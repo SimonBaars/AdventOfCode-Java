@@ -1,2 +1,2 @@
-# adventOfCode-2019
-adventOfCode(2019, Language.JAVA, CodeQuality.CRAPPY, Optimization.NONE);
+# adventOfCode(2019)
+Let's do this! Code first, refactor later(tm).
