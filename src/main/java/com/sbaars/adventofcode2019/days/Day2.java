@@ -27,14 +27,9 @@ public class Day2 implements Day, DoesFileOperations {
 
 	private boolean executeInstruction(int[] program, int i, int instruction) {
 		switch(instruction) {
-			case 1:
-				program[program[i+3]] = program[program[i+1]] + program[program[i+2]];
-				break;
-			case 2: 
-				program[program[i+3]] = program[program[i+1]] * program[program[i+2]];
-				break;
-			case 99: 
-				return false;
+			case 1: program[program[i+3]] = program[program[i+1]] + program[program[i+2]]; break;
+			case 2: program[program[i+3]] = program[program[i+1]] * program[program[i+2]]; break;
+			case 99: return false;
 			default: throw new IllegalStateException("Something went wrong!");
 		}
 		
