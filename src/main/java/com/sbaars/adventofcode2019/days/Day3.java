@@ -42,20 +42,24 @@ public class Day3 implements Day, DoesFileOperations
 					case LEFT: x--; break;
 					case RIGHT: x++; break;
 				}
-				Step currentStep = new Step(new Point(x,y), steps);
-				if(collect) {
-					if(walkedLocations.contains(currentStep) && !intersectingLocations.contains(currentStep)) {
-						Step step = walkedLocations.stream().filter(e -> e.equals(currentStep)).findAny().get();
-						intersectingLocations.add(step);
-						step.combine(currentStep);
-					}
-				} else {
-					walkedLocations.add(currentStep);
-				}
+				performStep(walkedLocations, collect, intersectingLocations, x, y, steps);
 				steps++;
 			}
 		}
 		return intersectingLocations;
+	}
+
+	private void performStep(Set<Step> walkedLocations, boolean collect, Set<Step> intersectingLocations, int x, int y, int steps) {
+		Step currentStep = new Step(new Point(x,y), steps);
+		if(collect) {
+			if(walkedLocations.contains(currentStep) && !intersectingLocations.contains(currentStep)) {
+				Step step = walkedLocations.stream().filter(e -> e.equals(currentStep)).findAny().get();
+				intersectingLocations.add(step);
+				step.combine(currentStep);
+			}
+		} else {
+			walkedLocations.add(currentStep);
+		}
 	}
 	
 	public int distance(Point p) {
@@ -92,34 +96,14 @@ public class Day3 implements Day, DoesFileOperations
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + getEnclosingInstance().hashCode();
-			result = prime * result + ((point == null) ? 0 : point.hashCode());
-			return result;
+			return 31 + ((point == null) ? 0 : point.hashCode());
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
+			if (!(obj instanceof Step))
 				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Step other = (Step) obj;
-			if (!getEnclosingInstance().equals(other.getEnclosingInstance()))
-				return false;
-			if (point == null) {
-				if (other.point != null)
-					return false;
-			} else if (!point.equals(other.point))
-				return false;
-			return true;
-		}
-
-		private Day3 getEnclosingInstance() {
-			return Day3.this;
+			return point.equals(((Step) obj).point);
 		}
 		
 		public void combine(Step step) {
