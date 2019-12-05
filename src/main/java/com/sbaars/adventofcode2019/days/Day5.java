@@ -12,6 +12,7 @@ public class Day5 implements Day, DoesFileOperations {
 
 	private static int NUM_MODES = 3;
 	private int instructionCounter = 0;
+	private int part;
 
 	public static void main(String[] args) throws IOException {
 		new Day5().printParts();
@@ -19,6 +20,13 @@ public class Day5 implements Day, DoesFileOperations {
 	
 	@Override
 	public int part1() throws IOException {
+		part = 1;
+		return execute();
+	}
+	
+	@Override
+	public int part2() throws IOException {
+		part = 2;
 		return execute();
 	}
 
@@ -53,8 +61,12 @@ public class Day5 implements Day, DoesFileOperations {
 		switch(instruction) {
 			case 1: program[args[0]] = args[1] + args[2]; break;
 			case 2: program[args[0]] = args[1] * args[2]; break;
-			case 3: program[args[0]] = 1; break;
+			case 3: program[args[0]] = part == 1 ? 1 : 5; break;
 			case 4: if(args[0]!=0) return args[0]; break;
+			case 5: if(args[1] != 0) instructionCounter = args[0]; break;
+			case 6: if(args[1] == 0) instructionCounter = args[0]; break;
+			case 7: program[args[0]] = args[1] < args[2] ? 1 : 0; break;
+			case 8: program[args[0]] = args[1] == args[2] ? 1 : 0; break;
 			default: throw new IllegalStateException("Something went wrong!");
 		}
 		
@@ -99,10 +111,4 @@ public class Day5 implements Day, DoesFileOperations {
 					 else throw new IllegalStateException("Something went wrong!");
 		}
 	}
-
-	@Override
-	public int part2() throws IOException {
-		return -1;
-	}
-
 }
