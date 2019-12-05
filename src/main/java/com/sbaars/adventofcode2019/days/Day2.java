@@ -18,7 +18,7 @@ public class Day2 implements Day, DoesFileOperations {
 	}
 
 	private int execute(int x, int y) throws IOException {
-		int[] program = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day2.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();;
+		int[] program = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day2.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();
 		program[1] = x;
 		program[2] = y;
 		for(int i = 0; executeInstruction(program, i, program[i]); i+=4);
