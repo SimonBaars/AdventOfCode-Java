@@ -19,70 +19,52 @@ public class Day5 implements Day, DoesFileOperations {
 	}
 	
 	public int part1() throws IOException {
-		return execute(12, 2);
+		return execute();
 	}
 
-	private int execute(int x, int y) throws IOException {
+	private int execute() throws IOException {
 		int[] program = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day5.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();;
-		//program[1] = x;
-		//program[2] = y;
-		for(; executeInstruction(program, program[instructionCounter]); instructionCounter+=nParams(program[instructionCounter])+1);
-		return program[0];
+		int result;
+		for(; (result = executeInstruction(program, program[instructionCounter])) == -1; instructionCounter+=nParams(program[instructionCounter])+1);
+		return result;
 	}
 
-	/*private boolean executeInstruction(int[] program, int i, int instruction) {
-		switch(instruction) {
-			case 1: program[program[i+3]] = program[program[i+1]] + program[program[i+2]];
-			case 2: program[program[i+3]] = program[program[i+1]] * program[program[i+2]]; break;
-			case 99: return false;
-			default: throw new IllegalStateException("Something went wrong!");
-		}
-		
-		return true;
-	}*/
-	
-	private boolean executeInstruction(int[] program, int i, int instruction) {
-		System.out.println("Executing instruction "+instruction+" at i "+i);
+	private int executeInstruction(int[] program, int instruction) {
 		if(instruction>99) 
-			return parseComplexInstruction(program, i, instruction);
+			return parseComplexInstruction(program, instruction);
 		else if(instruction == 99)
-			return false;
-		return execute(program, i, instruction);
+			throw new IllegalStateException("Hit terminal code 99 before finding diagnostic code!");
+		return execute(program, instruction);
 	}
 	
-	private boolean execute(int[] program, int i, int instruction) {
-		return execute(program, new int[NUM_MODES], i, instruction);
+	private int execute(int[] program, int instruction) {
+		return execute(program, new int[NUM_MODES], instruction);
 	}
 
-	private boolean execute(int[] program, int[] method, int i, int instruction) {
+	private int execute(int[] program, int[] method, int instruction) {
 		int nParams = nParams(instruction);
-		int[] args = IntStream.range(0, nParams).map(j -> j == 0 ? program[i+nParams] : program[i+j]).toArray();
+		int[] args = IntStream.range(0, nParams).map(j -> j == 0 ? program[instructionCounter+nParams] : program[instructionCounter+j]).toArray();
 		if(args.length>2) Arrays.stream(new int[]{2, 1}).filter(j -> method[j] == 0).map(j -> j == 2 ? 1 : 2).forEach(j -> args[j] = program[args[j]]);
 		if(instruction == 4 && method[2] == 0) args[0] = program[args[0]];
 		return executeInstruction(program, args, instruction);
 	}
 	
-	/*static int reverseRange(int num, int from, int to) {
-	    return to - num + from - 1;
-	}*/
-	
-	private boolean executeInstruction(int[] program, int[] args, int instruction) {
+	private int executeInstruction(int[] program, int[] args, int instruction) {
 		switch(instruction) {
 			case 1: program[args[0]] = args[1] + args[2]; break;
 			case 2: program[args[0]] = args[1] * args[2]; break;
 			case 3: program[args[0]] = 1; break;
-			case 4: if(args[0]!=0) System.out.println(args[0]); break;
+			case 4: if(args[0]!=0) return args[0]; break;
 			default: throw new IllegalStateException("Something went wrong!");
 		}
 		
-		return true;
+		return -1;
 	}
 	
-	private boolean parseComplexInstruction(int[] program, int i, int instruction) {
+	private int parseComplexInstruction(int[] program, int instruction) {
 		int[] instructions = getInstructions(instruction);
 		int opcode = getOpCode(instructions);
-		System.out.println("Parsed as "+Arrays.toString(instructions)+" opcode "+opcode);
-		return execute(program, instructions, i, opcode);
+		return execute(program, instructions, opcode);
 		
 	}
 	
@@ -103,18 +85,16 @@ public class Day5 implements Day, DoesFileOperations {
 		return instructions;
 	}
 	
-	/*private int[] getParams(int[] program, int instruction, boolean parameterMode) {
-		int nParams = nParams(instruction);
-		IntStream params = IntStream.range(1,nParams+1).map(i -> program[i]);
-		if(parameterMode) params = 
-	}
-	
-	*/private int nParams(int instruction) {
+	private int nParams(int instruction) {
 		switch(instruction) {
-			case 1: 
-			case 2: return 3;
 			case 3: 
 			case 4: return 1;
+			case 5:
+			case 6: return 2;
+			case 1: 
+			case 2:
+			case 7:
+			case 8: return 3;
 			default: if(instruction>=99) return nParams(getOpCode(instruction));
 					 else throw new IllegalStateException("Something went wrong!");
 		}
