@@ -13,8 +13,25 @@ public class Day2 implements Day, DoesFileOperations {
 		new Day2().printParts();
 	}
 	
+	@Override
 	public int part1() throws IOException {
 		return execute(12, 2);
+	}
+	
+	@Override
+	public int part2() throws IOException {
+		return bruteForceFindingNumber(19690720, 99);
+	}
+
+	private int bruteForceFindingNumber(int number, int bound) throws IOException {
+		for(int i = 0; i<bound;i++) {
+			for(int j = 0; j<bound; j++) {
+					if(execute(i, j) == number) {
+						return 100 * i + j;
+					}
+				}
+		}
+		return -1;
 	}
 
 	private int execute(int x, int y) throws IOException {
@@ -34,18 +51,6 @@ public class Day2 implements Day, DoesFileOperations {
 		}
 		
 		return true;
-	}
-
-	@Override
-	public int part2() throws IOException {
-		for(int i = 0; i<99;i++) {
-			for(int j = 0; j<99; j++) {
-					if(execute(i, j) == 19690720) {
-						return 100 * i + j;
-					}
-				}
-		}
-		return -1;
 	}
 
 }

@@ -15,10 +15,12 @@ public class Day1 implements Day, DoesFileOperations
     	new Day1().printParts();
     }
 
+    @Override
 	public int part1() throws IOException {
 		return createNumberStream().map(this::getFuel).sum();
 	}
 	
+    @Override
 	public int part2() throws IOException {
 		return createNumberStream().map(this::getRequiredFuel).sum();
 	}

@@ -9,8 +9,7 @@ import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
 public class Day5 implements Day, DoesFileOperations {
-	
-	boolean parameterMode = true;
+
 	private static int NUM_MODES = 3;
 	private int instructionCounter = 0;
 
@@ -18,6 +17,7 @@ public class Day5 implements Day, DoesFileOperations {
 		new Day5().printParts();
 	}
 	
+	@Override
 	public int part1() throws IOException {
 		return execute();
 	}

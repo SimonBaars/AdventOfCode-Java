@@ -22,13 +22,19 @@ public class Day3 implements Day, DoesFileOperations
 		this.intersect = calculateDistance(walks2, walkedLocations, true);
 	}
 	
-    public static void main(String[] args) throws IOException
+	public static void main(String[] args) throws IOException
     {
     	new Day3().printParts();
     }
 
+	@Override
 	public int part1() throws IOException {
 		return intersect.stream().mapToInt(e -> distance(e.point)).min().orElse(Integer.MAX_VALUE);
+	}
+	
+	@Override
+	public int part2() throws IOException {
+		return intersect.stream().mapToInt(e -> e.steps).min().orElse(Integer.MAX_VALUE);
 	}
 
 	private Set<Step> calculateDistance(Walk[] walks1, Set<Step> walkedLocations, boolean collect) {
@@ -68,10 +74,6 @@ public class Day3 implements Day, DoesFileOperations
 	
 	private Walk[] mapToWalks(String string) {
 		return Arrays.stream(string.split(",")).map(Walk::new).toArray(Walk[]::new);
-	}
-
-	public int part2() throws IOException {
-		return intersect.stream().mapToInt(e -> e.steps).min().orElse(Integer.MAX_VALUE);
 	}
 	
 	class Walk {

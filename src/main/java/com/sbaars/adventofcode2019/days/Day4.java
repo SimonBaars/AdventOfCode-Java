@@ -18,6 +18,11 @@ public class Day4 implements Day {
 		return checkPasswords(false);
 	}
 	
+	@Override
+	public int part2() throws IOException {
+		return checkPasswords(true);
+	}
+	
 	public long meetsCriteria(int lowerBound, int higherBound, boolean checkGroup) {
 		return IntStream.range(lowerBound, higherBound+1).filter(e -> meetsCriteria(e, checkGroup)).count();
 	}
@@ -43,12 +48,6 @@ public class Day4 implements Day {
 	    }
 	    
 	    return adjacentTheSame!=-2;
-	}
-
-
-	@Override
-	public int part2() throws IOException {
-		return checkPasswords(true);
 	}
 
 	private int checkPasswords(boolean checkGroup) {
