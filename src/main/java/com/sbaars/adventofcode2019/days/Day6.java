@@ -24,59 +24,47 @@ public class Day6 implements Day, DoesFileOperations
 
     @Override
 	public int part1() throws IOException {
-    	String[] nums = createNumberStream();
+    	String[] nums = createOrbitArray();
     	for(String num : nums) {
     		String[] parts = num.split("\\)");
     		orbits.addTo(parts[0], parts[1]);
     	}
     	AtomicInteger o = new AtomicInteger();
-    	extracted(orbits, o);
+    	for(Entry<String, List<String>> entry : orbits.entrySet())
+    		countOrbitsInList(orbits, o, entry.getValue());
 		return o.get();
 	}
 
-	private void extracted(ListMap<String, String> orbits, AtomicInteger o) {
-		for(Entry<String, List<String>> entry : orbits.entrySet()) {
-    		extracted(orbits, o, entry.getValue());
-    	}
-	}
-
-	private void extracted(ListMap<String, String> orbits, AtomicInteger o, List<String> entry) {
+	private void countOrbitsInList(ListMap<String, String> orbits, AtomicInteger o, List<String> entry) {
 		for(String str : entry) {
 			o.incrementAndGet();
 			if(orbits.containsKey(str)) {
-				extracted(orbits, o, orbits.get(str));
+				countOrbitsInList(orbits, o, orbits.get(str));
 			}
 		}
 	}
 	
     @Override
 	public int part2() throws IOException {
-    	
-		return goFrom("YOU", "SAN");
+		return findRoute("YOU", "SAN");
 	}
     
-    public int goFrom(String s1, String s2) {
-    	AtomicInteger steps = new AtomicInteger();
-    	step(s1, 0);
-    	return 0;
+    private int findRoute(String from, String to) {
+    	return findRoute(from, to, new ArrayList<>(), 0);
     }
     
-    List<String> been = new ArrayList<>();
-    
-    private void step(String s1, int depth) {
-    	if(been.contains(s1))
-    		return;
-    	been.add(s1);
-    	List<String> str = collectAll(s1);
-    	//System.out.println(Arrays.toString(str.toArray()));
-    	if(str.contains("SAN")) {
-    		System.out.println(depth+1);
-    		//System.exit(1);
-    	}
-    	//steps.incrementAndGet();
+    private int findRoute(String from, String to, List<String> visited, int depth) {
+    	if(visited.contains(from))
+    		return 0;
+    	visited.add(from);
+    	List<String> str = collectAll(from);
+    	if(str.contains(to))
+    		return depth-1;
     	for(String s : str) {
-    		step(s, depth + 1);
+    		int findRoute = findRoute(s, to, visited, depth + 1);
+			if(findRoute>0) return findRoute;
     	}
+    	return -1;
 	}
 
 	private List<String> collectAll(String s1) {
@@ -95,7 +83,7 @@ public class Day6 implements Day, DoesFileOperations
     	return orbit;
     }
 
-	private String[] createNumberStream() throws IOException {
+	private String[] createOrbitArray() throws IOException {
 		return Arrays.stream(getFileAsString(new File(Day6.class.getClassLoader().getResource("day6.txt").getFile())).split(System.lineSeparator())).toArray(String[]::new);
 	}
 }
