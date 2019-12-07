@@ -1,14 +1,12 @@
 package com.sbaars.adventofcode2019.days;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode2019.common.Day;
-import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
-public class Day1 implements Day, DoesFileOperations
+public class Day1 implements Day
 {	
     public static void main(String[] args) throws IOException
     {
@@ -26,7 +24,7 @@ public class Day1 implements Day, DoesFileOperations
 	}
 
 	private IntStream createNumberStream() throws IOException {
-		return Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day1.txt").getFile())).split(System.lineSeparator())).mapToInt(Integer::parseInt);
+		return Arrays.stream(readDay(1).split(System.lineSeparator())).mapToInt(Integer::parseInt);
 	}
 	
 	private int getRequiredFuel(int mass) {

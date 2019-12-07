@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode2019.common.Day;
@@ -142,7 +139,7 @@ public class Day7 implements Day, DoesFileOperations {
 		case 1: program[args[0]] = args[1] + args[2]; break;
 		case 2: program[args[0]] = args[1] * args[2]; break;
 		case 3: program[args[0]] = isFirst ? phase : (part == 0 ? 0 : lastVal);if(!isFirst) part++; isFirst = false; break;
-		case 4: /*if(args[0]!=0)lastVal=args[0]; */return args[0];/*lastVal=args[0];*/  //break;
+		case 4: return args[0];
 		case 5: if(args[1] != 0) { instructionCounter = args[0]; return -1; } break;
 		case 6: if(args[1] == 0) { instructionCounter = args[0]; return -1; } break;
 		case 7: program[args[0]] = args[1] < args[2] ? 1 : 0; break;
