@@ -21,38 +21,65 @@ public class Day7 implements Day, DoesFileOperations {
 	int phase = 0;
 	boolean isFirst = true;
 
+	int[] startState;
+
+	public Day7() throws IOException {
+		startState = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day7.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();
+	}
+
 	public static void main(String[] args) throws IOException {
 		new Day7().printParts();
 	}
 	int lastVal = -1;
-	
+
 	boolean done = false;
 
 	@Override
 	public int part1() throws IOException {
-		int[] program = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day7.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();
+		List<List<Integer>> shuffles = generatePerm(new ArrayList<>(Arrays.asList(0,1,2,3,4)));
+		List<Integer> results = new ArrayList<>();
+		for(List<Integer> shuffle : shuffles) {
+			lastVal = -1;
+			part = 0;
+			for(Integer i : shuffle) {
+				int[] program = new int[startState.length];
+				for(int j = 0; j<startState.length; j++) {
+					program[j] = startState[j];
+				}
+				phase = i;
+				lastVal = executeProgram(program, 0);
+				part++;
+			}
+			results.add(lastVal);
+
+		}
+		return results.stream().mapToInt(e -> e).max().getAsInt();
+	}
+
+	@Override
+	public int part2() throws IOException {
 		List<List<Integer>> shuffles = generatePerm(new ArrayList<>(Arrays.asList(5,6,7,8,9)));
 		List<Integer> results = new ArrayList<>();
 		//List<Integer> shuffle = Arrays.asList(9,8,7,6,5);
 		for(List<Integer> shuffle : shuffles) {
-		lastVal = 0;
-		part = 0;
-		int[][] programs = new int[shuffle.size()][program.length];
-		for(int i = 0; i<programs.length; i++) {
-			for(int j = 0; j<program.length; j++) {
-				programs[i][j] = program[j];
+			lastVal = 0;
+			part = 0;
+			int[][] programs = new int[shuffle.size()][startState.length];
+			for(int i = 0; i<programs.length; i++) {
+				for(int j = 0; j<startState.length; j++) {
+					programs[i][j] = startState[j];
+				}
 			}
-		}
-		int[] instructionCounters = new int[5];
-		done = false;
-		while(!done) {
-		for(Integer i : shuffle) {
-			phase = i;
-			lastVal = executeProgram(programs[i-5], instructionCounters[i-5]);
-			instructionCounters[i-5] = instructionCounter+2;
-		}
-		}
-		results.add(lastVal);
+			int[] instructionCounters = new int[5];
+			done = false;
+			while(!done) {
+				for(Integer i : shuffle) {
+					phase = i;
+					lastVal = executeProgram(programs[i-5], instructionCounters[i-5]);
+					instructionCounters[i-5] = instructionCounter+2;
+				}
+			}
+			results.add(lastVal);
 
 		}
 		return results.stream().mapToInt(e -> e).max().getAsInt();
@@ -75,12 +102,6 @@ public class Day7 implements Day, DoesFileOperations {
 			}
 		}
 		return returnValue;
-	}
-
-
-	@Override
-	public int part2() throws IOException {
-		return 0;
 	}
 
 	private int executeProgram(int[] program, int c) throws IOException {
