@@ -1,7 +1,6 @@
 package com.sbaars.adventofcode2019.days;
 
 import java.awt.Point;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,7 +14,7 @@ public class Day3 implements Day, DoesFileOperations
 	private Set<Step> intersect;
 	
 	private Day3() throws IOException {
-		String[] strings = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day3.txt").getFile())).split(System.lineSeparator())).toArray(String[]::new);
+		String[] strings = Arrays.stream(readDay(3).split(System.lineSeparator())).toArray(String[]::new);
 		Walk[] walks1 = mapToWalks(strings[0]), walks2 = mapToWalks(strings[1]);
 		Set<Step> walkedLocations = new HashSet<>();
 		calculateDistance(walks1, walkedLocations, false);

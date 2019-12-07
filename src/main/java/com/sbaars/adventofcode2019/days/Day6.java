@@ -1,6 +1,5 @@
 package com.sbaars.adventofcode2019.days;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,6 +83,6 @@ public class Day6 implements Day, DoesFileOperations
     }
 
 	private String[] createOrbitArray() throws IOException {
-		return Arrays.stream(getFileAsString(new File(Day6.class.getClassLoader().getResource("day6.txt").getFile())).split(System.lineSeparator())).toArray(String[]::new);
+		return Arrays.stream(readDay(6).split(System.lineSeparator())).toArray(String[]::new);
 	}
 }

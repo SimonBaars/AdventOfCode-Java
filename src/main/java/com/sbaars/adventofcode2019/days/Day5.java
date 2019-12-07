@@ -1,6 +1,5 @@
 package com.sbaars.adventofcode2019.days;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -32,7 +31,7 @@ public class Day5 implements Day, DoesFileOperations {
 	}
 
 	private int execute() throws IOException {
-		int[] program = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day5.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();;
+		int[] program = Arrays.stream(readDay(5).split(",")).mapToInt(Integer::parseInt).toArray();;
 		int result;
 		while((result = executeInstruction(program, program[instructionCounter])) == -1);
 		return result;

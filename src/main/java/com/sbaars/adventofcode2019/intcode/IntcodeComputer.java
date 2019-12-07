@@ -1,18 +1,19 @@
 package com.sbaars.adventofcode2019.intcode;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
-public class IntcodeComputer extends Thread {
-	int[] program;
-	int instructionCounter;
+import com.sbaars.adventofcode2019.util.DoesFileOperations;
+
+public class IntcodeComputer extends Thread implements DoesFileOperations {
+	final int[] program;
+	int instructionCounter = 0;
 	
 	public IntcodeComputer(int day) {
-		
+		this.program =  Arrays.stream(getFileAsString(new File(IntcodeComputer.class.getClassLoader().getResource("day7-3.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();
 	}
-	
-	
-	
+
 	@Override
 	public void run() {
 		
