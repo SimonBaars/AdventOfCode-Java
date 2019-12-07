@@ -3,7 +3,7 @@ package com.sbaars.adventofcode2019.intcode;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Deque;
+import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -12,9 +12,8 @@ import com.sbaars.adventofcode2019.util.DoesFileOperations;
 public class IntcodeComputer implements DoesFileOperations {
 	final int[] program;
 	private int instructionCounter = 0;
-	private final Deque<Integer> input = new ArrayDeque<>(2);
-	
-	private boolean done = false;
+	private final Queue<Integer> input = new ArrayDeque<>(2);
+	private int lastInput;
 	
 	public IntcodeComputer(int day, int...input) throws IOException {
 		this.program = Arrays.stream(readDay(day).split(",")).mapToInt(Integer::parseInt).toArray();
@@ -29,10 +28,6 @@ public class IntcodeComputer implements DoesFileOperations {
 		int result;
 		while((result = executeInstruction(program, program[instructionCounter])) == 0);
 		return result;
-	}
-	
-	public boolean isDone() {
-		return done;
 	}
 
 	private int executeInstruction(int[] program, int instruction) {
@@ -58,16 +53,21 @@ public class IntcodeComputer implements DoesFileOperations {
 	}
 
 	private int readInput() {
-		if(input.size()>1)
-			return input.pop();
-		return input.peek();
+		if(input.isEmpty())
+			return lastInput;
+		lastInput = input.poll();
+		return lastInput;
+	}
+	
+	public boolean addInput(int num) {
+		return input.add(num);
 	}
 	
 	public int firstElement() {
 		return program[0];
 	}
 	
-	private boolean setInput(int...input) {
+	public boolean setInput(int...input) {
 		this.input.clear();
 		return this.input.addAll(Arrays.stream(input).boxed().collect(Collectors.toList()));
 	}
@@ -115,7 +115,7 @@ public class IntcodeComputer implements DoesFileOperations {
 
 	private int nParams(int instruction) {
 		switch(instruction) {
-			case 99: return 0;
+			case 99: return -1;
 			case 3: 
 			case 4: return 1;
 			case 5:
