@@ -12,8 +12,4 @@ public interface Day extends DoesFileOperations {
 		System.out.println("Part 1 = "+part1());
 		System.out.println("Part 2 = "+part2());
 	}
-	
-	public default String readDay(int day) throws IOException {
-		return getResourceAsString("day"+day+".txt");
-	}
 }
