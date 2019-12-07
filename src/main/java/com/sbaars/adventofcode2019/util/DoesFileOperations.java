@@ -14,4 +14,8 @@ public interface DoesFileOperations {
 	public default String getResourceAsString(String resource) throws IOException {
 		return getFileAsString(new File(DoesFileOperations.class.getClassLoader().getResource(resource).getFile()));
 	}
+	
+	public default String readDay(int day) throws IOException {
+		return getResourceAsString("day"+day+".txt");
+	}
 }

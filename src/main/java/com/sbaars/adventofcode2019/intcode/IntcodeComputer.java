@@ -1,22 +1,28 @@
 package com.sbaars.adventofcode2019.intcode;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Stack;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
-public class IntcodeComputer extends Thread implements DoesFileOperations {
+public class IntcodeComputer implements DoesFileOperations {
 	final int[] program;
 	int instructionCounter = 0;
+	final Stack<Integer> input = new Stack<>();
 	
-	public IntcodeComputer(int day) {
-		this.program =  Arrays.stream(getFileAsString(new File(IntcodeComputer.class.getClassLoader().getResource("day7-3.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();
+	public IntcodeComputer(int day, int...input) throws IOException {
+		this.program = Arrays.stream(readDay(day).split(",")).mapToInt(Integer::parseInt).toArray();
+		setInput(input);
 	}
 
-	@Override
-	public void run() {
-		
+	public int run() {
+		int result;
+		while((result = executeInstruction(program, program[instructionCounter])) == -1);
+		return result;
 	}
 	
 	private int executeProgram(int[] program, int c) throws IOException {
@@ -53,20 +59,30 @@ public class IntcodeComputer extends Thread implements DoesFileOperations {
 		return executeInstruction(program, args, instruction);
 	}
 
+	private int readInput() {
+		if(input.size()>1)
+			return input.pop();
+		return input.peek();
+	}
+	
+	private boolean setInput(int...input) {
+		this.input.clear();
+		return this.input.addAll(Arrays.stream(input).boxed().collect(Collectors.toList()));
+	}
 	
 	private int executeInstruction(int[] program, int[] args, int instruction) {
-		switch(instruction) {
-		case 1: program[args[0]] = args[1] + args[2]; break;
-		case 2: program[args[0]] = args[1] * args[2]; break;
-		case 3: program[args[0]] = isFirst ? phase : (part == 0 ? 0 : lastVal);if(!isFirst) part++; isFirst = false; break;
-		case 4: return args[0];
-		case 5: if(args[1] != 0) { instructionCounter = args[0]; return -1; } break;
-		case 6: if(args[1] == 0) { instructionCounter = args[0]; return -1; } break;
-		case 7: program[args[0]] = args[1] < args[2] ? 1 : 0; break;
-		case 8: program[args[0]] = args[1] == args[2] ? 1 : 0; break;
-		default: throw new IllegalStateException("Something went wrong!");
-		}
 		instructionCounter+=nParams(instruction) + 1;
+		switch(instruction) {
+			case 1: program[args[0]] = args[1] + args[2]; break;
+			case 2: program[args[0]] = args[1] * args[2]; break;
+			case 3: program[args[0]] = readInput(); break;
+			case 4: return args[0];
+			case 5: if(args[1] != 0) instructionCounter = args[0]; break;
+			case 6: if(args[1] == 0) instructionCounter = args[0]; break;
+			case 7: program[args[0]] = args[1] < args[2] ? 1 : 0; break;
+			case 8: program[args[0]] = args[1] == args[2] ? 1 : 0; break;
+			default: throw new IllegalStateException("Something went wrong!");
+		}
 		return -1;
 	}
 	
