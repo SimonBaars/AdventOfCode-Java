@@ -25,27 +25,36 @@ public class Day7 implements Day, DoesFileOperations {
 		new Day7().printParts();
 	}
 	int lastVal = -1;
+	
+	boolean done = false;
 
 	@Override
 	public int part1() throws IOException {
-		List<List<Integer>> shuffles = generatePerm(new ArrayList<>(Arrays.asList(0,1,2,3,4)));
+		int[] program = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day7.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();
+		List<List<Integer>> shuffles = generatePerm(new ArrayList<>(Arrays.asList(5,6,7,8,9)));
 		List<Integer> results = new ArrayList<>();
-		List<Integer> shuffle = Arrays.asList(9,8,7,6,5);
-		//for(List<Integer> shuffle : shuffles) {
+		//List<Integer> shuffle = Arrays.asList(9,8,7,6,5);
+		for(List<Integer> shuffle : shuffles) {
 		lastVal = 0;
 		part = 0;
-		for(Integer i : shuffle) {
-			isFirst = true;
-			phase = i;
-			try {
-				execute();
-			} catch(Exception e) {
-				e.printStackTrace();
+		int[][] programs = new int[shuffle.size()][program.length];
+		for(int i = 0; i<programs.length; i++) {
+			for(int j = 0; j<program.length; j++) {
+				programs[i][j] = program[j];
 			}
+		}
+		int[] instructionCounters = new int[5];
+		done = false;
+		while(!done) {
+		for(Integer i : shuffle) {
+			phase = i;
+			lastVal = executeProgram(programs[i-5], instructionCounters[i-5]);
+			instructionCounters[i-5] = instructionCounter+2;
+		}
 		}
 		results.add(lastVal);
 
-		//}
+		}
 		return results.stream().mapToInt(e -> e).max().getAsInt();
 	}
 
@@ -74,9 +83,10 @@ public class Day7 implements Day, DoesFileOperations {
 		return 0;
 	}
 
-	private int execute() throws IOException {
-		instructionCounter = 0;
-		int[] program = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day7-3.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();
+	private int executeProgram(int[] program, int c) throws IOException {
+		isFirst = c == 0;
+		instructionCounter = c;
+		// = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day7-3.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();
 		int result;
 		while((result = executeInstruction(program, program[instructionCounter])) == -1);
 		return result;
@@ -85,8 +95,10 @@ public class Day7 implements Day, DoesFileOperations {
 	private int executeInstruction(int[] program, int instruction) {
 		if(instruction>99) 
 			return parseComplexInstruction(program, instruction);
-		else if(instruction == 99)
-			return 0;
+		else if(instruction == 99) {
+			done = true;
+			return lastVal;
+		}
 		//throw new IllegalStateException("Hit terminal code 99 before finding diagnostic code!");
 		return execute(program, instruction);
 	}
@@ -112,7 +124,7 @@ public class Day7 implements Day, DoesFileOperations {
 		case 1: program[args[0]] = args[1] + args[2]; break;
 		case 2: program[args[0]] = args[1] * args[2]; break;
 		case 3: program[args[0]] = isFirst ? phase : (part == 0 ? 0 : lastVal);if(!isFirst) part++; isFirst = false; break;
-		case 4: /*if(args[0]!=0)*/ lastVal = args[0];/*lastVal=args[0];*/  break;
+		case 4: /*if(args[0]!=0)lastVal=args[0]; */return args[0];/*lastVal=args[0];*/  //break;
 		case 5: if(args[1] != 0) { instructionCounter = args[0]; return -1; } break;
 		case 6: if(args[1] == 0) { instructionCounter = args[0]; return -1; } break;
 		case 7: program[args[0]] = args[1] < args[2] ? 1 : 0; break;
