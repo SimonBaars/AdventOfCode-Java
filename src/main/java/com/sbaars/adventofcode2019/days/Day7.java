@@ -18,10 +18,11 @@ public class Day7 implements Day, DoesFileOperations {
 	private static final int NUM_MODES = 3;
 	private int instructionCounter = 0;
 	private int part;
-	int phase = 0;
-	boolean isFirst = true;
-
-	int[] startState;
+	private int phase = 0;
+	private boolean isFirst = true;
+	private int[] startState;
+	private int lastVal = -1;
+	private boolean done = false;
 
 	public Day7() throws IOException {
 		startState = Arrays.stream(getFileAsString(new File(Day1.class.getClassLoader().getResource("day7.txt").getFile())).split(",")).mapToInt(Integer::parseInt).toArray();
@@ -30,15 +31,12 @@ public class Day7 implements Day, DoesFileOperations {
 	public static void main(String[] args) throws IOException {
 		new Day7().printParts();
 	}
-	int lastVal = -1;
-
-	boolean done = false;
 
 	@Override
 	public int part1() throws IOException {
-		List<List<Integer>> shuffles = generatePerm(new ArrayList<>(Arrays.asList(0,1,2,3,4)));
+		List<List<Integer>> permutations = generatePerm(new ArrayList<>(Arrays.asList(0,1,2,3,4)));
 		List<Integer> results = new ArrayList<>();
-		for(List<Integer> shuffle : shuffles) {
+		for(List<Integer> shuffle : permutations) {
 			lastVal = -1;
 			part = 0;
 			for(Integer i : shuffle) {
@@ -58,10 +56,9 @@ public class Day7 implements Day, DoesFileOperations {
 
 	@Override
 	public int part2() throws IOException {
-		List<List<Integer>> shuffles = generatePerm(new ArrayList<>(Arrays.asList(5,6,7,8,9)));
+		List<List<Integer>> permutations = generatePerm(new ArrayList<>(Arrays.asList(5,6,7,8,9)));
 		List<Integer> results = new ArrayList<>();
-		//List<Integer> shuffle = Arrays.asList(9,8,7,6,5);
-		for(List<Integer> shuffle : shuffles) {
+		for(List<Integer> shuffle : permutations) {
 			lastVal = 0;
 			part = 0;
 			int[][] programs = new int[shuffle.size()][startState.length];
