@@ -1,9 +1,9 @@
 package com.sbaars.adventofcode2019.intcode;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.Deque;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -11,40 +11,38 @@ import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
 public class IntcodeComputer implements DoesFileOperations {
 	final int[] program;
-	int instructionCounter = 0;
-	final Stack<Integer> input = new Stack<>();
+	private int instructionCounter = 0;
+	private final Deque<Integer> input = new ArrayDeque<>(2);
+	
+	private boolean done = false;
 	
 	public IntcodeComputer(int day, int...input) throws IOException {
 		this.program = Arrays.stream(readDay(day).split(",")).mapToInt(Integer::parseInt).toArray();
 		setInput(input);
+		if(day == 2) {
+			program[1] = input[0];
+			program[2] = input[1];
+		}
 	}
-
+	
 	public int run() {
 		int result;
-		while((result = executeInstruction(program, program[instructionCounter])) == -1);
+		while((result = executeInstruction(program, program[instructionCounter])) == 0);
 		return result;
 	}
 	
-	private int executeProgram(int[] program, int c) throws IOException {
-		isFirst = c == 0;
-		int result;
-		while((result = executeInstruction(program, program[instructionCounter])) == -1);
-		return result;
+	public boolean isDone() {
+		return done;
 	}
 
 	private int executeInstruction(int[] program, int instruction) {
 		if(instruction>99) 
 			return parseComplexInstruction(program, instruction);
-		else if(instruction == 99) {
-			done = true;
-			return lastVal;
-		}
-		//throw new IllegalStateException("Hit terminal code 99 before finding diagnostic code!");
 		return execute(program, instruction);
 	}
 
 	private int execute(int[] program, int instruction) {
-		return execute(program, new int[NUM_MODES], instruction);
+		return execute(program, new int[3], instruction);
 	}
 
 	private int execute(int[] program, int[] method, int instruction) {
@@ -65,6 +63,10 @@ public class IntcodeComputer implements DoesFileOperations {
 		return input.peek();
 	}
 	
+	public int firstElement() {
+		return program[0];
+	}
+	
 	private boolean setInput(int...input) {
 		this.input.clear();
 		return this.input.addAll(Arrays.stream(input).boxed().collect(Collectors.toList()));
@@ -81,9 +83,10 @@ public class IntcodeComputer implements DoesFileOperations {
 			case 6: if(args[1] == 0) instructionCounter = args[0]; break;
 			case 7: program[args[0]] = args[1] < args[2] ? 1 : 0; break;
 			case 8: program[args[0]] = args[1] == args[2] ? 1 : 0; break;
+			case 99: return -1;
 			default: throw new IllegalStateException("Something went wrong!");
 		}
-		return -1;
+		return 0;
 	}
 	
 	private int parseComplexInstruction(int[] program, int instruction) {
@@ -112,6 +115,7 @@ public class IntcodeComputer implements DoesFileOperations {
 
 	private int nParams(int instruction) {
 		switch(instruction) {
+			case 99: return 0;
 			case 3: 
 			case 4: return 1;
 			case 5:
@@ -120,7 +124,7 @@ public class IntcodeComputer implements DoesFileOperations {
 			case 2:
 			case 7:
 			case 8: return 3;
-			default: if(instruction>=99) return nParams(getOpCode(instruction));
+			default: if(instruction>99) return nParams(getOpCode(instruction));
 			else throw new IllegalStateException("Something went wrong! "+instruction);
 		}
 	}

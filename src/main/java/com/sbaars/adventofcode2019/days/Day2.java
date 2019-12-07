@@ -1,9 +1,9 @@
 package com.sbaars.adventofcode2019.days;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import com.sbaars.adventofcode2019.common.Day;
+import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
 import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
 public class Day2 implements Day, DoesFileOperations {
@@ -14,10 +14,10 @@ public class Day2 implements Day, DoesFileOperations {
 	
 	@Override
 	public int part1() throws IOException {
-		return execute(12, 2);
+		return execute(12,2);
 	}
 	
-	@Override
+	@Override //3146
 	public int part2() throws IOException {
 		return bruteForceFindingNumber(19690720, 99);
 	}
@@ -34,22 +34,8 @@ public class Day2 implements Day, DoesFileOperations {
 	}
 
 	private int execute(int x, int y) throws IOException {
-		int[] program = Arrays.stream(readDay(2).split(",")).mapToInt(Integer::parseInt).toArray();
-		program[1] = x;
-		program[2] = y;
-		for(int i = 0; executeInstruction(program, i, program[i]); i+=4);
-		return program[0];
+		IntcodeComputer computer = new IntcodeComputer(2, x, y);
+		computer.run();
+		return computer.firstElement();
 	}
-
-	private boolean executeInstruction(int[] program, int i, int instruction) {
-		switch(instruction) {
-			case 1: program[program[i+3]] = program[program[i+1]] + program[program[i+2]]; break;
-			case 2: program[program[i+3]] = program[program[i+1]] * program[program[i+2]]; break;
-			case 99: return false;
-			default: throw new IllegalStateException("Something went wrong!");
-		}
-		
-		return true;
-	}
-
 }
