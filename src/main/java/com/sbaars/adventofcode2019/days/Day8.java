@@ -18,8 +18,19 @@ public class Day8 implements Day, DoesFileOperations {
 
 	@Override
 	public int part1() throws IOException {
+		int[] pixels = readPixels();
+		List<CountMap<Integer>> pixelCounts = countPixels(pixels);
+		CountMap<Integer> cm = pixelCounts.stream().reduce((e1, e2) -> e1.get(0) > e2.get(0) ? e2 : e1).get();
+		return cm.get(1) * cm.get(2);
+	}
+
+	private int[] readPixels() throws IOException {
 		char[] chars = readDay(8).toCharArray();
 		int[] pixels = IntStream.range(0, chars.length).map(i -> Character.getNumericValue(chars[i])).toArray();
+		return pixels;
+	}
+
+	private List<CountMap<Integer>> countPixels(int[] pixels) {
 		List<CountMap<Integer>> pixelCounts = new ArrayList<>();
 		for(int i = 0; i<pixels.length; i+=25*6) {
 			CountMap<Integer> cm = new CountMap<>();
@@ -28,16 +39,19 @@ public class Day8 implements Day, DoesFileOperations {
 			}
 			pixelCounts.add(cm);
 		}
-		System.out.println(pixelCounts.size());
-		CountMap<Integer> cm = pixelCounts.stream().reduce((e1, e2) -> e1.get(0) > e2.get(0) ? e2 : e1).get();
-		return cm.get(1) * cm.get(2);
+		return pixelCounts;
 	}
 
 	@Override
 	public int part2() throws IOException {
-		char[] chars = readDay(8).toCharArray();
-		int[] pixels = IntStream.range(0, chars.length).map(i -> Character.getNumericValue(chars[i])).toArray();
+		int[] pixels = readPixels();
 		int[][] pixelArrays = splitArray(pixels, 100, 25*6);
+		int[] finalPixels = determineFinalImage(pixelArrays);
+		System.out.println(Arrays.deepToString(splitArray(finalPixels, 6, 25)));
+		return 0;
+	}
+
+	private int[] determineFinalImage(int[][] pixelArrays) {
 		int[] finalPixels = pixelArrays[0];
 		for(int i = 1; i<pixelArrays.length; i++) {
 			for(int j = 0; j<pixelArrays[i].length; j++) {
@@ -46,10 +60,7 @@ public class Day8 implements Day, DoesFileOperations {
 				}
 			}
 		}
-		System.out.println(Arrays.deepToString(pixelArrays));
-		System.out.println(Arrays.toString(finalPixels));
-		System.out.println(Arrays.deepToString(splitArray(finalPixels, 6, 25)));
-		return 0;
+		return finalPixels;
 	}
 	
 	int[][] splitArray(int[] arr, int x, int y){
