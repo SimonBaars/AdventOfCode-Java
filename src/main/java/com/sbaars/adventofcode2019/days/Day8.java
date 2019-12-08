@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode2019.common.Day;
@@ -47,8 +48,8 @@ public class Day8 implements Day, DoesFileOperations {
 		int[] pixels = readPixels();
 		int[][] pixelArrays = splitArray(pixels, 100, 25*6);
 		int[] finalPixels = determineFinalImage(pixelArrays);
-		System.out.println(Arrays.deepToString(splitArray(finalPixels, 6, 25)));
-		return 0;
+		Arrays.stream(splitArray(finalPixels, 6, 25)).map(a -> Arrays.stream(a).boxed().map(x -> x == 0 ? " " : "█").collect(Collectors.joining())).forEach(System.out::println);
+		return 0; // Answer: FPUAR
 	}
 
 	private int[] determineFinalImage(int[][] pixelArrays) {
@@ -65,13 +66,9 @@ public class Day8 implements Day, DoesFileOperations {
 	
 	int[][] splitArray(int[] arr, int x, int y){
 		int[][] pixelArrays = new int[x][y];
-		int cor = 0;
-		for(int i = 0; i<arr.length; i+=y) {
-			for(int j = i; j<i+y; j++) {
-				pixelArrays[cor][j-i] = arr[j];
-			}
-			cor++;
-		}
+		for(int i = 0; i<arr.length; i+=y)
+			for(int j = i; j<i+y; j++)
+				pixelArrays[i/y][j-i] = arr[j];
 		return pixelArrays;
 	}
 }
