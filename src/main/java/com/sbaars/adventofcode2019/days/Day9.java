@@ -19,6 +19,6 @@ public class Day9 implements Day, DoesFileOperations {
 	
 	@Override
 	public int part2() throws IOException {
-		return 0;
+		return new IntcodeComputer(9, 2).runInt();
 	}
 }
