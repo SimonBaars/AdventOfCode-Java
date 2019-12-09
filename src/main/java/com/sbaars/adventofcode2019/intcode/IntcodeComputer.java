@@ -15,6 +15,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	private final Queue<Integer> input = new ArrayDeque<>(2);
 	private int lastInput;
 	private long relativeBase = 0;
+	private static final int[] DO_NOT_TRANSFORM_FINAL_ARGUMENT = {1, 2, 3, 7, 8};
 	
 	public IntcodeComputer(int day, int...input) throws IOException {
 		this.program = Arrays.stream(readDay(day).split(",")).mapToLong(Long::parseLong).toArray();
@@ -43,13 +44,19 @@ public class IntcodeComputer implements DoesFileOperations {
 
 	private long execute(int[] method, int instruction) {
 		int nParams = nParams(instruction);
-		long[] args = IntStream.range(0, nParams).mapToLong(j -> j == 0 ? program[instructionCounter+nParams] : program[instructionCounter+j]).toArray();
-		transformParam2(method, args);
-		transformDataForMode(method, instruction, args);
+		long[] args = IntStream.range(0, nParams).mapToLong(j -> program[instructionCounter+j]).toArray();
+		//transformParam2(method, args);
+		//transformDataForMode(method, instruction, args);
+		transformParameters(method, args, instruction);
 		return executeInstruction(args, instruction);
 	}
+	
+	private void transformParameters(int[] method, long[] args, int instruction) {
+		IntStream.range(0, args.length).filter(i -> method[i] != 1).filter(i -> i+1 != args.length || !Arrays.stream(DO_NOT_TRANSFORM_FINAL_ARGUMENT)
+				.anyMatch(j -> j==instruction)).forEach(i -> args[i] = program[Math.toIntExact((method[i] == 2 ? relativeBase : 0) + args[i])]);
+	}
 
-	private void transformParam2(int[] method, long[] args) {
+	/*private void transformParam2(int[] method, long[] args) {
 		if(args.length>=2) {
 			if(method[2] == 0 || method[2] == 2) args[1] = method[2] == 0 ? program[Math.toIntExact(args[1])] : program[Math.toIntExact(relativeBase+args[1])];
 			if(args.length>=3 && (method[1] == 0 || method[1] == 2)) args[2] = method[1] == 0 ? program[Math.toIntExact(args[2])] : program[Math.toIntExact(relativeBase+args[2])];
@@ -61,7 +68,7 @@ public class IntcodeComputer implements DoesFileOperations {
 			args[0] = method[2] == 0 ? program[Math.toIntExact(args[0])] : program[Math.toIntExact(relativeBase+args[0])];
 		}
 		if((instruction == 5 || instruction == 6) && (method[1] == 0 || method[1] == 2)) args[0] = method[1] == 0 ? program[Math.toIntExact(args[0])] : program[Math.toIntExact(relativeBase+args[0])];
-	}
+	}*/
 
 	private int readInput() {
 		if(input.isEmpty())
@@ -86,14 +93,14 @@ public class IntcodeComputer implements DoesFileOperations {
 	private long executeInstruction(long[] args, int instruction) {
 		instructionCounter+=nParams(instruction) + 1;
 		switch(instruction) {
-			case 1: program[Math.toIntExact(args[0])] = args[1] + args[2]; break;
-			case 2: program[Math.toIntExact(args[0])] = args[1] * args[2]; break;
+			case 1: program[Math.toIntExact(args[2])] = args[0] + args[1]; break;
+			case 2: program[Math.toIntExact(args[2])] = args[0] * args[1]; break;
 			case 3: program[Math.toIntExact(args[0])] = readInput(); break;
 			case 4: return args[0];
-			case 5: if(args[1] != 0) instructionCounter = Math.toIntExact(args[0]); break;
-			case 6: if(args[1] == 0) instructionCounter = Math.toIntExact(args[0]); break;
-			case 7: program[Math.toIntExact(args[0])] = args[1] < args[2] ? 1 : 0; break;
-			case 8: program[Math.toIntExact(args[0])] = args[1] == args[2] ? 1 : 0; break;
+			case 5: if(args[0] != 0) instructionCounter = Math.toIntExact(args[1]); break;
+			case 6: if(args[0] == 0) instructionCounter = Math.toIntExact(args[1]); break;
+			case 7: program[Math.toIntExact(args[2])] = args[0] < args[1] ? 1 : 0; break;
+			case 8: program[Math.toIntExact(args[2])] = args[0] == args[1] ? 1 : 0; break;
 			case 9: relativeBase += Math.toIntExact(args[0]); break;
 			case 99: return -1;
 			default: throw new IllegalStateException("Something went wrong!");
