@@ -10,13 +10,14 @@ import java.util.stream.IntStream;
 import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
 public class IntcodeComputer implements DoesFileOperations {
-	final int[] program;
+	final long[] program;
 	private int instructionCounter = 0;
 	private final Queue<Integer> input = new ArrayDeque<>(2);
 	private int lastInput;
+	private long relativeBase = 0;
 	
 	public IntcodeComputer(int day, int...input) throws IOException {
-		this.program = Arrays.stream(readDay(day).split(",")).mapToInt(Integer::parseInt).toArray();
+		this.program = Arrays.stream(readDay(day).split(",")).mapToLong(Long::parseLong).toArray();
 		setInput(input);
 		if(day == 2) {
 			program[1] = input[0];
@@ -24,32 +25,42 @@ public class IntcodeComputer implements DoesFileOperations {
 		}
 	}
 	
-	public int run() {
-		int result;
-		while((result = executeInstruction(program, program[instructionCounter])) == 0);
+	public long run() {
+		long result;
+		while((result = executeInstruction(Math.toIntExact(program[instructionCounter]))) == 0);
 		return result;
 	}
 
-	private int executeInstruction(int[] program, int instruction) {
+	private long executeInstruction(int instruction) {
 		if(instruction>99) 
-			return parseComplexInstruction(program, instruction);
-		return execute(program, instruction);
+			return parseComplexInstruction(instruction);
+		return execute(instruction);
 	}
 
-	private int execute(int[] program, int instruction) {
-		return execute(program, new int[3], instruction);
+	private long execute(int instruction) {
+		return execute(new int[3], instruction);
 	}
 
-	private int execute(int[] program, int[] method, int instruction) {
+	private long execute(int[] method, int instruction) {
 		int nParams = nParams(instruction);
-		int[] args = IntStream.range(0, nParams).map(j -> j == 0 ? program[instructionCounter+nParams] : program[instructionCounter+j]).toArray();
+		long[] args = IntStream.range(0, nParams).mapToLong(j -> j == 0 ? program[instructionCounter+nParams] : program[instructionCounter+j]).toArray();
+		transformParam2(method, args);
+		transformDataForMode(method, instruction, args);
+		return executeInstruction(args, instruction);
+	}
+
+	private void transformParam2(int[] method, long[] args) {
 		if(args.length>=2) {
-			if(method[2] == 0) args[1] = program[args[1]];
-			if(args.length>=3 && method[1] == 0) args[2] = program[args[2]];
+			if(method[2] == 0 || method[2] == 2) args[1] = method[2] == 0 ? program[Math.toIntExact(args[1])] : program[Math.toIntExact(relativeBase+args[1])];
+			if(args.length>=3 && (method[1] == 0 || method[1] == 2)) args[2] = method[1] == 0 ? program[Math.toIntExact(args[2])] : program[Math.toIntExact(relativeBase+args[2])];
 		}
-		if(instruction == 4 && method[2] == 0) args[0] = program[args[0]];
-		if((instruction == 5 || instruction == 6) && method[1] == 0) args[0] = program[args[0]];
-		return executeInstruction(program, args, instruction);
+	}
+
+	private void transformDataForMode(int[] method, int instruction, long[] args) {
+		if(instruction == 4 && (method[2] == 0 || method[2] == 2)) {
+			args[0] = method[2] == 0 ? program[Math.toIntExact(args[0])] : program[Math.toIntExact(relativeBase+args[0])];
+		}
+		if((instruction == 5 || instruction == 6) && (method[1] == 0 || method[1] == 2)) args[0] = method[1] == 0 ? program[Math.toIntExact(args[0])] : program[Math.toIntExact(relativeBase+args[0])];
 	}
 
 	private int readInput() {
@@ -63,7 +74,7 @@ public class IntcodeComputer implements DoesFileOperations {
 		return input.add(num);
 	}
 	
-	public int firstElement() {
+	public long firstElement() {
 		return program[0];
 	}
 	
@@ -72,28 +83,28 @@ public class IntcodeComputer implements DoesFileOperations {
 		return this.input.addAll(Arrays.stream(input).boxed().collect(Collectors.toList()));
 	}
 	
-	private int executeInstruction(int[] program, int[] args, int instruction) {
+	private long executeInstruction(long[] args, int instruction) {
 		instructionCounter+=nParams(instruction) + 1;
 		switch(instruction) {
-			case 1: program[args[0]] = args[1] + args[2]; break;
-			case 2: program[args[0]] = args[1] * args[2]; break;
-			case 3: program[args[0]] = readInput(); break;
+			case 1: program[Math.toIntExact(args[0])] = args[1] + args[2]; break;
+			case 2: program[Math.toIntExact(args[0])] = args[1] * args[2]; break;
+			case 3: program[Math.toIntExact(args[0])] = readInput(); break;
 			case 4: return args[0];
-			case 5: if(args[1] != 0) instructionCounter = args[0]; break;
-			case 6: if(args[1] == 0) instructionCounter = args[0]; break;
-			case 7: program[args[0]] = args[1] < args[2] ? 1 : 0; break;
-			case 8: program[args[0]] = args[1] == args[2] ? 1 : 0; break;
+			case 5: if(args[1] != 0) instructionCounter = Math.toIntExact(args[0]); break;
+			case 6: if(args[1] == 0) instructionCounter = Math.toIntExact(args[0]); break;
+			case 7: program[Math.toIntExact(args[0])] = args[1] < args[2] ? 1 : 0; break;
+			case 8: program[Math.toIntExact(args[0])] = args[1] == args[2] ? 1 : 0; break;
+			case 9: relativeBase += Math.toIntExact(args[0]); break;
 			case 99: return -1;
 			default: throw new IllegalStateException("Something went wrong!");
 		}
 		return 0;
 	}
 	
-	private int parseComplexInstruction(int[] program, int instruction) {
+	private long parseComplexInstruction(int instruction) {
 		int[] instructions = getInstructions(instruction);
 		int opcode = getOpCode(instructions);
-		return execute(program, instructions, opcode);
-
+		return execute(instructions, opcode);
 	}
 
 	private int getOpCode(int instruction) {
@@ -117,7 +128,8 @@ public class IntcodeComputer implements DoesFileOperations {
 		switch(instruction) {
 			case 99: return -1;
 			case 3: 
-			case 4: return 1;
+			case 4: 
+			case 9: return 1;
 			case 5:
 			case 6: return 2;
 			case 1: 
@@ -127,5 +139,9 @@ public class IntcodeComputer implements DoesFileOperations {
 			default: if(instruction>99) return nParams(getOpCode(instruction));
 			else throw new IllegalStateException("Something went wrong! "+instruction);
 		}
+	}
+
+	public int runInt() {
+		return Math.toIntExact(run());
 	}
 }

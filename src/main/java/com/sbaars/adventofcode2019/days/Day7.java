@@ -22,7 +22,7 @@ public class Day7 implements Day, DoesFileOperations {
 		for(List<Integer> perm : permutations) {
 			int lastVal = 0;
 			for(Integer i : perm)
-				lastVal = new IntcodeComputer(7, i, lastVal).run();
+				lastVal = new IntcodeComputer(7, i, lastVal).runInt();
 			results.add(lastVal);
 
 		}
@@ -41,7 +41,7 @@ public class Day7 implements Day, DoesFileOperations {
 				for(IntcodeComputer c : computers) {
 					c.addInput(lastVal);
 					int thruster = lastVal;
-					lastVal = c.run();
+					lastVal = c.runInt();
 					if(lastVal == -1) {
 						results.add(thruster);
 						continue perms;
