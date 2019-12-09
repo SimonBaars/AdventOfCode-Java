@@ -6,19 +6,19 @@ import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
 import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
-public class Day5 implements Day, DoesFileOperations {
-	
+public class Day9 implements Day, DoesFileOperations {
+
 	public static void main(String[] args) throws IOException {
-		new Day5().printParts();
+		new Day9().printParts();
 	}
-	
+
 	@Override
 	public int part1() throws IOException {
-		return new IntcodeComputer(5, 1).runInt();
+		return new IntcodeComputer(9, 1).runInt();
 	}
 	
 	@Override
 	public int part2() throws IOException {
-		return new IntcodeComputer(5, 5).runInt();
+		return 0;
 	}
 }

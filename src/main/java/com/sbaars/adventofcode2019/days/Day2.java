@@ -36,6 +36,6 @@ public class Day2 implements Day, DoesFileOperations {
 	private int execute(int x, int y) throws IOException {
 		IntcodeComputer computer = new IntcodeComputer(2, x, y);
 		computer.run();
-		return computer.firstElement();
+		return Math.toIntExact(computer.firstElement());
 	}
 }
