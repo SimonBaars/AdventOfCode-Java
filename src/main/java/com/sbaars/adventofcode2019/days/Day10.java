@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -26,46 +27,20 @@ public class Day10 implements Day, DoesFileOperations {
 		for(int i = 0; i<mapString.length; i++) {
 			for(int j = 0; j<mapString[i].length(); j++) {
 				if(mapString[i].charAt(j) == '#') {
-					asteroids.add(new Point(i, j));
+					asteroids.add(new Point(j, i));
 				}
 			}
 		}
-		int[] nVisible = new int[asteroids.size()];
+		long[] nVisible = new long[asteroids.size()];
 		for(int i = 0; i<nVisible.length; i++) {
 			nVisible[i] = countNVisible(asteroids.get(i), new Point(mapString.length, mapString[0].length()));
 		}
 		baseLocation = asteroids.get(IntStream.range(0, nVisible.length).reduce((i, j) -> nVisible[i] > nVisible[j] ? i : j).getAsInt());
-		return Arrays.stream(nVisible).max().getAsInt();
+		return Math.toIntExact(Arrays.stream(nVisible).max().getAsLong());
 	}
 	
-	private int countNVisible(Point asteroid, Point mapSize) {
-		List<Point> visible = new ArrayList<>(asteroids);
-		for(int i = 0; i<visible.size(); i++) {
-			if(visible.get(i).equals(asteroid)){
-				continue;
-			}
-			Point rel = new Point(visible.get(i).x - asteroid.x, visible.get(i).y - asteroid.y);
-			int max = Math.max(Math.abs(rel.x)+1, Math.abs(rel.y)+1);
-			
-			Point step = new Point(rel.x, rel.y);
-			for(int j = 2; j<=max; j++) {
-				if(addRel(rel.x) % j == 0 && addRel(rel.y) % j == 0) {
-					step = new Point(addRel(rel.x) / j, addRel(rel.y) / j);
-				}
-			}
-			
-			Point rem = new Point(visible.get(i).x + step.x, visible.get(i).y+step.y);
-			while(rem.x<=mapSize.x && rem.y<=mapSize.y && rem.x>=0 && rem.y>=0) {
-				int index = visible.indexOf(rem);
-				if(index!=-1) {
-					visible.remove(index);
-					if(index<i)
-						i--;
-				}
-				rem = new Point(rem.x + step.x, rem.y+step.y);
-			}
-		}
-		return visible.size();
+	private long countNVisible(Point asteroid, Point mapSize) {
+		return asteroids.stream().map(e -> new Asteroid(calcRotationAngleInDegrees(asteroid, e), asteroid.distance(e), e)).mapToDouble(e -> e.rotation).distinct().count();
 	}
 
 	private int addRel(int x) {
@@ -78,12 +53,25 @@ public class Day10 implements Day, DoesFileOperations {
 	
 	@Override
 	public int part2() throws IOException {
+		System.out.println("Base = "+baseLocation);
 		List<Asteroid> asteroidList = asteroids.stream().map(e -> new Asteroid(calcRotationAngleInDegrees(baseLocation, e), baseLocation.distance(e), e)).collect(Collectors.toList());
-		double currentRotation = -0.0000000000000000000000000001;
-		for(int destroyed = 0; destroyed<200; destroyed++) {
-			int nextRotation = ro
+		asteroidList.remove(new Asteroid(0, 0, baseLocation));
+		Asteroid prevDestroyed = new Asteroid(Double.MIN_VALUE, 0, new Point(0,0));
+		for(int destroyed = 0; destroyed<250; destroyed++) {
+			Asteroid prev = prevDestroyed;
+			OptionalDouble nextRot = asteroidList.stream().mapToDouble(e -> e.rotation).filter(e -> e > prev.rotation).min();
+			if(nextRot.isPresent()) {
+				double nextRotation = nextRot.getAsDouble();
+				Asteroid a = asteroidList.stream().filter(e -> e.rotation == nextRotation).reduce((a1, a2) -> a1.distance < a2.distance ? a1 : a2).get();
+				asteroidList.remove(a);
+				prevDestroyed = a;
+				System.out.println(destroyed+". BOOM "+a.position+" rot "+a.rotation+" dis "+a.distance);
+			} else {
+				prevDestroyed = new Asteroid(Double.MIN_VALUE, 0, new Point(0,0));
+				destroyed--;
+			}
 		}
-		return 0;
+		return prevDestroyed.position.x*100+prevDestroyed.position.y;
 	}
 	
 	public static double calcRotationAngleInDegrees(Point centerPt, Point targetPt)
@@ -104,14 +92,27 @@ public class Day10 implements Day, DoesFileOperations {
 		double distance;
 		Point position;
 		
-		
 		public Asteroid(double rotation, double distance, Point position) {
 			super();
 			this.rotation = rotation;
 			this.distance = distance;
 			this.position = position;
 		}
-		
-		
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((position == null) ? 0 : position.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof Asteroid))
+				return false;
+			Asteroid other = (Asteroid) obj;
+			return position.equals(other.position);
+		}
 	}
 }
