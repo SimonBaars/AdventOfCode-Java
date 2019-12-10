@@ -2,7 +2,6 @@ package com.sbaars.adventofcode2019.days;
 
 import java.awt.Point;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -14,8 +13,13 @@ import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
 public class Day10 implements Day, DoesFileOperations {
 	
-	private final List<Point> asteroids = new ArrayList<>();
+	private final List<Point> asteroids;
 	private Point baseLocation;
+	
+	public Day10() throws IOException {
+		String[] mapString = Arrays.stream(readDay(10).split(System.lineSeparator())).toArray(String[]::new);
+		this.asteroids = IntStream.range(0, mapString.length).boxed().flatMap(i -> IntStream.range(0, mapString[i].length()).mapToObj(j -> new Point(j, i))).filter(p -> mapString[p.y].charAt(p.x) == '#').collect(Collectors.toList());
+	}
 
 	public static void main(String[] args) throws IOException {
 		new Day10().printParts();
@@ -23,41 +27,21 @@ public class Day10 implements Day, DoesFileOperations {
 
 	@Override
 	public int part1() throws IOException {
-		String[] mapString = Arrays.stream(readDay(10).split(System.lineSeparator())).toArray(String[]::new);
-		for(int i = 0; i<mapString.length; i++) {
-			for(int j = 0; j<mapString[i].length(); j++) {
-				if(mapString[i].charAt(j) == '#') {
-					asteroids.add(new Point(j, i));
-				}
-			}
-		}
 		long[] nVisible = new long[asteroids.size()];
-		for(int i = 0; i<nVisible.length; i++) {
-			nVisible[i] = countNVisible(asteroids.get(i), new Point(mapString.length, mapString[0].length()));
-		}
+		for(int i = 0; i<nVisible.length; i++) nVisible[i] = countNVisible(asteroids.get(i));
 		baseLocation = asteroids.get(IntStream.range(0, nVisible.length).reduce((i, j) -> nVisible[i] > nVisible[j] ? i : j).getAsInt());
 		return Math.toIntExact(Arrays.stream(nVisible).max().getAsLong());
 	}
 	
-	private long countNVisible(Point asteroid, Point mapSize) {
+	private long countNVisible(Point asteroid) {
 		return asteroids.stream().map(e -> new Asteroid(calcRotationAngleInDegrees(asteroid, e), asteroid.distance(e), e)).mapToDouble(e -> e.rotation).distinct().count();
-	}
-
-	private int addRel(int x) {
-		if(x<0)
-			return x-1;
-		else if (x == 0)
-			return x;
-		return x+1;
 	}
 	
 	@Override
 	public int part2() throws IOException {
-		System.out.println("Base = "+baseLocation);
 		List<Asteroid> asteroidList = asteroids.stream().map(e -> new Asteroid(calcRotationAngleInDegrees(baseLocation, e), baseLocation.distance(e), e)).collect(Collectors.toList());
-		asteroidList.remove(new Asteroid(0, 0, baseLocation));
 		Asteroid prevDestroyed = new Asteroid(Double.MIN_VALUE, 0, new Point(0,0));
-		for(int destroyed = 0; destroyed<250; destroyed++) {
+		for(int destroyed = 1; destroyed<200; destroyed++) {
 			Asteroid prev = prevDestroyed;
 			OptionalDouble nextRot = asteroidList.stream().mapToDouble(e -> e.rotation).filter(e -> e > prev.rotation).min();
 			if(nextRot.isPresent()) {
@@ -65,7 +49,6 @@ public class Day10 implements Day, DoesFileOperations {
 				Asteroid a = asteroidList.stream().filter(e -> e.rotation == nextRotation).reduce((a1, a2) -> a1.distance < a2.distance ? a1 : a2).get();
 				asteroidList.remove(a);
 				prevDestroyed = a;
-				System.out.println(destroyed+". BOOM "+a.position+" rot "+a.rotation+" dis "+a.distance);
 			} else {
 				prevDestroyed = new Asteroid(Double.MIN_VALUE, 0, new Point(0,0));
 				destroyed--;
