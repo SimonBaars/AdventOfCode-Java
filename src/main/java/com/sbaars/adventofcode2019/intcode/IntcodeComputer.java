@@ -50,8 +50,11 @@ public class IntcodeComputer implements DoesFileOperations {
 	}
 	
 	private void transformParameters(int[] method, long[] args, int instruction) {
-		IntStream.range(0, args.length).filter(i -> method[i] != 1).filter(i -> i+1 != args.length || !Arrays.stream(DO_NOT_TRANSFORM_FINAL_ARGUMENT)
-				.anyMatch(j -> j==instruction)).forEach(i -> args[i] = program[Math.toIntExact((method[i] == 2 ? relativeBase : 0) + args[i])]);
+		IntStream.range(0, args.length).filter(i -> method[i] != 1).filter(i -> i+1 != args.length || !Arrays.stream(DO_NOT_TRANSFORM_FINAL_ARGUMENT).anyMatch(j -> j==instruction))
+			.forEach(i -> args[i] = program[Math.toIntExact((method[i] == 2 ? relativeBase : 0) + args[i])]);
+		if(Arrays.stream(DO_NOT_TRANSFORM_FINAL_ARGUMENT).anyMatch(j -> j==instruction) && method[args.length-1] == 2) {
+			args[args.length-1] += relativeBase;
+		}
 	}
 	
 	private int readInput() {
