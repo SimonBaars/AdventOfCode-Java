@@ -95,7 +95,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	private long parseComplexInstruction(int instruction) {
 		int[] instructions = getInstructions(instruction);
 		int opcode = getOpCode(instructions);
-		return execute(instructions, opcode);
+		return execute(new int[] {instructions[2], instructions[1], instructions[0]}, opcode);
 	}
 
 	private int getOpCode(int instruction) {
