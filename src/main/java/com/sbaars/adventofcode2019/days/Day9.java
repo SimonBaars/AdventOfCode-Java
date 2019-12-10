@@ -14,7 +14,9 @@ public class Day9 implements Day, DoesFileOperations {
 
 	@Override
 	public int part1() throws IOException { // Just append a 2 to the number ;-)
-		return Math.toIntExact(new IntcodeComputer(9, 1).run()-2000000000L);
+		long res = new IntcodeComputer(9, 1).run();
+		System.out.println(res);
+		return Math.toIntExact(res-2000000000L);
 	}
 	
 	@Override
