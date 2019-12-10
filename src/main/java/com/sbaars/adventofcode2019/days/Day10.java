@@ -8,8 +8,6 @@ import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.swing.text.Position;
-
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
