@@ -44,9 +44,7 @@ public class IntcodeComputer implements DoesFileOperations {
 
 	private long execute(int[] method, int instruction) {
 		int nParams = nParams(instruction);
-		long[] args = IntStream.range(0, nParams).mapToLong(j -> program[instructionCounter+j]).toArray();
-		//transformParam2(method, args);
-		//transformDataForMode(method, instruction, args);
+		long[] args = IntStream.range(1, nParams+1).mapToLong(j -> program[instructionCounter+j]).toArray();
 		transformParameters(method, args, instruction);
 		return executeInstruction(args, instruction);
 	}
@@ -55,21 +53,7 @@ public class IntcodeComputer implements DoesFileOperations {
 		IntStream.range(0, args.length).filter(i -> method[i] != 1).filter(i -> i+1 != args.length || !Arrays.stream(DO_NOT_TRANSFORM_FINAL_ARGUMENT)
 				.anyMatch(j -> j==instruction)).forEach(i -> args[i] = program[Math.toIntExact((method[i] == 2 ? relativeBase : 0) + args[i])]);
 	}
-
-	/*private void transformParam2(int[] method, long[] args) {
-		if(args.length>=2) {
-			if(method[2] == 0 || method[2] == 2) args[1] = method[2] == 0 ? program[Math.toIntExact(args[1])] : program[Math.toIntExact(relativeBase+args[1])];
-			if(args.length>=3 && (method[1] == 0 || method[1] == 2)) args[2] = method[1] == 0 ? program[Math.toIntExact(args[2])] : program[Math.toIntExact(relativeBase+args[2])];
-		}
-	}
-
-	private void transformDataForMode(int[] method, int instruction, long[] args) {
-		if(instruction == 4 && (method[2] == 0 || method[2] == 2)) {
-			args[0] = method[2] == 0 ? program[Math.toIntExact(args[0])] : program[Math.toIntExact(relativeBase+args[0])];
-		}
-		if((instruction == 5 || instruction == 6) && (method[1] == 0 || method[1] == 2)) args[0] = method[1] == 0 ? program[Math.toIntExact(args[0])] : program[Math.toIntExact(relativeBase+args[0])];
-	}*/
-
+	
 	private int readInput() {
 		if(input.isEmpty())
 			return lastInput;

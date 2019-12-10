@@ -17,7 +17,7 @@ public class Day2 implements Day, DoesFileOperations {
 		return execute(12,2);
 	}
 	
-	@Override //3146
+	@Override 
 	public int part2() throws IOException {
 		return bruteForceFindingNumber(19690720, 99);
 	}
