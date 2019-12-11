@@ -7,9 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.sbaars.adventofcode2019.common.Day;
-import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
-public class Day3 implements Day, DoesFileOperations
+public class Day3 implements Day
 {	
 	private Set<Step> intersect;
 	

@@ -4,9 +4,8 @@ import java.io.IOException;
 
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
-import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
-public class Day2 implements Day, DoesFileOperations {
+public class Day2 implements Day {
 
 	public static void main(String[] args) throws IOException {
 		new Day2().printParts();

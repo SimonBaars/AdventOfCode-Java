@@ -1,4 +1,4 @@
-package com.sbaars.adventofcode2019.util;
+package com.sbaars.adventofcode2019.common;
 
 import java.util.ArrayList;
 import java.util.List;

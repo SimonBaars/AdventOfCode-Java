@@ -7,9 +7,8 @@ import java.util.List;
 
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
-import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
-public class Day7 implements Day, DoesFileOperations {
+public class Day7 implements Day {
 
 	public static void main(String[] args) throws IOException {
 		new Day7().printParts();

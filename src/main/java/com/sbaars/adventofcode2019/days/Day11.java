@@ -7,9 +7,8 @@ import java.util.Set;
 
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
-import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
-public class Day11 implements Day, DoesFileOperations {
+public class Day11 implements Day {
 	
 	enum Direction { UP, RIGHT, DOWN, LEFT }
 
@@ -55,6 +54,12 @@ public class Day11 implements Day, DoesFileOperations {
 		int cornerX = whitePlaces.stream().mapToInt(e -> e.x).min().getAsInt();
 		int cornerY = whitePlaces.stream().mapToInt(e -> e.y).min().getAsInt();
 		whitePlaces.forEach(e -> e.move(e.x - cornerX, e.y - cornerY));
+		int sizex = whitePlaces.stream().mapToInt(e -> e.x).max().getAsInt();
+		int sizey = whitePlaces.stream().mapToInt(e -> e.y).max().getAsInt();
+		int[][] places = new int[sizex][sizey];
+		for(Point p : whitePlaces) {
+			places[p.x][p.y] = 1;
+		}
 		return 0;
 	}
 
