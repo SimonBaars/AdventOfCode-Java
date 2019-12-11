@@ -9,9 +9,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode2019.common.Day;
-import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
-public class Day10 implements Day, DoesFileOperations {
+public class Day10 implements Day {
 	
 	private final List<Point> asteroids;
 	private Point baseLocation;

@@ -8,10 +8,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.sbaars.adventofcode2019.common.Day;
-import com.sbaars.adventofcode2019.util.DoesFileOperations;
 import com.sbaars.adventofcode2019.util.ListMap;
 
-public class Day6 implements Day, DoesFileOperations {	
+public class Day6 implements Day {	
 	
 	ListMap<String, String> orbits = new ListMap<>();
 	
