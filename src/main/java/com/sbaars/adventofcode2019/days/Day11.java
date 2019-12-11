@@ -12,15 +12,6 @@ import com.sbaars.adventofcode2019.util.DoesFileOperations;
 public class Day11 implements Day, DoesFileOperations {
 	
 	enum Direction { UP, RIGHT, DOWN, LEFT }
-	
-	public Direction turn(Direction dir, boolean right) {
-		int cur = dir.ordinal() + (right ? 1 : -1);
-		if(cur == Direction.values().length)
-			cur = 0;
-		else if(cur == -1)
-			cur = 3;
-		return Direction.values()[cur];
-	}
 
 	public static void main(String[] args) throws IOException {
 		new Day11().printParts();
@@ -57,7 +48,23 @@ public class Day11 implements Day, DoesFileOperations {
 			dir = turn(dir, turn == 1);
 			currentLocation = move(currentLocation, dir);
 		}
-		return startWhite ? "JELEFGHP" : paintedOnce.size();
+		return startWhite ? constructImage(whitePlaces) : paintedOnce.size();
+	}
+	
+	private int constructImage(Set<Point> whitePlaces) {
+		int cornerX = whitePlaces.stream().mapToInt(e -> e.x).min().getAsInt();
+		int cornerY = whitePlaces.stream().mapToInt(e -> e.y).min().getAsInt();
+		whitePlaces.forEach(e -> e.move(e.x - cornerX, e.y - cornerY));
+		return 0;
+	}
+
+	public Direction turn(Direction dir, boolean right) {
+		int cur = dir.ordinal() + (right ? 1 : -1);
+		if(cur == Direction.values().length)
+			cur = 0;
+		else if(cur == -1)
+			cur = 3;
+		return Direction.values()[cur];
 	}
 	
 	private Point move(Point currentLocation, Direction dir2) {

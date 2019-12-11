@@ -12,13 +12,13 @@ import junit.framework.TestCase;
 
 public class IntcodeTest extends TestCase {
 	public void testDay2() throws IOException {
-		Assert.assertEquals(8017076, new Day2().part1());
+		Assert.assertEquals(8017076L, new Day2().part1());
 		Assert.assertEquals(3146, new Day2().part2());
 	}
 	
 	public void testDay5() throws IOException {
-		Assert.assertEquals(11049715, new Day5().part1());
-		Assert.assertEquals(2140710, new Day5().part2());
+		Assert.assertEquals(11049715L, new Day5().part1());
+		Assert.assertEquals(2140710L, new Day5().part2());
 	}
 	
 	public void testDay7() throws IOException {
@@ -27,7 +27,7 @@ public class IntcodeTest extends TestCase {
 	}
 	
 	public void testDay9() throws IOException {
-		Assert.assertEquals(518058886, new Day9().part1());
-		Assert.assertEquals(44292, new Day9().part2());
+		Assert.assertEquals(2518058886L, new Day9().part1());
+		Assert.assertEquals(44292L, new Day9().part2());
 	}
 }
