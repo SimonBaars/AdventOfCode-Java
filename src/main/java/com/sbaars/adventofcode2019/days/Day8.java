@@ -22,7 +22,7 @@ public class Day8 implements Day, DoesFileOperations {
 	}
 
 	@Override
-	public int part1() throws IOException {
+	public Object part1() throws IOException {
 		int[] pixels = readPixels();
 		List<CountMap<Integer>> pixelCounts = countPixels(pixels);
 		CountMap<Integer> cm = pixelCounts.stream().reduce((e1, e2) -> e1.get(0) > e2.get(0) ? e2 : e1).get();
@@ -58,7 +58,7 @@ public class Day8 implements Day, DoesFileOperations {
 		█    █     ██  █  █ █  █ 
 	 */
 	@Override
-	public int part2() throws IOException {
+	public Object part2() throws IOException {
 		int[] pixels = readPixels();
 		int[][] pixelArrays = splitArray(pixels, 100, SIZE);
 		int[] finalPixels = determineFinalImage(pixelArrays);

@@ -14,12 +14,12 @@ public class Day1 implements Day
     }
 
     @Override
-	public int part1() throws IOException {
+	public Object part1() throws IOException {
 		return createNumberStream().map(this::getFuel).sum();
 	}
 	
     @Override
-	public int part2() throws IOException {
+	public Object part2() throws IOException {
 		return createNumberStream().map(this::getRequiredFuel).sum();
 	}
 

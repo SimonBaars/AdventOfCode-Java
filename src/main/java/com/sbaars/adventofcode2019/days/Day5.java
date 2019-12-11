@@ -13,12 +13,12 @@ public class Day5 implements Day, DoesFileOperations {
 	}
 	
 	@Override
-	public int part1() throws IOException {
-		return new IntcodeComputer(5, 1).runInt();
+	public Object part1() throws IOException {
+		return new IntcodeComputer(5, 1).run();
 	}
 	
 	@Override
-	public int part2() throws IOException {
-		return new IntcodeComputer(5, 5).runInt();
+	public Object part2() throws IOException {
+		return new IntcodeComputer(5, 5).run();
 	}
 }

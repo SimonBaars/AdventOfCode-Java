@@ -26,15 +26,15 @@ public class Day10 implements Day, DoesFileOperations {
 	}
 
 	@Override
-	public int part1() throws IOException {
+	public Object part1() throws IOException {
 		long[] nVisible = new long[asteroids.size()];
 		for(int i = 0; i<nVisible.length; i++) nVisible[i] = countNVisible(asteroids.get(i));
 		baseLocation = asteroids.get(IntStream.range(0, nVisible.length).reduce((i, j) -> nVisible[i] > nVisible[j] ? i : j).getAsInt());
-		return Math.toIntExact(Arrays.stream(nVisible).max().getAsLong());
+		return Arrays.stream(nVisible).max().getAsLong();
 	}
 	
 	@Override
-	public int part2() throws IOException {
+	public Object part2() throws IOException {
 		List<Asteroid> asteroidList = asteroids.stream().map(e -> new Asteroid(baseLocation, e)).collect(Collectors.toList());
 		Asteroid prevDestroyed = new Asteroid();
 		for(int destroyed = 1; destroyed<200; destroyed++) {

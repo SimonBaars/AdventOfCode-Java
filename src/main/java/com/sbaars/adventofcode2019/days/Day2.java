@@ -13,12 +13,12 @@ public class Day2 implements Day, DoesFileOperations {
 	}
 	
 	@Override
-	public int part1() throws IOException {
+	public Object part1() throws IOException {
 		return execute(12,2);
 	}
 	
 	@Override 
-	public int part2() throws IOException {
+	public Object part2() throws IOException {
 		return bruteForceFindingNumber(19690720, 99);
 	}
 
@@ -33,9 +33,9 @@ public class Day2 implements Day, DoesFileOperations {
 		return -1;
 	}
 
-	private int execute(int x, int y) throws IOException {
+	private long execute(int x, int y) throws IOException {
 		IntcodeComputer computer = new IntcodeComputer(2, x, y);
 		computer.run();
-		return Math.toIntExact(computer.firstElement());
+		return computer.firstElement();
 	}
 }
