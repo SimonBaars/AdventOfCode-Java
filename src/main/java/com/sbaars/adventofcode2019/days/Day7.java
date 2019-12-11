@@ -42,7 +42,7 @@ public class Day7 implements Day, DoesFileOperations {
 					c.addInput(lastVal);
 					int thruster = lastVal;
 					lastVal = c.runInt();
-					if(lastVal == -1) {
+					if(lastVal == -2) {
 						results.add(thruster);
 						continue perms;
 					}
