@@ -11,19 +11,13 @@ import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
 public class Day11 implements Day, DoesFileOperations {
 	
-	int face = 0;
-	Set<Point> paintedOnce = new HashSet<>();
-	Set<Point> whitePlaces = new HashSet<>();
-	
 	enum Direction { UP, RIGHT, DOWN, LEFT }
 	
-	Direction dir = Direction.UP;
-	
-	public void turn() {
+	public Direction turn(Direction dir) {
 		int cur = dir.ordinal()+1;
 		if(cur == Direction.values().length)
 			cur = 0;
-		dir = Direction.values()[cur];
+		return Direction.values()[cur];
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -32,9 +26,18 @@ public class Day11 implements Day, DoesFileOperations {
 
 	@Override
 	public int part1() throws IOException {
+		return robotWalk(false).size();
+	}
+
+	private Set<Point> robotWalk(boolean startWhite) throws IOException {
 		IntcodeComputer c = new IntcodeComputer(11);
 		Point currentLocation = new Point(0,0);
-		
+		int steps = 0;
+		Direction dir = Direction.UP;
+		Set<Point> paintedOnce = new HashSet<>();
+		Set<Point> whitePlaces = new HashSet<>();
+		if(startWhite)
+			whitePlaces.add(currentLocation);
 		while(true) {
 			c.setInput(whitePlaces.contains(currentLocation) ? 1 : 0);
 			int paintColor = c.runInt();
@@ -43,7 +46,7 @@ public class Day11 implements Day, DoesFileOperations {
 			int turn = c.runInt();
 			if(turn == -2)
 				break;
-			System.out.println("Loc = "+currentLocation+"Paint = " + paintColor+ ", turn = "+turn+", is space white = "+whitePlaces.contains(currentLocation));
+			System.out.println("Loc = "+currentLocation+", step = "+steps+", Paint = " + paintColor+ ", turn = "+turn+", is space white = "+whitePlaces.contains(currentLocation));
 			paintedOnce.add(currentLocation);
 			if(paintColor == 1) {
 				whitePlaces.add(currentLocation);
@@ -51,30 +54,26 @@ public class Day11 implements Day, DoesFileOperations {
 				whitePlaces.remove(currentLocation);
 			}
 			
-			if(turn == 1) {
-				turn();
-			}
+			if(turn == 1) dir = turn(dir);
 			currentLocation = move(currentLocation, dir);
+			steps++;
 		}
-		return paintedOnce.size();
+		return paintedOnce;
 	}
 	
 	private Point move(Point currentLocation, Direction dir2) {
 		switch (dir2) {
-		case UP:
-			return new Point(currentLocation.x, currentLocation.y+1);
-		case DOWN:
-			return new Point(currentLocation.x, currentLocation.y-1);
-		case RIGHT:
-			return new Point(currentLocation.x+1, currentLocation.y);
-		case LEFT:
-			return new Point(currentLocation.x-1, currentLocation.y);
+			case UP: return new Point(currentLocation.x, currentLocation.y+1);
+			case DOWN: return new Point(currentLocation.x, currentLocation.y-1);
+			case RIGHT: return new Point(currentLocation.x+1, currentLocation.y);
+			case LEFT: return new Point(currentLocation.x-1, currentLocation.y);
 		}
 		return null;
 	}
 
 	@Override
 	public int part2() throws IOException {
+		robotWalk(true);
 		return 0;
 	}
 }
