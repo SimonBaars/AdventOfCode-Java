@@ -2,13 +2,16 @@ package com.sbaars.adventofcode2019.days;
 
 import java.awt.Point;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.sbaars.adventofcode2019.common.Day;
+import com.sbaars.adventofcode2019.common.OCR;
+import com.sbaars.adventofcode2019.common.ProcessesImages;
 import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
 
-public class Day11 implements Day {
+public class Day11 implements Day, ProcessesImages {
 	
 	enum Direction { UP, RIGHT, DOWN, LEFT }
 
@@ -50,17 +53,16 @@ public class Day11 implements Day {
 		return startWhite ? constructImage(whitePlaces) : paintedOnce.size();
 	}
 	
-	private int constructImage(Set<Point> whitePlaces) {
+	private OCR constructImage(Set<Point> whitePlaces) {
 		int cornerX = whitePlaces.stream().mapToInt(e -> e.x).min().getAsInt();
 		int cornerY = whitePlaces.stream().mapToInt(e -> e.y).min().getAsInt();
 		whitePlaces.forEach(e -> e.move(e.x - cornerX, e.y - cornerY));
-		int sizex = whitePlaces.stream().mapToInt(e -> e.x).max().getAsInt();
-		int sizey = whitePlaces.stream().mapToInt(e -> e.y).max().getAsInt();
-		int[][] places = new int[sizex][sizey];
-		for(Point p : whitePlaces) {
-			places[p.x][p.y] = 1;
-		}
-		return 0;
+		int sizex = whitePlaces.stream().mapToInt(e -> e.x).max().getAsInt()+1;
+		int sizey = whitePlaces.stream().mapToInt(e -> e.y).max().getAsInt()+1;
+		int[][] places = new int[sizey][sizex];
+		for(Point p : whitePlaces)
+			places[p.y][p.x] = 1;
+		return new OCR(createAsciiArray(places));
 	}
 
 	public Direction turn(Direction dir, boolean right) {
@@ -74,8 +76,8 @@ public class Day11 implements Day {
 	
 	private Point move(Point currentLocation, Direction dir2) {
 		switch (dir2) {
-			case UP: return new Point(currentLocation.x, currentLocation.y+1);
-			case DOWN: return new Point(currentLocation.x, currentLocation.y-1);
+			case UP: return new Point(currentLocation.x, currentLocation.y-1);
+			case DOWN: return new Point(currentLocation.x, currentLocation.y+1);
 			case RIGHT: return new Point(currentLocation.x+1, currentLocation.y);
 			case LEFT: return new Point(currentLocation.x-1, currentLocation.y);
 		}

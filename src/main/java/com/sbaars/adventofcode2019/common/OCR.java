@@ -3,6 +3,7 @@ package com.sbaars.adventofcode2019.common;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("preview")
 public class OCR {
 	
 	List<String[]> characters = new ArrayList<>();
@@ -16,26 +17,58 @@ public class OCR {
 			characters.add(character);
 		}
 	}
-	
-	// I will expand this as more characters present themselves throughout these challenges.
-	public String getString() {
+
+	@Override
+	public String toString() {
 		StringBuilder result = new StringBuilder();
 		for(String[] character : characters) {
-			if(character[0].equals("████"))
-				result.append('F');
-			else if(character[0].equals("███ ")) {
-				if(character[5].equals("█   "))
-					result.append('P');
-				else if(character[5].equals("█  █")) {
-					result.append('R');
-				}
-			} else if (character[0].equals("█  █")) {
-				result.append('U');
-			} else if(character[0].equals(" ██ ")) {
-				result.append('A');
-			}
+			result.append(switch(character[0]) {
+				case "████" -> fullTop(character);
+				case "███ " -> threeTopLeft(character);
+				case "█  █" -> bothSides(character);
+				case " ██ " -> middleTwo(character);
+				case "  ██" -> 'J';
+				case "█   " -> 'L';
+				default -> dontKnow();
+			});
 		}
 		return result.toString();
+	}
+
+	private char bothSides(String[] character) {
+		return switch(character[5]) {
+			case " ██ " -> 'U';
+			case "█  █" -> 'H';
+			default -> dontKnow();
+		};
+	}
+
+	private char middleTwo(String[] character) {
+		return switch(character[5]) {
+			case " ███" -> 'G';
+			case "█  █" -> 'A';
+			default -> dontKnow();
+		};
+	}
+
+	private char dontKnow() {
+		throw new IllegalArgumentException("I don't know your character yet!");
+	}
+	
+	private char fullTop(String[] character) {
+		return switch(character[5]) {
+			case "█   " -> 'F';
+			case "████" -> 'E';
+			default -> dontKnow();
+		};
+	}
+
+	private char threeTopLeft(String[] character) {
+		return switch(character[5]) {
+			case "█   " -> 'P';
+			case "█  █" -> 'R';
+			default -> dontKnow();
+		};
 	}
 	
 }

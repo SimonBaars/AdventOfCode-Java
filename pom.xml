@@ -13,6 +13,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.release>8</maven.compiler.release>
+		<maven.compiler.target>13</maven.compiler.target>
+		<maven.compiler.source>13</maven.compiler.source>
 	</properties>
 
 	<dependencies>
@@ -29,4 +32,14 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<release>13</release>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
