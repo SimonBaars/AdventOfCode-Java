@@ -49,7 +49,7 @@ public class Day8 implements Day, ProcessesImages {
 	public Object part2() throws IOException {
 		int[][] pixelArrays = splitArray(readPixels(), 100, SIZE);
 		int[] finalPixels = determineFinalImage(pixelArrays);
-		return new OCR(createAsciiArray(splitArray(finalPixels, DIM_X, DIM_Y))).getString();
+		return new OCR(createAsciiArray(splitArray(finalPixels, DIM_X, DIM_Y)));
 	}
 
 	private int[] determineFinalImage(int[][] pixelArrays) {
