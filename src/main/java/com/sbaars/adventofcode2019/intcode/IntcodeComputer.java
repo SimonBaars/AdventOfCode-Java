@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 import com.sbaars.adventofcode2019.util.DoesFileOperations;
 
 public class IntcodeComputer implements DoesFileOperations {
-	final long[] program;
+	private long[] program;
 	private int instructionCounter = 0;
 	private final Queue<Integer> input = new ArrayDeque<>(2);
 	private int lastInput;
@@ -19,6 +19,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	
 	public IntcodeComputer(int day, int...input) throws IOException {
 		this.program = Arrays.stream(readDay(day).split(",")).mapToLong(Long::parseLong).toArray();
+		this.program = Arrays.copyOf(this.program, 10000);
 		setInput(input);
 		if(day == 2) {
 			program[1] = input[0];
@@ -28,7 +29,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	
 	public long run() {
 		long result;
-		while((result = executeInstruction(Math.toIntExact(program[instructionCounter]))) == 0);
+		while((result = executeInstruction(Math.toIntExact(program[instructionCounter]))) == -1);
 		return result;
 	}
 
@@ -50,8 +51,12 @@ public class IntcodeComputer implements DoesFileOperations {
 	}
 	
 	private void transformParameters(int[] method, long[] args, int instruction) {
+		try { 
 		IntStream.range(0, args.length).filter(i -> method[i] != 1).filter(i -> i+1 != args.length || !Arrays.stream(DO_NOT_TRANSFORM_FINAL_ARGUMENT).anyMatch(j -> j==instruction))
 			.forEach(i -> args[i] = program[Math.toIntExact((method[i] == 2 ? relativeBase : 0) + args[i])]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if(Arrays.stream(DO_NOT_TRANSFORM_FINAL_ARGUMENT).anyMatch(j -> j==instruction) && method[args.length-1] == 2) {
 			args[args.length-1] += relativeBase;
 		}
@@ -89,10 +94,10 @@ public class IntcodeComputer implements DoesFileOperations {
 			case 7: program[Math.toIntExact(args[2])] = args[0] < args[1] ? 1 : 0; break;
 			case 8: program[Math.toIntExact(args[2])] = args[0] == args[1] ? 1 : 0; break;
 			case 9: relativeBase += Math.toIntExact(args[0]); break;
-			case 99: return -1;
+			case 99: return -2;
 			default: throw new IllegalStateException("Something went wrong!");
 		}
-		return 0;
+		return -1;
 	}
 	
 	private long parseComplexInstruction(int instruction) {
