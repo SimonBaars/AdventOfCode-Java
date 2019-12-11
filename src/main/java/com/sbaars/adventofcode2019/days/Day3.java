@@ -12,7 +12,7 @@ public class Day3 implements Day
 {	
 	private Set<Step> intersect;
 	
-	private Day3() throws IOException {
+	public Day3() throws IOException {
 		String[] strings = Arrays.stream(readDay(3).split(System.lineSeparator())).toArray(String[]::new);
 		Walk[] walks1 = mapToWalks(strings[0]), walks2 = mapToWalks(strings[1]);
 		Set<Step> walkedLocations = new HashSet<>();
