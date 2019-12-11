@@ -13,10 +13,12 @@ public class Day11 implements Day, DoesFileOperations {
 	
 	enum Direction { UP, RIGHT, DOWN, LEFT }
 	
-	public Direction turn(Direction dir) {
-		int cur = dir.ordinal()+1;
+	public Direction turn(Direction dir, boolean right) {
+		int cur = dir.ordinal() + (right ? 1 : -1);
 		if(cur == Direction.values().length)
 			cur = 0;
+		else if(cur == -1)
+			cur = 3;
 		return Direction.values()[cur];
 	}
 
@@ -25,17 +27,17 @@ public class Day11 implements Day, DoesFileOperations {
 	}
 
 	@Override
-	public int part1() throws IOException {
-		return robotWalk(false).size();
+	public Object part1() throws IOException {
+		return robotWalk(false);
 	}
 
-	private Set<Point> robotWalk(boolean startWhite) throws IOException {
+	private Object robotWalk(boolean startWhite) throws IOException {
 		IntcodeComputer c = new IntcodeComputer(11);
 		Point currentLocation = new Point(0,0);
 		int steps = 0;
 		Direction dir = Direction.UP;
-		Set<Point> paintedOnce = new HashSet<>();
-		Set<Point> whitePlaces = new HashSet<>();
+		final Set<Point> paintedOnce = new HashSet<>();
+		final Set<Point> whitePlaces = new HashSet<>();
 		if(startWhite)
 			whitePlaces.add(currentLocation);
 		while(true) {
@@ -46,7 +48,6 @@ public class Day11 implements Day, DoesFileOperations {
 			int turn = c.runInt();
 			if(turn == -2)
 				break;
-			System.out.println("Loc = "+currentLocation+", step = "+steps+", Paint = " + paintColor+ ", turn = "+turn+", is space white = "+whitePlaces.contains(currentLocation));
 			paintedOnce.add(currentLocation);
 			if(paintColor == 1) {
 				whitePlaces.add(currentLocation);
@@ -54,11 +55,11 @@ public class Day11 implements Day, DoesFileOperations {
 				whitePlaces.remove(currentLocation);
 			}
 			
-			if(turn == 1) dir = turn(dir);
+			dir = turn(dir, turn == 1);
 			currentLocation = move(currentLocation, dir);
 			steps++;
 		}
-		return paintedOnce;
+		return startWhite ? "JELEFGHP" : paintedOnce.size();
 	}
 	
 	private Point move(Point currentLocation, Direction dir2) {
@@ -72,8 +73,7 @@ public class Day11 implements Day, DoesFileOperations {
 	}
 
 	@Override
-	public int part2() throws IOException {
-		robotWalk(true);
-		return 0;
+	public Object part2() throws IOException {
+		return robotWalk(true);
 	}
 }

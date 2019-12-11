@@ -13,14 +13,12 @@ public class Day9 implements Day, DoesFileOperations {
 	}
 
 	@Override
-	public int part1() throws IOException { // Just append a 2 to the number ;-)
-		long res = new IntcodeComputer(9, 1).run();
-		System.out.println(res);
-		return Math.toIntExact(res-2000000000L);
+	public Object part1() throws IOException { // Just append a 2 to the number ;-)
+		return new IntcodeComputer(9, 1).run();
 	}
 	
 	@Override
-	public int part2() throws IOException {
-		return new IntcodeComputer(9, 2).runInt();
+	public Object part2() throws IOException {
+		return new IntcodeComputer(9, 2).run();
 	}
 }

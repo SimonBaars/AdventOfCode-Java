@@ -14,12 +14,12 @@ public class Day4 implements Day {
 	}
 
 	@Override
-	public int part1() throws IOException {
+	public Object part1() throws IOException {
 		return checkPasswords(false);
 	}
 	
 	@Override
-	public int part2() throws IOException {
+	public Object part2() throws IOException {
 		return checkPasswords(true);
 	}
 	

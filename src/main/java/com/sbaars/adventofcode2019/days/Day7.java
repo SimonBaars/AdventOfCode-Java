@@ -16,7 +16,7 @@ public class Day7 implements Day, DoesFileOperations {
 	}
 
 	@Override
-	public int part1() throws IOException {
+	public Object part1() throws IOException {
 		List<List<Integer>> permutations = generatePerm(new ArrayList<>(Arrays.asList(0,1,2,3,4)));
 		List<Integer> results = new ArrayList<>();
 		for(List<Integer> perm : permutations) {
@@ -30,7 +30,7 @@ public class Day7 implements Day, DoesFileOperations {
 	}
 
 	@Override
-	public int part2() throws IOException {
+	public Object part2() throws IOException {
 		List<List<Integer>> permutations = generatePerm(new ArrayList<>(Arrays.asList(5,6,7,8,9)));
 		List<Integer> results = new ArrayList<>();
 		perms: for(List<Integer> shuffle : permutations) {

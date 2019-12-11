@@ -27,12 +27,12 @@ public class Day3 implements Day, DoesFileOperations
     }
 
 	@Override
-	public int part1() throws IOException {
+	public Object part1() throws IOException {
 		return intersect.stream().mapToInt(e -> distance(e.point)).min().orElse(Integer.MAX_VALUE);
 	}
 	
 	@Override
-	public int part2() throws IOException {
+	public Object part2() throws IOException {
 		return intersect.stream().mapToInt(e -> e.steps).min().orElse(Integer.MAX_VALUE);
 	}
 

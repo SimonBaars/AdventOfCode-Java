@@ -21,7 +21,7 @@ public class Day6 implements Day, DoesFileOperations {
     }
 
     @Override
-	public int part1() throws IOException {
+	public Object part1() throws IOException {
     	String[] nums = createOrbitArray();
     	for(String num : nums) {
     		String[] parts = num.split("\\)");
@@ -43,7 +43,7 @@ public class Day6 implements Day, DoesFileOperations {
 	}
 	
     @Override
-	public int part2() throws IOException {
+	public Object part2() throws IOException {
 		return findRoute("YOU", "SAN");
 	}
     
