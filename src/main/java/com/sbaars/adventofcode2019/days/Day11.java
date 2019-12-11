@@ -2,7 +2,6 @@ package com.sbaars.adventofcode2019.days;
 
 import java.awt.Point;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
