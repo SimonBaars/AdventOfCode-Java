@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.util.CountMap;
 import com.sbaars.adventofcode2019.util.DoesFileOperations;
+import com.sbaars.adventofcode2019.util.OCR;
 
 public class Day8 implements Day, DoesFileOperations {
 	
@@ -46,24 +47,13 @@ public class Day8 implements Day, DoesFileOperations {
 		return pixelCounts;
 	}
 
-	
-	/*
-	   Answer:
-	   
-		████ ███  █  █  ██  ███  
-		█    █  █ █  █ █  █ █  █ 
-		███  █  █ █  █ █  █ █  █ 
-		█    ███  █  █ ████ ███  
-		█    █    █  █ █  █ █ █  
-		█    █     ██  █  █ █  █ 
-	 */
 	@Override
 	public Object part2() throws IOException {
 		int[] pixels = readPixels();
 		int[][] pixelArrays = splitArray(pixels, 100, SIZE);
 		int[] finalPixels = determineFinalImage(pixelArrays);
-		Arrays.stream(splitArray(finalPixels, DIM_X, DIM_Y)).map(a -> Arrays.stream(a).boxed().map(x -> x == 0 ? " " : "█").collect(Collectors.joining())).forEach(System.out::println);
-		return 0;
+		String[] image = Arrays.stream(splitArray(finalPixels, DIM_X, DIM_Y)).map(a -> Arrays.stream(a).boxed().map(x -> x == 0 ? " " : "█").collect(Collectors.joining())).toArray(String[]::new);
+		return new OCR(image).getString();
 	}
 
 	private int[] determineFinalImage(int[][] pixelArrays) {
