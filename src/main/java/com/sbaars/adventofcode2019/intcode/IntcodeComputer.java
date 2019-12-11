@@ -19,7 +19,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	
 	public IntcodeComputer(int day, int...input) throws IOException {
 		this.program = Arrays.stream(readDay(day).split(",")).mapToLong(Long::parseLong).toArray();
-		this.program = Arrays.copyOf(this.program, 10000);
+		this.program = Arrays.copyOf(this.program, 10000); // Quick hack to enlange memory, should be refactored.
 		setInput(input);
 		if(day == 2) {
 			program[1] = input[0];
@@ -50,13 +50,9 @@ public class IntcodeComputer implements DoesFileOperations {
 		return executeInstruction(args, instruction);
 	}
 	
-	private void transformParameters(int[] method, long[] args, int instruction) {
-		try { 
+	private void transformParameters(int[] method, long[] args, int instruction) {	
 		IntStream.range(0, args.length).filter(i -> method[i] != 1).filter(i -> i+1 != args.length || !Arrays.stream(DO_NOT_TRANSFORM_FINAL_ARGUMENT).anyMatch(j -> j==instruction))
 			.forEach(i -> args[i] = program[Math.toIntExact((method[i] == 2 ? relativeBase : 0) + args[i])]);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		if(Arrays.stream(DO_NOT_TRANSFORM_FINAL_ARGUMENT).anyMatch(j -> j==instruction) && method[args.length-1] == 2) {
 			args[args.length-1] += relativeBase;
 		}

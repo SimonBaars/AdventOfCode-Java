@@ -14,7 +14,10 @@ public class Day5 implements Day, DoesFileOperations {
 	
 	@Override
 	public Object part1() throws IOException {
-		return new IntcodeComputer(5, 1).run();
+		long res;
+		IntcodeComputer intcodeComputer = new IntcodeComputer(5, 1);
+		while((res = intcodeComputer.run()) == 0);
+		return res;
 	}
 	
 	@Override
