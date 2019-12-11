@@ -34,7 +34,6 @@ public class Day11 implements Day, DoesFileOperations {
 	private Object robotWalk(boolean startWhite) throws IOException {
 		IntcodeComputer c = new IntcodeComputer(11);
 		Point currentLocation = new Point(0,0);
-		int steps = 0;
 		Direction dir = Direction.UP;
 		final Set<Point> paintedOnce = new HashSet<>();
 		final Set<Point> whitePlaces = new HashSet<>();
@@ -57,7 +56,6 @@ public class Day11 implements Day, DoesFileOperations {
 			
 			dir = turn(dir, turn == 1);
 			currentLocation = move(currentLocation, dir);
-			steps++;
 		}
 		return startWhite ? "JELEFGHP" : paintedOnce.size();
 	}
