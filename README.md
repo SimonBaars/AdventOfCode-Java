@@ -13,3 +13,4 @@ Days:
 - [Day 9](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day9.java)
 - [Day 10](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day10.java)
 - [Day 11](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day11.java)
+- [Day 12](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day12.java)
