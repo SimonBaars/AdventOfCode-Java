@@ -1,19 +1,16 @@
 package com.sbaars.adventofcode2019.days;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.sbaars.adventofcode2019.common.Day;
 
 public class Day12 implements Day {
 
-	int[][] moons = {{-5,6,-11},{-8,-4,-2},{1,16,4},{11,11,-4}};
-	//int[][] moons = {{-8,-10,0},{5,5,10},{2,-7,3},{9,-8,-3}};
+	//int[][] moons = {{-5,6,-11},{-8,-4,-2},{1,16,4},{11,11,-4}};
+	int[][] moons = {{-8,-10,0},{5,5,10},{2,-7,3},{9,-8,-3}};
 	//int[][] moons = {{-1,0,2},{2,-10,-7},{4,-8,8},{3,5,-1}};
 	int[][] velocity = {{0,0,0},{0,0,0},{0,0,0},{0,0,0}};
 
@@ -65,9 +62,13 @@ public class Day12 implements Day {
 						if(moon1 < moon2) {
 							velocity[i][dim]++;
 							velocity[j][dim]--;
+							//moons[i][dim]++;
+							//moons[j][dim]--;
 						} else if(moon1 > moon2) {
 							velocity[i][dim]--;
 							velocity[j][dim]++;
+							//moons[j][dim]++;
+							//moons[i][dim]--;
 						}
 					}
 				}
@@ -79,43 +80,47 @@ public class Day12 implements Day {
 				}
 			}
 			//System.out.println("Moons = "+Arrays.deepToString(moons));
-			List<Integer> stuff = new ArrayList<>();
-			stuff.addAll(Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).boxed().collect(Collectors.toList()));
-			stuff.addAll(Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).boxed().collect(Collectors.toList()));
-			if(!set.add(new Numbers(stuff.stream().mapToInt(e -> e).toArray()))){
+			//List<Integer> stuff = new ArrayList<>();
+			//stuff.addAll(Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).boxed().collect(Collectors.toList()));
+			//stuff.addAll(Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).boxed().collect(Collectors.toList()));
+			if(!set.add(new Numbers(new int[][][] {moons,velocity}))){
+				//System.out.println(Arrays.deepToString(new int[][][] {moons,velocity}));
 				break;
+			}
+			
+			if(n % 1000000 == 0) {
+				int minMoon = Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).min().getAsInt();
+				int maxMoon = Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).max().getAsInt();
+				int minVel = Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).min().getAsInt();
+				int maxVel = Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).max().getAsInt();
+				System.out.println(n+". Moon: "+minMoon+", "+maxMoon+", Vel: "+minVel+", "+maxVel);
 			}
 		}
 		return n;
 	}
 	
 	class Numbers{
-		int[] numbers;
+		int[][][] numbers;
 		
-		public Numbers(int...nums) {
+		public Numbers(int[][][] nums) {
 			this.numbers=nums;
 		}
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + Arrays.hashCode(numbers);
-			return result;
+			return Arrays.deepHashCode(numbers);
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
 			Numbers other = (Numbers) obj;
-			if (!Arrays.equals(numbers, other.numbers))
-				return false;
-			return true;
+			//System.out.println("Check deep equals "+toString()+" between "+other.toString());
+			return Arrays.deepEquals(numbers, other.numbers);
+		}
+
+		@Override
+		public String toString() {
+			return "Numbers [numbers=" + Arrays.deepToString(numbers) + "]";
 		}
 	}
 }
