@@ -3,6 +3,7 @@ package com.sbaars.adventofcode2019.days;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.sbaars.adventofcode2019.common.Day;
@@ -52,9 +53,9 @@ public class Day12 implements Day {
 
 	@Override
 	public Object part2() throws IOException {
-		Set<Numbers> set = new HashSet<>();
-		long n;
-		for(n = 0; true; n++) {
+		final List<Set<List<Short>>> sets = Arrays.asList(new HashSet<List<Short>>(), new HashSet<List<Short>>(), new HashSet<List<Short>>());
+		long[] res = new long[sets.size()];
+		for(long n = 0; true; n++) {
 			for(int i = 0; i<moons.length; i++) {
 				for(int j = i+1; j<moons.length; j++) {
 					for(int dim = 0; dim<moons[0].length; dim++) {
@@ -87,22 +88,40 @@ public class Day12 implements Day {
 //			if(!set2.add(stuff)) {
 //				System.out.println("Stuff is filled!");
 //			}
-			if(!set.add(new Numbers(new short[][][] {copy(moons),copy(velocity)}))){
-				//System.out.println(Arrays.deepToString(new int[][][] {moons,velocity}));
-				break;
-			}
-			
-			if(n % 1000000 == 0) {
-				System.out.println(n);
-				//int minMoon = Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).min().getAsInt();
-				//int maxMoon = Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).max().getAsInt();
-				//int minVel = Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).min().getAsInt();
-				//int maxVel = Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).max().getAsInt();
-				//System.out.println(n+". Moon: "+minMoon+", "+maxMoon+", Vel: "+minVel+", "+maxVel);
+			for(int i = 0; i<sets.size(); i++) {
+				if(res[i] == 0 && !sets.get(i).add(Arrays.asList(moons[0][i], moons[1][i], moons[2][i], moons[3][i],velocity[0][i], velocity[1][i], velocity[2][i], velocity[3][i]))){
+					res[i] = n;
+					if(Arrays.stream(res).noneMatch(x -> x == 0)) {
+						return lcm(res);
+					}
+				}
 			}
 		}
-		return n;
 	}
+	
+	private static long gcd(long a, long b)
+	{
+	    while (b > 0)
+	    {
+	        long temp = b;
+	        b = a % b; // % is remainder
+	        a = temp;
+	    }
+	    return a;
+	}
+	
+	private static long lcm(long a, long b)
+	{
+	    return a * (b / gcd(a, b));
+	}
+
+	private static long lcm(long[] input)
+	{
+	    long result = input[0];
+	    for(int i = 1; i < input.length; i++) result = lcm(result, input[i]);
+	    return result;
+	}
+
 	
 	short[][] copy(short[][] arr){
 		short [][] myInt = new short[arr.length][];
