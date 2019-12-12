@@ -9,10 +9,10 @@ import com.sbaars.adventofcode2019.common.Day;
 
 public class Day12 implements Day {
 
-	//int[][] moons = {{-5,6,-11},{-8,-4,-2},{1,16,4},{11,11,-4}};
-	int[][] moons = {{-8,-10,0},{5,5,10},{2,-7,3},{9,-8,-3}};
+	short[][] moons = {{-5,6,-11},{-8,-4,-2},{1,16,4},{11,11,-4}};
+	//int[][] moons = {{-8,-10,0},{5,5,10},{2,-7,3},{9,-8,-3}};
 	//int[][] moons = {{-1,0,2},{2,-10,-7},{4,-8,8},{3,5,-1}};
-	int[][] velocity = {{0,0,0},{0,0,0},{0,0,0},{0,0,0}};
+	short[][] velocity = {{0,0,0},{0,0,0},{0,0,0},{0,0,0}};
 
 	public static void main(String[] args) throws IOException {
 		new Day12().printParts();
@@ -45,7 +45,7 @@ public class Day12 implements Day {
 		}
 		int[] res = new int[moons.length];
 		for(int i = 0; i<res.length; i++) {
-			res[i] = Arrays.stream(moons[i]).map(Math::abs).sum() * Arrays.stream(velocity[i]).map(Math::abs).sum();
+			//res[i] = Arrays.stream(moons[i]).map(Math::abs).sum() * Arrays.stream(velocity[i]).map(Math::abs).sum();
 		}
 		return Arrays.stream(res).sum();
 	}
@@ -62,13 +62,9 @@ public class Day12 implements Day {
 						if(moon1 < moon2) {
 							velocity[i][dim]++;
 							velocity[j][dim]--;
-							//moons[i][dim]++;
-							//moons[j][dim]--;
 						} else if(moon1 > moon2) {
 							velocity[i][dim]--;
 							velocity[j][dim]++;
-							//moons[j][dim]++;
-							//moons[i][dim]--;
 						}
 					}
 				}
@@ -79,30 +75,46 @@ public class Day12 implements Day {
 					moons[i][j]+=velocity[i][j];
 				}
 			}
+			
 			//System.out.println("Moons = "+Arrays.deepToString(moons));
-			//List<Integer> stuff = new ArrayList<>();
-			//stuff.addAll(Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).boxed().collect(Collectors.toList()));
-			//stuff.addAll(Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).boxed().collect(Collectors.toList()));
-			if(!set.add(new Numbers(new int[][][] {moons,velocity}))){
+//			List<Integer> stuff = new ArrayList<>();
+//			stuff.addAll(Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).boxed().collect(Collectors.toList()));
+//			stuff.addAll(Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).boxed().collect(Collectors.toList()));
+//			if(n == 65976L || n == 45167L) {
+//				System.out.println(Arrays.toString(stuff.toArray()));
+//			}
+//			
+//			if(!set2.add(stuff)) {
+//				System.out.println("Stuff is filled!");
+//			}
+			if(!set.add(new Numbers(new short[][][] {copy(moons),copy(velocity)}))){
 				//System.out.println(Arrays.deepToString(new int[][][] {moons,velocity}));
 				break;
 			}
 			
 			if(n % 1000000 == 0) {
-				int minMoon = Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).min().getAsInt();
-				int maxMoon = Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).max().getAsInt();
-				int minVel = Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).min().getAsInt();
-				int maxVel = Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).max().getAsInt();
-				System.out.println(n+". Moon: "+minMoon+", "+maxMoon+", Vel: "+minVel+", "+maxVel);
+				System.out.println(n);
+				//int minMoon = Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).min().getAsInt();
+				//int maxMoon = Arrays.stream(moons).flatMapToInt(e -> Arrays.stream(e)).max().getAsInt();
+				//int minVel = Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).min().getAsInt();
+				//int maxVel = Arrays.stream(velocity).flatMapToInt(e -> Arrays.stream(e)).max().getAsInt();
+				//System.out.println(n+". Moon: "+minMoon+", "+maxMoon+", Vel: "+minVel+", "+maxVel);
 			}
 		}
 		return n;
 	}
 	
+	short[][] copy(short[][] arr){
+		short [][] myInt = new short[arr.length][];
+		for(int i = 0; i < arr.length; i++)
+		    myInt[i] = arr[i].clone();
+		return myInt;
+	}
+	
 	class Numbers{
-		int[][][] numbers;
+		short[][][] numbers;
 		
-		public Numbers(int[][][] nums) {
+		public Numbers(short[][][] nums) {
 			this.numbers=nums;
 		}
 
@@ -114,6 +126,7 @@ public class Day12 implements Day {
 		@Override
 		public boolean equals(Object obj) {
 			Numbers other = (Numbers) obj;
+//			System.out.println(iter+", "+other.iter);
 			//System.out.println("Check deep equals "+toString()+" between "+other.toString());
 			return Arrays.deepEquals(numbers, other.numbers);
 		}
