@@ -16,6 +16,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	private int lastInput;
 	private long relativeBase = 0;
 	private static final int[] DO_NOT_TRANSFORM_FINAL_ARGUMENT = {1, 2, 3, 7, 8};
+	public static final int STOP_CODE = Integer.MIN_VALUE+1;
 	
 	public IntcodeComputer(int day, int...input) throws IOException {
 		this.program = Arrays.stream(readDay(day).split(",")).mapToLong(Long::parseLong).toArray();
@@ -29,7 +30,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	
 	public long run() {
 		long result;
-		while((result = executeInstruction(Math.toIntExact(program[instructionCounter]))) == -1);
+		while((result = executeInstruction(Math.toIntExact(program[instructionCounter]))) == Integer.MIN_VALUE);
 		return result;
 	}
 
@@ -90,10 +91,10 @@ public class IntcodeComputer implements DoesFileOperations {
 			case 7: program[Math.toIntExact(args[2])] = args[0] < args[1] ? 1 : 0; break;
 			case 8: program[Math.toIntExact(args[2])] = args[0] == args[1] ? 1 : 0; break;
 			case 9: relativeBase += Math.toIntExact(args[0]); break;
-			case 99: return -2;
+			case 99: return STOP_CODE;
 			default: throw new IllegalStateException("Something went wrong!");
 		}
-		return -1;
+		return Integer.MIN_VALUE;
 	}
 	
 	private long parseComplexInstruction(int instruction) {
@@ -138,5 +139,9 @@ public class IntcodeComputer implements DoesFileOperations {
 
 	public int runInt() {
 		return Math.toIntExact(run());
+	}
+
+	public void setElement(int i, long j) {
+		program[i] = j;
 	}
 }
