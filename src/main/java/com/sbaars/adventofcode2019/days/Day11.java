@@ -34,11 +34,9 @@ public class Day11 implements Day, ProcessesImages {
 		while(true) {
 			c.setInput(whitePlaces.contains(currentLocation) ? 1 : 0);
 			int paintColor = c.runInt();
-			if(paintColor == -2)
+			if(paintColor == IntcodeComputer.STOP_CODE)
 				break;
 			int turn = c.runInt();
-			if(turn == -2)
-				break;
 			paintedOnce.add(currentLocation);
 			if(paintColor == 1) {
 				whitePlaces.add(currentLocation);

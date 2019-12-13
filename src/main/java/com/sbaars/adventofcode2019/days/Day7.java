@@ -41,7 +41,7 @@ public class Day7 implements Day {
 					c.addInput(lastVal);
 					int thruster = lastVal;
 					lastVal = c.runInt();
-					if(lastVal == -2) {
+					if(lastVal == IntcodeComputer.STOP_CODE) {
 						results.add(thruster);
 						continue perms;
 					}
