@@ -2,6 +2,8 @@ package com.sbaars.adventofcode2019;
 
 import java.io.IOException;
 
+import com.sbaars.adventofcode2019.days.Day11;
+import com.sbaars.adventofcode2019.days.Day13;
 import com.sbaars.adventofcode2019.days.Day2;
 import com.sbaars.adventofcode2019.days.Day5;
 import com.sbaars.adventofcode2019.days.Day7;
@@ -29,5 +31,15 @@ public class IntcodeTest extends TestCase {
 	public void testDay9() throws IOException {
 		Assert.assertEquals(2518058886L, new Day9().part1());
 		Assert.assertEquals(44292L, new Day9().part2());
+	}
+	
+	public void testDay11() throws IOException {
+		Assert.assertEquals(2172, new Day11().part1());
+		Assert.assertEquals("JELEFGHP", new Day11().part2());
+	}
+	
+	public void testDay13() throws IOException {
+		Assert.assertEquals(320, new Day13().part1());
+		Assert.assertEquals(15156, new Day13().part2());
 	}
 }
