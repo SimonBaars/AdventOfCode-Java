@@ -49,4 +49,10 @@ public class CountMap<K> extends HashMap<K, Integer> {
 	public void addAll(CountMap<K> amountPerCloneClassSize) {
 		amountPerCloneClassSize.entrySet().stream().forEach(e -> this.increment(e.getKey(), e.getValue()));
 	}
+
+	public void incrementAll(CountMap<K> input) {
+		for(Entry<K, Integer> i : input.entrySet()) {
+			increment(i.getKey(), i.getValue());
+		}
+	}
 }
