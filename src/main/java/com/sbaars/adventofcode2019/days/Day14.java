@@ -2,8 +2,6 @@ package com.sbaars.adventofcode2019.days;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.util.CountMap;
@@ -15,6 +13,10 @@ public class Day14 implements Day {
 
 	@Override
 	public Object part1() throws IOException {
+		return findCosts();
+	}
+
+	private int findCosts() throws IOException {
 		Trade[] trades = Arrays.stream(readDay(14).split(System.lineSeparator())).map(Trade::new).toArray(Trade[]::new);
 		return findCost(trades, new Item(1, "FUEL"), new CountMap<>());
 	}
@@ -51,25 +53,19 @@ public class Day14 implements Day {
 	public Object part2() throws IOException {
 		Trade[] trades = Arrays.stream(readDay(15).split(System.lineSeparator())).map(Trade::new).toArray(Trade[]::new);
 		CountMap<String> leftOver = new CountMap<>();
-		long ore = 1000000000000L;
 		int fuel = 0;
-		Map<CountMap<String>, Integer> res = new HashMap<>();
-		int found = 0, notFound = 0;
-		while(true) {
-			if(!res.containsKey(leftOver)) {
-				int cost = findCost(trades, new Item(1, "FUEL"), leftOver);
-				res.put(new CountMap<>(leftOver), cost);
-				ore-=cost;
-				found++;
+		
+		for(long ore = 1000000000000L, amount = ore / findCosts(); ore>0 && amount>0; ) {
+			CountMap<String> newLeftOver = new CountMap<>(leftOver);
+			int cost = findCost(trades, new Item(1, "FUEL"), newLeftOver);
+			if(cost > ore) {
+				amount /= 2;	
 			} else {
-				ore-=res.get(leftOver);
-				notFound++;
+				fuel += amount;
+				ore -= cost;
+				leftOver = newLeftOver;
 			}
-			if(ore>=0) {
-				fuel++;
-			} else break;
 		}
-		System.out.println("Found "+found+", notFound "+notFound);
 		return fuel;
 	}
 	
