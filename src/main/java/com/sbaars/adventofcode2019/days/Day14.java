@@ -2,7 +2,6 @@ package com.sbaars.adventofcode2019.days;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Map.Entry;
 
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.util.CountMap;
@@ -15,7 +14,9 @@ public class Day14 implements Day {
 	@Override
 	public Object part1() throws IOException {
 		Trade[] trades = Arrays.stream(readDay(15).split(System.lineSeparator())).map(Trade::new).toArray(Trade[]::new);
-		return findCost(trades, getTrade(trades, "FUEL"), 1);
+		int cost = findCost(trades, new Item(1, "FUEL"), new CountMap<>());
+		System.out.println(created);
+		return cost;
 		//return Arrays.stream(trades).map(e -> e.output.item).distinct().count();
 		/*CountMap<String> items = new CountMap<>();
 		for(int i = 13311; i<15000; i++) {
@@ -35,37 +36,34 @@ public class Day14 implements Day {
 		return Arrays.stream(trades).filter(e -> e.output.item.equals(key)).findAny().get();
 	}
 	
-	private int findCost(Trade[] trades, Trade fuelTrade, int nNeeded) {
-		int timesApplied = (int)Math.ceil((double)nNeeded/(double)fuelTrade.output.amount);
-		int totalCost = 0;
-		for(Entry<String, Integer> cost : fuelTrade.input.entrySet()) {
-			if(cost.getKey().equals("ORE")) {
-				totalCost+=cost.getValue();
-			} else {
-				totalCost+=findCost(trades, getTrade(trades, cost.getKey()), cost.getValue());
-			}
-		}
-		System.out.println(fuelTrade.output.item+" costs "+totalCost+" times "+timesApplied+" needed "+nNeeded);
-		return totalCost * timesApplied;
-	}
-
-	private boolean canMakeFuel(Trade[] trades, CountMap<String> items) {
-		//System.out.println(items);
-		//System.out.println("----");
-		//Trade fuelTrade = Arrays.stream(trades).filter(e -> e.output.item.equals("FUEL")).findAny().get();
-		//findCost
+	CountMap<String> created = new CountMap<>();
+	private int findCost(Trade[] trades, Item buyingItem, CountMap<String> leftOver) {
+		Trade fuelTrade = getTrade(trades, buyingItem.item);
+		int timesApplied = (int)Math.ceil((double)buyingItem.amount/(double)fuelTrade.output.amount);
+		leftOver.increment(fuelTrade.output.item, buyingItem.amount % fuelTrade.output.amount);
 		
-		/*for(Trade trade : trades) {
-			CountMap<String> newItems = new CountMap<>(items);
-			if(trade.perform(newItems)) {
-				if(trade.output.item.equals("FUEL")) {
-					return true;
+		//System.out.println(fuelTrade.output.item+" nLeftOver "+leftOver.get(fuelTrade.output.item));
+		int totalCost = 0;
+		for(int i = 0; i<timesApplied; i++) {			
+			for(Item cost : fuelTrade.input) {
+				if(leftOver.get(cost.item) >= cost.amount) {
+					leftOver.increment(fuelTrade.output.item, -fuelTrade.output.amount);
+					//skip = fuelTrade.output.item;
+					System.out.println("Enough "+fuelTrade.output.item+" LEFTOVER!");
+					continue;
 				}
-				if(canMakeFuel(trades, newItems))
-					return true;
+				if(cost.item.equals("ORE")) {
+					totalCost+=cost.amount;
+					System.out.println("Spend "+cost.amount+" ORE to get "+fuelTrade.output.amount+" "+fuelTrade.output.item);
+				} else {
+					totalCost+=findCost(trades, new Item(cost.amount, cost.item), leftOver);
+				}
 			}
-		}*/
-		return false;
+			created.increment(buyingItem.item, fuelTrade.output.amount);
+		}
+		System.out.println("Bought "+(timesApplied*fuelTrade.output.amount)+" "+buyingItem.item+" for "+totalCost);
+		//System.out.println(fuelTrade.output.item+" costs "+totalCost+" times "+timesApplied);
+		return totalCost;
 	}
 	
 	@Override
@@ -74,25 +72,18 @@ public class Day14 implements Day {
 	}
 	
 	class Trade {
-		CountMap<String> input = new CountMap<>();
-		Item output;
+		final Item[] input;
+		final Item output;
 		
 		public Trade(String trade) {
 			String[] inputOutput = trade.split(" => ");
-			Arrays.stream(inputOutput[0].split(", ")).map(Item::new).forEach(e -> input.increment(e.item, e.amount));
+			input = Arrays.stream(inputOutput[0].split(", ")).map(Item::new).toArray(Item[]::new);
 			output = new Item(inputOutput[1]);
 		}
-		
-		public boolean perform(CountMap<String> items) {
-			for(Entry<String, Integer> item : input.entrySet()) {
-				if(!items.containsKey(item.getKey()) || items.get(item.getKey()) < item.getValue())
-					return false;
-				else {
-					items.increment(item.getKey(), -item.getValue());
-				}
-			}
-			items.increment(output.item, output.amount);
-			return true;
+
+		@Override
+		public String toString() {
+			return "Trade [input=" + Arrays.toString(input) + ", output=" + output + "]";
 		}
 	}
 	
@@ -109,6 +100,11 @@ public class Day14 implements Day {
 		public Item(int i, String string) {
 			amount = i;
 			item = string;
+		}
+
+		@Override
+		public String toString() {
+			return "Item [amount=" + amount + ", item=" + item + "]";
 		}
 	}
 }
