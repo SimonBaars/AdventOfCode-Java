@@ -19,10 +19,6 @@ public class Day14 implements Day {
 
 	@Override
 	public Object part1() throws IOException {
-		return findCosts();
-	}
-
-	private long findCosts() throws IOException {
 		return findCost(new Item(1, "FUEL"), new LongCountMap<>());
 	}
 
@@ -68,8 +64,8 @@ public class Day14 implements Day {
 	}
 	
 	class Trade {
-		final Item[] input;
-		final Item output;
+		private final Item[] input;
+		private final Item output;
 		
 		public Trade(String trade) {
 			String[] inputOutput = trade.split(" => ");
@@ -79,8 +75,8 @@ public class Day14 implements Day {
 	}
 	
 	class Item {
-		long amount;
-		String item;
+		private long amount;
+		private final String item;
 		
 		public Item(String item) {
 			String[] i = item.split(" ");
