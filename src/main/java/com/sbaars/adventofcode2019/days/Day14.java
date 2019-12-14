@@ -15,7 +15,9 @@ public class Day14 implements Day {
 	@Override
 	public Object part1() throws IOException {
 		Trade[] trades = Arrays.stream(readDay(15).split(System.lineSeparator())).map(Trade::new).toArray(Trade[]::new);
-		CountMap<String> items = new CountMap<>();
+		return findCost(trades, getTrade(trades, "FUEL"), 1);
+		//return Arrays.stream(trades).map(e -> e.output.item).distinct().count();
+		/*CountMap<String> items = new CountMap<>();
 		for(int i = 13311; i<15000; i++) {
 			System.out.println("We now have "+i+" ORE");
 			items.put("ORE", i);
@@ -26,13 +28,34 @@ public class Day14 implements Day {
 				return i;
 			}
 		}
-		return 0;
+		return 0;*/
+	}
+
+	private Trade getTrade(Trade[] trades, String key) {
+		return Arrays.stream(trades).filter(e -> e.output.item.equals(key)).findAny().get();
 	}
 	
+	private int findCost(Trade[] trades, Trade fuelTrade, int nNeeded) {
+		int timesApplied = (int)Math.ceil((double)nNeeded/(double)fuelTrade.output.amount);
+		int totalCost = 0;
+		for(Entry<String, Integer> cost : fuelTrade.input.entrySet()) {
+			if(cost.getKey().equals("ORE")) {
+				totalCost+=cost.getValue();
+			} else {
+				totalCost+=findCost(trades, getTrade(trades, cost.getKey()), cost.getValue());
+			}
+		}
+		System.out.println(fuelTrade.output.item+" costs "+totalCost+" times "+timesApplied+" needed "+nNeeded);
+		return totalCost * timesApplied;
+	}
+
 	private boolean canMakeFuel(Trade[] trades, CountMap<String> items) {
 		//System.out.println(items);
 		//System.out.println("----");
-		for(Trade trade : trades) {
+		//Trade fuelTrade = Arrays.stream(trades).filter(e -> e.output.item.equals("FUEL")).findAny().get();
+		//findCost
+		
+		/*for(Trade trade : trades) {
 			CountMap<String> newItems = new CountMap<>(items);
 			if(trade.perform(newItems)) {
 				if(trade.output.item.equals("FUEL")) {
@@ -41,7 +64,7 @@ public class Day14 implements Day {
 				if(canMakeFuel(trades, newItems))
 					return true;
 			}
-		}
+		}*/
 		return false;
 	}
 	
