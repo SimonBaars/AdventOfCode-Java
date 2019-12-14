@@ -13,9 +13,9 @@ public class Day14 implements Day {
 
 	@Override
 	public Object part1() throws IOException {
-		Trade[] trades = Arrays.stream(readDay(15).split(System.lineSeparator())).map(Trade::new).toArray(Trade[]::new);
+		Trade[] trades = Arrays.stream(readDay(14).split(System.lineSeparator())).map(Trade::new).toArray(Trade[]::new);
 		int cost = findCost(trades, new Item(1, "FUEL"), new CountMap<>());
-		System.out.println(created);
+		//System.out.println(created);
 		return cost;
 		//return Arrays.stream(trades).map(e -> e.output.item).distinct().count();
 		/*CountMap<String> items = new CountMap<>();
@@ -40,10 +40,17 @@ public class Day14 implements Day {
 	private int findCost(Trade[] trades, Item buyingItem, CountMap<String> leftOver) {
 		if(buyingItem.item.equals("ORE"))
 			return buyingItem.amount;
+		else if(buyingItem.amount <= leftOver.get(buyingItem.item)) {
+			leftOver.increment(buyingItem.item, -buyingItem.amount);
+			return 0;
+		}
+		buyingItem.amount-=leftOver.get(buyingItem.item);
+		leftOver.put(buyingItem.item, 0);
+		
 		Trade fuelTrade = getTrade(trades, buyingItem.item);
 		int timesApplied = (int)Math.ceil((double)buyingItem.amount/(double)fuelTrade.output.amount);
 		
-		System.out.println("Buy "+timesApplied+"x"+fuelTrade.output.amount+" "+buyingItem.item);
+		//System.out.println("Buy "+timesApplied+"x"+fuelTrade.output.amount+" "+buyingItem.item);
 		
 		/*if(leftOver.get(fuelTrade.output.item) >= fuelTrade.output.amount) {
 			System.out.println("Leftover "+fuelTrade.output.item+" = "+leftOver.get(fuelTrade.output.item)+" for trade "+fuelTrade);
@@ -57,7 +64,10 @@ public class Day14 implements Day {
 		//leftOver.increment(fuelTrade.output.item, buyingItem.amount % fuelTrade.output.amount);
 		
 		int totalCost = 0;
-		for(int i = 0; i<timesApplied; i++) {	
+		for(Item cost : fuelTrade.input) {
+			totalCost+=findCost(trades, new Item(cost.amount*timesApplied, cost.item), leftOver);
+		}
+		//for(int i = 0; i<timesApplied; i++) {	
 			/*if(leftOver.get(fuelTrade.output.item) >= fuelTrade.output.amount) {
 				System.out.println("Leftover "+fuelTrade.output.item+" = "+leftOver.get(fuelTrade.output.item)+" for trade "+fuelTrade);
 				leftOver.increment(fuelTrade.output.item, -fuelTrade.output.amount);
@@ -66,13 +76,13 @@ public class Day14 implements Day {
 				System.out.println("Enough "+fuelTrade.output.item+" LEFTOVER!");
 				continue;
 			}*/
-			totalCost = applyTrade(trades, fuelTrade, totalCost, leftOver);
-			created.increment(buyingItem.item, fuelTrade.output.amount);
-		}
+			//totalCost = applyTrade(trades, fuelTrade, totalCost, leftOver);
+			//created.increment(buyingItem.item, fuelTrade.output.amount);
+		//}
 		
-		leftOver.increment(buyingItem.item, buyingItem.amount % fuelTrade.output.amount);
-		System.out.println(fuelTrade.output.item+" nLeftOver "+leftOver.get(fuelTrade.output.item));
-		System.out.println("Bought "+(timesApplied*fuelTrade.output.amount)+" "+buyingItem.item+" for "+totalCost);
+		leftOver.increment(buyingItem.item, fuelTrade.output.amount * timesApplied - buyingItem.amount);
+		//System.out.println(fuelTrade.output.item+" nLeftOver "+leftOver.get(fuelTrade.output.item));
+		//System.out.println("Bought "+(timesApplied*fuelTrade.output.amount)+" "+buyingItem.item+" for "+totalCost);
 		//System.out.println(fuelTrade.output.item+" costs "+totalCost+" times "+timesApplied);
 		return totalCost;
 	}
@@ -87,13 +97,13 @@ public class Day14 implements Day {
 				//System.out.println("Enough "+fuelTrade.output.item+" !");
 				continue; //You have this material, so you get it for free :)
 			}*/
-			if(cost.item.equals("ORE")) {
-				totalCost+=cost.amount;
-				System.out.println("Spend "+cost.amount+" ORE to get "+fuelTrade.output.amount+" "+fuelTrade.output.item+" in trade "+fuelTrade);
-			} else {
+			//if(cost.item.equals("ORE")) {
+			//	totalCost+=cost.amount;
+			//	System.out.println("Spend "+cost.amount+" ORE to get "+fuelTrade.output.amount+" "+fuelTrade.output.item+" in trade "+fuelTrade);
+			//} else {
 				totalCost+=findCost(trades, new Item(cost.amount, cost.item), leftOver);
 				//leftOver.increment(fuelTrade.output.item, cost.amount % fuelTrade.output.amount);
-			}
+			//}
 		}
 		return totalCost;
 	}
