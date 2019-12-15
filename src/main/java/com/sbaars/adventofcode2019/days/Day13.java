@@ -20,12 +20,12 @@ public class Day13 implements Day {
 		IntcodeComputer cp = new IntcodeComputer(13);
 		Set<Point> n = new HashSet<Point>();
 		while(true) {
-			int x = cp.runInt();
+			long x = cp.run();
 			if(x == IntcodeComputer.STOP_CODE) return n.size();
-			int y = cp.runInt();
-			int tile = cp.runInt();
+			long y = cp.run();
+			long tile = cp.run();
 			if(tile == 2)
-				n.add(new Point(x,y));
+				n.add(new Point(Math.toIntExact(x), Math.toIntExact(y)));
 		}
 	}
 	
@@ -37,12 +37,12 @@ public class Day13 implements Day {
 		int score = 0;
 		AtomicInteger paddlePos = new AtomicInteger(), ballPos = new AtomicInteger();
 		while(true) {
-			int x = cp.runInt();
+			long x = cp.run();
 			if(x == IntcodeComputer.STOP_CODE)
 				return score;
-			int y = cp.runInt();
-			int tile = cp.runInt();
-			score = simulateField(cp, field, score, paddlePos, ballPos, x, y, tile);
+			long y = cp.run();
+			long tile = cp.run();
+			score = simulateField(cp, field, score, paddlePos, ballPos, Math.toIntExact(x), Math.toIntExact(y), Math.toIntExact(tile));
 		}
 	}
 
@@ -52,7 +52,7 @@ public class Day13 implements Day {
 		else {
 			field[y][x] = tile;
 			if (tile == 3) {
-				paddlePos.set(x);;
+				paddlePos.set(x);
 			} else if (tile == 4) {
 				ballPos.set(x);
 				cp.setInput(provideInput(paddlePos, ballPos));
