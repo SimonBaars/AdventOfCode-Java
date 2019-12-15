@@ -45,7 +45,7 @@ public class Day11 implements Day, ProcessesImages {
 			}
 			
 			dir = dir.turn(turn == 1L);
-			currentLocation = move(currentLocation, dir);
+			currentLocation = dir.move(currentLocation);
 		}
 		return startWhite ? constructImage(whitePlaces) : paintedOnce.size();
 	}
@@ -60,16 +60,6 @@ public class Day11 implements Day, ProcessesImages {
 		for(Point p : whitePlaces)
 			places[p.y][p.x] = 1;
 		return new OCR(createAsciiArray(places));
-	}
-	
-	private Point move(Point currentLocation, Direction dir2) {
-		switch (dir2) {
-			case NORTH: return new Point(currentLocation.x, currentLocation.y-1);
-			case SOUTH: return new Point(currentLocation.x, currentLocation.y+1);
-			case EAST: return new Point(currentLocation.x+1, currentLocation.y);
-			case WEST: return new Point(currentLocation.x-1, currentLocation.y);
-		}
-		return null;
 	}
 
 	@Override
