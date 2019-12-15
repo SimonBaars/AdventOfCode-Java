@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sbaars.adventofcode2019.common.Direction;
+
 import com.sbaars.adventofcode2019.common.Day;
 
 public class Day3 implements Day
@@ -41,10 +43,10 @@ public class Day3 implements Day
 		for(Walk walk : walks1) {
 			for(;walk.distance>0;walk.distance--) {
 				switch(walk.dir) {
-					case UP: y++; break;
-					case DOWN: y--; break;
-					case LEFT: x--; break;
-					case RIGHT: x++; break;
+					case NORTH: y++; break;
+					case SOUTH: y--; break;
+					case WEST: x--; break;
+					case EAST: x++; break;
 				}
 				performStep(walkedLocations, collect, intersectingLocations, x, y, steps);
 				steps++;
@@ -111,18 +113,6 @@ public class Day3 implements Day
 				steps+=step.steps;
 				isCombined = true;
 			}
-		}
-	}
-	
-	enum Direction {
-		UP, DOWN, LEFT, RIGHT;
-		
-		public char directionCode() {
-			return name().charAt(0);
-		}
-		
-		public static Direction getByDirCode(char code) {
-			return Arrays.stream(values()).filter(e -> e.directionCode() == code).findAny().get();
 		}
 	}
 }

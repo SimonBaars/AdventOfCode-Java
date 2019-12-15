@@ -10,9 +10,9 @@ import com.sbaars.adventofcode2019.common.OCR;
 import com.sbaars.adventofcode2019.common.ProcessesImages;
 import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
 
+import com.sbaars.adventofcode2019.common.Direction;
+
 public class Day11 implements Day, ProcessesImages {
-	
-	enum Direction { UP, RIGHT, DOWN, LEFT }
 
 	public static void main(String[] args) throws IOException {
 		new Day11().printParts();
@@ -26,7 +26,7 @@ public class Day11 implements Day, ProcessesImages {
 	private Object robotWalk(boolean startWhite) throws IOException {
 		IntcodeComputer c = new IntcodeComputer(11);
 		Point currentLocation = new Point(0,0);
-		Direction dir = Direction.UP;
+		Direction dir = Direction.NORTH;
 		final Set<Point> paintedOnce = new HashSet<>();
 		final Set<Point> whitePlaces = new HashSet<>();
 		if(startWhite)
@@ -44,7 +44,7 @@ public class Day11 implements Day, ProcessesImages {
 				whitePlaces.remove(currentLocation);
 			}
 			
-			dir = turn(dir, turn == 1L);
+			dir = dir.turn(turn == 1L);
 			currentLocation = move(currentLocation, dir);
 		}
 		return startWhite ? constructImage(whitePlaces) : paintedOnce.size();
@@ -61,22 +61,13 @@ public class Day11 implements Day, ProcessesImages {
 			places[p.y][p.x] = 1;
 		return new OCR(createAsciiArray(places));
 	}
-
-	public Direction turn(Direction dir, boolean right) {
-		int cur = dir.ordinal() + (right ? 1 : -1);
-		if(cur == Direction.values().length)
-			cur = 0;
-		else if(cur == -1)
-			cur = 3;
-		return Direction.values()[cur];
-	}
 	
 	private Point move(Point currentLocation, Direction dir2) {
 		switch (dir2) {
-			case UP: return new Point(currentLocation.x, currentLocation.y-1);
-			case DOWN: return new Point(currentLocation.x, currentLocation.y+1);
-			case RIGHT: return new Point(currentLocation.x+1, currentLocation.y);
-			case LEFT: return new Point(currentLocation.x-1, currentLocation.y);
+			case NORTH: return new Point(currentLocation.x, currentLocation.y-1);
+			case SOUTH: return new Point(currentLocation.x, currentLocation.y+1);
+			case EAST: return new Point(currentLocation.x+1, currentLocation.y);
+			case WEST: return new Point(currentLocation.x-1, currentLocation.y);
 		}
 		return null;
 	}
