@@ -33,18 +33,18 @@ public class Day11 implements Day, ProcessesImages {
 			whitePlaces.add(currentLocation);
 		while(true) {
 			c.setInput(whitePlaces.contains(currentLocation) ? 1 : 0);
-			int paintColor = c.runInt();
+			long paintColor = c.run();
 			if(paintColor == IntcodeComputer.STOP_CODE)
 				break;
-			int turn = c.runInt();
+			long turn = c.run();
 			paintedOnce.add(currentLocation);
-			if(paintColor == 1) {
+			if(paintColor == 1L) {
 				whitePlaces.add(currentLocation);
-			} else if(paintColor == 0) {
+			} else if(paintColor == 0L) {
 				whitePlaces.remove(currentLocation);
 			}
 			
-			dir = turn(dir, turn == 1);
+			dir = turn(dir, turn == 1L);
 			currentLocation = move(currentLocation, dir);
 		}
 		return startWhite ? constructImage(whitePlaces) : paintedOnce.size();

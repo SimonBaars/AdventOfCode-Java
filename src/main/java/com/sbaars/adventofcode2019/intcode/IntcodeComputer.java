@@ -12,13 +12,13 @@ import com.sbaars.adventofcode2019.util.DoesFileOperations;
 public class IntcodeComputer implements DoesFileOperations {
 	private long[] program;
 	private int instructionCounter = 0;
-	private final Queue<Integer> input = new ArrayDeque<>(2);
-	private int lastInput;
+	private final Queue<Long> input = new ArrayDeque<>(2);
+	private long lastInput;
 	private long relativeBase = 0;
 	private static final int[] DO_NOT_TRANSFORM_FINAL_ARGUMENT = {1, 2, 3, 7, 8};
-	public static final int STOP_CODE = Integer.MIN_VALUE+1;
+	public static final long STOP_CODE = Long.MIN_VALUE+1;
 	
-	public IntcodeComputer(int day, int...input) throws IOException {
+	public IntcodeComputer(int day, long...input) throws IOException {
 		this.program = Arrays.stream(readDay(day).split(",")).mapToLong(Long::parseLong).toArray();
 		this.program = Arrays.copyOf(this.program, 10000); // Quick hack to enlange memory, should be refactored.
 		setInput(input);
@@ -26,6 +26,11 @@ public class IntcodeComputer implements DoesFileOperations {
 			program[1] = input[0];
 			program[2] = input[1];
 		}
+	}
+	
+	public long run(long input) {
+		setInput(input);
+		return run();
 	}
 	
 	public long run() {
@@ -59,14 +64,14 @@ public class IntcodeComputer implements DoesFileOperations {
 		}
 	}
 	
-	private int readInput() {
+	private long readInput() {
 		if(input.isEmpty())
 			return lastInput;
 		lastInput = input.poll();
 		return lastInput;
 	}
 	
-	public boolean addInput(int num) {
+	public boolean addInput(long num) {
 		return input.add(num);
 	}
 	
@@ -74,7 +79,7 @@ public class IntcodeComputer implements DoesFileOperations {
 		return program[0];
 	}
 	
-	public boolean setInput(int...input) {
+	public boolean setInput(long...input) {
 		this.input.clear();
 		return this.input.addAll(Arrays.stream(input).boxed().collect(Collectors.toList()));
 	}
@@ -94,7 +99,7 @@ public class IntcodeComputer implements DoesFileOperations {
 			case 99: return STOP_CODE;
 			default: throw new IllegalStateException("Something went wrong!");
 		}
-		return Integer.MIN_VALUE;
+		return Long.MIN_VALUE;
 	}
 	
 	private long parseComplexInstruction(int instruction) {
@@ -136,11 +141,7 @@ public class IntcodeComputer implements DoesFileOperations {
 			else throw new IllegalStateException("Something went wrong! "+instruction);
 		}
 	}
-
-	public int runInt() {
-		return Math.toIntExact(run());
-	}
-
+	
 	public void setElement(int i, long j) {
 		program[i] = j;
 	}

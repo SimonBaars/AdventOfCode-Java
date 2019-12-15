@@ -17,30 +17,30 @@ public class Day7 implements Day {
 	@Override
 	public Object part1() throws IOException {
 		List<List<Integer>> permutations = generatePerm(new ArrayList<>(Arrays.asList(0,1,2,3,4)));
-		List<Integer> results = new ArrayList<>();
+		List<Long> results = new ArrayList<>();
 		for(List<Integer> perm : permutations) {
-			int lastVal = 0;
+			long lastVal = 0;
 			for(Integer i : perm)
-				lastVal = new IntcodeComputer(7, i, lastVal).runInt();
+				lastVal = new IntcodeComputer(7, i, lastVal).run();
 			results.add(lastVal);
 
 		}
-		return results.stream().mapToInt(e -> e).max().getAsInt();
+		return results.stream().mapToLong(e -> e).max().getAsLong();
 	}
 
 	@Override
 	public Object part2() throws IOException {
 		List<List<Integer>> permutations = generatePerm(new ArrayList<>(Arrays.asList(5,6,7,8,9)));
-		List<Integer> results = new ArrayList<>();
+		List<Long> results = new ArrayList<>();
 		perms: for(List<Integer> shuffle : permutations) {
 			IntcodeComputer[] computers = new IntcodeComputer[5];
 			for(int i = 0; i<computers.length; i++) computers[i] = new IntcodeComputer(7, shuffle.get(i));
-			int lastVal = 0;
+			long lastVal = 0;
 			while(true) {
 				for(IntcodeComputer c : computers) {
 					c.addInput(lastVal);
-					int thruster = lastVal;
-					lastVal = c.runInt();
+					long thruster = lastVal;
+					lastVal = c.run();
 					if(lastVal == IntcodeComputer.STOP_CODE) {
 						results.add(thruster);
 						continue perms;
@@ -49,7 +49,7 @@ public class Day7 implements Day {
 			}
 
 		}
-		return results.stream().mapToInt(e -> e).max().getAsInt();
+		return results.stream().mapToLong(e -> e).max().getAsLong();
 	}
 
 	public <E> List<List<E>> generatePerm(List<E> original) {
