@@ -24,8 +24,8 @@ public class IntcodeTest extends TestCase {
 	}
 	
 	public void testDay7() throws IOException {
-		Assert.assertEquals(116680, new Day7().part1());
-		Assert.assertEquals(89603079, new Day7().part2());
+		Assert.assertEquals(116680L, new Day7().part1());
+		Assert.assertEquals(89603079L, new Day7().part2());
 	}
 	
 	public void testDay9() throws IOException {

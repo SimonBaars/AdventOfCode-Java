@@ -2,7 +2,9 @@ package com.sbaars.adventofcode2019.pathfinding;
 
 import java.awt.Point;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Creates nodes and neighbours from a 2d grid. Each point in the map has an
@@ -63,7 +65,7 @@ public class Grid2d {
 						continue;
 					}
 
-					if (map[j][i] == 1) {
+					if (map[j][i] < 1) {
 						continue;
 					}
 
@@ -123,8 +125,8 @@ public class Grid2d {
 		this.allowDiagonal = allowDiagonal;
 	}
 
-	public Point[] findPath(Point start, Point end) {
-		return PathFinding.doAStar(new MapNode(start.x, start.y), new MapNode(end.x, end.y)).stream().map(MapNode::toPoint).toArray(Point[]::new);
+	public List<Point> findPath(Point start, Point end) {
+		return PathFinding.doAStar(new MapNode(start.x, start.y), new MapNode(end.x, end.y)).stream().map(MapNode::toPoint).collect(Collectors.toList());
 	}
 
 }
