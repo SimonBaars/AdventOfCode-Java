@@ -1,14 +1,9 @@
 package com.sbaars.adventofcode2019.days;
 
-import java.awt.Point;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.sbaars.adventofcode2019.common.Day;
-import com.sbaars.adventofcode2019.util.CountMap;
 
 public class Day16 implements Day {
 	
@@ -77,23 +72,42 @@ public class Day16 implements Day {
 	
 	@Override
 	public Object part2() throws IOException {
-		int[] actNums = readDay(16).chars().map(e -> Character.getNumericValue(e)).toArray();
-		
-		int totalTimes = 10000;
+		int[] nums = readDay(16).chars().map(e -> Character.getNumericValue(e)).toArray();
+		nums = repeat(nums, 10000);
 		//System.out.println(nums.length);
 		//int[] nums = repeat(actNums, 10000);
 		//System.out.println(Arrays.toString(nums));
 		int[] pattern = {0, 1, 0, -1};
+		
+		int[] res = new int[nums.length];
 		for(int phase = 0; phase<100; phase++) {
 			System.out.println("Phase "+phase);
-		int[] newNums = new int[totalTimes];
-		int timesEachElement = 1;
-		for(int j = 0; j<totalTimes; j++) {
+			
+			int[] newNums = new int[nums.length+1];
+			for(int i=0;i<nums.length;i++) {
+				newNums[i+1]=newNums[i]+nums[i];
+			}
+		
+			for(int i = 0; i<nums.length; i++) {
+				int sum = 0, loc = 0;
+				for(int j=0; true;j++) {
+					int k=((j+1)*(i+1))-1;
+					sum += (newNums[Math.min(k, res.length)] - newNums[loc]) * pattern[j%4];
+					if(k >= res.length) break;
+					loc=k;
+				}
+				res[i]=Math.abs(sum)%10;
+			}
+			
+			System.arraycopy(res, 0, nums, 0, res.length);
+			//nums=Arrays.copyOf(res,res.length);
+		//int timesEachElement = 1;
+		//for(int j = 0; j<totalTimes; j++) {
 			//System.out.println("Num "+j);
 			//int[] sumArray = new int[nums.length];
-			Map<Point, int[]> numsForIndices = new HashMap<>();
-			CountMap<Point> timesEachPoint = new CountMap<>();
-			for(int o = 0; o<totalTimes; o+=actNums.length) {
+			//Map<Point, int[]> numsForIndices = new HashMap<>();
+			//CountMap<Point> timesEachPoint = new CountMap<>();
+			/*for(int o = 0; o<totalTimes; o+=actNums.length) {
 				int patternIndex = (o / timesEachElement) % pattern.length;
 				int elementTimes = o % timesEachElement + 1;
 				//System.out.println(patternIndex+", "+elementTimes);
@@ -121,24 +135,24 @@ public class Day16 implements Day {
 					numsForIndices.put(p, res);
 					timesEachPoint.increment(p);
 				}
-			}
+			}*/
 	 		//System.out.println();
-			int sum = 0;
+			/*int sum = 0;
 			for(Entry<Point, int[]> arr : numsForIndices.entrySet()) {
 				sum+=Arrays.stream(arr.getValue()).sum() * timesEachPoint.get(arr.getKey());
 			}
 	 		newNums[j] = lastDigit(sum);
-	 		timesEachElement++;
+	 		timesEachElement++;*/
 		}
 		//System.out.println(arrayToInt(newNums));
 		//System.out.println(Arrays.toString(newNums));
-		if(phase == 99) {
+		//if(phase == 99) {
 			for(int i = 5977341; i<5977341+8; i++) {
-				System.out.println(newNums[i]);
+				System.out.println(res[i]);
 			}
-		}
-		actNums = newNums;
-		}
+		//}
+		//actNums = newNums;
+		//}
 		return 0;
 	}
 	
