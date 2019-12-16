@@ -9,8 +9,16 @@ import java.util.List;
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.common.Direction;
 import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
+import com.sbaars.adventofcode2019.pathfinding.Grid2d;
 
 public class Day15 implements Day {
+	
+	private static final int UNEXPLORED = -1;
+	private static final int WALL = 0;
+	private static final int PATH = 1;
+	private static final int FINISH = 2;
+	private static final int BOARD_SIZE = 100;
+	private static final Point START_POINT = new Point(BOARD_SIZE/2,BOARD_SIZE/2);
 
 	public static void main(String[] args) throws IOException {
 		new Day15().printParts();
@@ -19,14 +27,68 @@ public class Day15 implements Day {
 	@Override
 	public Object part1() throws IOException {
 		IntcodeComputer ic = new IntcodeComputer(15);
-		List<Point> walls = new ArrayList<>();
-		Point pos = new Point(50,50);
-		int[][] grid = new int[100][100];
-		for(int[] row : grid) Arrays.fill(row, -1);
+		Point pos = START_POINT;
+		int[][] grid = new int[BOARD_SIZE][BOARD_SIZE];
+		for(int[] row : grid) Arrays.fill(row, UNEXPLORED);
 		grid[pos.y][pos.x] = 0;
-		Direction dir  = Direction.NORTH;
 		while(true) {
-			ic.run();
+			explore(grid, pos, ic);
+			pos = moveToUnexploredPlace(grid, pos, ic);
+			if(pos == null) {
+				Grid2d map2d = new Grid2d(grid, false);
+				System.out.println(Arrays.deepToString(grid));
+				return map2d.findPath(START_POINT, findPos(grid, FINISH).get(0)).length;
+			}
+		}
+	}
+	
+	private Point moveToUnexploredPlace(int[][] grid, Point pos, IntcodeComputer ic) {
+		List<Point> corridorSpaces = findPos(grid, PATH);
+		for(Point p : corridorSpaces) {
+			if(hasAdjecent(grid, p, UNEXPLORED)) {
+				Grid2d map2d = new Grid2d(grid, false);
+				Point[] route = map2d.findPath(START_POINT, findPos(grid, FINISH).get(0));
+				traverseRoute(ic, pos, route);
+				return p;
+			}
+		}
+		return null;
+	}
+	
+	private void traverseRoute(IntcodeComputer ic, Point pos, Point[] route) {
+		for(Point p : route) {
+			ic.run(Direction.getByMove(pos, p).num);
+		}
+	}
+
+	private boolean hasAdjecent(int[][] grid, Point pos, int tile) {
+		return grid[pos.y+1][pos.x] == tile || grid[pos.y][pos.x+1] == tile || grid[pos.y-1][pos.x] == tile || grid[pos.y][pos.x-1] == tile;
+	}
+
+	private List<Point> findPos(int[][] grid, int tile) {
+		List<Point> positions = new ArrayList<>();
+		for(int y = 0; y<grid.length; y++) {
+			for(int x = 0; x<grid[y].length; x++) {
+				if(grid[y][x] == tile)
+					positions.add(new Point(x, y));
+			}
+		}
+		return positions;
+	}
+
+	private void explore(int[][] grid, Point pos, IntcodeComputer ic) {
+		Direction dir  = Direction.NORTH;
+		for(int i = 0; i<4;i++) {
+			Point move = dir.move(pos);
+			if(grid[move.y][move.x] == UNEXPLORED) {
+				long run = ic.run(dir.num);
+				System.out.println(run);
+				grid[move.y][move.x] = Math.toIntExact(run);
+				if(grid[move.y][move.x] != WALL) {
+					ic.run(dir.opposite().num); // Move back
+				}
+			}
+			dir = dir.turn(true);
 		}
 	}
 	
