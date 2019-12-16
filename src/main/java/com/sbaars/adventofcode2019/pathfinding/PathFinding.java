@@ -80,7 +80,7 @@ public class PathFinding {
 			}
 		}
 
-		return null;
+		return route;
 	}
 
 }

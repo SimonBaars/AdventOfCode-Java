@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode2019.common;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("preview")
@@ -29,7 +30,7 @@ public class OCR {
 				case " ██ " -> middleTwo(character);
 				case "  ██" -> 'J';
 				case "█   " -> 'L';
-				default -> dontKnow();
+				default -> dontKnow(character);
 			});
 		}
 		return result.toString();
@@ -39,7 +40,7 @@ public class OCR {
 		return switch(character[5]) {
 			case " ██ " -> 'U';
 			case "█  █" -> 'H';
-			default -> dontKnow();
+			default -> dontKnow(character);
 		};
 	}
 
@@ -47,11 +48,12 @@ public class OCR {
 		return switch(character[5]) {
 			case " ███" -> 'G';
 			case "█  █" -> 'A';
-			default -> dontKnow();
+			default -> dontKnow(character);
 		};
 	}
 
-	private char dontKnow() {
+	private char dontKnow(String[] character) {
+		Arrays.stream(character).forEach(System.out::println);
 		throw new IllegalArgumentException("I don't know your character yet!");
 	}
 	
@@ -59,7 +61,7 @@ public class OCR {
 		return switch(character[5]) {
 			case "█   " -> 'F';
 			case "████" -> 'E';
-			default -> dontKnow();
+			default -> dontKnow(character);
 		};
 	}
 
@@ -67,7 +69,7 @@ public class OCR {
 		return switch(character[5]) {
 			case "█   " -> 'P';
 			case "█  █" -> 'R';
-			default -> dontKnow();
+			default -> dontKnow(character);
 		};
 	}
 	

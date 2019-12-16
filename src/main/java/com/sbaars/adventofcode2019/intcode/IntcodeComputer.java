@@ -17,10 +17,11 @@ public class IntcodeComputer implements DoesFileOperations {
 	private long relativeBase = 0;
 	private static final int[] DO_NOT_TRANSFORM_FINAL_ARGUMENT = {1, 2, 3, 7, 8};
 	public static final long STOP_CODE = Long.MIN_VALUE+1;
+	private static final long CONTINUE_CODE = Long.MIN_VALUE;
 	
 	public IntcodeComputer(int day, long...input) throws IOException {
 		this.program = Arrays.stream(readDay(day).split(",")).mapToLong(Long::parseLong).toArray();
-		this.program = Arrays.copyOf(this.program, 10000); // Quick hack to enlange memory, should be refactored.
+		this.program = Arrays.copyOf(this.program, 10000); // Quick hack to enlarge memory, should be refactored later(tm).
 		setInput(input);
 		if(day == 2) {
 			program[1] = input[0];
@@ -35,7 +36,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	
 	public long run() {
 		long result;
-		while((result = executeInstruction(Math.toIntExact(program[instructionCounter]))) == Integer.MIN_VALUE);
+		while((result = executeInstruction(Math.toIntExact(program[instructionCounter]))) == CONTINUE_CODE);
 		return result;
 	}
 
@@ -99,7 +100,7 @@ public class IntcodeComputer implements DoesFileOperations {
 			case 99: return STOP_CODE;
 			default: throw new IllegalStateException("Something went wrong!");
 		}
-		return Long.MIN_VALUE;
+		return CONTINUE_CODE;
 	}
 	
 	private long parseComplexInstruction(int instruction) {
