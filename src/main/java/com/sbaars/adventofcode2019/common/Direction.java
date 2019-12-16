@@ -34,6 +34,24 @@ public enum Direction {
 			case EAST: return new Point(currentLocation.x+1, currentLocation.y);
 			case WEST: return new Point(currentLocation.x-1, currentLocation.y);
 		}
-		return null;
+		throw new IllegalStateException("Non-existent Direction: "+this);
+	}
+
+	public Direction opposite() {
+		switch (this) {
+			case NORTH: return SOUTH;
+			case SOUTH: return NORTH;
+			case EAST: return WEST;
+			case WEST: return EAST;
+		}
+		throw new IllegalStateException("Non-existent Direction: "+this);
+	}
+
+	public static Direction getByMove(Point from, Point to) {
+		if(to.x > from.x) return EAST;
+		else if(to.x < from.x) return WEST;
+		else if(to.y > from.y) return SOUTH;
+		else if(to.y < from.y) return NORTH;
+		throw new IllegalStateException("From and to location are the same: "+from+", "+to);
 	}
 }

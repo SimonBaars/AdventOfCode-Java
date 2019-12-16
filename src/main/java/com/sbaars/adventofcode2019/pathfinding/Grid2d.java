@@ -1,7 +1,7 @@
 package com.sbaars.adventofcode2019.pathfinding;
 
+import java.awt.Point;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,7 +16,7 @@ import java.util.Set;
  * 
  */
 public class Grid2d {
-	private final double[][] map;
+	private final int[][] map;
 	private final boolean allowDiagonal;
 
 	/**
@@ -107,6 +107,10 @@ public class Grid2d {
 				return false;
 			return true;
 		}
+		
+		public Point toPoint() {
+			return new Point(x, y);
+		}
 
 		private Grid2d getOuterType() {
 			return Grid2d.this;
@@ -114,14 +118,13 @@ public class Grid2d {
 
 	}
 
-	public Grid2d(double[][] map, boolean allowDiagonal) {
+	public Grid2d(int[][] map, boolean allowDiagonal) {
 		this.map = map;
 		this.allowDiagonal = allowDiagonal;
 	}
 
-	public List<MapNode> findPath(int xStart, int yStart, int xGoal, int yGoal) {
-		return PathFinding.doAStar(new MapNode(xStart, yStart), new MapNode(
-				xGoal, yGoal));
+	public Point[] findPath(Point start, Point end) {
+		return PathFinding.doAStar(new MapNode(start.x, start.y), new MapNode(end.x, end.y)).stream().map(MapNode::toPoint).toArray(Point[]::new);
 	}
 
 }
