@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode2019.common.Day;
-import com.sbaars.adventofcode2019.common.OCR;
 import com.sbaars.adventofcode2019.common.ProcessesImages;
 import com.sbaars.adventofcode2019.util.CountMap;
 
@@ -49,7 +48,7 @@ public class Day8 implements Day, ProcessesImages {
 	public Object part2() throws IOException {
 		int[][] pixelArrays = splitArray(readPixels(), 100, SIZE);
 		int[] finalPixels = determineFinalImage(pixelArrays);
-		return new OCR(createAsciiArray(splitArray(finalPixels, DIM_X, DIM_Y)));
+		return printAsciiArray(splitArray(finalPixels, DIM_X, DIM_Y));
 	}
 
 	private int[] determineFinalImage(int[][] pixelArrays) {
