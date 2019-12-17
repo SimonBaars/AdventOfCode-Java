@@ -22,8 +22,7 @@ public class Day3 implements Day
 		this.intersect = calculateDistance(walks2, walkedLocations, true);
 	}
 	
-	public static void main(String[] args) throws IOException
-    {
+	public static void main(String[] args) throws IOException {
     	new Day3().printParts();
     }
 
