@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.common.Direction;
@@ -13,18 +14,13 @@ import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
 
 public class Day17 implements Day {
 
-	public static void main(String[] args) throws IOException {
-		new Day17().printParts();
-	}
+	char[][] grid = new char[48][48];
 
-	@Override
-	public Object part1() throws IOException {
-		char[][] grid = new char[48][48];
+	public Day17() throws IOException {
 		IntcodeComputer ic = new IntcodeComputer(17, 1);
 		long res;
 		int x = 0, y =0;
 		while((res = ic.run()) != IntcodeComputer.STOP_CODE) {
-			System.out.print((char)res);
 			if(res == 10) {
 				y++;
 				x= 0;
@@ -33,9 +29,17 @@ public class Day17 implements Day {
 				x++;
 			}
 		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		new Day17().printParts();
+	}
+
+	@Override
+	public Object part1() throws IOException {
 		int result = 0;
-		for(y = 1; y<grid.length-1; y++) {
-			for(x = 1; x<grid.length-1; x++) {
+		for(int y = 1; y<grid.length-1; y++) {
+			for(int x = 1; x<grid.length-1; x++) {
 				if(hasAdjecent(grid, new Point(x,y), '#')) {
 					result+=x*y;
 				}
@@ -43,27 +47,13 @@ public class Day17 implements Day {
 		}
 		return result;
 	}
-	
+
 	private boolean hasAdjecent(char[][] grid, Point pos, char tile) {
 		return grid[pos.y+1][pos.x] == tile && grid[pos.y][pos.x+1] == tile && grid[pos.y-1][pos.x] == tile && grid[pos.y][pos.x-1] == tile && grid[pos.y][pos.x] == tile;
 	}
-	
+
 	@Override
 	public Object part2() throws IOException {
-		char[][] grid = new char[48][48];
-		readDay(17);
-		IntcodeComputer ic = new IntcodeComputer(17, 1);
-		long res;
-		int x = 0, y = 0;
-		while((res = ic.run()) != IntcodeComputer.STOP_CODE) {
-			if(res == 10) {
-				y++;
-				x= 0;
-			} else {
-				grid[y][x] = (char)res;
-				x++;
-			}
-		}
 		Point pos = findPos(grid, '^').get(0);
 		List<Instruction> instructions = new ArrayList<>();
 		List<Point> traversed = new ArrayList<>();
@@ -76,37 +66,58 @@ public class Day17 implements Day {
 			instructions.add(new Instruction(n-1, dir.leftOf(robotDir) ? Dir.R : Dir.L));
 			robotDir = dir;
 		}
-		System.out.println(Arrays.toString(instructions.toArray()));
-		List<String> good = new ArrayList<>();
-		int start = 0;
-		for(int i = 1; i<instructions.size(); i++) {
-			List<Instruction> is = instructions.subList(start, i);
-			if(toString(is).length()>20) {
-				good.add(toString(instructions.subList(start, i-1)));
-				start = i-1;
-			}
-		}
-		good.add(toString(instructions.subList(start, instructions.size())));
-		String stuff = "A,A,B,C,B,A,C,B,C,A\nL,6,R,12,L,6,L,8,L,8\nL,6,R,12,R,8,L,8\nL,4,L,4,L,6\nn\n";
-		System.out.println(stuff);
-		long[] asciis = stuff.chars().mapToLong(e -> e).toArray();
-		ic = new IntcodeComputer(17, 2);
+		String patterns = findPatterns(instructions) + "\nn\n";
+		long[] asciis = patterns.chars().mapToLong(e -> e).toArray();
+		IntcodeComputer ic = new IntcodeComputer(17, 2);
 		ic.setInput(asciis);
 		while(true) {
-			if((res = ic.run())>255L)
+			long res = ic.run();
+			if(res>255L)
 				return res;
 		}
+	}
+
+	private String findPatterns(List<Instruction> instructions) {
+		List<List<Instruction>> patterns = new ArrayList<>();
+		String patternString = "";
+		int start = 0;
+		for(int i = 0; i<instructions.size()-1; i++) {
+			List<Instruction> pattern = existing(instructions, patterns, i);
+			if(pattern!=null && start == i) {
+				start += pattern.size();
+				i+=pattern.size()-1;
+				patternString += ","+patterns.indexOf(pattern);
+				continue;
+			} else if(start!=i && (pattern != null || occurrences(instructions, instructions.subList(start, i+1))<3)) {
+				patternString += ","+patterns.size();
+				patterns.add(instructions.subList(start, i));
+				start = i;
+				i--;
+			}
+		}
+		return patternString.substring(1).replace("0", "A").replace("1", "B").replace("2", "C")+"\n"+patterns.stream().map(this::toString).collect(Collectors.joining("\n"));
+	}
+
+	private List<Instruction> existing(List<Instruction> instructions, List<List<Instruction>> patterns, int i){
+		for(List<Instruction> pattern : patterns)
+			if(i+pattern.size() <= instructions.size() && instructions.subList(i, i+pattern.size()).equals(pattern))
+				return pattern;
+		return null;
+	}
+
+	private int occurrences(List<Instruction> instructions, List<Instruction> subList) {
+		return Math.toIntExact(IntStream.range(0, instructions.size()-subList.size()).filter(i -> toString(instructions.subList(i, i+subList.size())).equals(toString(subList))).count());
 	}
 
 	public String toString(List<Instruction> i) {
 		return i.stream().map(Instruction::toString).collect(Collectors.joining(","));
 	}
-	
+
 	private char getGrid(char[][] grid, Point p) {
 		if(p.x < 0 || p.y < 0 || p.x>=grid[0].length || p.y>=grid.length) return '.';
 		return grid[p.y][p.x];
 	}
-	
+
 	private Direction directionContainsSomethingAndUntraversed(char[][] grid, Point pos, List<Point> traversed) {
 		Direction dir = Direction.NORTH;
 		for(int i = 0; i<4; i++) {
@@ -129,12 +140,12 @@ public class Day17 implements Day {
 		}
 		return positions;
 	}
-	
+
 	enum Dir{L,R}
 	class Instruction{
 		int amount;
 		Dir dir;
-		
+
 		public Instruction(int amount, Dir dir) {
 			super();
 			this.amount = amount;
@@ -144,6 +155,31 @@ public class Day17 implements Day {
 		@Override
 		public String toString() {
 			return dir.name()+","+amount;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + amount;
+			result = prime * result + ((dir == null) ? 0 : dir.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Instruction other = (Instruction) obj;
+			if (amount != other.amount)
+				return false;
+			if (dir != other.dir)
+				return false;
+			return true;
 		}
 	}
 }
