@@ -27,14 +27,18 @@ public enum Direction {
 		return Direction.values()[cur];
 	}
 	
-	public Point move(Point currentLocation) {
+	public Point move(Point currentLocation, int amount) {
 		switch (this) {
-			case SOUTH: return new Point(currentLocation.x, currentLocation.y+1);
-			case NORTH: return new Point(currentLocation.x, currentLocation.y-1);
-			case EAST: return new Point(currentLocation.x+1, currentLocation.y);
-			case WEST: return new Point(currentLocation.x-1, currentLocation.y);
+			case SOUTH: return new Point(currentLocation.x, currentLocation.y+amount);
+			case NORTH: return new Point(currentLocation.x, currentLocation.y-amount);
+			case EAST: return new Point(currentLocation.x+amount, currentLocation.y);
+			case WEST: return new Point(currentLocation.x-amount, currentLocation.y);
 		}
 		throw new IllegalStateException("Non-existent Direction: "+this);
+	}
+	
+	public Point move(Point currentLocation) {
+		return move(currentLocation, 1);
 	}
 
 	public Direction opposite() {
@@ -53,5 +57,11 @@ public enum Direction {
 		else if(to.y > from.y) return SOUTH;
 		else if(to.y < from.y) return NORTH;
 		throw new IllegalStateException("From and to location are the same: "+from+", "+to);
+	}
+
+	public boolean leftOf(Direction robotDir) {
+		int n = this.ordinal()-1;
+		if(n == -1) n = values().length-1;
+		return robotDir.ordinal() == n;
 	}
 }
