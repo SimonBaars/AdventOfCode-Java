@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,6 @@ public class Day17 implements Day {
 	@Override
 	public Object part1() throws IOException {
 		char[][] grid = new char[48][48];
-		readDay(17);
 		IntcodeComputer ic = new IntcodeComputer(17, 1);
 		long res;
 		int x = 0, y =0;
@@ -43,7 +41,6 @@ public class Day17 implements Day {
 				}
 			}
 		}
-		//System.out.println(y);
 		return result;
 	}
 	
@@ -67,7 +64,6 @@ public class Day17 implements Day {
 				x++;
 			}
 		}
-		//StringBuilder input = new StringBuilder();
 		Point pos = findPos(grid, '^').get(0);
 		List<Instruction> instructions = new ArrayList<>();
 		List<Point> traversed = new ArrayList<>();
@@ -91,13 +87,11 @@ public class Day17 implements Day {
 			}
 		}
 		good.add(toString(instructions.subList(start, instructions.size())));
-		good.stream().forEach(System.out::println);
 		String stuff = "A,A,B,C,B,A,C,B,C,A\nL,6,R,12,L,6,L,8,L,8\nL,6,R,12,R,8,L,8\nL,4,L,4,L,6\nn\n";
 		System.out.println(stuff);
 		long[] asciis = stuff.chars().mapToLong(e -> e).toArray();
 		ic = new IntcodeComputer(17, 2);
 		ic.setInput(asciis);
-		System.out.println(Arrays.toString(asciis));
 		while(true) {
 			if((res = ic.run())>255L)
 				return res;
