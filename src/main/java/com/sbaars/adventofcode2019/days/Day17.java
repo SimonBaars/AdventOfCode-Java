@@ -23,7 +23,6 @@ public class Day17 implements Day {
 		IntcodeComputer ic = new IntcodeComputer(17, 1);
 		long res;
 		int x = 0, y =0;
-		int result = 0;
 		while((res = ic.run()) != IntcodeComputer.STOP_CODE) {
 			System.out.print((char)res);
 			if(res == 10) {
@@ -34,6 +33,7 @@ public class Day17 implements Day {
 				x++;
 			}
 		}
+		int result = 0;
 		for(y = 1; y<grid.length-1; y++) {
 			for(x = 1; x<grid.length-1; x++) {
 				if(hasAdjecent(grid, new Point(x,y), '#')) {

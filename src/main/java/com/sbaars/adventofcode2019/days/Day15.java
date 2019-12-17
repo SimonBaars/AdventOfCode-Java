@@ -13,12 +13,12 @@ import com.sbaars.adventofcode2019.pathfinding.Grid2d;
 
 public class Day15 implements Day {
 	
-	private static final int UNEXPLORED = 3;
-	private static final int WALL = 0;
+	public static final int UNEXPLORED = 3;
+	public static final int WALL = 0;
 	private static final int PATH = 1;
 	private static final int FINISH = 2;
-	private static final int BOARD_SIZE = 60;
-	private static final Point START_POINT = new Point(BOARD_SIZE/2,BOARD_SIZE/2);
+	private static final int BOARD_SIZE = 41;
+	private static final Point START_POINT = new Point(BOARD_SIZE/2+1,BOARD_SIZE/2+1);
 
 	public static void main(String[] args) throws IOException {
 		new Day15().printParts();
@@ -30,16 +30,14 @@ public class Day15 implements Day {
 		Point pos = START_POINT;
 		int[][] grid = new int[BOARD_SIZE][BOARD_SIZE];
 		for(int[] row : grid) Arrays.fill(row, UNEXPLORED);
-		grid[pos.y][pos.x] = 0;
+		grid[pos.y][pos.x] = 1;
 		while(true) {
-			System.out.println("Current pos = "+pos);
-			Arrays.stream(grid).map(e -> Arrays.toString(e)).forEach(System.out::println);
 			explore(grid, pos, ic);
 			pos = moveToUnexploredPlace(grid, pos, ic);
 			if(pos == null) {
 				Grid2d map2d = new Grid2d(grid, false);
-				System.out.println(Arrays.deepToString(grid));
-				return map2d.findPath(START_POINT, findPos(grid, FINISH).get(0)).size();
+				Arrays.stream(grid).map(e -> Arrays.toString(e)).forEach(System.out::println);
+				return map2d.findPath(START_POINT, findPos(grid, FINISH).get(0)).size()-1;
 			}
 		}
 	}
@@ -59,7 +57,9 @@ public class Day15 implements Day {
 	
 	private void traverseRoute(IntcodeComputer ic, Point pos, List<Point> route) {
 		for(Point p : route) {
-			ic.run(Direction.getByMove(pos, p).num);
+			if(ic.run(Direction.getByMove(pos, p).num)!=1L)
+				throw new IllegalStateException("Illegal state at "+pos+" execute to "+p);
+			pos = p;
 		}
 	}
 

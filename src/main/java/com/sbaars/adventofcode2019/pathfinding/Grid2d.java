@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.sbaars.adventofcode2019.days.Day15;
+
 /**
  * Creates nodes and neighbours from a 2d grid. Each point in the map has an
  * integer value that specifies the cost of crossing that point. If this value
@@ -65,7 +67,7 @@ public class Grid2d {
 						continue;
 					}
 
-					if (map[j][i] < 1) {
+					if (map[j][i] == Day15.WALL || map[j][i] == Day15.UNEXPLORED) {
 						continue;
 					}
 
