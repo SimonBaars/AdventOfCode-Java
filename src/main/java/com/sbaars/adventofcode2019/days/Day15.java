@@ -19,6 +19,7 @@ public class Day15 implements Day {
 	private static final int FINISH = 2;
 	private static final int BOARD_SIZE = 41;
 	private static final Point START_POINT = new Point(BOARD_SIZE/2+1,BOARD_SIZE/2+1);
+	int[][] grid = new int[BOARD_SIZE][BOARD_SIZE];
 
 	public static void main(String[] args) throws IOException {
 		new Day15().printParts();
@@ -28,24 +29,22 @@ public class Day15 implements Day {
 	public Object part1() throws IOException {
 		IntcodeComputer ic = new IntcodeComputer(15);
 		Point pos = START_POINT;
-		int[][] grid = new int[BOARD_SIZE][BOARD_SIZE];
 		for(int[] row : grid) Arrays.fill(row, UNEXPLORED);
 		grid[pos.y][pos.x] = 1;
 		while(true) {
-			explore(grid, pos, ic);
-			pos = moveToUnexploredPlace(grid, pos, ic);
+			explore(pos, ic);
+			pos = moveToUnexploredPlace(pos, ic);
 			if(pos == null) {
 				Grid2d map2d = new Grid2d(grid, false);
-				Arrays.stream(grid).map(e -> Arrays.toString(e)).forEach(System.out::println);
-				return map2d.findPath(START_POINT, findPos(grid, FINISH).get(0)).size()-1;
+				return map2d.findPath(START_POINT, findPos(FINISH).get(0)).size()-1;
 			}
 		}
 	}
 	
-	private Point moveToUnexploredPlace(int[][] grid, Point pos, IntcodeComputer ic) {
-		List<Point> corridorSpaces = findPos(grid, PATH);
+	private Point moveToUnexploredPlace(Point pos, IntcodeComputer ic) {
+		List<Point> corridorSpaces = findPos(PATH);
 		for(Point p : corridorSpaces) {
-			if(hasAdjecent(grid, p, UNEXPLORED)) {
+			if(hasAdjecent(p, UNEXPLORED)) {
 				Grid2d map2d = new Grid2d(grid, false);
 				List<Point> route = map2d.findPath(pos, p);
 				traverseRoute(ic, pos, route.subList(1, route.size()));
@@ -63,11 +62,11 @@ public class Day15 implements Day {
 		}
 	}
 
-	private boolean hasAdjecent(int[][] grid, Point pos, int tile) {
+	private boolean hasAdjecent(Point pos, int tile) {
 		return grid[pos.y+1][pos.x] == tile || grid[pos.y][pos.x+1] == tile || grid[pos.y-1][pos.x] == tile || grid[pos.y][pos.x-1] == tile;
 	}
 
-	private List<Point> findPos(int[][] grid, int tile) {
+	private List<Point> findPos(int tile) {
 		List<Point> positions = new ArrayList<>();
 		for(int y = 0; y<grid.length; y++) {
 			for(int x = 0; x<grid[y].length; x++) {
@@ -78,7 +77,7 @@ public class Day15 implements Day {
 		return positions;
 	}
 
-	private void explore(int[][] grid, Point pos, IntcodeComputer ic) {
+	private void explore(Point pos, IntcodeComputer ic) {
 		Direction dir  = Direction.NORTH;
 		for(int i = 0; i<4;i++) {
 			Point move = dir.move(pos);
@@ -94,6 +93,7 @@ public class Day15 implements Day {
 	
 	@Override
 	public Object part2() throws IOException {
-		return 0;
+		Point oxygenLeak = findPos(FINISH).get(0);
+		return findPos(PATH).stream().mapToInt(e -> new Grid2d(grid, false).findPath(oxygenLeak, e).size()-1).max().getAsInt();
 	}
 }
