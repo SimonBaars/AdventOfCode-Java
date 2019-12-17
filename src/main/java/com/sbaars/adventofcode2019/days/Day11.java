@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.sbaars.adventofcode2019.common.Day;
-import com.sbaars.adventofcode2019.common.OCR;
 import com.sbaars.adventofcode2019.common.ProcessesImages;
 import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
 
@@ -50,7 +49,7 @@ public class Day11 implements Day, ProcessesImages {
 		return startWhite ? constructImage(whitePlaces) : paintedOnce.size();
 	}
 	
-	private OCR constructImage(Set<Point> whitePlaces) {
+	private String constructImage(Set<Point> whitePlaces) {
 		int cornerX = whitePlaces.stream().mapToInt(e -> e.x).min().getAsInt();
 		int cornerY = whitePlaces.stream().mapToInt(e -> e.y).min().getAsInt();
 		whitePlaces.forEach(e -> e.move(e.x - cornerX, e.y - cornerY));
@@ -59,7 +58,7 @@ public class Day11 implements Day, ProcessesImages {
 		int[][] places = new int[sizey][sizex];
 		for(Point p : whitePlaces)
 			places[p.y][p.x] = 1;
-		return new OCR(createAsciiArray(places));
+		return printAsciiArray(places);
 	}
 
 	@Override
