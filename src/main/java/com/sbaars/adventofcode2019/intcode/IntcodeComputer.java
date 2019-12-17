@@ -26,7 +26,7 @@ public class IntcodeComputer implements DoesFileOperations {
 		if(day == 2) {
 			program[1] = input[0];
 			program[2] = input[1];
-		} else if(day == 7) {
+		} else if(day == 17) {
 			program[0] = input[0];
 		}
 	}

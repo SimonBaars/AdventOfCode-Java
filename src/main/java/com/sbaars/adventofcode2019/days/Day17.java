@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,10 +55,9 @@ public class Day17 implements Day {
 	public Object part2() throws IOException {
 		char[][] grid = new char[48][48];
 		readDay(17);
-		IntcodeComputer ic = new IntcodeComputer(17, 2);
+		IntcodeComputer ic = new IntcodeComputer(17, 1);
 		long res;
 		int x = 0, y = 0;
-		int result = 0;
 		while((res = ic.run()) != IntcodeComputer.STOP_CODE) {
 			if(res == 10) {
 				y++;
@@ -92,18 +92,18 @@ public class Day17 implements Day {
 		}
 		good.add(toString(instructions.subList(start, instructions.size())));
 		good.stream().forEach(System.out::println);
-		String stuff = "A,B,C,D,E,F,G,H\n" + good.stream().collect(Collectors.joining("\n"))+"\nn\n";
+		String stuff = "A,A,B,C,B,A,C,B,C,A\nL,6,R,12,L,6,L,8,L,8\nL,6,R,12,R,8,L,8\nL,4,L,4,L,6\nn\n";
 		System.out.println(stuff);
 		long[] asciis = stuff.chars().mapToLong(e -> e).toArray();
 		ic = new IntcodeComputer(17, 2);
 		ic.setInput(asciis);
 		System.out.println(Arrays.toString(asciis));
-		while((res = ic.run()) != IntcodeComputer.STOP_CODE) {
-			System.out.print((char)res);
+		while(true) {
+			if((res = ic.run())>255L)
+				return res;
 		}
-		return 0;
 	}
-	
+
 	public String toString(List<Instruction> i) {
 		return i.stream().map(Instruction::toString).collect(Collectors.joining(","));
 	}
