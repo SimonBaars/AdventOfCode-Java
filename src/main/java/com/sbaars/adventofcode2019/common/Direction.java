@@ -4,20 +4,18 @@ import java.awt.Point;
 import java.util.Arrays;
 
 public enum Direction {
-	NORTH(1), EAST(4), SOUTH(2), WEST(3);
+	NORTH(1, 'U'), EAST(4, 'R'), SOUTH(2, 'D'), WEST(3, 'L');
 	
 	public final int num;
+	public final int code;
 	
-	private Direction(int num) {
+	private Direction(int num, char code) {
 		this.num = num;
-	}
-	
-	public char directionCode() {
-		return name().charAt(0);
+		this.code = code;
 	}
 	
 	public static Direction getByDirCode(char code) {
-		return Arrays.stream(values()).filter(e -> e.directionCode() == code).findAny().get();
+		return Arrays.stream(values()).filter(e -> e.code == code).findAny().get();
 	}
 	
 	public Direction turn(boolean right) {
