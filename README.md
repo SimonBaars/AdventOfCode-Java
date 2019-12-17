@@ -15,6 +15,10 @@ Days:
 - [Day 11](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day11.java)
 - [Day 12](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day12.java)
 - [Day 13](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day13.java)
+- [Day 14](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day14.java)
+- [Day 15](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day15.java)
+- [Day 16](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day16.java)
+- [Day 17](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day17.java)
 
 Output of running [Main.java](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/Main.java):
 ```
@@ -48,7 +52,13 @@ Part 2: 89603079
 
 Day 8:
 Part 1: 1360
-Part 2: FPUAR
+Part 2: 
+████ ███  █  █  ██  ███  
+█    █  █ █  █ █  █ █  █ 
+███  █  █ █  █ █  █ █  █ 
+█    ███  █  █ ████ ███  
+█    █    █  █ █  █ █ █  
+█    █     ██  █  █ █  █ 
 
 Day 9:
 Part 1: 2518058886
@@ -60,7 +70,13 @@ Part 2: 1419
 
 Day 11:
 Part 1: 2172
-Part 2: JELEFGHP
+Part 2: 
+  ██ ████ █    ████ ████  ██  █  █ ███ 
+   █ █    █    █    █    █  █ █  █ █  █
+   █ ███  █    ███  ███  █    ████ █  █
+   █ █    █    █    █    █ ██ █  █ ███ 
+█  █ █    █    █    █    █  █ █  █ █   
+ ██  ████ ████ ████ █     ███ █  █ █   
 
 Day 12:
 Part 1: 13399
@@ -69,4 +85,20 @@ Part 2: 312992287193064
 Day 13:
 Part 1: 320
 Part 2: 15156
+
+Day 14:
+Part 1: 485720
+Part 2: 3848998
+
+Day 15:
+Part 1: 380
+Part 2: 410
+
+Day 16:
+Part 1: 12541048
+Part 2: 62858988
+
+Day 17:
+Part 1: 7404
+Part 2: 929045
 ```
