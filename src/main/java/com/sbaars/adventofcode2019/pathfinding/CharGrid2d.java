@@ -66,7 +66,7 @@ public class CharGrid2d {
 						continue;
 					}
 
-					if (map[j][i] == '#' || (map[j][i]>='A' && map[j][i]<='Z' && !collectedKeys.contains(map[j][i]))) {
+					if (map[j][i] == '#'/* || (map[j][i]>='A' && map[j][i]<='Z' && !collectedKeys.contains(map[j][i]))*/) {
 						continue;
 					}
 
@@ -126,18 +126,8 @@ public class CharGrid2d {
 		this.allowDiagonal = allowDiagonal;
 	}
 
-	public List<Point> findPath(Point start, Point end, List<Character> collectedKeys) {
-		this.collectedKeys = collectedKeys;
-		char removed = '.';
-		if(map[end.y][end.x] >='A' && map[end.y][end.x]<='Z') {
-			removed = map[end.y][end.x];
-			map[end.y][end.x] = '.';
-		}
-		List<Point> res = PathFinding.doAStar(new MapNode(start.x, start.y), new MapNode(end.x, end.y)).stream().map(MapNode::toPoint).collect(Collectors.toList());
-		if(removed >='A' && removed<='Z') {
-			map[end.y][end.x] = removed;
-		}
-		return res;
+	public List<Point> findPath(Point start, Point end) {
+		return PathFinding.doAStar(new MapNode(start.x, start.y), new MapNode(end.x, end.y)).stream().map(MapNode::toPoint).collect(Collectors.toList());
 	}
 
 }
