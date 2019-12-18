@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.sbaars.adventofcode2019.common.Day;
@@ -71,13 +70,19 @@ public class Day18 implements Day {
 		
 		
 	}
+	
+	class Robot{
+		Point pos;
+		int num;
+	}
 
 	@Override
 	public Object part1() throws IOException {
-		Point me = findPos('@').get(0);
+		List<Point> robots = findPos('@');
+		
 		//List<Character> collectedKeys = new ArrayList<>();
 		//int keysToCollect = findPos('a', 'z').size();
-		List<Point> keys = findPos('a', 'z');
+		/*List<Point> keys = findPos('a', 'z');
 		Map<Route, List<Point>> routes = new HashMap<>();
 		List<Point> requiredRoutes = new ArrayList<>(keys);
 		requiredRoutes.add(me);
@@ -87,7 +92,7 @@ public class Day18 implements Day {
 				//System.out.println(r.size()+", "+new Route(requiredRoutes.get(i), requiredRoutes.get(j)));
 				routes.put(new Route(requiredRoutes.get(i), requiredRoutes.get(j)), r);
 			}
-		}
+		}*/
 		//List<Point> doors = findPos('A', 'Z');
 		/*int steps = 0;
 		//while(collectedKeys.size()<keysToCollect) {
@@ -115,9 +120,19 @@ public class Day18 implements Day {
 		System.out.println(steps);
 		}*/
 		//System.out.println(Arrays.toString(reachableKeys.toArray()));
-		return findSteps(0, me, new ArrayList<>(), keys, routes);
+		return fSteps(robots, new ArrayList<>());
+		//return findSteps(0, me, new ArrayList<>(), keys, routes);
 	}
 	
+	private Object fSteps(List<Point> robots, List<Character> collectedKeys) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private List<List<Point>> reachableKeys(List<Point> robots, List<Character> collectedKeys){
+		
+	}
+
 	public List<Point> getRoute(Map<Route, List<Point>> routes, Point p1, Point p2){
 		List<Point> p = routes.get(new Route(p1, p2));
 		if(p != null)
@@ -134,14 +149,14 @@ public class Day18 implements Day {
 		return true;
 	}
 	
-	int lowest = Integer.MAX_VALUE;
+	//int lowest = Integer.MAX_VALUE;
 	public int findSteps(int currentSteps, Point me, List<Character> collectedKeys, List<Point> keys, Map<Route, List<Point>> routes) {
-		if(keys.isEmpty() && currentSteps<lowest) {
+		/*if(keys.isEmpty() && currentSteps<lowest) {
 			lowest = currentSteps;
 			System.out.println(lowest);
 		} else if(currentSteps>=lowest) {
 			return currentSteps;
-		}
+		}*/
 		
 		List<List<Point>> possibleMoves = keys.stream().map(e -> getRoute(routes, me, e)).filter(e -> canTakeRoute(e, collectedKeys)).collect(Collectors.toList());
 		//System.out.println("moves "+possibleMoves.size());
