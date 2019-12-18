@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -123,19 +124,23 @@ public class Day18 implements Day {
 	public Object part1() throws IOException {
 		List<Point> me = new ArrayList<>();
 		me.add(middle);
+		return findRoutes(me);
+	}
+
+	private Object findRoutes(List<Point> me) {
 		//List<Character> collectedKeys = new ArrayList<>();
 		//int keysToCollect = findPos('a', 'z').size();
 		List<Point> keys = findPos('a', 'z');
-		/*Map<Route, List<Point>> routes = new HashMap<>();
+		Map<Route, List<Point>> routes = new HashMap<>();
 		List<Point> requiredRoutes = new ArrayList<>(keys);
-		requiredRoutes.add(me);
+		requiredRoutes.addAll(me);
 		for(int i = 0; i<requiredRoutes.size(); i++) {
 			for(int j = i+1; j<requiredRoutes.size(); j++) {
 				List<Point> r = charGrid.findPath(requiredRoutes.get(i), requiredRoutes.get(j));
-				//System.out.println(r.size()+", "+new Route(requiredRoutes.get(i), requiredRoutes.get(j)));
-				routes.put(new Route(requiredRoutes.get(i), requiredRoutes.get(j)), r);
+				if(!r.isEmpty())
+					routes.put(new Route(requiredRoutes.get(i), requiredRoutes.get(j)), r);
 			}
-		}*/
+		}
 		//List<Point> doors = findPos('A', 'Z');
 		/*int steps = 0;
 		//while(collectedKeys.size()<keysToCollect) {
@@ -163,17 +168,14 @@ public class Day18 implements Day {
 		System.out.println(steps);
 		}*/
 		//System.out.println(Arrays.toString(reachableKeys.toArray()));
-		return findSteps(me, new TreeSet<>(), keys);
+		return findSteps(me, new TreeSet<>(), keys, routes);
 	}
 	
-	public List<List<Point>> getRoute(List<Point> me, Point p){
-		List<List<Point>> points = new ArrayList<>();
-		me.forEach(m -> points.add(charGrid.findPath(m, p)));
-		return points;
-		//List<Point> p = routes.get(new Route(p1, p2));
-		//if(p != null)
-		//	return p;
-		//else return routes.get(new Route(p2, p1));
+	public List<Point> getRoute(Map<Route, List<Point>> routes, Point p1, Point p2){
+		List<Point> p = routes.get(new Route(p1, p2));
+		if(p != null)
+			return p;
+		else return routes.get(new Route(p2, p1));
 	}
 	
 	public boolean canTakeRoute(List<Point> route, TreeSet<Character> keys) {
@@ -187,7 +189,7 @@ public class Day18 implements Day {
 	
 	//int lowest = Integer.MAX_VALUE;
 	Map<State, Integer> cachedResult = new HashMap<>();
-	public int findSteps(List<Point> me, TreeSet<Character> collectedKeys, List<Point> keys) {
+	public int findSteps(List<Point> me, TreeSet<Character> collectedKeys, List<Point> keys, Map<Route, List<Point>> routes) {
 		Integer cachedRes = cachedResult.get(new State(me, collectedKeys));
 		if(cachedRes!=null)
 			return cachedRes;
@@ -197,8 +199,8 @@ public class Day18 implements Day {
 		} else if(currentSteps>=lowest) {
 			return currentSteps;
 		}*/
-		List<List<Point>> possibleMoves = me.stream().flatMap(m -> keys.stream().map(p -> charGrid.findPath(m, p))).filter(e -> !e.isEmpty()).collect(Collectors.toList());//keys.stream().map(e -> getRoute(routes, me, e)).filter(e -> canTakeRoute(e, collectedKeys)).collect(Collectors.toList());
-		System.out.println(Arrays.toString(collectedKeys.toArray())+possibleMoves.size());
+		List<List<Point>> possibleMoves = me.stream().flatMap(m -> keys.stream().map(p -> getRoute(routes, m, p))).filter(Objects::nonNull).filter(e -> canTakeRoute(e, collectedKeys)).collect(Collectors.toList());//keys.stream().map(e -> getRoute(routes, me, e)).filter(e -> canTakeRoute(e, collectedKeys)).collect(Collectors.toList());
+		//System.out.println(Arrays.toString(collectedKeys.toArray())+possibleMoves.size());
 		//System.out.println("moves "+possibleMoves.size());
 		//possibleMoves.addAll(doors.stream().filter(e -> collectedKeys.contains(grid[e.y][e.x])).map(e -> charGrid.findPath(meNow, e)).filter(e -> !e.isEmpty()).collect(Collectors.toList()));
 		//List<Point> takenMove = possibleMoves.stream().reduce((a, b) -> a.size()<b.size() ? a : b).get();
@@ -210,7 +212,8 @@ public class Day18 implements Day {
 			//me = takenMove.get(takenMove.size()-1);
 			TreeSet<Character> myKeys = new TreeSet<>(collectedKeys);
 			List<Point> keyLocs = new ArrayList<>(keys);
-			Point newLoc = takenMove.get(takenMove.size()-1);
+			Point newLoc = me.contains(takenMove.get(0)) ? takenMove.get(takenMove.size()-1) : takenMove.get(0);
+			Point oldLoc = me.contains(takenMove.get(0)) ? takenMove.get(0) : takenMove.get(takenMove.size()-1);
 			char collected = grid[newLoc.y][newLoc.x];
 			//System.out.println((takenMove.size()-1)+" steps to "+collected);
 			myKeys.add(Character.toUpperCase(collected));
@@ -218,11 +221,11 @@ public class Day18 implements Day {
 				//doors.removeIf(e -> grid[e.y][e.x] == Character.toUpperCase(collected));
 			keyLocs.remove(newLoc);
 			List<Point> me2 = new ArrayList<>(me);
-			me2.set(me.indexOf(takenMove.get(0)), newLoc);
+			me2.set(me.indexOf(oldLoc), newLoc);
 			//System.out.println(collected);
 			//grid[newLoc.y][newLoc.x] = '@';
 			//System.out.println("Taken move "+collected+" for "+(takenMove.size()-1));
-			nSteps.add(findSteps(me2, myKeys, keyLocs) + takenMove.size()-1);
+			nSteps.add(findSteps(me2, myKeys, keyLocs, routes) + takenMove.size()-1);
 		}
 		int res = nSteps.stream().mapToInt(e -> e).min().orElse(0);
 		cachedResult.put(new State(me, collectedKeys), res);
@@ -253,6 +256,12 @@ public class Day18 implements Day {
 	
 	@Override
 	public Object part2() throws IOException {
-		return 0;
+		for(int y = 0; y<CHANGE_GRID.length; y++) {
+			for(int x = 0; x<CHANGE_GRID[y].length; x++) {
+				grid[middle.y-1+y][middle.x-1+x] = CHANGE_GRID[y][x];
+			}
+		}
+		cachedResult.clear();
+		return findRoutes(findPos('@'));
 	}
 }
