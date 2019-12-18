@@ -1,4 +1,5 @@
 package com.sbaars.adventofcode2019.pathfinding;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,7 +81,7 @@ public class PathFinding {
 			}
 		}
 
-		return route;
+		return new ArrayList<>();
 	}
 
 }
