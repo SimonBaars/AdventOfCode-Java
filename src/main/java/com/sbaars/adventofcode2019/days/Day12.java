@@ -74,8 +74,7 @@ public class Day12 implements Day {
 	}
 	
 	private static long gcd(long a, long b) {
-	    while (b > 0)
-	    {
+	    while (b > 0) {
 	        long temp = b;
 	        b = a % b; // % is remainder
 	        a = temp;

@@ -11,6 +11,8 @@ import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.common.Direction;
 import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
 
+import lombok.EqualsAndHashCode;
+
 public class Day17 implements Day {
 
 	char[][] grid = new char[48][48];
@@ -141,7 +143,7 @@ public class Day17 implements Day {
 	}
 
 	enum Dir{L,R}
-	class Instruction{
+	@EqualsAndHashCode class Instruction{
 		int amount;
 		Dir dir;
 
@@ -154,31 +156,6 @@ public class Day17 implements Day {
 		@Override
 		public String toString() {
 			return dir.name()+","+amount;
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + amount;
-			result = prime * result + ((dir == null) ? 0 : dir.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Instruction other = (Instruction) obj;
-			if (amount != other.amount)
-				return false;
-			if (dir != other.dir)
-				return false;
-			return true;
 		}
 	}
 }

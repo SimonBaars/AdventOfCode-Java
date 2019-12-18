@@ -9,6 +9,8 @@ import java.util.Set;
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.common.Direction;
 
+import lombok.EqualsAndHashCode;
+
 public class Day3 implements Day
 {	
 	private Set<Step> intersect;
@@ -84,26 +86,14 @@ public class Day3 implements Day
 		}
 	}
 	
-	class Step {
+	@EqualsAndHashCode class Step {
 		private final Point point;
-		private int steps;
-		private boolean isCombined = false;
+		@EqualsAndHashCode.Exclude private int steps;
+		@EqualsAndHashCode.Exclude private boolean isCombined = false;
 		
 		public Step(Point point, int steps) {
 			this.point = point;
 			this.steps = steps + 1;
-		}
-
-		@Override
-		public int hashCode() {
-			return 31 + ((point == null) ? 0 : point.hashCode());
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (!(obj instanceof Step))
-				return false;
-			return point.equals(((Step) obj).point);
 		}
 		
 		public void combine(Step step) {

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.util.ListMap;
@@ -27,7 +27,7 @@ public class Day6 implements Day {
     		orbits.addTo(parts[0], parts[1]);
     	}
     	AtomicInteger o = new AtomicInteger();
-    	for(Entry<String, List<String>> entry : orbits.entrySet())
+    	for(var entry : orbits.entrySet())
     		countOrbitsInList(orbits, o, entry.getValue());
 		return o.get();
 	}
@@ -71,13 +71,7 @@ public class Day6 implements Day {
 	}
 
 	public List<String> findOrbit(String orbitValue) {
-		List<String> orbit = new ArrayList<>();
-    	for(Entry<String, List<String>> entry : orbits.entrySet()) {
-    		if(entry.getValue().contains(orbitValue)) {
-    			orbit.add(entry.getKey());
-    		}
-    	}
-    	return orbit;
+		return orbits.entrySet().stream().filter(e -> e.getValue().contains(orbitValue)).map(e -> e.getKey()).collect(Collectors.toList());
     }
 
 	private String[] createOrbitArray() throws IOException {

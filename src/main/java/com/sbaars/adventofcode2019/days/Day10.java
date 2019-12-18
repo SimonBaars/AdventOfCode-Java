@@ -10,6 +10,8 @@ import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode2019.common.Day;
 
+import lombok.EqualsAndHashCode;
+
 public class Day10 implements Day {
 	
 	private final List<Point> asteroids;
@@ -52,9 +54,9 @@ public class Day10 implements Day {
 		return asteroids.stream().map(e -> new Asteroid(asteroid, e)).mapToDouble(e -> e.rotation).distinct().count();
 	}
 	
-	class Asteroid {
-		double rotation;
-		double distance;
+	@EqualsAndHashCode class Asteroid {
+		@EqualsAndHashCode.Exclude double rotation;
+		@EqualsAndHashCode.Exclude double distance;
 		Point position;
 		
 		public Asteroid(Point center, Point me) {
@@ -71,22 +73,6 @@ public class Day10 implements Day {
 		    double theta = Math.atan2(targetPt.y - centerPt.y, targetPt.x - centerPt.x) + Math.PI/2.0;
 		    double angle = Math.toDegrees(theta);
 		    return angle < 0 ? angle + 360 : angle;
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((position == null) ? 0 : position.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (!(obj instanceof Asteroid))
-				return false;
-			Asteroid other = (Asteroid) obj;
-			return position.equals(other.position);
 		}
 	}
 }
