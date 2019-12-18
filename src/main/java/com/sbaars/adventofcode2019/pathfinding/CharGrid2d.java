@@ -66,7 +66,7 @@ public class CharGrid2d {
 						continue;
 					}
 
-					if (map[j][i] == '#'/* || (map[j][i]>='A' && map[j][i]<='Z' && !collectedKeys.contains(map[j][i]))*/) {
+					if (map[j][i] == '#') {
 						continue;
 					}
 

@@ -22,8 +22,8 @@ public class Day8 implements Day, ProcessesImages {
 	@Override
 	public Object part1() throws IOException {
 		int[] pixels = readPixels();
-		List<CountMap<Integer>> pixelCounts = countPixels(pixels);
-		CountMap<Integer> cm = pixelCounts.stream().reduce((e1, e2) -> e1.get(0) > e2.get(0) ? e2 : e1).get();
+		var pixelCounts = countPixels(pixels);
+		var cm = pixelCounts.stream().reduce((e1, e2) -> e1.get(0) > e2.get(0) ? e2 : e1).get();
 		return cm.get(1) * cm.get(2);
 	}
 
