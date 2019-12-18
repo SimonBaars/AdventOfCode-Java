@@ -6,10 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.sbaars.adventofcode2019.common.Day;
+import com.sbaars.adventofcode2019.common.Direction;
 import com.sbaars.adventofcode2019.common.ProcessesImages;
 import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
-
-import com.sbaars.adventofcode2019.common.Direction;
 
 public class Day11 implements Day, ProcessesImages {
 
