@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.sbaars.adventofcode2019.common.Day;
@@ -71,6 +71,47 @@ public class Day18 implements Day {
 		
 		
 	}
+	
+	class State{
+		Point me;
+		TreeSet<Character> keys;
+		public State(Point me, TreeSet<Character> keys) {
+			super();
+			this.me = me;
+			this.keys = keys;
+		}
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((keys == null) ? 0 : keys.hashCode());
+			result = prime * result + ((me == null) ? 0 : me.hashCode());
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			State other = (State) obj;
+			if (keys == null) {
+				if (other.keys != null)
+					return false;
+			} else if (!keys.equals(other.keys))
+				return false;
+			if (me == null) {
+				if (other.me != null)
+					return false;
+			} else if (!me.equals(other.me))
+				return false;
+			return true;
+		}
+		
+		
+	}
 
 	@Override
 	public Object part1() throws IOException {
@@ -115,7 +156,7 @@ public class Day18 implements Day {
 		System.out.println(steps);
 		}*/
 		//System.out.println(Arrays.toString(reachableKeys.toArray()));
-		return findSteps(0, me, new ArrayList<>(), keys, routes);
+		return findSteps(me, new TreeSet<>(), keys, routes);
 	}
 	
 	public List<Point> getRoute(Map<Route, List<Point>> routes, Point p1, Point p2){
@@ -125,7 +166,7 @@ public class Day18 implements Day {
 		else return routes.get(new Route(p2, p1));
 	}
 	
-	public boolean canTakeRoute(List<Point> route, List<Character> keys) {
+	public boolean canTakeRoute(List<Point> route, TreeSet<Character> keys) {
 		for(Point p : route) {
 			if(grid[p.y][p.x]>='A' && grid[p.y][p.x]<='Z' && !keys.contains(grid[p.y][p.x])) {
 				return false;
@@ -134,15 +175,19 @@ public class Day18 implements Day {
 		return true;
 	}
 	
-	int lowest = Integer.MAX_VALUE;
-	public int findSteps(int currentSteps, Point me, List<Character> collectedKeys, List<Point> keys, Map<Route, List<Point>> routes) {
-		if(keys.isEmpty() && currentSteps<lowest) {
+	//int lowest = Integer.MAX_VALUE;
+	Map<State, Integer> cachedResult = new HashMap<>();
+	public int findSteps(Point me, TreeSet<Character> collectedKeys, List<Point> keys, Map<Route, List<Point>> routes) {
+		Integer cachedRes = cachedResult.get(new State(me, collectedKeys));
+		if(cachedRes!=null)
+			return cachedRes;
+		/*if(keys.isEmpty() && currentSteps<lowest) {
 			lowest = currentSteps;
 			System.out.println(lowest);
 		} else if(currentSteps>=lowest) {
 			return currentSteps;
-		}
-		
+		}*/
+		//System.out.println(Arrays.toString(collectedKeys.toArray()));
 		List<List<Point>> possibleMoves = keys.stream().map(e -> getRoute(routes, me, e)).filter(e -> canTakeRoute(e, collectedKeys)).collect(Collectors.toList());
 		//System.out.println("moves "+possibleMoves.size());
 		//possibleMoves.addAll(doors.stream().filter(e -> collectedKeys.contains(grid[e.y][e.x])).map(e -> charGrid.findPath(meNow, e)).filter(e -> !e.isEmpty()).collect(Collectors.toList()));
@@ -153,7 +198,7 @@ public class Day18 implements Day {
 		//List<Point> takenMove = possibleMoves.get(new Random().nextInt(possibleMoves.size()));
 			//grid[me.y][me.x] = '.';
 			//me = takenMove.get(takenMove.size()-1);
-			List<Character> myKeys = new ArrayList<>(collectedKeys);
+			TreeSet<Character> myKeys = new TreeSet<>(collectedKeys);
 			List<Point> keyLocs = new ArrayList<>(keys);
 			Point newLoc = me.equals(takenMove.get(0)) ? takenMove.get(takenMove.size()-1) : takenMove.get(0);
 			char collected = grid[newLoc.y][newLoc.x];
@@ -164,9 +209,12 @@ public class Day18 implements Day {
 			keyLocs.remove(newLoc);
 			//System.out.println(collected);
 			//grid[newLoc.y][newLoc.x] = '@';
-			nSteps.add(findSteps(currentSteps + takenMove.size()-1, newLoc, myKeys, keyLocs, routes));
+			//System.out.println("Taken move "+collected+" for "+(takenMove.size()-1));
+			nSteps.add(findSteps(newLoc, myKeys, keyLocs, routes) + takenMove.size()-1);
 		}
-		return nSteps.stream().mapToInt(e -> e).min().orElse(0);
+		int res = nSteps.stream().mapToInt(e -> e).min().orElse(0);
+		cachedResult.put(new State(me, collectedKeys), res);
+		return res;
 	}
 	
 	private List<Point> findPos(char tile) {

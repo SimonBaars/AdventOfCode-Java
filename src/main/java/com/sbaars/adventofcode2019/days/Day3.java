@@ -6,9 +6,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.sbaars.adventofcode2019.common.Direction;
-
 import com.sbaars.adventofcode2019.common.Day;
+import com.sbaars.adventofcode2019.common.Direction;
 
 public class Day3 implements Day
 {	
