@@ -20,6 +20,7 @@ Days:
 - [Day 16](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day16.java)
 - [Day 17](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day17.java)
 - [Day 18](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day18.java)
+- [Day 19](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day19.java)
 
 Output of running [Main.java](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/Main.java):
 ```
@@ -106,4 +107,8 @@ Part 2: 929045
 Day 18:
 Part 1: 5402
 Part 2: 2138
+
+Day 19:
+Part 1: 179
+Part 2: 9760485
 ```
