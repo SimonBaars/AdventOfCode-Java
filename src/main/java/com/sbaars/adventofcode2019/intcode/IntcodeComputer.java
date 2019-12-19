@@ -31,7 +31,7 @@ public class IntcodeComputer implements DoesFileOperations {
 		}
 	}
 	
-	public long run(long input) {
+	public long run(long...input) {
 		setInput(input);
 		return run();
 	}
