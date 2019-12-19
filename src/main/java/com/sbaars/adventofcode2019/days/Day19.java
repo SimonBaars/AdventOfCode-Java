@@ -13,12 +13,6 @@ public class Day19 implements Day {
 
 	@Override
 	public Object part1() throws IOException {
-		/*for(int i = 0; i<200;i++) {
-			for(int j = 0; j<100;j++) {
-				System.out.print(new IntcodeComputer(19, 1).run(i, j));
-			}
-			System.out.println();
-		}*/
 		long res = 0;
 		for(int x = 0; x<50;x++) {
 			for(int y = 0; y<50;y++) {
@@ -30,16 +24,32 @@ public class Day19 implements Day {
 	
 	@Override
 	public Object part2() throws IOException {
-		int x = 500, y = 0;
+		int i = 600, j = 0, start = 0, countWidth = 0;
+		boolean atStart = true;
 		while(true) {
-			if(beam(x, y)) {
-				if(beam(x-99, y+99)) return 10000 * (x - 99) + y;
-				x++;
-			} else y++;
+			long n = new IntcodeComputer(19, 1).run(i, j);
+			if(n == 1) {
+				if(atStart) {
+					start = j;
+				}
+				j++;
+				countWidth++;
+				atStart = false;
+			} else if(atStart) {
+				j++;
+			} else {
+				if(countWidth >= 100) {
+					int y = j-100;
+					int x = i;
+					while(new IntcodeComputer(19, 1).run(x, y) == 1) x++;
+					if((x-i)>=100)
+						return ((x-100)*10000)+y;
+				}
+				i++;
+				j = start;
+				countWidth = 0;
+				atStart = true;
+			}
 		}
-	}
-
-	private boolean beam(int x, int y) throws IOException {
-		return new IntcodeComputer(19).run(x, y) == 1L;
 	}
 }
