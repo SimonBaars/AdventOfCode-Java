@@ -119,22 +119,17 @@ public class Day20 implements Day {
 		queue.add(new State("", 0, new Visited(entry, 0)));
 		while(true) {
 			State s = queue.poll();
-			//System.out.println(Arrays.toString(queue.toArray()));
-			//System.out.println("------");
-			//System.out.println(s+", "+portalLabel.get(s.pos));
 			if(s.level == 0 && s.pos.equals(exit)) {
 				System.out.println(s.debug);
-				return s.totalSteps;
+				return s.totalSteps-1;
 			}
 			else if(s.level < 0) continue;
 			if(!routes.containsKey(s.pos)) determineRoutes(s.pos);
 			for(Route route : routes.get(s.pos)) {
-				//System.out.println(route);
 				int level = s.level;
 				if(b) level+=route.goal.isOuter ? -1 : 1;
 				Visited vis = new Visited(route.goal, level);
 				if(!visited.contains(vis)) {
-					//System.out.println("ADD!");
 					visited.add(vis);
 					queue.add(new State(s.debug+" "+(route.goal.isOuter ? '-' : '+')+portalLabel.get(route.goal)+":"+(s.totalSteps + route.distance), s.totalSteps + route.distance, vis));
 				}
@@ -146,8 +141,7 @@ public class Day20 implements Day {
 		for(Portal portal : portalsToTake) {
 			if(!portal.pos.equals(p.pos)) {
 				List<Point> route = charGrid.findPath(p.pos, portal.pos);
-				if(!route.isEmpty()) routes.addTo(p, new Route(teleport(portal), route.size()-1));
-				//System.out.println("portal from "+portal+portalLabel.get(portal)+" to "+routes.get(p).get(routes.get(p).size()-1));}
+				if(!route.isEmpty()) routes.addTo(p, new Route(teleport(portal), route.size()));
 			}
 		}
 	}
