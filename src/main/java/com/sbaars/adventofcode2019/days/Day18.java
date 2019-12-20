@@ -20,6 +20,7 @@ public class Day18 implements Day {
 	
 	private final char[][] grid;
 	private final CharGrid2d charGrid;
+	private final Map<State, Integer> cachedResult = new HashMap<>();
 	private static final char[][] CHANGE_GRID = {
 			{'@', '#', '@'},
 			{'#', '#', '#'},
@@ -85,7 +86,6 @@ public class Day18 implements Day {
 		return true;
 	}
 	
-	Map<State, Integer> cachedResult = new HashMap<>();
 	public int findSteps(List<Point> me, TreeSet<Character> collectedKeys, List<Point> keys, Map<Route, List<Point>> routes) {
 		Integer cachedRes = cachedResult.get(new State(me, collectedKeys));
 		if(cachedRes!=null) return cachedRes;
