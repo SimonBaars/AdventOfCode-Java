@@ -117,6 +117,8 @@ public class Day20 implements Day {
 		
 		var possibleMoves = portals.stream().filter(p -> !collectedKeys.contains(p.value)).map(p -> getRoute(routes, me, p.location)).filter(Objects::nonNull).collect(Collectors.toList());
 		removeDuplicates(me, portals, possibleMoves);
+		if(collectedKeys.size()>3) possibleMoves.clear();
+		System.out.println(Arrays.toString(collectedKeys.toArray())+possibleMoves.size());
 		
 		List<Integer> nSteps = new ArrayList<>();
 		for(List<Point> takenMove : possibleMoves) {
@@ -142,7 +144,7 @@ public class Day20 implements Day {
 			keyLocs.removeAll(teleport);
 			nSteps.add(findSteps(newLoc, myKeys, keyLocs, routes) + takenMove.size()-1);
 		}
-		int res = nSteps.stream().mapToInt(e -> e).min().orElse(0);
+		int res = nSteps.stream().mapToInt(e -> e).min().orElse(Integer.MAX_VALUE-10000);
 		cachedResult.put(new State(me, collectedKeys), res);
 		return res;
 	}
