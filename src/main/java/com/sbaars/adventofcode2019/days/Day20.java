@@ -21,10 +21,43 @@ import lombok.val;
 public class Day20 implements Day {
 	char[][] grid;
 	CharGrid2d charGrid;
+	private final List<Portal> outerRing = new ArrayList<>();
+	private final List<Portal> innerRing = new ArrayList<>();
+	private Portal entry;
+	private Portal exit;
 	
 	public Day20() throws IOException {
 		grid = Arrays.stream(readDay(20).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
 		charGrid = new CharGrid2d(grid, false);
+		
+		int[] rows = {2, 26, 80, 104};
+		for(int row : rows) {
+			boolean addPortal = row == rows[0] || row == rows[rows.length];
+			for(int i = 2; i<grid.length-2; i++) {
+				//System.out.println(row+", "+i+", "+grid[i][row]+", "+grid[i][row-1]);
+				if(grid[i][row] == '.') {
+					if(Character.isAlphabetic(grid[i][row-1])) {
+						addPortal(new Portal(""+grid[i][row-2]+grid[i][row-1], new Point(row, i)), addPortal);
+					} else if (Character.isAlphabetic(grid[i][row+1])) {
+						addPortal(new Portal(""+grid[i][row+2]+grid[i][row+1], new Point(row, i)), addPortal);
+					}
+				}
+				if(grid[row][i] == '.') {
+					if(Character.isAlphabetic(grid[row-1][i])) {
+						addPortal(new Portal(""+grid[row-2][i]+grid[row-1][i], new Point(i, row)), addPortal);
+					} else if (Character.isAlphabetic(grid[row+1][i])) {
+						addPortal(new Portal(""+grid[row+1][i]+grid[row+2][i], new Point(i, row)), addPortal);
+					}
+				}
+			}
+		}
+	}
+	
+	public void addPortal(Portal p, boolean outerRing) {
+		if(p.value.equals("AA")) this.entry = p;
+		else if(p.value.equals("AA")) this.exit = p;
+		else if(outerRing) this.outerRing.add(p);
+		else this.innerRing.add(p);
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -38,28 +71,7 @@ public class Day20 implements Day {
 
 	@Override
 	public Object part1() throws IOException {
-		Arrays.stream(grid).forEach(e -> System.out.println(new String(e)));
-		int[] rows = {2, 26, 80, 104};
-		List<Portal> portals = new ArrayList<>();
-		for(int row : rows) {
-			for(int i = 2; i<grid.length-2; i++) {
-				//System.out.println(row+", "+i+", "+grid[i][row]+", "+grid[i][row-1]);
-				if(grid[i][row] == '.') {
-					if(Character.isAlphabetic(grid[i][row-1])) {
-						portals.add(new Portal(""+grid[i][row-2]+grid[i][row-1], new Point(row, i)));
-					} else if (Character.isAlphabetic(grid[i][row+1])) {
-						portals.add(new Portal(""+grid[i][row+2]+grid[i][row+1], new Point(row, i)));
-					}
-				}
-				if(grid[row][i] == '.') {
-					if(Character.isAlphabetic(grid[row-1][i])) {
-						portals.add(new Portal(""+grid[row-2][i]+grid[row-1][i], new Point(i, row)));
-					} else if (Character.isAlphabetic(grid[row+1][i])) {
-						portals.add(new Portal(""+grid[row+1][i]+grid[row+2][i], new Point(i, row)));
-					}
-				}
-			}
-		}
+		//Arrays.stream(grid).forEach(e -> System.out.println(new String(e)));
 		return findRoutes(getPortal(portals, "AA").stream().map(e -> e.location).findAny().get(), portals);
 		//System.out.println(Arrays.toString(portals.toArray()));
 		//return 0;
@@ -73,11 +85,16 @@ public class Day20 implements Day {
 	@Data @AllArgsConstructor class Route {
 		Point start;
 		Point end;
+		List<Point> route;
+		
+		public int steps() {
+			return route.size();
+		}
 	}
 	
 	@Data @AllArgsConstructor class State{
 		Point me;
-		TreeSet<String> portalsTaken;
+		int depth;
 	}
 	
 	private Object findRoutes(Point me, List<Portal> portals) {
