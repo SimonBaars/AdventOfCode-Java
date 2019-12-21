@@ -68,9 +68,8 @@ public class Day17 implements Day {
 			robotDir = dir;
 		}
 		String patterns = findPatterns(instructions) + "\nn\n";
-		long[] asciis = patterns.chars().mapToLong(e -> e).toArray();
 		IntcodeComputer ic = new IntcodeComputer(17, 2);
-		ic.setInput(asciis);
+		ic.setInput(patterns);
 		while(true) {
 			long res = ic.run();
 			if(res>255L)
