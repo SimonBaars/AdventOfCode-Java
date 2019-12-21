@@ -148,4 +148,8 @@ public class IntcodeComputer implements DoesFileOperations {
 	public void setElement(int i, long j) {
 		program[i] = j;
 	}
+
+	public void setInput(String patterns) {
+		setInput(patterns.chars().mapToLong(e -> e).toArray());
+	}
 }
