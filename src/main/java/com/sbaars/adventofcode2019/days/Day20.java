@@ -119,14 +119,14 @@ public class Day20 implements Day {
 		queue.add(new State("", 0, new Visited(entry, 0)));
 		while(true) {
 			State s = queue.poll();
-			if(s.level == 0 && s.pos.equals(exit)) {
-				System.out.println(s.debug);
-				return s.totalSteps-1;
-			}
-			else if(s.level < 0) continue;
+			if(s.level < 0) continue;
 			if(!routes.containsKey(s.pos)) determineRoutes(s.pos);
 			for(Route route : routes.get(s.pos)) {
 				int level = s.level;
+				if(level == 0 && route.goal.equals(exit)) {
+					System.out.println(s.debug);
+					return route.distance + s.totalSteps - 1;
+				} else if(route.goal.equals(exit)) continue;
 				if(b) level+=route.goal.isOuter ? -1 : 1;
 				Visited vis = new Visited(route.goal, level);
 				if(!visited.contains(vis)) {
