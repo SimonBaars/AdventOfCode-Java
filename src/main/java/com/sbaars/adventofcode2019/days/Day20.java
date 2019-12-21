@@ -116,22 +116,22 @@ public class Day20 implements Day {
 	private int findRoutes(boolean b) {
 		final Queue<State> queue = new ArrayDeque<>();
 		final Set<Visited> visited = new HashSet<>();
-		queue.add(new State("", 0, new Visited(entry, 0)));
+		queue.add(new State("", -1, new Visited(entry, 0)));
 		while(true) {
 			State s = queue.poll();
-			if(s.level < 0) continue;
 			if(!routes.containsKey(s.pos)) determineRoutes(s.pos);
 			for(Route route : routes.get(s.pos)) {
 				int level = s.level;
 				if(level == 0 && route.goal.equals(exit)) {
 					System.out.println(s.debug);
-					return route.distance + s.totalSteps - 1;
+					return route.distance + s.totalSteps;
 				} else if(route.goal.equals(exit)) continue;
-				if(b) level+=route.goal.isOuter ? -1 : 1;
+				if(b) level+=route.goal.isOuter ? 1 : -1;
+				if(s.level < 0) continue;
 				Visited vis = new Visited(route.goal, level);
 				if(!visited.contains(vis)) {
 					visited.add(vis);
-					queue.add(new State(s.debug+" "+(route.goal.isOuter ? '-' : '+')+portalLabel.get(route.goal)+":"+(s.totalSteps + route.distance), s.totalSteps + route.distance, vis));
+					queue.add(new State(s.debug+" "+(route.goal.isOuter ? '-' : '+')+portalLabel.get(route.goal)+":"+(s.totalSteps + route.distance) + "(" + s.level + ")", s.totalSteps + route.distance, vis));
 				}
 			}
 		}
