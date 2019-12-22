@@ -27,7 +27,7 @@ public class Day22 implements Day {
 		new Day22().printParts();
 	}
 	
-	@AllArgsConstructor enum Action{
+	@AllArgsConstructor enum Action {
 		DEAL_WITH_INCREMENT("deal with increment "),
 		DEAL_NEW_STACK("deal into new stack"),
 		CUT("cut ");
@@ -79,7 +79,7 @@ public class Day22 implements Day {
 				} break;
 				case CUT: input[1] = input[1].add(num(amount)); break;
 				case DEAL_WITH_INCREMENT: {
-					BigInteger p = num(amount).modPow(deckSize.min(num(2)), deckSize);
+					var p = num(amount).modPow(deckSize.subtract(num(2)), deckSize);
 					for(int i = 0; i<input.length; i++) input[i] = input[i].multiply(p);
 				} break;
 			}
@@ -100,21 +100,15 @@ public class Day22 implements Day {
 	
 	@Override
 	public Object part2() throws IOException {
-		BigInteger deckSize = num(119315717514047L);
-		BigInteger timesShuffled = num(101741582076661L);
-		BigInteger[] calc = new BigInteger[] {num(1), num(0)};
+		var deckSize = num(119315717514047L);
+		var timesShuffled = num(101741582076661L);
+		var calc = new BigInteger[] {num(1), num(0)};
 		for(Move move : reverseArray(moves)) {
-			System.out.println(move);
 			calc = move.execute(calc, deckSize);
-			//System.out.println("Before mod: "+Arrays.toString(calc));
 			for(int i = 0; i<calc.length; i++) calc[i] = calc[i].mod(deckSize);
-			//calc[0] %= deckSize;
-			//calc[1] %= deckSize;
-			System.out.println("after mod: "+Arrays.toString(calc));
 		}
-		BigInteger pow = calc[0].modPow(timesShuffled, deckSize);
-		//return Math.floorMod(pow.multiply(num(2020)).add(calc[1]).multiply((pow + deckSize - 1) * pow(calc[0] - 1, deckSize - 2, deckSize), deckSize);
-		return pow.multiply(num(2020)).add(calc[1].multiply(pow.add(deckSize).min(num(1))).multiply(calc[0].min(num(1)).modPow(deckSize.min(num(2)), deckSize))).mod(deckSize);
+		var pow = calc[0].modPow(timesShuffled, deckSize);
+		return pow.multiply(num(2020)).add(calc[1].multiply(pow.add(deckSize).subtract(num(1))).multiply(calc[0].subtract(num(1)).modPow(deckSize.subtract(num(2)), deckSize))).mod(deckSize);
 	}
 	
 	private <T> T[] reverseArray(T[] arr) {
