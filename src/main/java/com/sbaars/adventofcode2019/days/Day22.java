@@ -100,15 +100,17 @@ public class Day22 implements Day {
 	
 	@Override
 	public Object part2() throws IOException {
-		var deckSize = num(119315717514047L);
-		var timesShuffled = num(101741582076661L);
+		return seekPosition(num(119315717514047L), num(101741582076661L), 2020);
+	}
+
+	private BigInteger seekPosition(BigInteger deckSize, BigInteger timesShuffled, int position) {
 		var calc = new BigInteger[] {num(1), num(0)};
 		for(Move move : reverseArray(moves)) {
 			calc = move.execute(calc, deckSize);
 			for(int i = 0; i<calc.length; i++) calc[i] = calc[i].mod(deckSize);
 		}
 		var pow = calc[0].modPow(timesShuffled, deckSize);
-		return pow.multiply(num(2020)).add(calc[1].multiply(pow.add(deckSize).subtract(num(1))).multiply(calc[0].subtract(num(1)).modPow(deckSize.subtract(num(2)), deckSize))).mod(deckSize);
+		return pow.multiply(num(position)).add(calc[1].multiply(pow.add(deckSize).subtract(num(1))).multiply(calc[0].subtract(num(1)).modPow(deckSize.subtract(num(2)), deckSize))).mod(deckSize);
 	}
 	
 	private <T> T[] reverseArray(T[] arr) {
