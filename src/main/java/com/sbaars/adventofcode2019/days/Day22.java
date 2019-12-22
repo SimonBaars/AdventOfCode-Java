@@ -71,23 +71,26 @@ public class Day22 implements Day {
 			return cards;
 		}
 		
-		public long[] execute(long[] input, long deckSize) {
+		public BigInteger[] execute(BigInteger[] input, BigInteger deckSize) {
 			switch(action) {
-				case DEAL_NEW_STACK: return new long[] {-input[0], -(input[1]+1)};
-				case CUT: input[1] += amount; break;
+				case DEAL_NEW_STACK: {
+					input[0] = input[0].multiply(num(-1));
+					input[1] = input[1].add(num(1)).multiply(num(-1));
+				} break;
+				case CUT: input[1] = input[1].add(num(amount)); break;
 				case DEAL_WITH_INCREMENT: {
-					long p = pow(amount, deckSize-2, deckSize);
-					return new long[] {input[0]*p, input[1]*p};
-				}
+					BigInteger p = num(amount).modPow(deckSize.min(num(2)), deckSize);
+					for(int i = 0; i<input.length; i++) input[i] = input[i].multiply(p);
+				} break;
 			}
 			return input;
 		}
 	}
 	
-	private long pow(long a, long b, long c) {
-		return new BigInteger(Long.toString(a)).modPow(new BigInteger(Long.toString(b)), new BigInteger(Long.toString(c))).longValue();
+	private BigInteger num(long n) {
+		return new BigInteger(Long.toString(n));
 	}
-
+	
 	@Override
 	public Object part1() throws IOException {
 		List<Integer> cards = IntStream.range(0, 10007).boxed().collect(Collectors.toList());
@@ -97,21 +100,21 @@ public class Day22 implements Day {
 	
 	@Override
 	public Object part2() throws IOException {
-		long deckSize = 119315717514047L;
-		long timesShuffled = 101741582076661L;
-		long[] calc = new long[] {1, 0};
-		System.out.println("Max long "+Long.MAX_VALUE);
+		BigInteger deckSize = num(119315717514047L);
+		BigInteger timesShuffled = num(101741582076661L);
+		BigInteger[] calc = new BigInteger[] {num(1), num(0)};
 		for(Move move : reverseArray(moves)) {
 			System.out.println(move);
 			calc = move.execute(calc, deckSize);
 			//System.out.println("Before mod: "+Arrays.toString(calc));
-			for(int i = 0; i<calc.length; i++) calc[i] = Math.floorMod(calc[i], deckSize);
+			for(int i = 0; i<calc.length; i++) calc[i] = calc[i].mod(deckSize);
 			//calc[0] %= deckSize;
 			//calc[1] %= deckSize;
 			System.out.println("after mod: "+Arrays.toString(calc));
 		}
-		long pow = pow(calc[0], timesShuffled, deckSize);
-		return Math.floorMod(pow * 2020 + calc[1] * (pow + deckSize - 1) * pow(calc[0] - 1, deckSize - 2, deckSize), deckSize);
+		BigInteger pow = calc[0].modPow(timesShuffled, deckSize);
+		//return Math.floorMod(pow.multiply(num(2020)).add(calc[1]).multiply((pow + deckSize - 1) * pow(calc[0] - 1, deckSize - 2, deckSize), deckSize);
+		return pow.multiply(num(2020)).add(calc[1].multiply(pow.add(deckSize).min(num(1))).multiply(calc[0].min(num(1)).modPow(deckSize.min(num(2)), deckSize))).mod(deckSize);
 	}
 	
 	private <T> T[] reverseArray(T[] arr) {
