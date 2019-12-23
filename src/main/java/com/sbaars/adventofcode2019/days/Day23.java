@@ -1,6 +1,5 @@
 package com.sbaars.adventofcode2019.days;
 
-import java.awt.Point;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
@@ -24,7 +23,7 @@ public class Day23 implements Day {
 		return getNetworkNumber(false);
 	}
 
-	private Object getNetworkNumber(boolean returnNatY) throws IOException {
+	private long getNetworkNumber(boolean returnNatY) throws IOException {
 		long[] program = readLongArray(23);
 		IntcodeComputer[] ic = IntStream.range(0, 50).mapToObj(i -> new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, program, i, -1)).toArray(IntcodeComputer[]::new);
 		long[] nat = new long[2];
