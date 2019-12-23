@@ -71,7 +71,7 @@ public class Day22 implements Day {
 			return cards;
 		}
 		
-		public BigInteger[] execute(BigInteger[] input, BigInteger deckSize) {
+		public void execute(BigInteger[] input, BigInteger deckSize) {
 			switch(action) {
 				case DEAL_NEW_STACK: {
 					input[0] = input[0].multiply(num(-1));
@@ -83,7 +83,6 @@ public class Day22 implements Day {
 					for(int i = 0; i<input.length; i++) input[i] = input[i].multiply(p);
 				} break;
 			}
-			return input;
 		}
 	}
 	
@@ -106,7 +105,7 @@ public class Day22 implements Day {
 	private BigInteger seekPosition(BigInteger deckSize, BigInteger timesShuffled, int position) {
 		var calc = new BigInteger[] {num(1), num(0)};
 		for(Move move : reverseArray(moves)) {
-			calc = move.execute(calc, deckSize);
+			move.execute(calc, deckSize);
 			for(int i = 0; i<calc.length; i++) calc[i] = calc[i].mod(deckSize);
 		}
 		var pow = calc[0].modPow(timesShuffled, deckSize);
