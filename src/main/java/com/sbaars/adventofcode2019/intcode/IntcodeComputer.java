@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode2019.util.DoesFileOperations;
@@ -18,17 +17,26 @@ public class IntcodeComputer implements DoesFileOperations {
 	private static final int[] DO_NOT_TRANSFORM_FINAL_ARGUMENT = {1, 2, 3, 7, 8};
 	public static final long STOP_CODE = Long.MIN_VALUE+1;
 	private static final long CONTINUE_CODE = Long.MIN_VALUE;
+	public RetentionPolicy policy;
+	
+	public IntcodeComputer(RetentionPolicy policy, long[] program, long...input) {
+		//this.program = Arrays.copyOf(this.program, 10000); // Quick hack to enlarge memory, should be refactored later(tm).
+		this.program = Arrays.copyOf(program, 10000);
+		setInput(input);
+		this.policy = policy;
+	}
 	
 	public IntcodeComputer(int day, long...input) throws IOException {
-		this.program = Arrays.stream(readDay(day).split(",")).mapToLong(Long::parseLong).toArray();
+		this.program = readLongArray(day);
 		this.program = Arrays.copyOf(this.program, 10000); // Quick hack to enlarge memory, should be refactored later(tm).
-		setInput(input);
 		if(day == 2) {
-			program[1] = input[0];
-			program[2] = input[1];
+			this.program[1] = input[0];
+			this.program[2] = input[1];
 		} else if(day == 17) {
-			program[0] = input[0];
+			this.program[0] = input[0];
 		}
+		setInput(input);
+		this.policy = RetentionPolicy.EXIT_ON_OUTPUT;
 	}
 	
 	public long run(long...input) {
@@ -43,6 +51,8 @@ public class IntcodeComputer implements DoesFileOperations {
 	}
 
 	private long executeInstruction(int instruction) {
+		if(instruction == 3 && policy == RetentionPolicy.EXIT_ON_EMPTY_INPUT && input.size() == 0)
+			return STOP_CODE;
 		if(instruction>99) 
 			return parseComplexInstruction(instruction);
 		return execute(instruction);
@@ -74,17 +84,18 @@ public class IntcodeComputer implements DoesFileOperations {
 		return lastInput;
 	}
 	
-	public boolean addInput(long num) {
-		return input.add(num);
+	public void addInput(long...num) {
+		for(long n : num)
+			input.add(n);
 	}
 	
 	public long firstElement() {
 		return program[0];
 	}
 	
-	public boolean setInput(long...input) {
+	public void setInput(long...input) {
 		this.input.clear();
-		return this.input.addAll(Arrays.stream(input).boxed().collect(Collectors.toList()));
+		addInput(input);
 	}
 	
 	private long executeInstruction(long[] args, int instruction) {

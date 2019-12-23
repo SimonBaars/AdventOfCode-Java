@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 public interface DoesFileOperations {
 
@@ -17,5 +18,9 @@ public interface DoesFileOperations {
 	
 	public default String readDay(int day) throws IOException {
 		return getResourceAsString("day"+day+".txt");
+	}
+	
+	public default long[] readLongArray(int day) throws IOException {
+		return Arrays.stream(readDay(day).split(",")).mapToLong(Long::parseLong).toArray();
 	}
 }
