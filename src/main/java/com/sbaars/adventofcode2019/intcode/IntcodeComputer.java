@@ -69,7 +69,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	
 	private long readInput() {
 		if(input.isEmpty())
-			return lastInput;
+			return -1;
 		lastInput = input.poll();
 		return lastInput;
 	}
