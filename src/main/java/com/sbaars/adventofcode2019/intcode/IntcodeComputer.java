@@ -21,14 +21,14 @@ public class IntcodeComputer implements DoesFileOperations {
 	
 	public IntcodeComputer(RetentionPolicy policy, long[] program, long...input) {
 		//this.program = Arrays.copyOf(this.program, 10000); // Quick hack to enlarge memory, should be refactored later(tm).
-		this.program = Arrays.copyOf(program, 10000);
+		this.program = Arrays.copyOf(program, 50000);
 		setInput(input);
 		this.policy = policy;
 	}
 	
 	public IntcodeComputer(int day, long...input) throws IOException {
 		this.program = readLongArray(day);
-		this.program = Arrays.copyOf(this.program, 10000); // Quick hack to enlarge memory, should be refactored later(tm).
+		this.program = Arrays.copyOf(this.program, 50000); // Quick hack to enlarge memory, should be refactored later(tm).
 		if(day == 2) {
 			this.program[1] = input[0];
 			this.program[2] = input[1];
@@ -79,7 +79,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	
 	private long readInput() {
 		if(input.isEmpty())
-			return -1;
+			return lastInput;
 		lastInput = input.poll();
 		return lastInput;
 	}
