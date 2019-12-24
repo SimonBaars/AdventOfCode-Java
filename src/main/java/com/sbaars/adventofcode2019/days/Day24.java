@@ -51,15 +51,15 @@ public class Day24 implements Day {
 
 	private void simulate(char[][] grid, char[][] newGrid, Point p) {
 		int adj = nAdjecent(grid, p);
-		if(grid[p.y][p.x] == '#' && adj != 1) {
-			newGrid[p.y][p.x] = '.';
-		} else if(grid[p.y][p.x] == '.' && (adj == 1 || adj == 2)) {
-			newGrid[p.y][p.x] = '#';
+		if(get(grid, p) == '#' && adj != 1) {
+			set(newGrid, p, '.');
+		} else if(get(grid, p) == '.' && (adj == 1 || adj == 2)) {
+			set(newGrid, p, '#');
 		}
 	}
 	
 	private long calcRes(char[][] grid) {
-		return (long)streamGrid(grid).filter(p -> grid[p.y][p.x] == '#').mapToDouble(p -> Math.pow(2, (p.y*grid.length)+p.x)).sum();
+		return (long)streamGrid(grid).filter(p -> get(grid, p) == '#').mapToDouble(p -> Math.pow(2, (p.y*grid.length)+p.x)).sum();
 	}
 
 	public char[][] copy(char[][] grid){
@@ -74,7 +74,7 @@ public class Day24 implements Day {
 	
 	private int num(char[][] grid, Point p) {
 		if(p.x<0 || p.y<0 || p.x>=grid.length || p.y>=grid.length) return 0;
-		return grid[p.y][p.x] == '#' ? 1 : 0;
+		return get(grid, p) == '#' ? 1 : 0;
 	}
 
 	@Override
@@ -104,19 +104,27 @@ public class Day24 implements Day {
 	}
 	
 	private long count(char[][] grid, char c) {
-		return streamGrid(grid).filter(p -> grid[p.y][p.x] == '#').count();
+		return streamGrid(grid).filter(p -> get(grid, p) == '#').count();
 	}
 
 	private void simulate(int layer, char[][] newGrid, Point p) {
 		int adj = nAdjecent(layer, p);
-		if(layers.get(layer)[p.y][p.x] == '#' && adj != 1) {
-			newGrid[p.y][p.x] = '.';
-		} else if(layers.get(layer)[p.y][p.x] == '.' && (adj == 1 || adj == 2)) {
-			newGrid[p.y][p.x] = '#';
+		if(get(layers.get(layer), p) == '#' && adj != 1) {
+			set(newGrid, p, '.');
+		} else if(get(layers.get(layer), p) == '.' && (adj == 1 || adj == 2)) {
+			set(newGrid, p, '#');
 		}
 	}
 	
-	public int nAdjecent(int layer, Point pos) {
+	private char get(char[][] grid, Point pos) {
+		return grid[pos.y][pos.x];
+	}
+	
+	private void set(char[][] grid, Point pos, char c) {
+		grid[pos.y][pos.x] = c;
+	}
+	
+	private int nAdjecent(int layer, Point pos) {
 		int res = 0;
 		Point[] surround = new Point[] {new Point(2, 1), new Point(1, 2), new Point(2, 3), new Point(3, 2)};
 		if(layers.containsKey(layer+1)) {
@@ -135,7 +143,7 @@ public class Day24 implements Day {
 	}
 	
 	public char[][] fill(char[][] arr, char el) {
-		for (char[] row: arr) Arrays.fill(row, el);
+		streamGrid(arr).forEach(p -> set(arr, p, el));
 		return arr;
 	}
 }
