@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import com.sbaars.adventofcode2019.common.Day;
 
@@ -42,9 +43,8 @@ public class Day24 implements Day {
 		while(true) {
 			if(!grids.add(new Grid(grid))) return calcRes(grid);
 			char[][] newGrid = copy(grid);
-			for(int y = 0; y<grid.length; y++)
-				for(int x = 0; x<grid[0].length; x++)
-					simulate(grid, newGrid, new Point(x, y));
+			final char[][] g = grid;
+			streamGrid(grid).forEach(p -> simulate(g, newGrid, p));
 			grid = newGrid;
 		}
 	}
@@ -59,7 +59,7 @@ public class Day24 implements Day {
 	}
 	
 	private long calcRes(char[][] grid) {
-		return (long)IntStream.range(0, grid.length).boxed().flatMap(y -> IntStream.range(0, grid[y].length).mapToObj(x -> new Point(x,y))).filter(p -> grid[p.y][p.x] == '#').mapToDouble(p -> Math.pow(2, (p.y*grid.length)+p.x)).sum();
+		return (long)streamGrid(grid).filter(p -> grid[p.y][p.x] == '#').mapToDouble(p -> Math.pow(2, (p.y*grid.length)+p.x)).sum();
 	}
 
 	public char[][] copy(char[][] grid){
@@ -86,32 +86,33 @@ public class Day24 implements Day {
 			final Map<Integer, char[][]> layers2 = new HashMap<>();
 			for(int layer = -200; layer<=200; layer++) {
 				char[][] newGrid = copy(layers.get(layer));
-				for(int y = 0; y<grid.length; y++)
-					for(int x = 0; x<grid[0].length; x++)
-						if(x != 2 || y!=2)
-							simulate(layer, newGrid, y, x);
+				final int l = layer;
+				streamGrid(grid).filter(p -> p.x != 2 || p.y!=2).forEach(p -> simulate(l, newGrid, p));
 				layers2.put(layer, newGrid);
 			}
 			layers = layers2;
 		}
-		return layers.values().stream().mapToInt(e -> count(e, '#')).sum();
+		return layers.values().stream().mapToLong(e -> count(e, '#')).sum();
 	}
 	
-	private int count(char[][] grid, char c) {
-		int total = 0;
-		for(int y = 0; y<grid.length; y++)
-			for(int x = 0; x<grid[0].length; x++)
-				if(grid[y][x] == '#')
-					total++;
-		return total;
+	public Stream<Point> streamGrid(int sizex, int sizey) {
+		return IntStream.range(0, sizey).boxed().flatMap(y -> IntStream.range(0, sizex).mapToObj(x -> new Point(x,y)));
+	}
+	
+	public Stream<Point> streamGrid(char[][] grid) {
+		return streamGrid(grid[0].length, grid.length);
+	}
+	
+	private long count(char[][] grid, char c) {
+		return streamGrid(grid).filter(p -> grid[p.y][p.x] == '#').count();
 	}
 
-	private void simulate(int layer, char[][] newGrid, int y, int x) {
-		int adj = nAdjecent(layer, new Point(x,y));
-		if(layers.get(layer)[y][x] == '#' && adj != 1) {
-			newGrid[y][x] = '.';
-		} else if(layers.get(layer)[y][x] == '.' && (adj == 1 || adj == 2)) {
-			newGrid[y][x] = '#';
+	private void simulate(int layer, char[][] newGrid, Point p) {
+		int adj = nAdjecent(layer, p);
+		if(layers.get(layer)[p.y][p.x] == '#' && adj != 1) {
+			newGrid[p.y][p.x] = '.';
+		} else if(layers.get(layer)[p.y][p.x] == '.' && (adj == 1 || adj == 2)) {
+			newGrid[p.y][p.x] = '#';
 		}
 	}
 	
