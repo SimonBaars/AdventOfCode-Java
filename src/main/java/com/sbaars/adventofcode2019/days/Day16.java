@@ -11,7 +11,7 @@ public class Day16 implements Day {
 
 	private static final int TARGET_POS = 5977341;
 	private final int[] input;
-	
+
 	public Day16() throws IOException {
 		input = readDay(16).chars().map(e -> Character.getNumericValue(e)).toArray();
 	}
@@ -42,7 +42,7 @@ public class Day16 implements Day {
 			for(int i = 0; i<nums.length; i++) {
 				int sum = 0, loc = 0;
 				for(int j=0; true;j++) {
-					
+
 					int k=((j+1)*(i+1))-1;
 					sum += (newNums[Math.min(k, res.length)] - newNums[loc]) * pattern[j%4];
 					if(k >= res.length) break;

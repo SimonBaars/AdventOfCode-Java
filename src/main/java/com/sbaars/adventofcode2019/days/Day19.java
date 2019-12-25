@@ -19,7 +19,7 @@ public class Day19 implements Day {
 				res+=new IntcodeComputer(19).run(x, y);
 		return res;
 	}
-	
+
 	@Override
 	public Object part2() throws IOException {
 		int x = 500, y = 0;

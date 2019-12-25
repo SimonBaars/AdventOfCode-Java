@@ -17,7 +17,7 @@ import com.sbaars.adventofcode2019.pathfinding.CharGrid2d;
 import lombok.*;
 
 public class Day18 implements Day {
-	
+
 	private final char[][] grid;
 	private final CharGrid2d charGrid;
 	private final Map<State, Integer> cachedResult = new HashMap<>();
@@ -27,7 +27,7 @@ public class Day18 implements Day {
 			{'@', '#', '@'}
 	};
 	private final Point middle;
-	
+
 	public Day18() throws IOException {
 		grid = Arrays.stream(readDay(18).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
 		charGrid = new CharGrid2d(grid, false);
@@ -37,12 +37,12 @@ public class Day18 implements Day {
 	public static void main(String[] args) throws IOException {
 		new Day18().printParts();
 	}
-	
+
 	@Data @AllArgsConstructor class Route {
 		Point start;
 		Point end;
 	}
-	
+
 	@Data @AllArgsConstructor class State{
 		List<Point> me;
 		TreeSet<Character> keys;
@@ -69,14 +69,14 @@ public class Day18 implements Day {
 		}
 		return findSteps(me, new TreeSet<>(), keys, routes);
 	}
-	
+
 	public List<Point> getRoute(Map<Route, List<Point>> routes, Point p1, Point p2){
 		List<Point> p = routes.get(new Route(p1, p2));
 		if(p != null)
 			return p;
 		else return routes.get(new Route(p2, p1));
 	}
-	
+
 	public boolean canTakeRoute(List<Point> route, TreeSet<Character> keys) {
 		for(Point p : route) {
 			if(grid[p.y][p.x]>='A' && grid[p.y][p.x]<='Z' && !keys.contains(grid[p.y][p.x])) {
@@ -85,7 +85,7 @@ public class Day18 implements Day {
 		}
 		return true;
 	}
-	
+
 	public int findSteps(List<Point> me, TreeSet<Character> collectedKeys, List<Point> keys, Map<Route, List<Point>> routes) {
 		Integer cachedRes = cachedResult.get(new State(me, collectedKeys));
 		if(cachedRes!=null) return cachedRes;
@@ -107,7 +107,7 @@ public class Day18 implements Day {
 		cachedResult.put(new State(me, collectedKeys), res);
 		return res;
 	}
-	
+
 	private List<Point> findPos(char tile) {
 		List<Point> positions = new ArrayList<>();
 		for(int y = 0; y<grid.length; y++) {
@@ -118,7 +118,7 @@ public class Day18 implements Day {
 		}
 		return positions;
 	}
-	
+
 	private List<Point> findPos(char tile, char tile2) {
 		List<Point> positions = new ArrayList<>();
 		for(int y = 0; y<grid.length; y++) {
@@ -129,7 +129,7 @@ public class Day18 implements Day {
 		}
 		return positions;
 	}
-	
+
 	@Override
 	public Object part2() throws IOException {
 		for(int y = 0; y<CHANGE_GRID.length; y++) {

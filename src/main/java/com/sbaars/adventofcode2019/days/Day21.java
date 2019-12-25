@@ -27,7 +27,7 @@ public class Day21 implements Day {
 			if(res>255) return res;
 		return 0;
 	}
-	
+
 	@Override
 	public Object part2() throws IOException {
 		IntcodeComputer ic = new IntcodeComputer(21);

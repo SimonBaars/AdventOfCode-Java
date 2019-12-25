@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 public class Day3 implements Day
 {	
 	private Set<Step> intersect;
-	
+
 	public Day3() throws IOException {
 		String[] strings = Arrays.stream(readDay(3).split(System.lineSeparator())).toArray(String[]::new);
 		Walk[] walks1 = mapToWalks(strings[0]), walks2 = mapToWalks(strings[1]);
@@ -22,16 +22,16 @@ public class Day3 implements Day
 		calculateDistance(walks1, walkedLocations, false);
 		this.intersect = calculateDistance(walks2, walkedLocations, true);
 	}
-	
+
 	public static void main(String[] args) throws IOException {
-    	new Day3().printParts();
-    }
+		new Day3().printParts();
+	}
 
 	@Override
 	public Object part1() throws IOException {
 		return intersect.stream().mapToInt(e -> distance(e.point)).min().orElse(Integer.MAX_VALUE);
 	}
-	
+
 	@Override
 	public Object part2() throws IOException {
 		return intersect.stream().mapToInt(e -> e.steps).min().orElse(Integer.MAX_VALUE);
@@ -43,10 +43,10 @@ public class Day3 implements Day
 		for(Walk walk : walks1) {
 			for(;walk.distance>0;walk.distance--) {
 				switch(walk.dir) {
-					case NORTH: y++; break;
-					case SOUTH: y--; break;
-					case WEST: x--; break;
-					case EAST: x++; break;
+				case NORTH: y++; break;
+				case SOUTH: y--; break;
+				case WEST: x--; break;
+				case EAST: x++; break;
 				}
 				performStep(walkedLocations, collect, intersectingLocations, x, y, steps);
 				steps++;
@@ -67,35 +67,35 @@ public class Day3 implements Day
 			walkedLocations.add(currentStep);
 		}
 	}
-	
+
 	public int distance(Point p) {
 		return Math.abs(p.x) + Math.abs(p.y);
 	}
-	
+
 	private Walk[] mapToWalks(String string) {
 		return Arrays.stream(string.split(",")).map(Walk::new).toArray(Walk[]::new);
 	}
-	
+
 	class Walk {
 		private final Direction dir;
 		private int distance;
-		
+
 		public Walk(String code) {
 			this.dir = Direction.getByDirCode(code.charAt(0));
 			this.distance = Integer.parseInt(code.substring(1));
 		}
 	}
-	
+
 	@EqualsAndHashCode class Step {
 		private final Point point;
 		@EqualsAndHashCode.Exclude private int steps;
 		@EqualsAndHashCode.Exclude private boolean isCombined = false;
-		
+
 		public Step(Point point, int steps) {
 			this.point = point;
 			this.steps = steps + 1;
 		}
-		
+
 		public void combine(Step step) {
 			if(!isCombined) {
 				steps+=step.steps;

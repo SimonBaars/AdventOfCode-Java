@@ -31,35 +31,35 @@ public class Day20 implements Day {
 	private final List<Portal> portalsToTake = new ArrayList<>();
 	private Portal entry;
 	private Portal exit;
-	
+
 	@Data @AllArgsConstructor class Portal {
 		Point pos;
 		boolean isOuter;
 	}
-	
+
 	@Data @AllArgsConstructor class Route {
 		Portal goal;
 		int distance;
 	}
-	
+
 	@EqualsAndHashCode(callSuper = true) @ToString(callSuper = true) @AllArgsConstructor class State extends Visited {
 		int totalSteps;
-		
+
 		public State(int totalSteps, Visited vis) {
 			super(vis.pos, vis.level);
 			this.totalSteps = totalSteps;
 		}
 	}
-	
+
 	@Data @AllArgsConstructor @NoArgsConstructor class Visited {
 		Portal pos;
 		int level;
 	}
-	
+
 	public Day20() throws IOException {
 		grid = Arrays.stream(readDay(20).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
 		charGrid = new CharGrid2d(grid, false);
-		
+
 		int[] rows = {2, 26, 80, 104};
 		for(int row : rows) {
 			boolean addPortal = row == rows[0] || row == rows[rows.length-1];
@@ -87,7 +87,7 @@ public class Day20 implements Day {
 		portalsToTake.addAll(portalLabel.keySet());
 		portalsToTake.add(exit);
 	}
-	
+
 	public void addPortal(String label, Point pos, boolean outerRing) {
 		Portal p = new Portal(pos, outerRing);
 		if(label.equals("AA")) this.entry = p;
@@ -99,7 +99,7 @@ public class Day20 implements Day {
 			} else portal[1] = p;
 			portalLabel.put(p, label);
 		}
-		
+
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -110,7 +110,7 @@ public class Day20 implements Day {
 	public Object part1() throws IOException {
 		return findRoutes(false);
 	}
-	
+
 	private int findRoutes(boolean b) {
 		final Queue<State> queue = new ArrayDeque<>();
 		final Set<Visited> visited = new HashSet<>();

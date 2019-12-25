@@ -10,7 +10,7 @@ import com.sbaars.adventofcode2019.common.ProcessesImages;
 import com.sbaars.adventofcode2019.util.CountMap;
 
 public class Day8 implements Day, ProcessesImages {
-	
+
 	private static final int DIM_X = 6;
 	private static final int DIM_Y = 25;
 	private static final int SIZE = DIM_X*DIM_Y;
@@ -59,7 +59,7 @@ public class Day8 implements Day, ProcessesImages {
 					finalPixels[j] = pixelArrays[i][j];
 		return finalPixels;
 	}
-	
+
 	int[][] splitArray(int[] arr, int x, int y){
 		int[][] pixelArrays = new int[x][y];
 		for(int i = 0; i<arr.length; i+=y)

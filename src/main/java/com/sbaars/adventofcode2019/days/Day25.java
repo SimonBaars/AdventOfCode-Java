@@ -35,7 +35,6 @@ public class Day25 implements Day {
 		for(int i = 0; i<=inputs.length; i++) {
 			long res;
 			while((res = ic.run()) != IntcodeComputer.STOP_CODE) {
-				//System.out.print((char)res);
 				if(Character.isDigit((char)res)) numbers += (char)res;
 			}
 			if(i == inputs.length)
@@ -44,7 +43,7 @@ public class Day25 implements Day {
 		}
 		return 0;
 	}
-	
+
 	@Override
 	public Object part2() throws IOException {
 		return "MERRY CHRISTMAS!!";

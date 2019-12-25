@@ -41,13 +41,13 @@ public class Day11 implements Day, ProcessesImages {
 			} else if(paintColor == 0L) {
 				whitePlaces.remove(currentLocation);
 			}
-			
+
 			dir = dir.turn(turn == 1L);
 			currentLocation = dir.move(currentLocation);
 		}
 		return startWhite ? constructImage(whitePlaces) : paintedOnce.size();
 	}
-	
+
 	private String constructImage(Set<Point> whitePlaces) {
 		int cornerX = whitePlaces.stream().mapToInt(e -> e.x).min().getAsInt();
 		int cornerY = whitePlaces.stream().mapToInt(e -> e.y).min().getAsInt();
