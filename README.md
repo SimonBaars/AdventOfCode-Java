@@ -24,6 +24,9 @@ Days:
 - [Day 20](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day20.java)
 - [Day 21](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day21.java)
 - [Day 22](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day22.java)
+- [Day 23](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day23.java)
+- [Day 24](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day24.java)
+- [Day 25](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/days/Day25.java)
 
 Output of running [Main.java](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode2019/Main.java):
 ```
@@ -126,4 +129,16 @@ Part 2: 1142488337
 Day 22:
 Part 1: 7860
 Part 2: 61256063148970
+
+Day 23:
+Part 1: 17286
+Part 2: 11249
+
+Day 24:
+Part 1: 32506911
+Part 2: 2025
+
+Day 25:
+Part 1: 34095120
+Part 2: MERRY CHRISTMAS!!
 ```
