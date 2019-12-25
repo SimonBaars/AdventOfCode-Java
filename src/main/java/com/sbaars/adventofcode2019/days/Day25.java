@@ -18,12 +18,8 @@ public class Day25 implements Day {
 		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, readLongArray(25));
 		while(true) {
 			long res;
-			while((res = ic.run()) != IntcodeComputer.STOP_CODE) {
-				System.out.print((char)res);
-			}
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-			String name = reader.readLine();
-			ic.setInput(name+"\n");
+			while((res = ic.run()) != IntcodeComputer.STOP_CODE) System.out.print((char)res);
+			ic.setInput(new BufferedReader(new InputStreamReader(System.in)).readLine()+"\n");
 		}
 	}
 
@@ -37,8 +33,7 @@ public class Day25 implements Day {
 			while((res = ic.run()) != IntcodeComputer.STOP_CODE) {
 				if(Character.isDigit((char)res)) numbers += (char)res;
 			}
-			if(i == inputs.length)
-				return numbers.substring(1);
+			if(i == inputs.length) return numbers.substring(1);
 			ic.setInput(inputs[i]+"\n");
 		}
 		return 0;
