@@ -11,26 +11,42 @@ import com.sbaars.adventofcode2019.intcode.RetentionPolicy;
 public class Day25 implements Day {
 
 	public static void main(String[] args) throws IOException {
-		new Day25().printParts();
+		new Day25().play();
 	}
 
-	@Override
-	public Object part1() throws IOException {
+	private void play() throws IOException {
 		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, readLongArray(25));
 		while(true) {
 			long res;
 			while((res = ic.run()) != IntcodeComputer.STOP_CODE) {
 				System.out.print((char)res);
 			}
-			BufferedReader reader =
-	                new BufferedReader(new InputStreamReader(System.in));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			String name = reader.readLine();
 			ic.setInput(name+"\n");
 		}
 	}
+
+	@Override
+	public Object part1() throws IOException {
+		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, readLongArray(25));
+		String[] inputs = new String [] {"west", "take semiconductor", "west", "take planetoid", "west", "take food ration", "west", "take fixed point", "east", "east", "south", "east", "east", "north", "east", "north"};
+		String numbers = "";
+		for(int i = 0; i<=inputs.length; i++) {
+			long res;
+			while((res = ic.run()) != IntcodeComputer.STOP_CODE) {
+				//System.out.print((char)res);
+				if(Character.isDigit((char)res)) numbers += (char)res;
+			}
+			if(i == inputs.length)
+				return numbers.substring(1);
+			ic.setInput(inputs[i]+"\n");
+		}
+		return 0;
+	}
 	
 	@Override
 	public Object part2() throws IOException {
-		return new IntcodeComputer(9, 2).run();
+		return "MERRY CHRISTMAS!!";
 	}
 }
