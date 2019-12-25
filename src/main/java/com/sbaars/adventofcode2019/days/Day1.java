@@ -8,17 +8,17 @@ import com.sbaars.adventofcode2019.common.Day;
 
 public class Day1 implements Day
 {	
-    public static void main(String[] args) throws IOException
-    {
-    	new Day1().printParts();
-    }
+	public static void main(String[] args) throws IOException
+	{
+		new Day1().printParts();
+	}
 
-    @Override
+	@Override
 	public Object part1() throws IOException {
 		return createNumberStream().map(this::getFuel).sum();
 	}
-	
-    @Override
+
+	@Override
 	public Object part2() throws IOException {
 		return createNumberStream().map(this::getRequiredFuel).sum();
 	}
@@ -26,7 +26,7 @@ public class Day1 implements Day
 	private IntStream createNumberStream() throws IOException {
 		return Arrays.stream(readDay(1).split(System.lineSeparator())).mapToInt(Integer::parseInt);
 	}
-	
+
 	private int getRequiredFuel(int mass) {
 		int fuel = getFuel(mass);
 		return fuel>0 ? fuel+getRequiredFuel(fuel) : 0;

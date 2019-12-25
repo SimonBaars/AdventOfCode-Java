@@ -12,7 +12,7 @@ import com.sbaars.adventofcode2019.intcode.IntcodeComputer;
 import com.sbaars.adventofcode2019.pathfinding.Grid2d;
 
 public class Day15 implements Day {
-	
+
 	public static final int UNEXPLORED = 3;
 	public static final int WALL = 0;
 	private static final int PATH = 1;
@@ -40,7 +40,7 @@ public class Day15 implements Day {
 			}
 		}
 	}
-	
+
 	private Point moveToUnexploredPlace(Point pos, IntcodeComputer ic) {
 		List<Point> corridorSpaces = findPos(PATH);
 		for(Point p : corridorSpaces) {
@@ -53,7 +53,7 @@ public class Day15 implements Day {
 		}
 		return null;
 	}
-	
+
 	private void traverseRoute(IntcodeComputer ic, Point pos, List<Point> route) {
 		for(Point p : route) {
 			if(ic.run(Direction.getByMove(pos, p).num)!=1L)
@@ -90,7 +90,7 @@ public class Day15 implements Day {
 			dir = dir.turn(true);
 		}
 	}
-	
+
 	@Override
 	public Object part2() throws IOException {
 		Point oxygenLeak = findPos(FINISH).get(0);

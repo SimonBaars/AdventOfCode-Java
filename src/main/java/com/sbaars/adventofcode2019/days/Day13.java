@@ -28,7 +28,7 @@ public class Day13 implements Day {
 				n.add(new Point(Math.toIntExact(x), Math.toIntExact(y)));
 		}
 	}
-	
+
 	@Override
 	public Object part2() throws IOException {
 		IntcodeComputer cp = new IntcodeComputer(13, 1);

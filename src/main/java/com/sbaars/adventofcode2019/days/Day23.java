@@ -17,7 +17,7 @@ public class Day23 implements Day {
 	public Object part1() throws IOException {
 		return getNetworkNumber(true);
 	}
-	
+
 	@Override
 	public Object part2() throws IOException {
 		return getNetworkNumber(false);
@@ -28,7 +28,7 @@ public class Day23 implements Day {
 		IntcodeComputer[] ic = IntStream.range(0, 50).mapToObj(i -> new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, program, i, -1)).toArray(IntcodeComputer[]::new);
 		long[] nat = new long[2];
 		long sentByNat = -1;
-		
+
 		long input;
 		while(true) {
 			boolean idle = true;

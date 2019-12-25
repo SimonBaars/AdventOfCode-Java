@@ -15,7 +15,7 @@ public class Day9 implements Day {
 	public Object part1() throws IOException {
 		return new IntcodeComputer(9, 1).run();
 	}
-	
+
 	@Override
 	public Object part2() throws IOException {
 		return new IntcodeComputer(9, 2).run();

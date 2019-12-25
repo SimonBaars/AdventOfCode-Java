@@ -36,7 +36,7 @@ public class Day12 implements Day {
 		for(long n = 0; true; n++) {
 			determineVelocity();
 			moveMoonsUsingVelocity();
-			
+
 			for(int i = 0; i<sets.size(); i++) {
 				if(res[i] == 0 && !sets.get(i).add(Arrays.asList(moons[0][i], moons[1][i], moons[2][i], moons[3][i],velocity[0][i], velocity[1][i], velocity[2][i], velocity[3][i]))){
 					res[i] = n;
@@ -72,31 +72,31 @@ public class Day12 implements Day {
 			}
 		}
 	}
-	
+
 	private static long gcd(long a, long b) {
-	    while (b > 0) {
-	        long temp = b;
-	        b = a % b; // % is remainder
-	        a = temp;
-	    }
-	    return a;
+		while (b > 0) {
+			long temp = b;
+			b = a % b; // % is remainder
+			a = temp;
+		}
+		return a;
 	}
-	
+
 	private static long lcm(long a, long b) {
-	    return a * (b / gcd(a, b));
+		return a * (b / gcd(a, b));
 	}
 
 	private static long lcm(long[] input) {
-	    long result = input[0];
-	    for(int i = 1; i < input.length; i++) result = lcm(result, input[i]);
-	    return result;
+		long result = input[0];
+		for(int i = 1; i < input.length; i++) result = lcm(result, input[i]);
+		return result;
 	}
 
-	
+
 	short[][] copy(short[][] arr){
 		short [][] myInt = new short[arr.length][];
 		for(int i = 0; i < arr.length; i++)
-		    myInt[i] = arr[i].clone();
+			myInt[i] = arr[i].clone();
 		return myInt;
 	}
 }

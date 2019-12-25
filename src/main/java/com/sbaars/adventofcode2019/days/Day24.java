@@ -20,15 +20,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 public class Day24 implements Day {
-	
+
 	private final Set<Grid> grids = new HashSet<>();
 	private Map<Integer, char[][]> layers = new HashMap<>();
 	private final char[][] initialGrid;
-	
+
 	@EqualsAndHashCode @AllArgsConstructor @Data class Grid{
 		char[][] grid;
 	}
-	
+
 	public Day24() throws IOException {
 		this.initialGrid = Arrays.stream(readDay(24).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
 	}
@@ -57,7 +57,7 @@ public class Day24 implements Day {
 			set(newGrid, p, '#');
 		}
 	}
-	
+
 	private long calcRes(char[][] grid) {
 		return (long)streamGrid(grid).filter(p -> get(grid, p) == '#').mapToDouble(p -> Math.pow(2, (p.y*grid.length)+p.x)).sum();
 	}
@@ -67,11 +67,11 @@ public class Day24 implements Day {
 		for(int i = 0; i<grid.length; i++) g2[i] = Arrays.copyOf(grid[i], grid[i].length);
 		return g2;
 	}
-	
+
 	public int nAdjecent(char[][] grid, Point pos) {
 		return num(grid, new Point(pos.x, pos.y-1)) + num(grid, new Point(pos.x, pos.y+1)) + num(grid, new Point(pos.x-1, pos.y)) + num(grid, new Point(pos.x+1, pos.y));
 	}
-	
+
 	private int num(char[][] grid, Point p) {
 		if(p.x<0 || p.y<0 || p.x>=grid.length || p.y>=grid.length) return 0;
 		return get(grid, p) == '#' ? 1 : 0;
@@ -94,15 +94,15 @@ public class Day24 implements Day {
 		}
 		return layers.values().stream().mapToLong(e -> count(e, '#')).sum();
 	}
-	
+
 	public Stream<Point> streamGrid(int sizex, int sizey) {
 		return IntStream.range(0, sizey).boxed().flatMap(y -> IntStream.range(0, sizex).mapToObj(x -> new Point(x,y)));
 	}
-	
+
 	public Stream<Point> streamGrid(char[][] grid) {
 		return streamGrid(grid[0].length, grid.length);
 	}
-	
+
 	private long count(char[][] grid, char c) {
 		return streamGrid(grid).filter(p -> get(grid, p) == '#').count();
 	}
@@ -115,15 +115,15 @@ public class Day24 implements Day {
 			set(newGrid, p, '#');
 		}
 	}
-	
+
 	private char get(char[][] grid, Point pos) {
 		return grid[pos.y][pos.x];
 	}
-	
+
 	private void set(char[][] grid, Point pos, char c) {
 		grid[pos.y][pos.x] = c;
 	}
-	
+
 	private int nAdjecent(int layer, Point pos) {
 		int res = 0;
 		Point[] surround = new Point[] {new Point(2, 1), new Point(1, 2), new Point(2, 3), new Point(3, 2)};
@@ -137,11 +137,11 @@ public class Day24 implements Day {
 		}
 		return res + nAdjecent(layers.get(layer), pos);
 	}
-	
+
 	public int nLayer(int layer, Function<Integer, Point> f) {
 		return IntStream.range(0,5).map(i -> num(layers.get(layer-1), f.apply(i))).sum();
 	}
-	
+
 	public char[][] fill(char[][] arr, char el) {
 		streamGrid(arr).forEach(p -> set(arr, p, el));
 		return arr;

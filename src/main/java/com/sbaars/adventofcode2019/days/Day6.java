@@ -11,24 +11,24 @@ import com.sbaars.adventofcode2019.common.Day;
 import com.sbaars.adventofcode2019.util.ListMap;
 
 public class Day6 implements Day {	
-	
-	ListMap<String, String> orbits = new ListMap<>();
-	
-    public static void main(String[] args) throws IOException
-    {
-    	new Day6().printParts();
-    }
 
-    @Override
+	ListMap<String, String> orbits = new ListMap<>();
+
+	public static void main(String[] args) throws IOException
+	{
+		new Day6().printParts();
+	}
+
+	@Override
 	public Object part1() throws IOException {
-    	String[] nums = createOrbitArray();
-    	for(String num : nums) {
-    		String[] parts = num.split("\\)");
-    		orbits.addTo(parts[0], parts[1]);
-    	}
-    	AtomicInteger o = new AtomicInteger();
-    	for(var entry : orbits.entrySet())
-    		countOrbitsInList(orbits, o, entry.getValue());
+		String[] nums = createOrbitArray();
+		for(String num : nums) {
+			String[] parts = num.split("\\)");
+			orbits.addTo(parts[0], parts[1]);
+		}
+		AtomicInteger o = new AtomicInteger();
+		for(var entry : orbits.entrySet())
+			countOrbitsInList(orbits, o, entry.getValue());
 		return o.get();
 	}
 
@@ -40,39 +40,39 @@ public class Day6 implements Day {
 			}
 		}
 	}
-	
-    @Override
+
+	@Override
 	public Object part2() throws IOException {
 		return findRoute("YOU", "SAN");
 	}
-    
-    private int findRoute(String from, String to) {
-    	return findRoute(from, to, new ArrayList<>(), 0);
-    }
-    
-    private int findRoute(String from, String to, List<String> visited, int depth) {
-    	if(visited.contains(from))
-    		return 0;
-    	visited.add(from);
-    	List<String> str = collectAll(from);
-    	if(str.contains(to))
-    		return depth-1;
-    	for(String s : str) {
-    		int findRoute = findRoute(s, to, visited, depth + 1);
+
+	private int findRoute(String from, String to) {
+		return findRoute(from, to, new ArrayList<>(), 0);
+	}
+
+	private int findRoute(String from, String to, List<String> visited, int depth) {
+		if(visited.contains(from))
+			return 0;
+		visited.add(from);
+		List<String> str = collectAll(from);
+		if(str.contains(to))
+			return depth-1;
+		for(String s : str) {
+			int findRoute = findRoute(s, to, visited, depth + 1);
 			if(findRoute>0) return findRoute;
-    	}
-    	return -1;
+		}
+		return -1;
 	}
 
 	private List<String> collectAll(String s1) {
-    	List<String> s = findOrbit(s1);
-    	s.addAll(orbits.get(s1));
+		List<String> s = findOrbit(s1);
+		s.addAll(orbits.get(s1));
 		return s;
 	}
 
 	public List<String> findOrbit(String orbitValue) {
 		return orbits.entrySet().stream().filter(e -> e.getValue().contains(orbitValue)).map(e -> e.getKey()).collect(Collectors.toList());
-    }
+	}
 
 	private String[] createOrbitArray() throws IOException {
 		return Arrays.stream(readDay(6).split(System.lineSeparator())).toArray(String[]::new);
