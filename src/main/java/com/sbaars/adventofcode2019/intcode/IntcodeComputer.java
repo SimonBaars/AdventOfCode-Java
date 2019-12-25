@@ -50,8 +50,6 @@ public class IntcodeComputer implements DoesFileOperations {
 	}
 
 	private long executeInstruction(int instruction) {
-		if(instruction == 3 && policy == RetentionPolicy.EXIT_ON_EMPTY_INPUT && input.size() == 0)
-			return STOP_CODE;
 		if(instruction>99) 
 			return parseComplexInstruction(instruction);
 		return execute(instruction);
@@ -98,6 +96,8 @@ public class IntcodeComputer implements DoesFileOperations {
 	}
 	
 	private long executeInstruction(long[] args, int instruction) {
+		if(instruction == 3 && policy == RetentionPolicy.EXIT_ON_EMPTY_INPUT && input.size() == 0)
+			return STOP_CODE;
 		instructionCounter+=nParams(instruction) + 1;
 		switch(instruction) {
 			case 1: program[Math.toIntExact(args[2])] = args[0] + args[1]; break;
