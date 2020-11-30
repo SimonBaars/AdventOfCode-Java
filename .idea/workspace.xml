@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="98687f9d-cf15-4bd9-b8cb-f6bbf1a1c0c2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day20.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day20.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day6.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day6.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/util/DoesFileOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/util/DoesFileOperations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/util/ListMap.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +71,20 @@
       <recent name="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main (1)">
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Day6" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.sbaars.adventofcode.year19.days.Day6" />
+      <module name="adventofcode2019" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.sbaars.adventofcode.year19.days.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.sbaars.adventofcode.year20.Main" />
       <module name="adventofcode2019" />
@@ -110,8 +126,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main (1)" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Day6" />
+        <item itemvalue="Application.Main (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -124,7 +141,7 @@
       <option name="presentableId" value="Default" />
       <updated>1606754454120</updated>
       <workItem from="1606754455189" duration="1477000" />
-      <workItem from="1606755951243" duration="1778000" />
+      <workItem from="1606755951243" duration="2562000" />
     </task>
     <servers />
   </component>
@@ -140,10 +157,30 @@
       <screen x="0" y="0" width="1080" height="1605" />
     </state>
     <state x="345" y="837" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.packages/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606755339030" />
+    <state x="273" y="711" width="526" height="500" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606758176333">
+      <screen x="0" y="0" width="1080" height="1605" />
+    </state>
+    <state x="273" y="711" width="526" height="500" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606758176333" />
     <state x="319" y="706" width="426" height="511" key="FileChooserDialogImpl" timestamp="1606757732563">
       <screen x="0" y="0" width="1080" height="1605" />
     </state>
     <state x="319" y="706" width="426" height="511" key="FileChooserDialogImpl/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606757732563" />
+    <state width="1038" height="556" key="GridCell.Tab.0.bottom" timestamp="1606758672957">
+      <screen x="0" y="0" width="1080" height="1605" />
+    </state>
+    <state width="1038" height="556" key="GridCell.Tab.0.bottom/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606758672957" />
+    <state width="1038" height="556" key="GridCell.Tab.0.center" timestamp="1606758672957">
+      <screen x="0" y="0" width="1080" height="1605" />
+    </state>
+    <state width="1038" height="556" key="GridCell.Tab.0.center/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606758672957" />
+    <state width="1038" height="556" key="GridCell.Tab.0.left" timestamp="1606758672957">
+      <screen x="0" y="0" width="1080" height="1605" />
+    </state>
+    <state width="1038" height="556" key="GridCell.Tab.0.left/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606758672957" />
+    <state width="1038" height="556" key="GridCell.Tab.0.right" timestamp="1606758672957">
+      <screen x="0" y="0" width="1080" height="1605" />
+    </state>
+    <state width="1038" height="556" key="GridCell.Tab.0.right/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606758672957" />
     <state x="23" y="537" width="1026" height="847" key="SettingsEditor" timestamp="1606757757949">
       <screen x="0" y="0" width="1080" height="1605" />
     </state>

@@ -1,19 +1,24 @@
 package com.sbaars.adventofcode.year19.days;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimaps;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.sbaars.adventofcode.common.Day;
-import com.sbaars.adventofcode.year19.util.ListMap;
 
-public class Day6 implements Day {	
+public class Day6 implements Day {
 
-	ListMap<String, String> orbits = new ListMap<>();
+	ArrayListMultimap<String, String> orbits = ArrayListMultimap.create();
 
 	public static void main(String[] args) throws IOException
 	{
@@ -25,15 +30,15 @@ public class Day6 implements Day {
 		String[] nums = createOrbitArray();
 		for(String num : nums) {
 			String[] parts = num.split("\\)");
-			orbits.addTo(parts[0], parts[1]);
+			orbits.put(parts[0], parts[1]);
 		}
 		AtomicInteger o = new AtomicInteger();
-		for(Entry<String, List<String>> entry : orbits.entrySet())
+		for(Entry<String, Collection<String>> entry : orbits.asMap().entrySet())
 			countOrbitsInList(orbits, o, entry.getValue());
 		return o.get();
 	}
 
-	private void countOrbitsInList(ListMap<String, String> orbits, AtomicInteger o, List<String> entry) {
+	private void countOrbitsInList(ArrayListMultimap<String, String> orbits, AtomicInteger o, Collection<String> entry) {
 		for(String str : entry) {
 			o.incrementAndGet();
 			if(orbits.containsKey(str)) {
@@ -72,7 +77,7 @@ public class Day6 implements Day {
 	}
 
 	public List<String> findOrbit(String orbitValue) {
-		return orbits.entrySet().stream().filter(e -> e.getValue().contains(orbitValue)).map(e -> e.getKey()).collect(Collectors.toList());
+		return orbits.asMap().entrySet().stream().filter(e -> e.getValue().contains(orbitValue)).map(e -> e.getKey()).collect(Collectors.toList());
 	}
 
 	private String[] createOrbitArray() throws IOException {
