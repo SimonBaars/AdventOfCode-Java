@@ -1,0 +1,14 @@
+
+H
+java:S1199A"-Extract this nested code block into a method.(‚Í´ûûÿÿÿÿ
+R
+java:S3655)"7Call "Optional#isPresent()" before accessing the value.(ßà Ÿıÿÿÿÿ
+H
+java:S1199;"-Extract this nested code block into a method.(•€¨äÿÿÿÿÿ
+H
+java:S1199T"-Extract this nested code block into a method.(‚Í´ûûÿÿÿÿ
+C
+java:S1199O"-Extract this nested code block into a method.(Ó‹‘ó
+X
+java:S1128"6Remove this unused import 'lombok.AllArgsConstructor'.(´œ¾öùÿÿÿÿ8Ç‰õĞá.
+r	java:S127E"XRefactor the code in order to not assign to this loop counter from within the loop body.(—õÓûÿÿÿÿ

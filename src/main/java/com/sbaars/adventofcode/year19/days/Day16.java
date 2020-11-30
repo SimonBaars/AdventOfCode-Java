@@ -52,7 +52,7 @@ public class Day16 implements Day {
 
 			System.arraycopy(res, 0, nums, 0, res.length);
 		}
-		return IntStream.range(offset, offset+8).map(i -> res[i]).mapToObj(Integer::toString).collect(Collectors.joining());
+		return Arrays.stream(res, offset, offset + 8).mapToObj(Integer::toString).collect(Collectors.joining());
 	}
 
 	public static int[] repeat(int[] arr, int newLength) {

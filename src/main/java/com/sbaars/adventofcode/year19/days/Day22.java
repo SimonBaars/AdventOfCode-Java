@@ -78,7 +78,7 @@ public class Day22 implements Day {
 			} break;
 			case CUT: input[1] = input[1].add(num(amount)); break;
 			case DEAL_WITH_INCREMENT: {
-				var p = num(amount).modPow(deckSize.subtract(num(2)), deckSize);
+				BigInteger p = num(amount).modPow(deckSize.subtract(num(2)), deckSize);
 				for(int i = 0; i<input.length; i++) input[i] = input[i].multiply(p);
 			} break;
 			}
@@ -102,12 +102,12 @@ public class Day22 implements Day {
 	}
 
 	private BigInteger seekPosition(BigInteger deckSize, BigInteger timesShuffled, int position) {
-		var calc = new BigInteger[] {num(1), num(0)};
+		BigInteger[] calc = new BigInteger[] {num(1), num(0)};
 		for(Move move : reverseArray(moves)) {
 			move.execute(calc, deckSize);
 			for(int i = 0; i<calc.length; i++) calc[i] = calc[i].mod(deckSize);
 		}
-		var pow = calc[0].modPow(timesShuffled, deckSize);
+		BigInteger pow = calc[0].modPow(timesShuffled, deckSize);
 		return pow.multiply(num(position)).add(calc[1].multiply(pow.add(deckSize).subtract(num(1))).multiply(calc[0].subtract(num(1)).modPow(deckSize.subtract(num(2)), deckSize))).mod(deckSize);
 	}
 

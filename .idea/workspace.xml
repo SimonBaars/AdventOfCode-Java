@@ -5,49 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="98687f9d-cf15-4bd9-b8cb-f6bbf1a1c0c2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/days/Day1.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/b/3b958ff795cedc0f979c4605b123e3f06fdbf53c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/4/442292b8a7efeabbe4cc176709b833b1792140ec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/d/4d4b6e693ae645a020fb71d740afe99e9506ccc9" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/5/659b4ec94a1ae32e8511c4ea208e89613376dbf6" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/d/7d5c368f69ee4bb93748e18637683330bea8a523" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/2/821d189e8f8bfdeb5f70c11910cff0b4777e0a2f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/2/92328fcec51c42e3fb52187180a4f4a502ebba2c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/4/94f3e3cfe59a184450809321311bf3609217a96d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/c/9c45c172d58a9940cda7b5e76b337d7c1afa53de" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/d/cd0f342a75021aa326cd024d52b3eca647aec223" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/7/e7ebe488706586d5ce697c51ca61d3eb1181465c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/2/f2357216b819eab5aa6bdbe48528b65abb2f6dfa" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_csv_1_8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_csv_1_8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_projectlombok_lombok_1_18_8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_projectlombok_lombok_1_18_16.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adventofcode2019.iml" beforeDir="false" afterPath="$PROJECT_DIR$/adventofcode2019.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/common/Day.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/common/Day.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/common/Direction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/common/Direction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/common/ProcessesImages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/common/ProcessesImages.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day10.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day10.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day11.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day11.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day12.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day12.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day13.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day13.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day14.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day14.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day15.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day15.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day16.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day16.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day17.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day17.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day18.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day18.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day19.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day19.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day20.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day20.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day21.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day21.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day22.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day22.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day23.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day23.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day24.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day24.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day25.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day25.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day3.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day4.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day5.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day5.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day6.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day6.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day7.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day7.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day8.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day8.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/days/Day9.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day9.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/intcode/IntcodeComputer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/intcode/IntcodeComputer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/intcode/RetentionPolicy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/intcode/RetentionPolicy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/pathfinding/CharGrid2d.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/pathfinding/CharGrid2d.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/pathfinding/Grid2d.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/pathfinding/Grid2d.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/pathfinding/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/pathfinding/Node.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/pathfinding/PathFinding.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/pathfinding/PathFinding.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/util/CountMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/util/CountMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/util/DoesFileOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/util/DoesFileOperations.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/util/ListMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/util/ListMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode2019/util/LongCountMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/util/LongCountMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/sbaars/adventofcode2019/IntcodeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/sbaars/adventofcode/year19/IntcodeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day22.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day22.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/sbaars/adventofcode/year19/IntcodeTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,13 +69,14 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -122,13 +100,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -147,7 +127,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1606754454120</updated>
-      <workItem from="1606754455189" duration="1077000" />
+      <workItem from="1606754455189" duration="1477000" />
+      <workItem from="1606755951243" duration="1540000" />
     </task>
     <servers />
   </component>
@@ -163,9 +144,21 @@
       <screen x="0" y="0" width="1080" height="1605" />
     </state>
     <state x="345" y="837" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.packages/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606755339030" />
-    <state x="23" y="537" width="1026" height="847" key="SettingsEditor" timestamp="1606755468163">
+    <state x="319" y="706" width="426" height="511" key="FileChooserDialogImpl" timestamp="1606757732563">
       <screen x="0" y="0" width="1080" height="1605" />
     </state>
-    <state x="23" y="537" width="1026" height="847" key="SettingsEditor/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606755468163" />
+    <state x="319" y="706" width="426" height="511" key="FileChooserDialogImpl/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606757732563" />
+    <state x="23" y="537" width="1026" height="847" key="SettingsEditor" timestamp="1606757757949">
+      <screen x="0" y="0" width="1080" height="1605" />
+    </state>
+    <state x="23" y="537" width="1026" height="847" key="SettingsEditor/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606757757949" />
+    <state x="134" y="516" width="804" height="889" key="new project wizard" timestamp="1606757029026">
+      <screen x="0" y="0" width="1080" height="1605" />
+    </state>
+    <state x="134" y="516" width="804" height="889" key="new project wizard/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606757029026" />
+    <state x="203" y="449" width="672" height="678" key="search.everywhere.popup" timestamp="1606755862477">
+      <screen x="0" y="0" width="1080" height="1605" />
+    </state>
+    <state x="203" y="449" width="672" height="678" key="search.everywhere.popup/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606755862477" />
   </component>
 </project>
