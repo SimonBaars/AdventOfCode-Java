@@ -1,8 +1,8 @@
 package com.sbaars.adventofcode.year19.days;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.year19.pathfinding.CharGrid2d;
-import com.sbaars.adventofcode.year19.util.ListMap;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -26,7 +26,7 @@ public class Day20 implements Day {
 	CharGrid2d charGrid;
 	private final Map<String, Portal[]> portals = new HashMap<>();
 	private final Map<Portal, String> portalLabel = new HashMap<>();
-	private final ListMap<Portal, Route> routes = new ListMap<>();
+	private final ArrayListMultimap<Portal, Route> routes = ArrayListMultimap.create();
 	private final List<Portal> portalsToTake = new ArrayList<>();
 	private Portal entry;
 	private Portal exit;
@@ -136,7 +136,7 @@ public class Day20 implements Day {
 		for(Portal portal : portalsToTake) {
 			if(!portal.pos.equals(p.pos)) {
 				List<Point> route = charGrid.findPath(p.pos, portal.pos);
-				if(!route.isEmpty()) routes.addTo(p, new Route(teleport(portal), route.size()));
+				if(!route.isEmpty()) routes.put(p, new Route(teleport(portal), route.size()));
 			}
 		}
 	}
