@@ -4,7 +4,6 @@ import com.sbaars.adventofcode.common.Day;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Day16 implements Day {
 
@@ -12,7 +11,7 @@ public class Day16 implements Day {
 	private final int[] input;
 
 	public Day16() throws IOException {
-		input = readDay(16).chars().map(e -> Character.getNumericValue(e)).toArray();
+		input = day2019(16).chars().map(e -> Character.getNumericValue(e)).toArray();
 	}
 
 	public static void main(String[] args) throws IOException {

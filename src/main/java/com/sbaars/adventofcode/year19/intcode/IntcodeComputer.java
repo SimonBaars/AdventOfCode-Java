@@ -1,6 +1,6 @@
 package com.sbaars.adventofcode.year19.intcode;
 
-import com.sbaars.adventofcode.year19.util.DoesFileOperations;
+import com.sbaars.adventofcode.common.DoesFileOperations;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ public class IntcodeComputer implements DoesFileOperations {
 	}
 	
 	public IntcodeComputer(int day, long...input) throws IOException {
-		this.program = readLongArray(day);
+		this.program = dayNumbers2019(day);
 		this.program = Arrays.copyOf(this.program, 10000);
 		if(day == 2) {
 			this.program[1] = input[0];

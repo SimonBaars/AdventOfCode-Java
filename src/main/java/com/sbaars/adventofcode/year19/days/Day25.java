@@ -15,7 +15,7 @@ public class Day25 implements Day {
 	}
 
 	private void play() throws IOException {
-		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, readLongArray(25));
+		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers2019(25));
 		while(true) {
 			long res;
 			while((res = ic.run()) != IntcodeComputer.STOP_CODE) System.out.print((char)res);
@@ -25,7 +25,7 @@ public class Day25 implements Day {
 
 	@Override
 	public Object part1() throws IOException {
-		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, readLongArray(25));
+		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers2019(25));
 		String[] inputs = new String [] {"west", "take semiconductor", "west", "take planetoid", "west", "take food ration", "west", "take fixed point", "east", "east", "south", "east", "east", "north", "east", "north"};
 		String numbers = "";
 		for(int i = 0; i<=inputs.length; i++) {

@@ -56,7 +56,7 @@ public class Day20 implements Day {
 	}
 
 	public Day20() throws IOException {
-		grid = Arrays.stream(readDay(20).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
+		grid = Arrays.stream(day2019(20).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
 		charGrid = new CharGrid2d(grid, false);
 
 		int[] rows = {2, 26, 80, 104};

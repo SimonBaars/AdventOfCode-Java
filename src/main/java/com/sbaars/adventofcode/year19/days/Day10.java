@@ -17,7 +17,7 @@ public class Day10 implements Day {
 	private Point baseLocation;
 
 	public Day10() throws IOException {
-		String[] mapString = Arrays.stream(readDay(10).split(System.lineSeparator())).toArray(String[]::new);
+		String[] mapString = Arrays.stream(day2019(10).split(System.lineSeparator())).toArray(String[]::new);
 		this.asteroids = IntStream.range(0, mapString.length).boxed().flatMap(i -> IntStream.range(0, mapString[i].length()).mapToObj(j -> new Point(j, i))).filter(p -> mapString[p.y].charAt(p.x) == '#').collect(Collectors.toList());
 	}
 
