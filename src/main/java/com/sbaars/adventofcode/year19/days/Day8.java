@@ -27,7 +27,7 @@ public class Day8 implements Day, ProcessesImages {
 	}
 
 	private int[] readPixels() throws IOException {
-		char[] chars = readDay(8).toCharArray();
+		char[] chars = day2019(8).toCharArray();
 		return IntStream.range(0, chars.length).map(i -> Character.getNumericValue(chars[i])).toArray();
 	}
 

@@ -1,15 +1,11 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Multimaps;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -81,6 +77,6 @@ public class Day6 implements Day {
 	}
 
 	private String[] createOrbitArray() throws IOException {
-		return Arrays.stream(readDay(6).split(System.lineSeparator())).toArray(String[]::new);
+		return Arrays.stream(day2019(6).split(System.lineSeparator())).toArray(String[]::new);
 	}
 }

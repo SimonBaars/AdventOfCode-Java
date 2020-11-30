@@ -15,7 +15,7 @@ public class Day3 implements Day
 	private Set<Step> intersect;
 
 	public Day3() throws IOException {
-		String[] strings = Arrays.stream(readDay(3).split(System.lineSeparator())).toArray(String[]::new);
+		String[] strings = Arrays.stream(day2019(3).split(System.lineSeparator())).toArray(String[]::new);
 		Walk[] walks1 = mapToWalks(strings[0]), walks2 = mapToWalks(strings[1]);
 		Set<Step> walkedLocations = new HashSet<>();
 		calculateDistance(walks1, walkedLocations, false);

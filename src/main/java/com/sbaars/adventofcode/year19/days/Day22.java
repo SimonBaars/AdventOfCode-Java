@@ -19,7 +19,7 @@ public class Day22 implements Day {
 	Move[] moves;
 
 	public Day22() throws IOException {
-		this.moves = Arrays.stream(readDay(22).split(System.lineSeparator())).map(Move::new).toArray(Move[]::new);
+		this.moves = Arrays.stream(day2019(22).split(System.lineSeparator())).map(Move::new).toArray(Move[]::new);
 	}
 
 	public static void main(String[] args) throws IOException {

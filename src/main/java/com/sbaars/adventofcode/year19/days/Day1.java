@@ -24,7 +24,7 @@ public class Day1 implements Day
 	}
 
 	private IntStream createNumberStream() throws IOException {
-		return Arrays.stream(readDay(1).split(System.lineSeparator())).mapToInt(Integer::parseInt);
+		return Arrays.stream(day2019(1).split(System.lineSeparator())).mapToInt(Integer::parseInt);
 	}
 
 	private int getRequiredFuel(int mass) {

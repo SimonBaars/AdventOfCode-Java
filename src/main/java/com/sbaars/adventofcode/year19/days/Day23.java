@@ -23,7 +23,7 @@ public class Day23 implements Day {
 	}
 
 	private long getNetworkNumber(boolean returnNatY) throws IOException {
-		long[] program = readLongArray(23);
+		long[] program = dayNumbers2019(23);
 		IntcodeComputer[] ic = IntStream.range(0, 50).mapToObj(i -> new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, program, i, -1)).toArray(IntcodeComputer[]::new);
 		long[] nat = new long[2];
 		long sentByNat = -1;

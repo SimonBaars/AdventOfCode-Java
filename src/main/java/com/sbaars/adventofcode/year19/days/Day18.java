@@ -29,7 +29,7 @@ public class Day18 implements Day {
 	private final Point middle;
 
 	public Day18() throws IOException {
-		grid = Arrays.stream(readDay(18).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
+		grid = Arrays.stream(day2019(18).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
 		charGrid = new CharGrid2d(grid, false);
 		middle = findPos('@').get(0);
 	}	

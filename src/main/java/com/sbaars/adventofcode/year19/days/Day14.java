@@ -10,7 +10,7 @@ public class Day14 implements Day {
 	private Trade[] trades;
 
 	public Day14() throws IOException {
-		this.trades = Arrays.stream(readDay(14).split(System.lineSeparator())).map(Trade::new).toArray(Trade[]::new);
+		this.trades = Arrays.stream(day2019(14).split(System.lineSeparator())).map(Trade::new).toArray(Trade[]::new);
 	}
 
 	public static void main(String[] args) throws IOException {
