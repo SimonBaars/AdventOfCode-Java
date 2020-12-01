@@ -1,13 +1,15 @@
 package com.sbaars.adventofcode.year19.intcode;
 
 import com.sbaars.adventofcode.common.DoesFileOperations;
+import com.sbaars.adventofcode.year19.Day2019;
+
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
 import java.util.stream.IntStream;
 
-public class IntcodeComputer implements DoesFileOperations {
+public class IntcodeComputer extends Day2019 {
 	private long[] program;
 	private int instructionCounter = 0;
 	private final Queue<Long> input = new ArrayDeque<>(2);
@@ -19,13 +21,15 @@ public class IntcodeComputer implements DoesFileOperations {
 	public RetentionPolicy policy;
 	
 	public IntcodeComputer(RetentionPolicy policy, long[] program, long...input) {
+		super(0);
 		this.program = Arrays.copyOf(program, 10000);
 		setInput(input);
 		this.policy = policy;
 	}
 	
 	public IntcodeComputer(int day, long...input) throws IOException {
-		this.program = dayNumbers2019(day);
+		super(day);
+		this.program = dayNumbers(",");
 		this.program = Arrays.copyOf(this.program, 10000);
 		if(day == 2) {
 			this.program[1] = input[0];
@@ -160,5 +164,15 @@ public class IntcodeComputer implements DoesFileOperations {
 
 	public void setInput(String patterns) {
 		setInput(patterns.chars().mapToLong(e -> e).toArray());
+	}
+
+	@Override
+	public Object part1() throws IOException {
+		return null;
+	}
+
+	@Override
+	public Object part2() throws IOException {
+		return null;
 	}
 }

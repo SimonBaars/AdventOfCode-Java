@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year19.days;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.pathfinding.CharGrid2d;
 import java.awt.Point;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-public class Day20 implements Day {
+public class Day20 extends Day2019 {
 	char[][] grid;
 	CharGrid2d charGrid;
 	private final Map<String, Portal[]> portals = new HashMap<>();
@@ -56,7 +57,8 @@ public class Day20 implements Day {
 	}
 
 	public Day20() throws IOException {
-		grid = Arrays.stream(day2019(20).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
+		super(20);
+		grid = dayGrid();
 		charGrid = new CharGrid2d(grid, false);
 
 		int[] rows = {2, 26, 80, 104};

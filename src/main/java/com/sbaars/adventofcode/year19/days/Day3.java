@@ -8,14 +8,16 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sbaars.adventofcode.year19.Day2019;
 import lombok.EqualsAndHashCode;
 
-public class Day3 implements Day
-{	
+public class Day3 extends Day2019 {
+
 	private Set<Step> intersect;
 
 	public Day3() throws IOException {
-		String[] strings = Arrays.stream(day2019(3).split(System.lineSeparator())).toArray(String[]::new);
+		super(3);
+		String[] strings = dayStrings();
 		Walk[] walks1 = mapToWalks(strings[0]), walks2 = mapToWalks(strings[1]);
 		Set<Step> walkedLocations = new HashSet<>();
 		calculateDistance(walks1, walkedLocations, false);

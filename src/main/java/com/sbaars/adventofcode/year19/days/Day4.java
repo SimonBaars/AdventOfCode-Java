@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 
-public class Day4 implements Day {
-
-	public Day4() {}
+public class Day4 extends Day2019 {
+	public Day4(){
+		super(4);
+	}
 
 	public static void main(String[] args) throws IOException {
 		new Day4().printParts();

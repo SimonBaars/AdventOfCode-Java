@@ -15,11 +15,12 @@ import java.util.stream.Stream;
 
 import com.sbaars.adventofcode.common.Day;
 
+import com.sbaars.adventofcode.year19.Day2019;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-public class Day24 implements Day {
+public class Day24 extends Day2019 {
 
 	private final Set<Grid> grids = new HashSet<>();
 	private Map<Integer, char[][]> layers = new HashMap<>();
@@ -30,7 +31,8 @@ public class Day24 implements Day {
 	}
 
 	public Day24() throws IOException {
-		this.initialGrid = Arrays.stream(day2019(24).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
+		super(24);
+		this.initialGrid = dayGrid();
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -79,7 +81,7 @@ public class Day24 implements Day {
 
 	@Override
 	public Object part2() throws IOException {
-		char[][] grid = Arrays.stream(day2019(24).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
+		char[][] grid = dayGrid();
 		for(int i = -200; i<=200; i++) layers.put(i, fill(new char[grid.length][grid[0].length], '.'));
 		layers.put(0, grid);
 		for(int i =0; i<200; i++) {

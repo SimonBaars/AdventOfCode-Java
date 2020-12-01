@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
 import java.awt.Point;
 import java.io.IOException;
@@ -8,7 +9,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Day13 implements Day {
+public class Day13 extends Day2019 {
+	public Day13(){
+		super(13);
+	}
 
 	public static void main(String[] args) throws IOException {
 		new Day13().printParts();
@@ -62,8 +66,6 @@ public class Day13 implements Day {
 
 	private int provideInput(AtomicInteger paddlePos, AtomicInteger ballPos) {
 		int ball = ballPos.get(), paddle = paddlePos.get();
-		if(ball>paddle) return 1;
-		else if(ball<paddle) return -1;
-		else return 0;
+		return Integer.compare(ball, paddle);
 	}
 }

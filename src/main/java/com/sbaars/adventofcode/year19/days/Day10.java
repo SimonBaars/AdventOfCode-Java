@@ -10,14 +10,17 @@ import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode.common.Day;
 
+import com.sbaars.adventofcode.year19.Day2019;
 import lombok.EqualsAndHashCode;
 
-public class Day10 implements Day {
+public class Day10 extends Day2019 {
+
 	private final List<Point> asteroids;
 	private Point baseLocation;
 
 	public Day10() throws IOException {
-		String[] mapString = Arrays.stream(day2019(10).split(System.lineSeparator())).toArray(String[]::new);
+		super(10);
+		String[] mapString = dayStrings();
 		this.asteroids = IntStream.range(0, mapString.length).boxed().flatMap(i -> IntStream.range(0, mapString[i].length()).mapToObj(j -> new Point(j, i))).filter(p -> mapString[p.y].charAt(p.x) == '#').collect(Collectors.toList());
 	}
 

@@ -1,14 +1,17 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
 import java.io.IOException;
 
-public class Day21 implements Day {
+public class Day21 extends Day2019 {
 
 	public static void main(String[] args) throws IOException {
 		new Day21().printParts();
 	}
+
+	public Day21(){super(21);}
 
 	@Override
 	public Object part1() throws IOException {

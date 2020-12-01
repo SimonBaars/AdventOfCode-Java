@@ -23,13 +23,41 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="98687f9d-cf15-4bd9-b8cb-f6bbf1a1c0c2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/days/Day2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year18/Day2018.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/Day2019.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/Day2020.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/common/Day.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/common/Day.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year18/days/Day1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year18/days/Day1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day10.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day10.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day11.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day11.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day12.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day12.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day13.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day13.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day14.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day14.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day15.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day15.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day16.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day16.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day17.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day17.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day18.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day18.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day19.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day19.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day20.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day20.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day21.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day21.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day22.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day22.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day23.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day23.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day24.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day24.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day25.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day25.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day3.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day4.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day5.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day5.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day6.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day6.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day7.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day7.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day8.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day8.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day9.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/days/Day9.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/intcode/IntcodeComputer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year19/intcode/IntcodeComputer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/days/Day1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/days/Day1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/days/Day2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20/days/Day2.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +71,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -93,13 +122,16 @@
       <recent name="$PROJECT_DIR$/src/main/java/com/sbaars/adventofcode/year20" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.sbaars.adventofcode.year20" />
+      <recent name="com.sbaars.adventofcode.year18" />
+      <recent name="com.sbaars.adventofcode.year19" />
       <recent name="com.sbaars.adventofcode.year20.days" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources/2019" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Day1">
+  <component name="RunManager" selected="Application.Day2">
     <configuration name="Day1 (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.sbaars.adventofcode.year18.days.Day1" />
       <module name="adventofcode2019" />
@@ -126,12 +158,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Day6" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.sbaars.adventofcode.year19.days.Day6" />
+    <configuration name="Day2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.sbaars.adventofcode.year20.days.Day2" />
       <module name="adventofcode2019" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.sbaars.adventofcode.year19.days.*" />
+          <option name="PATTERN" value="com.sbaars.adventofcode.year20.days.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -178,11 +210,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Day1" />
-        <item itemvalue="Application.Main (1)" />
+        <item itemvalue="Application.Day2" />
         <item itemvalue="Application.Day1 (1)" />
         <item itemvalue="Application.Main" />
-        <item itemvalue="Application.Day6" />
+        <item itemvalue="Application.Day1" />
+        <item itemvalue="Application.Main (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -198,7 +230,7 @@
       <workItem from="1606755951243" duration="4943000" />
       <workItem from="1606766510853" duration="381000" />
       <workItem from="1606766924884" duration="248000" />
-      <workItem from="1606767262251" duration="2441000" />
+      <workItem from="1606767262251" duration="6409000" />
     </task>
     <servers />
   </component>
@@ -218,6 +250,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="533" y="160" key="#com.intellij.ide.util.MemberChooser" timestamp="1606852543499">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="533" y="160" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1606852543499" />
     <state x="142" y="888" width="796" height="145" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1606755337096">
       <screen x="0" y="0" width="1080" height="1605" />
     </state>
@@ -234,25 +270,25 @@
       <screen x="0" y="0" width="1080" height="1605" />
     </state>
     <state x="319" y="706" width="426" height="511" key="FileChooserDialogImpl/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606757732563" />
-    <state width="1398" height="235" key="GridCell.Tab.0.bottom" timestamp="1606836758274">
+    <state width="1398" height="235" key="GridCell.Tab.0.bottom" timestamp="1606854052985">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="235" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1606836758274" />
+    <state width="1398" height="235" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1606854052985" />
     <state width="1038" height="556" key="GridCell.Tab.0.bottom/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606761305168" />
-    <state width="1398" height="235" key="GridCell.Tab.0.center" timestamp="1606836758273">
+    <state width="1398" height="235" key="GridCell.Tab.0.center" timestamp="1606854052983">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="235" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1606836758273" />
+    <state width="1398" height="235" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1606854052983" />
     <state width="1038" height="556" key="GridCell.Tab.0.center/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606761305168" />
-    <state width="1398" height="235" key="GridCell.Tab.0.left" timestamp="1606836758273">
+    <state width="1398" height="235" key="GridCell.Tab.0.left" timestamp="1606854052980">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="235" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1606836758273" />
+    <state width="1398" height="235" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1606854052980" />
     <state width="1038" height="556" key="GridCell.Tab.0.left/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606761305168" />
-    <state width="1398" height="235" key="GridCell.Tab.0.right" timestamp="1606836758273">
+    <state width="1398" height="235" key="GridCell.Tab.0.right" timestamp="1606854052984">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="235" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1606836758273" />
+    <state width="1398" height="235" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1606854052984" />
     <state width="1038" height="556" key="GridCell.Tab.0.right/1080.549.1920.1080/3000.549.1920.1080/0.0.1080.1605@0.0.1080.1605" timestamp="1606761305168" />
     <state width="1038" height="680" key="GridCell.Tab.1.bottom" timestamp="1606760732313">
       <screen x="0" y="0" width="1080" height="1605" />

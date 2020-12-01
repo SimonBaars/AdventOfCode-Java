@@ -1,16 +1,19 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
 import com.sbaars.adventofcode.year19.intcode.RetentionPolicy;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
-public class Day23 implements Day {
+public class Day23 extends Day2019 {
 
 	public static void main(String[] args) throws IOException {
 		new Day23().printParts();
 	}
+
+	public Day23(){super(23);}
 
 	@Override
 	public Object part1() throws IOException {
@@ -23,7 +26,7 @@ public class Day23 implements Day {
 	}
 
 	private long getNetworkNumber(boolean returnNatY) throws IOException {
-		long[] program = dayNumbers2019(23);
+		long[] program = dayNumbers();
 		IntcodeComputer[] ic = IntStream.range(0, 50).mapToObj(i -> new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, program, i, -1)).toArray(IntcodeComputer[]::new);
 		long[] nat = new long[2];
 		long sentByNat = -1;

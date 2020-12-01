@@ -1,12 +1,17 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
-public class Day12 implements Day {
+public class Day12 extends Day2019 {
+	public Day12(){
+		super(12);
+	}
 
 	int[][] moons = {{-5,6,-11},{-8,-4,-2},{1,16,4},{11,11,-4}};
 	int[][] velocity = {{0,0,0},{0,0,0},{0,0,0},{0,0,0}};
