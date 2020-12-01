@@ -4,6 +4,16 @@
     <remote-repository>
       <option name="id" value="picnic-snapshots" />
       <option name="name" value="picnic-snapshots" />
+      <option name="url" value="https://this-url-is-not-accessed-because-of-the-mirror-configuration-above" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="picnic-snapshots" />
+      <option name="name" value="picnic-snapshots" />
       <option name="url" value="https://nexus.global.picnicinternational.com/repository/maven-public" />
     </remote-repository>
     <remote-repository>
