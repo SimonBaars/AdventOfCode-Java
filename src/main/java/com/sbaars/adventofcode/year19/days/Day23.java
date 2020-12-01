@@ -26,7 +26,7 @@ public class Day23 extends Day2019 {
 	}
 
 	private long getNetworkNumber(boolean returnNatY) throws IOException {
-		long[] program = dayNumbers();
+		long[] program = dayNumbers(",");
 		IntcodeComputer[] ic = IntStream.range(0, 50).mapToObj(i -> new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, program, i, -1)).toArray(IntcodeComputer[]::new);
 		long[] nat = new long[2];
 		long sentByNat = -1;
