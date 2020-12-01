@@ -2,13 +2,17 @@ package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.common.ProcessesImages;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.util.CountMap;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class Day8 implements Day, ProcessesImages {
+public class Day8 extends Day2019 implements ProcessesImages {
+	public Day8(){
+		super(8);
+	}
 
 	private static final int DIM_X = 6;
 	private static final int DIM_Y = 25;
@@ -27,7 +31,7 @@ public class Day8 implements Day, ProcessesImages {
 	}
 
 	private int[] readPixels() throws IOException {
-		char[] chars = day2019(8).toCharArray();
+		char[] chars = day().toCharArray();
 		return IntStream.range(0, chars.length).map(i -> Character.getNumericValue(chars[i])).toArray();
 	}
 

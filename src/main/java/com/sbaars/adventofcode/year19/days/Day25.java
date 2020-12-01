@@ -5,17 +5,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
 import com.sbaars.adventofcode.year19.intcode.RetentionPolicy;
 
-public class Day25 implements Day {
+public class Day25 extends Day2019 {
 
 	public static void main(String[] args) throws IOException {
 		new Day25().play();
 	}
 
+	public Day25(){super(25);}
+
 	private void play() throws IOException {
-		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers2019(25));
+		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers());
 		while(true) {
 			long res;
 			while((res = ic.run()) != IntcodeComputer.STOP_CODE) System.out.print((char)res);
@@ -25,7 +28,7 @@ public class Day25 implements Day {
 
 	@Override
 	public Object part1() throws IOException {
-		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers2019(25));
+		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers());
 		String[] inputs = new String [] {"west", "take semiconductor", "west", "take planetoid", "west", "take food ration", "west", "take fixed point", "east", "east", "south", "east", "east", "north", "east", "north"};
 		String numbers = "";
 		for(int i = 0; i<=inputs.length; i++) {

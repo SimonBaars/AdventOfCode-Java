@@ -8,10 +8,11 @@ import java.util.List;
 
 import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.common.Direction;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
 import com.sbaars.adventofcode.year19.pathfinding.Grid2d;
 
-public class Day15 implements Day {
+public class Day15 extends Day2019 {
 
 	public static final int UNEXPLORED = 3;
 	public static final int WALL = 0;
@@ -20,6 +21,10 @@ public class Day15 implements Day {
 	private static final int BOARD_SIZE = 41;
 	private static final Point START_POINT = new Point(BOARD_SIZE/2+1,BOARD_SIZE/2+1);
 	int[][] grid = new int[BOARD_SIZE][BOARD_SIZE];
+
+	public Day15(){
+		super(15);
+	}
 
 	public static void main(String[] args) throws IOException {
 		new Day15().printParts();

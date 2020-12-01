@@ -1,17 +1,20 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class Day16 implements Day {
+public class Day16 extends Day2019 {
 
 	private static final int TARGET_POS = 5977341;
 	private final int[] input;
 
 	public Day16() throws IOException {
-		input = day2019(16).chars().map(e -> Character.getNumericValue(e)).toArray();
+		super(16);
+		input = day().chars().map(Character::getNumericValue).toArray();
 	}
 
 	public static void main(String[] args) throws IOException {

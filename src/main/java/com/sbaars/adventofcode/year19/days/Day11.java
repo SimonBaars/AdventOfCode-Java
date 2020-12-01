@@ -3,13 +3,17 @@ package com.sbaars.adventofcode.year19.days;
 import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.ProcessesImages;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Day11 implements Day, ProcessesImages {
+public class Day11 extends Day2019 implements ProcessesImages {
+	public Day11(){
+		super(11);
+	}
 
 	public static void main(String[] args) throws IOException {
 		new Day11().printParts();

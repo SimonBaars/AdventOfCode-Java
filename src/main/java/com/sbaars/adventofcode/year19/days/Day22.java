@@ -10,16 +10,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.sbaars.adventofcode.year19.Day2019;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Value;
 
-public class Day22 implements Day {
+public class Day22 extends Day2019 {
 
 	Move[] moves;
 
 	public Day22() throws IOException {
-		this.moves = Arrays.stream(day2019(22).split(System.lineSeparator())).map(Move::new).toArray(Move[]::new);
+		super(22);
+		this.moves = Arrays.stream(day().split(System.lineSeparator())).map(Move::new).toArray(Move[]::new);
 	}
 
 	public static void main(String[] args) throws IOException {

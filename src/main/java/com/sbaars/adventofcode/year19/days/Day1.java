@@ -5,9 +5,13 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 
-public class Day1 implements Day
-{	
+public class Day1 extends Day2019 {
+	public Day1(){
+		super(1);
+	}
+
 	public static void main(String[] args) throws IOException
 	{
 		new Day1().printParts();
@@ -15,16 +19,12 @@ public class Day1 implements Day
 
 	@Override
 	public Object part1() throws IOException {
-		return createNumberStream().map(this::getFuel).sum();
+		return dayIntStream().map(this::getFuel).sum();
 	}
 
 	@Override
 	public Object part2() throws IOException {
-		return createNumberStream().map(this::getRequiredFuel).sum();
-	}
-
-	private IntStream createNumberStream() throws IOException {
-		return Arrays.stream(day2019(1).split(System.lineSeparator())).mapToInt(Integer::parseInt);
+		return dayIntStream().map(this::getRequiredFuel).sum();
 	}
 
 	private int getRequiredFuel(int mass) {

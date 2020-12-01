@@ -3,9 +3,13 @@ package com.sbaars.adventofcode.year19.days;
 import java.io.IOException;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
 
-public class Day2 implements Day {
+public class Day2 extends Day2019 {
+	public Day2(){
+		super(2);
+	}
 
 	public static void main(String[] args) throws IOException {
 		new Day2().printParts();

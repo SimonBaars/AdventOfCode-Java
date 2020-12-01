@@ -1,19 +1,19 @@
 package com.sbaars.adventofcode.year18.days;
 
-import com.sbaars.adventofcode.common.Day;
-import java.io.IOException;
-import java.util.stream.LongStream;
+import com.sbaars.adventofcode.year18.Day2018;
 
-public class Day1 implements Day
-{	
-	public static void main(String[] args) throws IOException
-	{
+import java.io.IOException;
+
+public class Day1 extends Day2018 {
+	public static void main(String[] args) throws IOException {
 		new Day1().printParts();
 	}
 
+	public Day1(){super(1);}
+
 	@Override
 	public Object part1() throws IOException {
-		return LongStream.of(dayNumbers2018(1, "\n")).sum();
+		return dayNumberStream().sum();
 	}
 
 	@Override

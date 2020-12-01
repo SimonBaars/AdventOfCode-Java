@@ -11,8 +11,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 
-public class Day6 implements Day {
+public class Day6 extends Day2019 {
+	public Day6(){
+		super(6);
+	}
 
 	ArrayListMultimap<String, String> orbits = ArrayListMultimap.create();
 
@@ -23,7 +27,7 @@ public class Day6 implements Day {
 
 	@Override
 	public Object part1() throws IOException {
-		String[] nums = createOrbitArray();
+		String[] nums = dayStrings();
 		for(String num : nums) {
 			String[] parts = num.split("\\)");
 			orbits.put(parts[0], parts[1]);
@@ -74,9 +78,5 @@ public class Day6 implements Day {
 
 	public List<String> findOrbit(String orbitValue) {
 		return orbits.asMap().entrySet().stream().filter(e -> e.getValue().contains(orbitValue)).map(e -> e.getKey()).collect(Collectors.toList());
-	}
-
-	private String[] createOrbitArray() throws IOException {
-		return Arrays.stream(day2019(6).split(System.lineSeparator())).toArray(String[]::new);
 	}
 }

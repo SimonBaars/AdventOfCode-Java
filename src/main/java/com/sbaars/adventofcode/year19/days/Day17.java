@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.common.Direction;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
 import java.awt.Point;
 import java.io.IOException;
@@ -12,11 +13,12 @@ import java.util.stream.IntStream;
 
 import lombok.EqualsAndHashCode;
 
-public class Day17 implements Day {
+public class Day17 extends Day2019 {
 
 	char[][] grid = new char[48][48];
 
 	public Day17() throws IOException {
+		super(17);
 		IntcodeComputer ic = new IntcodeComputer(17, 1);
 		long res;
 		int x = 0, y =0;

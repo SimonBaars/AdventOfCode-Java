@@ -12,11 +12,12 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.pathfinding.CharGrid2d;
 
 import lombok.*;
 
-public class Day18 implements Day {
+public class Day18 extends Day2019 {
 
 	private final char[][] grid;
 	private final CharGrid2d charGrid;
@@ -29,7 +30,8 @@ public class Day18 implements Day {
 	private final Point middle;
 
 	public Day18() throws IOException {
-		grid = Arrays.stream(day2019(18).split(System.lineSeparator())).map(e -> e.toCharArray()).toArray(char[][]::new);
+		super(18);
+		grid = dayStream().map(String::toCharArray).toArray(char[][]::new);
 		charGrid = new CharGrid2d(grid, false);
 		middle = findPos('@').get(0);
 	}	

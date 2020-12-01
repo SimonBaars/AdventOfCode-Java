@@ -4,13 +4,16 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.util.LongCountMap;
 
-public class Day14 implements Day {
+public class Day14 extends Day2019 {
+
 	private Trade[] trades;
 
 	public Day14() throws IOException {
-		this.trades = Arrays.stream(day2019(14).split(System.lineSeparator())).map(Trade::new).toArray(Trade[]::new);
+		super(14);
+		this.trades = dayStream().map(Trade::new).toArray(Trade[]::new);
 	}
 
 	public static void main(String[] args) throws IOException {
