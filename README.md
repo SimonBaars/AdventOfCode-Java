@@ -1,5 +1,20 @@
 # adventOfCode(Language.JAVA)
 
+## 2020
+### Days
+- [Day 1](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day1.java)
+- [Day 2](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day2.java)
+
+### Console output
+```
+Day 1:
+Part 1: 270144
+Part 2: 261342720
+
+Day 2:
+Part 1: 422
+Part 2: 451
+```
 
 ## 2019
 ### Days
@@ -143,4 +158,16 @@ Part 2: 2025
 Day 25:
 Part 1: 34095120
 Part 2: MERRY CHRISTMAS!!
+```
+
+## 2018
+I never did the 2018 advent of code puzzles when the event was ungoing. I'm just doing them whenever I feel like it :)
+
+### Days
+- [Day 1](https://github.com/SimonBaars/adventOfCode-2019/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day1.java)
+
+### Console output
+```
+Part 1: 433
+Part 2: 256
 ```
