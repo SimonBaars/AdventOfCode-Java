@@ -79,7 +79,7 @@ public abstract class Day {
 		return dayStream(delimiter).mapToLong(Long::parseLong);
 	}
 
-	protected char[][] dayGrid() throws IOException {
+	protected char[][] dayGrid() {
 		return dayGrid(DEFAULT_DELIMITER);
 	}
 

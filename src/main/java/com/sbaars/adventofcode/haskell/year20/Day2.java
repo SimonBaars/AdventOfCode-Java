@@ -17,7 +17,8 @@ public class Day2 extends Day2020 {
     @Override
     public Object part1() throws IOException {
         return dayStream().map(com.sbaars.adventofcode.year20.days.Day2::mapPassword)
-                .map(p -> "(("+p.getLower()+", "+p.getHigher()+"), '"+p.getCharacter()+"', \""+p.getPassword()+"\")").collect(Collectors.joining(", ", "[", "]"));
+                .map(p -> "(("+p.getLower()+", "+p.getHigher()+"), '"+p.getCharacter()+"', \""+p.getPassword()+"\")")
+                .collect(Collectors.joining(", ", "[", "]"));
     }
 
     @Override
