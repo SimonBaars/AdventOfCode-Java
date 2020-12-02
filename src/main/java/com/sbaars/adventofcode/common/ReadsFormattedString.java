@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface ReadsFormattedString {
-    default<T> T readString(String s, String pattern, Class<T> target){
+    static<T> T readString(String s, String pattern, Class<T> target){
         List<Object> mappedObjs = new ArrayList<>();
         while(s.length()>0){
             if(pattern.length() > 1 && pattern.charAt(0) == '%'){
@@ -37,11 +37,11 @@ public interface ReadsFormattedString {
         }
     }
 
-    default long crunchNumber(String s, String pattern){
+    static long crunchNumber(String s, String pattern){
         return Long.parseLong(crunchString(s, pattern));
     }
 
-    default String crunchString(String s, String pattern){
+    static String crunchString(String s, String pattern){
         return pattern.length() > 2 ? s.substring(0, s.indexOf(pattern.charAt(2))) : s;
     }
 
