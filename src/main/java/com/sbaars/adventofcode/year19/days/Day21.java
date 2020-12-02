@@ -16,7 +16,7 @@ public class Day21 extends Day2019 {
 	@Override
 	public Object part1() throws IOException {
 		IntcodeComputer ic = new IntcodeComputer(21);
-		// !(A && B && C) || D
+		// !(A && B && C) && D
 		ic.setInput("OR A T\n" + 
 				"AND B T\n" + 
 				"AND C T\n" + 
