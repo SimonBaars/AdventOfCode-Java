@@ -12,9 +12,10 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static java.lang.Math.toIntExact;
 
-public class Day2 extends Day2020 implements ReadsFormattedString {
+public class Day2 extends Day2020 {
     public static void main(String[] args) throws IOException {
         new Day2().printParts();
     }
@@ -27,11 +28,11 @@ public class Day2 extends Day2020 implements ReadsFormattedString {
     }
 
     private long pwCount(Predicate<Password> validator) {
-        List<Password> s = dayStream().map(this::mapPassword).collect(Collectors.toList());
+        List<Password> s = dayStream().map(Day2::mapPassword).collect(Collectors.toList());
         return s.stream().filter(validator).count();
     }
 
-    private Password mapPassword(String s){
+    public static Password mapPassword(String s){
         return readString(s, "%n-%n %c: %s", Password.class);
     }
 
