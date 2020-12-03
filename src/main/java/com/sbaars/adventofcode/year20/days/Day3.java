@@ -21,12 +21,22 @@ public class Day3 extends Day2020 implements ReadsFormattedString {
 
     @Override
     public Object part1() throws IOException {
-        String s = day();
-        return 0;
+        return trees(dayGrid(), 3, 1);
     }
 
     @Override
     public Object part2() throws IOException {
-        return 0;
+        char[][] g = dayGrid();
+        return trees(g,1,1) * trees(g,3,1) * trees(g,5,1) * trees(g,7,1) * trees (g,1,2);
+    }
+
+    int trees(char[][] grid, int x, int y){
+        int trees = 0;
+        for(int i = 0;  i < grid.length; i+=y){
+            if(grid[i][i*x%grid[0].length] == '#'){
+                trees++;
+            }
+        }
+        return trees;
     }
 }
