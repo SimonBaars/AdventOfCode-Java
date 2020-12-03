@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import lombok.var;
 
 public class Day12 extends Day2019 {
 	public Day12(){
@@ -35,7 +36,7 @@ public class Day12 extends Day2019 {
 
 	@Override
 	public Object part2() throws IOException {
-		final var sets = Collections.nCopies(moons[0].length, new HashSet<>());
+		var sets = Collections.nCopies(moons[0].length, new HashSet<>());
 		long[] res = new long[sets.size()];
 		for(long n = 0; true; n++) {
 			determineVelocity();
