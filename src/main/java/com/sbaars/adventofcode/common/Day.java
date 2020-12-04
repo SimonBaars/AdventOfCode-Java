@@ -71,6 +71,14 @@ public abstract class Day {
 		return dayNumberStream(delimiter).toArray();
 	}
 
+	protected double[] dayDoubles() {
+		return dayDoubles(DEFAULT_DELIMITER);
+	}
+
+	protected double[] dayDoubles(String delimiter) {
+		return dayStream(delimiter).mapToDouble(Double::parseDouble).toArray();
+	}
+
 	protected LongStream dayNumberStream() {
 		return dayNumberStream(DEFAULT_DELIMITER);
 	}
