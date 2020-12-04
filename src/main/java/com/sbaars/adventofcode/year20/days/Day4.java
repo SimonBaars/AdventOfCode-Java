@@ -18,13 +18,13 @@ import lombok.Data;
 import lombok.Value;
 
 public class Day4 extends Day2020 implements ReadsFormattedString {
-    private static final Map<String, String> expected = Map.of("byr", "^(200[0-2]|19[2-9][0-9])",
-                                                                "iyr", "^(2020|201[0-9])",
-                                                                "eyr", "^(2030|202[0-9])",
-                                                                "hgt", "^((1([5-8][0-9]|9[0-3])cm)|((59|6[0-9]|7[0-6])in))",
-                                                                "hcl", "^(#[0-9a-f]{6})",
-                                                                "ecl", "^(amb|blu|brn|gry|grn|hzl|oth)",
-                                                                "pid", "^[0-9]{9}");
+    private static final Map<String, String> expected = Map.of("byr", "^(200[0-2]|19[2-9][0-9])$",
+                                                                "iyr", "^(2020|201[0-9])$",
+                                                                "eyr", "^(2030|202[0-9])$",
+                                                                "hgt", "^((1([5-8][0-9]|9[0-3])cm)|((59|6[0-9]|7[0-6])in))$",
+                                                                "hcl", "^(#[0-9a-f]{6})$",
+                                                                "ecl", "^(amb|blu|brn|gry|grn|hzl|oth)$",
+                                                                "pid", "^[0-9]{9}$");
 
     public static void main(String[] args)  {
         new Day4().printParts();
