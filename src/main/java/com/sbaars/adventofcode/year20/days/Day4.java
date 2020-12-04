@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 import lombok.Data;
 import lombok.Value;
 
-public class Day4 extends Day2020 implements ReadsFormattedString {
+public class Day4 extends Day2020 {
     private static final Map<String, String> expected = Map.of("byr", "^(200[0-2]|19[2-9][0-9])$",
                                                                 "iyr", "^(2020|201[0-9])$",
                                                                 "eyr", "^(2030|202[0-9])$",

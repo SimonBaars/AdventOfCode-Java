@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Math.toIntExact;
 
-public class Day3 extends Day2020 implements ReadsFormattedString {
+public class Day3 extends Day2020 {
     public static void main(String[] args)  {
         new Day3().printParts();
     }
