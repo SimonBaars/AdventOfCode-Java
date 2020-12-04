@@ -7,14 +7,14 @@ import java.io.IOException;
 
 public class Day19 extends Day2019 {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day19().printParts();
 	}
 
 	public Day19(){super(19);}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		long res = 0;
 		for(int x = 0; x<50;x++) 
 			for(int y = 0; y<50;y++) 
@@ -23,7 +23,7 @@ public class Day19 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		int x = 500, y = 0;
 		while(true) {
 			if(beam(x, y)) {
@@ -33,7 +33,7 @@ public class Day19 extends Day2019 {
 		}
 	}
 
-	private boolean beam(int x, int y) throws IOException {
+	private boolean beam(int x, int y)  {
 		return new IntcodeComputer(19).run(x, y) == 1L;
 	}
 }

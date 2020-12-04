@@ -13,19 +13,19 @@ import java.util.stream.Collectors;
 import static java.lang.Math.toIntExact;
 
 public class Day3 extends Day2020 implements ReadsFormattedString {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         new Day3().printParts();
     }
 
     public Day3(){super(3);}
 
     @Override
-    public Object part1() throws IOException {
+    public Object part1()  {
         return trees(dayGrid(), 3, 1);
     }
 
     @Override
-    public Object part2() throws IOException {
+    public Object part2()  {
         char[][] g = dayGrid();
         return trees(g,1,1) * trees(g,3,1) * trees(g,5,1) * trees(g,7,1) * trees (g,1,2);
     }

@@ -19,19 +19,19 @@ public class Day8 extends Day2019 implements ProcessesImages {
 	private static final int DIM_Y = 25;
 	private static final int SIZE = DIM_X*DIM_Y;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day8().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		int[] pixels = readPixels();
 		var pixelCounts = countPixels(pixels);
 		var cm = pixelCounts.stream().reduce((e1, e2) -> e1.get(0) > e2.get(0) ? e2 : e1).get();
 		return cm.get(1) * cm.get(2);
 	}
 
-	private int[] readPixels() throws IOException {
+	private int[] readPixels()  {
 		char[] chars = day().toCharArray();
 		return IntStream.range(0, chars.length).map(i -> Character.getNumericValue(chars[i])).toArray();
 	}
@@ -49,7 +49,7 @@ public class Day8 extends Day2019 implements ProcessesImages {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		int[][] pixelArrays = splitArray(readPixels(), 100, SIZE);
 		int[] finalPixels = determineFinalImage(pixelArrays);
 		return printAsciiArray(splitArray(finalPixels, DIM_X, DIM_Y));

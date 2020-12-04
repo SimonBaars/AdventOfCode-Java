@@ -11,17 +11,17 @@ public class Day14 extends Day2019 {
 
 	private Trade[] trades;
 
-	public Day14() throws IOException {
+	public Day14()  {
 		super(14);
 		this.trades = dayStream().map(Trade::new).toArray(Trade[]::new);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day14().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return findCost(new Item(1, "FUEL"), new LongCountMap<>());
 	}
 
@@ -53,7 +53,7 @@ public class Day14 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		long oreLeft = 1000000000000L;
 		long fuel = 1;
 		while(true) {

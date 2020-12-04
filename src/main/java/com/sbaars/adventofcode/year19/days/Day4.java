@@ -11,17 +11,17 @@ public class Day4 extends Day2019 {
 		super(4);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day4().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return checkPasswords(false);
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return checkPasswords(true);
 	}
 

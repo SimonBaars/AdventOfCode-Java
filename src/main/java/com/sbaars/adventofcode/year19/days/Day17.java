@@ -17,7 +17,7 @@ public class Day17 extends Day2019 {
 
 	char[][] grid = new char[48][48];
 
-	public Day17() throws IOException {
+	public Day17()  {
 		super(17);
 		IntcodeComputer ic = new IntcodeComputer(17, 1);
 		long res;
@@ -33,12 +33,12 @@ public class Day17 extends Day2019 {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day17().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		int result = 0;
 		for(int y = 1; y<grid.length-1; y++) {
 			for(int x = 1; x<grid.length-1; x++) {
@@ -55,7 +55,7 @@ public class Day17 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		Point pos = findPos(grid, '^').get(0);
 		List<Instruction> instructions = new ArrayList<>();
 		List<Point> traversed = new ArrayList<>();

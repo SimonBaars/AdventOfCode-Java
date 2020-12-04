@@ -9,23 +9,23 @@ import java.util.stream.IntStream;
 
 public class Day23 extends Day2019 {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day23().printParts();
 	}
 
 	public Day23(){super(23);}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return getNetworkNumber(true);
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return getNetworkNumber(false);
 	}
 
-	private long getNetworkNumber(boolean returnNatY) throws IOException {
+	private long getNetworkNumber(boolean returnNatY)  {
 		long[] program = dayNumbers(",");
 		IntcodeComputer[] ic = IntStream.range(0, 50).mapToObj(i -> new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, program, i, -1)).toArray(IntcodeComputer[]::new);
 		long[] nat = new long[2];

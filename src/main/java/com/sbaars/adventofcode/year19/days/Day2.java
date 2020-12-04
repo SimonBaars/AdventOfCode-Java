@@ -11,21 +11,21 @@ public class Day2 extends Day2019 {
 		super(2);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day2().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return execute(12,2);
 	}
 
 	@Override 
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return bruteForceFindingNumber(19690720, 99);
 	}
 
-	private int bruteForceFindingNumber(int number, int bound) throws IOException {
+	private int bruteForceFindingNumber(int number, int bound)  {
 		for(int i = 0; i<bound;i++) {
 			for(int j = 0; j<bound; j++) {
 				if(execute(i, j) == number) {
@@ -36,7 +36,7 @@ public class Day2 extends Day2019 {
 		return -1;
 	}
 
-	private long execute(int x, int y) throws IOException {
+	private long execute(int x, int y)  {
 		IntcodeComputer computer = new IntcodeComputer(2, x, y);
 		computer.run();
 		return computer.firstElement();

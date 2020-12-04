@@ -1,9 +1,7 @@
 package com.sbaars.adventofcode.year19.intcode;
 
-import com.sbaars.adventofcode.common.DoesFileOperations;
 import com.sbaars.adventofcode.year19.Day2019;
 
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
@@ -27,7 +25,7 @@ public class IntcodeComputer extends Day2019 {
 		this.policy = policy;
 	}
 	
-	public IntcodeComputer(int day, long...input) throws IOException {
+	public IntcodeComputer(int day, long...input)  {
 		super(day);
 		this.program = dayNumbers(",");
 		this.program = Arrays.copyOf(this.program, 10000);
@@ -167,12 +165,12 @@ public class IntcodeComputer extends Day2019 {
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return null;
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return null;
 	}
 }

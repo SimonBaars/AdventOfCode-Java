@@ -17,12 +17,12 @@ public class Day12 extends Day2019 {
 	int[][] moons = {{-5,6,-11},{-8,-4,-2},{1,16,4},{11,11,-4}};
 	int[][] velocity = {{0,0,0},{0,0,0},{0,0,0},{0,0,0}};
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day12().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		for(int n = 0; n<1000; n++) {
 			determineVelocity();
 			moveMoonsUsingVelocity();
@@ -35,7 +35,7 @@ public class Day12 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		var sets = Collections.nCopies(moons[0].length, new HashSet<>());
 		long[] res = new long[sets.size()];
 		for(long n = 0; true; n++) {

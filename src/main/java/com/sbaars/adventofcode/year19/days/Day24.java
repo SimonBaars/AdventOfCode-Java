@@ -30,17 +30,17 @@ public class Day24 extends Day2019 {
 		char[][] grid;
 	}
 
-	public Day24() throws IOException {
+	public Day24()  {
 		super(24);
 		this.initialGrid = dayGrid();
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day24().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		char[][] grid = initialGrid;
 		while(true) {
 			if(!grids.add(new Grid(grid))) return calcRes(grid);
@@ -80,7 +80,7 @@ public class Day24 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		char[][] grid = dayGrid();
 		for(int i = -200; i<=200; i++) layers.put(i, fill(new char[grid.length][grid[0].length], '.'));
 		layers.put(0, grid);

@@ -20,13 +20,13 @@ public class Day6 extends Day2019 {
 
 	ArrayListMultimap<String, String> orbits = ArrayListMultimap.create();
 
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args)
 	{
 		new Day6().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		String[] nums = dayStrings();
 		for(String num : nums) {
 			String[] parts = num.split("\\)");
@@ -48,7 +48,7 @@ public class Day6 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return findRoute("YOU", "SAN");
 	}
 

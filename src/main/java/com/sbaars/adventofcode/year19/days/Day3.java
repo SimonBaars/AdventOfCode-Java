@@ -15,7 +15,7 @@ public class Day3 extends Day2019 {
 
 	private Set<Step> intersect;
 
-	public Day3() throws IOException {
+	public Day3()  {
 		super(3);
 		String[] strings = dayStrings();
 		Walk[] walks1 = mapToWalks(strings[0]), walks2 = mapToWalks(strings[1]);
@@ -24,17 +24,17 @@ public class Day3 extends Day2019 {
 		this.intersect = calculateDistance(walks2, walkedLocations, true);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day3().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return intersect.stream().mapToInt(e -> distance(e.point)).min().orElse(Integer.MAX_VALUE);
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return intersect.stream().mapToInt(e -> e.steps).min().orElse(Integer.MAX_VALUE);
 	}
 

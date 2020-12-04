@@ -16,14 +16,14 @@ import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static java.lang.Math.toIntExact;
 
 public class Day2 extends Day2020 {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         new Day2().printParts();
     }
 
     public Day2(){super(2);}
 
     @Override
-    public Object part1() throws IOException {
+    public Object part1()  {
         return pwCount(Password::isValid);
     }
 
@@ -57,7 +57,7 @@ public class Day2 extends Day2020 {
     }
 
     @Override
-    public Object part2() throws IOException {
+    public Object part2()  {
         return pwCount(Password::isValid2);
     }
 }

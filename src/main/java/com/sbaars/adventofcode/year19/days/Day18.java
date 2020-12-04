@@ -29,14 +29,14 @@ public class Day18 extends Day2019 {
 	};
 	private final Point middle;
 
-	public Day18() throws IOException {
+	public Day18()  {
 		super(18);
 		grid = dayStream().map(String::toCharArray).toArray(char[][]::new);
 		charGrid = new CharGrid2d(grid, false);
 		middle = findPos('@').get(0);
 	}	
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day18().printParts();
 	}
 
@@ -51,7 +51,7 @@ public class Day18 extends Day2019 {
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		List<Point> me = new ArrayList<>();
 		me.add(middle);
 		return findRoutes(me);
@@ -133,7 +133,7 @@ public class Day18 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		for(int y = 0; y<CHANGE_GRID.length; y++) {
 			for(int x = 0; x<CHANGE_GRID[y].length; x++) {
 				grid[middle.y-1+y][middle.x-1+x] = CHANGE_GRID[y][x];

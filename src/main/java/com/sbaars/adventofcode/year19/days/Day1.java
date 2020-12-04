@@ -12,18 +12,18 @@ public class Day1 extends Day2019 {
 		super(1);
 	}
 
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args)
 	{
 		new Day1().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return dayIntStream().map(this::getFuel).sum();
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return dayIntStream().map(this::getRequiredFuel).sum();
 	}
 
