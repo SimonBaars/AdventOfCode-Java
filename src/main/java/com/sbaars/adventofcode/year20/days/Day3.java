@@ -32,8 +32,8 @@ public class Day3 extends Day2020 {
 
     int trees(char[][] grid, int x, int y){
         int trees = 0;
-        for(int i = 0;  i < grid.length; i+=y){
-            if(grid[i][i*x%grid[0].length] == '#'){
+        for(int i = 0;  i*y < grid.length; i++){
+            if(grid[i*y][i*x%grid[0].length] == '#'){
                 trees++;
             }
         }
