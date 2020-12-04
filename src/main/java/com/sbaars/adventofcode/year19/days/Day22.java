@@ -19,12 +19,12 @@ public class Day22 extends Day2019 {
 
 	Move[] moves;
 
-	public Day22() throws IOException {
+	public Day22()  {
 		super(22);
 		this.moves = Arrays.stream(day().split(System.lineSeparator())).map(Move::new).toArray(Move[]::new);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day22().printParts();
 	}
 
@@ -92,14 +92,14 @@ public class Day22 extends Day2019 {
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		List<Integer> cards = IntStream.range(0, 10007).boxed().collect(Collectors.toList());
 		for(Move move : moves) cards = move.execute(cards);
 		return cards.indexOf(2019);
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return seekPosition(num(119315717514047L), num(101741582076661L), 2020);
 	}
 

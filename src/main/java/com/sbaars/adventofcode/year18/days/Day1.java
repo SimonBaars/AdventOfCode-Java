@@ -9,19 +9,19 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Day1 extends Day2018 {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day1().printParts();
 	}
 
 	public Day1(){super(1);}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return dayNumberStream().sum();
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		Set<Long> encountered = new HashSet<>();
 		long[] ns = dayNumbers();
 		long acc = 0;

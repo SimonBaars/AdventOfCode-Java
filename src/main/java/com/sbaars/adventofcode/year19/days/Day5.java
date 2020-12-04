@@ -11,12 +11,12 @@ public class Day5 extends Day2019 {
 		super(5);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day5().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		long res;
 		IntcodeComputer intcodeComputer = new IntcodeComputer(5, 1);
 		while((res = intcodeComputer.run()) == 0);
@@ -24,7 +24,7 @@ public class Day5 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return new IntcodeComputer(5, 5).run();
 	}
 }

@@ -26,12 +26,12 @@ public class Day15 extends Day2019 {
 		super(15);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day15().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		IntcodeComputer ic = new IntcodeComputer(15);
 		Point pos = START_POINT;
 		for(int[] row : grid) Arrays.fill(row, UNEXPLORED);
@@ -97,7 +97,7 @@ public class Day15 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		Point oxygenLeak = findPos(FINISH).get(0);
 		return findPos(PATH).stream().mapToInt(e -> new Grid2d(grid, false).findPath(oxygenLeak, e).size()-1).max().getAsInt();
 	}

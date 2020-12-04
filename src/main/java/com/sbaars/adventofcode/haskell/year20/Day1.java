@@ -11,17 +11,17 @@ public class Day1 extends Day2020 {
         super(1);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         new Day1().printParts();
     }
 
     @Override
-    public Object part1() throws IOException {
+    public Object part1()  {
         return dayNumberStream().mapToObj(Long::toString).collect(Collectors.joining(", ", "[", "]"));
     }
 
     @Override
-    public Object part2() throws IOException {
+    public Object part2()  {
         return null;
     }
 }

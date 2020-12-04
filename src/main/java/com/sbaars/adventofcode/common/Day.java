@@ -19,19 +19,19 @@ public abstract class Day {
 		this.day = day;
 	}
 
-	public abstract Object part1() throws IOException;
-	public abstract Object part2() throws IOException;
+	public abstract Object part1() ;
+	public abstract Object part2() ;
 	
-	public void printParts() throws IOException {
+	public void printParts()  {
 		System.out.println("Part 1: "+part1());
 		System.out.println("Part 2: "+part2());
 	}
 
 	protected String getResourceAsString(String resource) {
 		try {
-			return readFileToString(new File(DoesFileOperations.class.getClassLoader().getResource(resource).getFile()));
+			return readFileToString(new File(Day.class.getClassLoader().getResource(resource).getFile()));
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 	}
 

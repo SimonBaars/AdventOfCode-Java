@@ -14,12 +14,12 @@ public class Day13 extends Day2019 {
 		super(13);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day13().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		IntcodeComputer cp = new IntcodeComputer(13);
 		Set<Point> n = new HashSet<Point>();
 		while(true) {
@@ -33,7 +33,7 @@ public class Day13 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		IntcodeComputer cp = new IntcodeComputer(13, 1);
 		cp.setElement(0, 2);
 		int[][] field = new int[21][38];

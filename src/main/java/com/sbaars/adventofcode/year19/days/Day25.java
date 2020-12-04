@@ -11,23 +11,25 @@ import com.sbaars.adventofcode.year19.intcode.RetentionPolicy;
 
 public class Day25 extends Day2019 {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day25().play();
 	}
 
 	public Day25(){super(25);}
 
-	private void play() throws IOException {
+	private void play()  {
 		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers());
 		while(true) {
 			long res;
 			while((res = ic.run()) != IntcodeComputer.STOP_CODE) System.out.print((char)res);
-			ic.setInput(new BufferedReader(new InputStreamReader(System.in)).readLine()+"\n");
+			try {
+				ic.setInput(new BufferedReader(new InputStreamReader(System.in)).readLine() + "\n");
+			} catch (Exception e){}
 		}
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers());
 		String[] inputs = new String [] {"west", "take semiconductor", "west", "take planetoid", "west", "take food ration", "west", "take fixed point", "east", "east", "south", "east", "east", "north", "east", "north"};
 		String numbers = "";
@@ -43,7 +45,7 @@ public class Day25 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return "MERRY CHRISTMAS!!";
 	}
 }

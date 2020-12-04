@@ -56,7 +56,7 @@ public class Day20 extends Day2019 {
 		int level;
 	}
 
-	public Day20() throws IOException {
+	public Day20()  {
 		super(20);
 		grid = dayGrid();
 		charGrid = new CharGrid2d(grid, false);
@@ -103,12 +103,12 @@ public class Day20 extends Day2019 {
 
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day20().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return findRoutes(false);
 	}
 
@@ -151,7 +151,7 @@ public class Day20 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return findRoutes(true);
 	}
 }

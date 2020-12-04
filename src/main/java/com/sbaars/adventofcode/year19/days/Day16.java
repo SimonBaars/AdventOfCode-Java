@@ -12,22 +12,22 @@ public class Day16 extends Day2019 {
 	private static final int TARGET_POS = 5977341;
 	private final int[] input;
 
-	public Day16() throws IOException {
+	public Day16()  {
 		super(16);
 		input = day().chars().map(Character::getNumericValue).toArray();
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day16().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return calcRes(Arrays.copyOf(input, input.length), 0);
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return calcRes(repeat(input, 10000), TARGET_POS);
 	}
 

@@ -7,14 +7,14 @@ import java.io.IOException;
 
 public class Day21 extends Day2019 {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day21().printParts();
 	}
 
 	public Day21(){super(21);}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		IntcodeComputer ic = new IntcodeComputer(21);
 		// !(A && B && C) && D
 		ic.setInput("OR A T\n" + 
@@ -31,7 +31,7 @@ public class Day21 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		IntcodeComputer ic = new IntcodeComputer(21);
 		// (((!B && H) || !A) || (!C && H)) && D
 		ic.setInput("NOT A J\n" + 

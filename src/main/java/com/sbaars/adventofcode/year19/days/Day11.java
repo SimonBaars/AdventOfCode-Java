@@ -15,16 +15,16 @@ public class Day11 extends Day2019 implements ProcessesImages {
 		super(11);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day11().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return robotWalk(false);
 	}
 
-	private Object robotWalk(boolean startWhite) throws IOException {
+	private Object robotWalk(boolean startWhite)  {
 		IntcodeComputer c = new IntcodeComputer(11);
 		Point currentLocation = new Point(0,0);
 		Direction dir = Direction.NORTH;
@@ -64,7 +64,7 @@ public class Day11 extends Day2019 implements ProcessesImages {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return robotWalk(true);
 	}
 }

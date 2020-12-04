@@ -9,17 +9,17 @@ public class Day9 extends Day2019 {
 		super(9);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day9().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		return new IntcodeComputer(9, 1).run();
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		return new IntcodeComputer(9, 2).run();
 	}
 }

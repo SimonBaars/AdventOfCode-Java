@@ -15,12 +15,12 @@ public class Day7 extends Day2019 {
 		super(7);
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args)  {
 		new Day7().printParts();
 	}
 
 	@Override
-	public Object part1() throws IOException {
+	public Object part1()  {
 		var permutations = generatePerm(new ArrayList<>(Arrays.asList(0,1,2,3,4)));
 		List<Long> results = new ArrayList<>();
 		for(List<Integer> perm : permutations) {
@@ -34,7 +34,7 @@ public class Day7 extends Day2019 {
 	}
 
 	@Override
-	public Object part2() throws IOException {
+	public Object part2()  {
 		var permutations = generatePerm(new ArrayList<>(Arrays.asList(5,6,7,8,9)));
 		List<Long> results = new ArrayList<>();
 		perms: for(List<Integer> shuffle : permutations) {
