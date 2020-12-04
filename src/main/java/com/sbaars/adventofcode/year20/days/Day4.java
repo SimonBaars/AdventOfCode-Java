@@ -1,18 +1,31 @@
 package com.sbaars.adventofcode.year20.days;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.lang.Math.toIntExact;
+import static org.apache.commons.collections4.CollectionUtils.isEqualCollection;
 
+import com.google.common.collect.Maps;
 import com.sbaars.adventofcode.common.ReadsFormattedString;
 import com.sbaars.adventofcode.year20.Day2020;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import lombok.Data;
 import lombok.Value;
 
 public class Day4 extends Day2020 implements ReadsFormattedString {
+    private static final Map<String, String> expected = Map.of("byr", "^(200[0-2]|19[2-9][0-9])",
+                                                                "iyr", "^(2020|201[0-9])",
+                                                                "eyr", "^(2030|202[0-9])",
+                                                                "hgt", "^((1([5-8][0-9]|9[0-3])cm)|((59|6[0-9]|7[0-6])in))",
+                                                                "hcl", "^(#[0-9a-f]{6})",
+                                                                "ecl", "^(amb|blu|brn|gry|grn|hzl|oth)",
+                                                                "pid", "^[0-9]{9}");
+
     public static void main(String[] args)  {
         new Day4().printParts();
     }
@@ -21,102 +34,30 @@ public class Day4 extends Day2020 implements ReadsFormattedString {
 
     @Override
     public Object part1()  {
-        String[][] s = Arrays.stream(day().split("\n\n")).map(str -> str.replace("\n", " ")).map(str -> str.split(" ")).toArray(String[][]::new);
-        String[] expected = {"byr",
-                "iyr",
-                "eyr",
-                "hgt",
-                "hcl",
-                "ecl",
-                "pid"};
-        int valid = 0;
-        for(String[] pass : s){
-            List<String> mustSee = new ArrayList<>(Arrays.asList(expected));
-            for(String str : pass){
-                for(int i = 0; i<mustSee.size(); i++){
-                    if(str.startsWith(mustSee.get(i))){
-                        mustSee.remove(i);
-                        break;
-                    }
-                }
-            }
-            if(mustSee.isEmpty()){
-                valid++;
-            }
-        }
-        return valid;
+        return verifyPassports(this::valid1);
     }
 
     @Override
     public Object part2()  {
-        String[][] s = Arrays.stream(day().split("\n\n")).map(str -> str.replace("\n", " ")).map(str -> str.split(" ")).toArray(String[][]::new);
-        String[] expected = {"byr",
-                "iyr",
-                "eyr",
-                "hgt",
-                "hcl",
-                "ecl",
-                "pid"};
-        int valid = 0;
-        for(String[] pass : s){
-            List<String> mustSee = new ArrayList<>(Arrays.asList(expected));
-            outerloop:
-            for(String str : pass){
-                for(int i = 0; i<mustSee.size(); i++){
-                    final String key = mustSee.get(i);
-                    if(str.startsWith(key)){
-                        String validate = str.split(":")[1];
-                        switch (key) {
-                            case "byr": {
-                                Long l = Long.parseLong(validate);
-                                if (l < 1920L || l > 2002L) break outerloop;
-                                break;
-                            }
-                            case "iyr": {
-                                Long l = Long.parseLong(validate);
-                                if (l < 2010 || l > 2020) break outerloop;
-                                break;
-                            }
-                            case "eyr": {
-                                Long l = Long.parseLong(validate);
-                                if (l < 2020 || l > 2030) break outerloop;
-                                break;
-                            }
-                            case "hgt":
-                                if (str.endsWith("in")) {
-                                    Long l = Long.parseLong(validate.split("i")[0]);
-                                    if (l < 59 || l > 76) break outerloop;
-                                } else if (str.endsWith("cm")) {
-                                    Long l = Long.parseLong(validate.split("c")[0]);
-                                    if (l < 150 || l > 193) break outerloop;
-                                } else break outerloop;
-                                break;
-                            case "hcl":
-                                if (validate.startsWith("#")) {
-                                    final Pattern pattern = Pattern.compile("^([0-9a-f])*");
-                                    if (!pattern.matcher(validate.substring(1)).matches()) break outerloop;
-                                } else break outerloop;
-                                break;
-                            case "ecl":
-                                if (!Arrays.asList("amb", "blu", "brn", "gry", "grn", "hzl", "oth").contains(validate))
-                                    break outerloop;
-                                break;
-                            case "pid":
-                                if (validate.length() == 9) {
-                                    final Pattern pattern = Pattern.compile("^([0-9])*");
-                                    if (!pattern.matcher(validate).matches()) break outerloop;
-                                } else break outerloop;
-                                break;
-                        }
-                        mustSee.remove(i);
-                        break;
-                    }
-                }
-            }
-            if(mustSee.isEmpty()){
-                valid++;
-            }
-        }
-        return valid;
+        return verifyPassports(this::valid2);
+    }
+
+    public long verifyPassports(Predicate<String[]> verifyFunction){
+        String[][] passports = Arrays.stream(day().split("\n\n")).map(str -> str.replace("\n", " ")).map(str -> str.split(" ")).toArray(String[][]::new);
+        return Arrays.stream(passports).filter(verifyFunction).count();
+    }
+
+    public boolean valid1(String[] passport){
+        return Arrays.stream(passport).map(s -> s.substring(0, 3)).collect(toImmutableSet()).containsAll(expected.keySet());
+    }
+
+    public boolean valid2(String[] passport){
+        return valid1(passport) && Arrays.stream(passport).map(s -> s.split(":")).allMatch(s -> matchesRegex(s[0], s[1]));
+    }
+
+    public boolean matchesRegex(String key, String validate){
+        if(!expected.containsKey(key)) return true;
+        final Pattern pattern = Pattern.compile(expected.get(key));
+        return pattern.matcher(validate).matches();
     }
 }
