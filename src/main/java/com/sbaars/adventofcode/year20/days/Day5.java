@@ -53,11 +53,6 @@ public class Day5 extends Day2020 {
     @Override
     public Object part2()  {
         Set<Integer> l = getSeatIds(dayStrings());
-        for(int n : l){
-            if(l.contains(n) && l.contains(n+2) && !l.contains(n+1)){
-                return n+1;
-            }
-        }
-        return 0;
+        return l.stream().mapToInt(e -> e).filter(n -> l.contains(n) && l.contains(n+2) && !l.contains(n+1)).sum() + 1;
     }
 }
