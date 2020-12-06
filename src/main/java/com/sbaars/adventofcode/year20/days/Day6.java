@@ -20,8 +20,9 @@ public class Day6 extends Day2020 {
 
     @Override
     public Object part1()  {
-        String[] input = day().split("\n\n");
-        return Arrays.stream(input).map(i -> i.replace("\n", "")).mapToLong(i -> i.chars().distinct().count()).sum();
+        return Arrays.stream(day().split("\n\n"))
+                .map(i -> i.replace("\n", ""))
+                .mapToLong(i -> i.chars().distinct().count()).sum();
     }
 
     @Override
