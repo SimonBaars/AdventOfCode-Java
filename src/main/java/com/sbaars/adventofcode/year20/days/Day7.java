@@ -79,7 +79,7 @@ public class Day7 extends Day2020 {
 
 		public Item(String item) {
 			amount = Integer.parseInt(item.substring(0,1));
-			this.item = item.substring(2).replaceAll(" bag(s?)(.?)", "");
+			this.item = item.substring(2).replaceAll(" bags?\\.?", "");
 		}
 
 		public Item(long i, String string) {
