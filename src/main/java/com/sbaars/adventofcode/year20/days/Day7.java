@@ -1,29 +1,90 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static com.google.common.primitives.Ints.asList;
-import static java.util.stream.IntStream.range;
+import static java.lang.Math.toIntExact;
+import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
 
 import com.sbaars.adventofcode.year20.Day2020;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 public class Day7 extends Day2020 {
 
-    public static void main(String[] args)  {
-        new Day7().printParts();
-    }
+	private Trade[] trades;
 
-    public Day7(){super(7);}
+	public Day7()  {
+		super(7);
+		this.trades = dayStream().filter(s -> !s.contains("no other bags")).map(Trade::new).toArray(Trade[]::new);
+	}
 
-    @Override
-    public Object part1()  {
-        String input = day();
-        return input;
-    }
+	public static void main(String[] args)  {
+		new Day7().printParts();
+	}
 
-    @Override
-    public Object part2()  {
-        return 0;
-    }
+	@Override
+	public Object part1()  {
+		return findCost(new Item(1, "shiny gold"), new HashSet<>()).size() - 1;
+	}
+
+	@Override
+	public Object part2()  {
+		return performTrade2(new LinkedList<>(singletonList(new Item(1, "shiny gold")))) - 1;
+	}
+
+	private Trade[] getTrades(Item i) {
+		return stream(trades).filter(e -> stream(e.output).anyMatch(t -> t.item.equals(i.item) && t.amount >= i.amount)).toArray(Trade[]::new);
+	}
+
+	private Optional<Trade> getTrade(Item i) {
+		return stream(trades).filter(e -> e.input.item.equals(i.item)).findAny();
+	}
+
+	private Set<String> findCost(Item buyingItem, Set<String> visitedColors) {
+		visitedColors.add(buyingItem.item);
+		Trade[] possibleTrades = getTrades(buyingItem);
+		stream(possibleTrades).forEach(t -> findCost(t.input, visitedColors));
+		return visitedColors;
+	}
+
+	private long performTrade2(Deque<Item> leftOver) {
+		long total = 0;
+		while (!leftOver.isEmpty()) total += performTrade(leftOver, leftOver.pop());
+		return total;
+	}
+
+	private long performTrade(Deque<Item> leftOver, Item buyingItem) {
+		Optional<Trade> fuelTrade = getTrade(buyingItem);
+		fuelTrade.ifPresent(trade -> stream(trade.output).flatMap(i -> IntStream.rangeClosed(1, toIntExact(i.amount)).mapToObj(e -> new Item(1, i.item))).forEach(leftOver::add));
+		return buyingItem.amount;
+	}
+
+	static class Trade {
+		private final Item input;
+		private final Item[] output;
+
+		public Trade(String trade) {
+			String[] inputOutput = trade.split(" contain ");
+			output = stream(inputOutput[1].split(", ")).map(Item::new).toArray(Item[]::new);
+			input = new Item(1, inputOutput[0].replace(" bags", ""));
+		}
+	}
+
+	static class Item {
+		private long amount;
+		private final String item;
+
+		public Item(String item) {
+			amount = Integer.parseInt(item.substring(0,1));
+			this.item = item.substring(2).replaceAll(" bag(s?)(.?)", "");
+		}
+
+		public Item(long i, String string) {
+			amount = i;
+			item = string;
+		}
+	}
 }
