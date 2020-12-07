@@ -27,12 +27,12 @@ public class Day7 extends Day2020 {
 
 	@Override
 	public Object part1()  {
-		return findCost(new Item(1, "shiny gold"), new HashSet<>()).size() - 1;
+		return findBagTypes(new Item(1, "shiny gold"), new HashSet<>()).size() - 1;
 	}
 
 	@Override
 	public Object part2()  {
-		return performTrade2(new LinkedList<>(singletonList(new Item(1, "shiny gold")))) - 1;
+		return findNumberOfBags(new LinkedList<>(singletonList(new Item(1, "shiny gold")))) - 1;
 	}
 
 	private Trade[] getTrades(Item i) {
@@ -43,28 +43,28 @@ public class Day7 extends Day2020 {
 		return stream(trades).filter(e -> e.input.item.equals(i.item)).findAny();
 	}
 
-	private Set<String> findCost(Item buyingItem, Set<String> visitedColors) {
+	private Set<String> findBagTypes(Item buyingItem, Set<String> visitedColors) {
 		visitedColors.add(buyingItem.item);
 		Trade[] possibleTrades = getTrades(buyingItem);
-		stream(possibleTrades).forEach(t -> findCost(t.input, visitedColors));
+		stream(possibleTrades).forEach(t -> findBagTypes(t.input, visitedColors));
 		return visitedColors;
 	}
 
-	private long performTrade2(Deque<Item> leftOver) {
+	private long findNumberOfBags(Deque<Item> leftOver) {
 		long total = 0;
-		while (!leftOver.isEmpty()) total += performTrade(leftOver, leftOver.pop());
+		while (!leftOver.isEmpty()) total += findBagsInside(leftOver, leftOver.pop());
 		return total;
 	}
 
-	private long performTrade(Deque<Item> leftOver, Item buyingItem) {
+	private long findBagsInside(Deque<Item> leftOver, Item buyingItem) {
 		Optional<Trade> fuelTrade = getTrade(buyingItem);
 		fuelTrade.ifPresent(trade -> stream(trade.output).flatMap(i -> IntStream.rangeClosed(1, toIntExact(i.amount)).mapToObj(e -> new Item(1, i.item))).forEach(leftOver::add));
 		return buyingItem.amount;
 	}
 
-	static class Trade {
-		private final Item input;
-		private final Item[] output;
+	public static class Trade {
+		public final Item input;
+		public final Item[] output;
 
 		public Trade(String trade) {
 			String[] inputOutput = trade.split(" contain ");
@@ -73,9 +73,9 @@ public class Day7 extends Day2020 {
 		}
 	}
 
-	static class Item {
-		private long amount;
-		private final String item;
+	public static class Item {
+		public long amount;
+		public final String item;
 
 		public Item(String item) {
 			amount = Integer.parseInt(item.substring(0,1));
