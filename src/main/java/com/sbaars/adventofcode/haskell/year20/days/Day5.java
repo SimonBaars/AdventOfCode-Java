@@ -1,10 +1,10 @@
-package com.sbaars.adventofcode.haskell.year20;
+package com.sbaars.adventofcode.haskell.year20.days;
 
-import com.sbaars.adventofcode.year20.Day2020;
+import com.sbaars.adventofcode.haskell.year20.HaskellDay2020;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class Day5 extends Day2020 {
+public class Day5 extends HaskellDay2020 {
     public Day5() {
         super(5);
     }
@@ -15,7 +15,7 @@ public class Day5 extends Day2020 {
 
     @Override
     public Object part1()  {
-        return Arrays.stream(dayStrings()).map(s -> "\""+s+"\"").collect(Collectors.joining(", ", "[", "]"));
+        return convert(dayStrings());
     }
 
     @Override

@@ -1,11 +1,10 @@
-package com.sbaars.adventofcode.haskell.year20;
+package com.sbaars.adventofcode.haskell.year20.days;
 
-import com.sbaars.adventofcode.year20.Day2020;
+import com.sbaars.adventofcode.haskell.year20.HaskellDay2020;
 
-import java.io.IOException;
 import java.util.stream.Collectors;
 
-public class Day2 extends Day2020 {
+public class Day2 extends HaskellDay2020 {
     public Day2() {
         super(2);
     }
@@ -17,8 +16,8 @@ public class Day2 extends Day2020 {
     @Override
     public Object part1()  {
         return dayStream().map(com.sbaars.adventofcode.year20.days.Day2::mapPassword)
-                .map(p -> "(("+p.getLower()+", "+p.getHigher()+"), '"+p.getCharacter()+"', \""+p.getPassword()+"\")")
-                .collect(Collectors.joining(", ", "[", "]"));
+                .map(p -> tuple(tup(p.getLower(), p.getHigher()), p.getCharacter(), convert(p.getPassword())))
+                .collect(haskellList());
     }
 
     @Override
