@@ -6,27 +6,27 @@ import static java.util.stream.IntStream.range;
 import com.sbaars.adventofcode.year20.Day2020;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Day6 extends Day2020 {
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         new Day6().printParts();
     }
 
-    public Day6(){super(6);}
+    public Day6() {
+        super(6);
+    }
 
     @Override
-    public Object part1()  {
+    public Object part1() {
         return Arrays.stream(day().split("\n\n"))
                 .map(i -> i.replace("\n", ""))
                 .mapToLong(i -> i.chars().distinct().count()).sum();
     }
 
     @Override
-    public Object part2()  {
+    public Object part2() {
         return Arrays.stream(day().split("\n\n")).mapToInt(group -> {
             String[] people = group.split("\n");
             List<Integer> c = new ArrayList<>(asList(people[0].chars().toArray()));
