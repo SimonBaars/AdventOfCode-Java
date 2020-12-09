@@ -46,9 +46,10 @@ public class Day9 extends Day2020 {
 	@Override
 	public Object part2()  {
 		long[] input = dayNumbers();
+		long part1Solution = (long)part1();
 		for(int i = 2; i<input.length; i++){
 			for(int j = 0; j<=input.length-i; j++){
-				if(stream(input, j, j + i).sum() == 373803594L){
+				if(stream(input, j, j + i).sum() == part1Solution){
 					long[] window = copyOfRange(input, j, j+i+1);
 					return stream(window).max().getAsLong() + stream(window).min().getAsLong();
 				}

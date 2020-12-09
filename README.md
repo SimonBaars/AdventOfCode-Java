@@ -7,6 +7,11 @@
 - [Day 3](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day3.java)
 - [Day 4](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day4.java)
 - [Day 5](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day5.java)
+- [Day 6](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day6.java)
+- [Day 7](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day7.java)
+- [Day 8](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day8.java)
+- [Day 9](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day9.java)
+- [Day 10](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day10.java)
 
 ### Console output
 ```
@@ -17,6 +22,34 @@ Part 2: 261342720
 Day 2:
 Part 1: 422
 Part 2: 451
+
+Day 3:
+Part 1: 254
+Part 2: 1666768320
+
+Day 4:
+Part 1: 222
+Part 2: 140
+
+Day 5:
+Part 1: 855
+Part 2: 552
+
+Day 6:
+Part 1: 7283
+Part 2: 3520
+
+Day 7:
+Part 1: 238
+Part 2: 82930
+
+Day 8:
+Part 1: 1420
+Part 2: 1245
+
+Day 9:
+Part 1: 373803594
+Part 2: 51152360
 ```
 
 ## 2019
