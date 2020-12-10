@@ -38,7 +38,6 @@ public class Day8 extends Day2020 {
                     return gamepad.getAccumulator();
                 }
             }
-
         }
         throw new IllegalStateException();
     }

@@ -34,6 +34,10 @@ public class Gamepad {
         those[occurrence].operation = replacement;
     }
 
+    public Instruction[] getInstructions(){
+        return instructions;
+    }
+
     public long getAccumulator(){
         return acc;
     }
