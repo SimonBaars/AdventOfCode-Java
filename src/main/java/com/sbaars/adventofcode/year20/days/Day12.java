@@ -8,7 +8,8 @@ import lombok.Value;
 import java.awt.*;
 import java.util.List;
 
-import static com.sbaars.adventofcode.common.Direction.EAST;
+import static com.sbaars.adventofcode.common.Direction.*;
+import static java.lang.Math.abs;
 import static java.util.stream.Collectors.toList;
 
 public class Day12 extends Day2020 {
@@ -22,31 +23,22 @@ public class Day12 extends Day2020 {
 
     @Override
     public Object part1() {
-        List<Flight> input = dayStream().map(e -> new Flight(e.charAt(0), Integer.parseInt(e.substring(1)))).collect(toList());
+        List<Flight> input = convertInput();
         Direction face = EAST;
         Point location = new Point(0, 0);
         for(Flight f : input){
             switch(f.dir){
-                case 'L':case 'R':
-                    {
-                    int num = f.distance;
-                    while(num>0){
-                        face = face.turn(f.dir == 'R');
-                        num-=90;
-                    }
-                    break;
-                }
-                case 'F': {
-                    location = face.move(location, f.distance);
-                    break;
-                }
-                default: {
-                    location = Direction.getByDir(f.dir).move(location, f.distance);
-                    break;
-                }
+                case 'L':
+                case 'R': face = face.turnDegrees(f.distance, f.dir == 'R'); break;
+                case 'F': location = face.move(location, f.distance); break;
+                default: location = Direction.getByDir(f.dir).move(location, f.distance); break;
             }
         }
-        return Math.abs(location.x) + Math.abs(location.y);
+        return abs(location.x) + abs(location.y);
+    }
+
+    private List<Flight> convertInput() {
+        return dayStream().map(e -> new Flight(e.charAt(0), Integer.parseInt(e.substring(1)))).collect(toList());
     }
 
     @Data
@@ -58,34 +50,18 @@ public class Day12 extends Day2020 {
 
     @Override
     public Object part2() {
-        List<Flight> input = dayStream().map(e -> new Flight(e.charAt(0), Integer.parseInt(e.substring(1)))).collect(toList());
+        List<Flight> input = convertInput();
         Point waypoint = new Point(10, -1);
         Point location = new Point(0, 0);
         for(Flight f : input){
             switch(f.dir){
-                case 'L':case 'R':
-                {
-                    int num = f.distance;
-                    while(num>0){
-                        waypoint = turn(waypoint, f.dir == 'R');
-                        num-=90;
-                    }
-                    break;
-                }
-                case 'F': {
-                    location = new Point(location.x+(waypoint.x*f.distance), location.y+(waypoint.y*f.distance));
-                    break;
-                }
-                default: {
-                    waypoint = Direction.getByDir(f.dir).move(waypoint, f.distance);
-                    break;
-                }
+                case 'L':case 'R': waypoint = turnDegrees(waypoint, f.distance, f.dir == 'R'); break;
+                case 'F': location = new Point(location.x+(waypoint.x*f.distance), location.y+(waypoint.y*f.distance)); break;
+                default: waypoint = Direction.getByDir(f.dir).move(waypoint, f.distance); break;
             }
         }
-        return Math.abs(location.x) + Math.abs(location.y);
+        return abs(location.x) + abs(location.y);
     }
 
-    private Point turn(Point w, boolean b) {
-        return b ? new Point(-w.y, w.x) : new Point(w.y, -w.x);
-    }
+
 }
