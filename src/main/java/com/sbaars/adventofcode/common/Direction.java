@@ -3,6 +3,8 @@ package com.sbaars.adventofcode.common;
 import java.awt.Point;
 import java.util.Arrays;
 
+import static java.lang.Math.abs;
+
 public enum Direction {
 	NORTH(1, 'U'), EAST(4, 'R'), SOUTH(2, 'D'), WEST(3, 'L'),
 	NORTHEAST(4, 'E'), EASTSOUTH(5, 'E'), SOUTHWEST(6, 'E'), WESTNORTH(7, 'E');
@@ -25,9 +27,9 @@ public enum Direction {
 	
 	public Direction turn(boolean right) {
 		int cur = ordinal() + (right ? 1 : -1);
-		if(cur == Direction.fourDirections().length) cur = 0;
+		if(cur == fourDirections().length) cur = 0;
 		else if(cur == -1) cur = 3;
-		return Direction.fourDirections()[cur];
+		return fourDirections()[cur];
 	}
 	
 	public Point move(Point currentLocation, int amount) {
@@ -85,6 +87,37 @@ public enum Direction {
 		int n = this.ordinal()-1;
 		if(n == -1) n = values().length-1;
 		return robotDir.ordinal() == n;
+	}
+
+	public Direction turnDegrees(int degrees, boolean right){
+		int num = degrees % 360;
+		Direction dir = this;
+		while(num>0){
+			dir = turn(right);
+			num-=90;
+		}
+		return dir;
+	}
+
+	public Direction turnDegrees(int degrees){
+		return turnDegrees(abs(degrees), degrees > 0);
+	}
+
+	public static Point turn(Point w, boolean b) {
+		return b ? new Point(-w.y, w.x) : new Point(w.y, -w.x);
+	}
+
+	public static Point turnDegrees(Point w, int distance, boolean b) {
+		int num = distance % 360;
+		while(num>0){
+			w = turn(w, b);
+			num-=90;
+		}
+		return w;
+	}
+
+	public static Point turnDegrees(Point w, int distance) {
+		return turnDegrees(w, abs(distance), distance > 0);
 	}
 
 	public static Direction[] fourDirections(){
