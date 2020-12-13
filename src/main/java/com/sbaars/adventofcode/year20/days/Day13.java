@@ -1,15 +1,11 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static com.sbaars.adventofcode.common.Direction.EAST;
-import static java.util.stream.Collectors.toList;
+import static java.lang.Integer.parseInt;
+import static java.lang.Long.parseLong;
+import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.range;
 
-import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.year20.Day2020;
-import java.awt.*;
-import java.util.List;
-import lombok.Data;
-import lombok.Value;
 
 public class Day13 extends Day2020 {
     public static void main(String[] args) {
@@ -22,8 +18,10 @@ public class Day13 extends Day2020 {
 
     @Override
     public Object part1() {
-        int timestamp = 1005526;
-        int[] times = {37,41,587,13,19,23,29,733,17};
+        String[] day = dayStrings();
+        int timestamp = parseInt(day[0]);
+        int[] times = stream(day[1].replace(",x", "").split(","))
+                .mapToInt(Integer::parseInt).toArray();
         for(int i = timestamp; true; i++){
             for(int j : times){
                 if(i%j == 0){
@@ -35,12 +33,20 @@ public class Day13 extends Day2020 {
 
     @Override
     public Object part2() {
-        int[] nums = {37,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,0,0,0,0,0,0,0,0,0,587,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,19,0,0,0,23,0,0,0,0,0,29,0,733,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17};
-        for(long match = 100000000000000L; true; match++){
-            long finalMatch = match;
-            if(range(0, nums.length).filter(j -> nums[j] != 0).allMatch(j -> (finalMatch + j) % nums[j] == 0)) {
-                return match;
-            }
+        String[] s = dayStrings()[1].split(",");
+        long[][] nums = range(0, s.length).filter(i -> !s[i].equals("x"))
+                .mapToObj(i -> new long[]{parseLong(s[i]), i})
+                .toArray(long[][]::new);
+        long product = stream(nums).mapToLong(a -> a[0]).reduce((a, b) -> a * b).getAsLong();
+        long sum = stream(nums).mapToLong(a -> a[1] * (product/a[0]) * inverseModulo(product/a[0], a[0])).sum();
+        return product - sum % product;
+    }
+
+    long inverseModulo(long x, long y){
+        if(x!=0){
+            long modulo = y % x;
+            return modulo == 0 ? 1 : y - inverseModulo(modulo, x) * y / x;
         }
+        return 0;
     }
 }
