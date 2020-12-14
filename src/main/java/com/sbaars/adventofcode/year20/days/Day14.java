@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Value;
 
 import java.util.*;
+import org.apache.commons.text.TextStringBuilder;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static java.lang.Integer.parseInt;
@@ -29,17 +30,10 @@ public class Day14 extends Day2020 {
     public Object part1() {
         Instruction[] input = getInput();
         Map<Long, Long> memory = new HashMap<>();
-        String currentMask = "";
+        final TextStringBuilder currentMask = new TextStringBuilder();
         for(Instruction i : input){
-            Optional<Mem> mem = i.getMem();
-            if(mem.isPresent()){
-                StringBuilder bin = binWithLength(mem.get().value, currentMask.length());
-                String finalCurrentMask = currentMask;
-                range(0, bin.length())
-                        .filter(j -> finalCurrentMask.charAt(j) != 'X')
-                        .forEach(j -> bin.setCharAt(j, finalCurrentMask.charAt(j)));
-                memory.put(mem.get().index, parseLong(bin.toString(), 2));
-            } else currentMask = i.value;
+            i.getMem().ifPresentOrElse(m -> memory.put(m.index,  m.value | parseLong(currentMask.toString(), 2)),
+                    () -> currentMask.set(i.value).replaceAll("X", "0"));
         }
         return memory.values().stream().mapToLong(e -> e).sum();
     }
