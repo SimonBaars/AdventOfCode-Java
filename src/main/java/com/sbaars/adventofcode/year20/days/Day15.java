@@ -38,7 +38,7 @@ public class Day15 extends Day2020 {
         long[] nums = dayNumbers(",");
         range(0, nums.length-1).forEach(i -> turnNumbers.put(nums[i], (long)i));
         long lastNumber = nums[nums.length-1];
-        for(long turnNumber = turnNumbers.size(); turnNumber <= offset -2L; turnNumber++){
+        for(long turnNumber = turnNumbers.size(); turnNumber < offset - 1; turnNumber++){
             long newLastNumber = turnNumbers.containsKey(lastNumber) ? turnNumber - turnNumbers.get(lastNumber) : 0;
             turnNumbers.put(lastNumber, turnNumber);
             lastNumber = newLastNumber;
