@@ -8,7 +8,6 @@ import java.util.List;
 import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
-import lombok.var;
 
 public class Day7 extends Day2019 {
 	public Day7(){
