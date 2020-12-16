@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.sbaars</groupId>
-	<artifactId>adventofcode2019</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>adventofcode</artifactId>
+	<version>1.0</version>
 	<build>
 		<plugins>
 			<plugin>
@@ -21,15 +21,8 @@
 	</build>
 	<packaging>jar</packaging>
 
-	<name>adventofcode2019</name>
+	<name>adventofcode</name>
 	<url>http://maven.apache.org</url>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.release>8</maven.compiler.release>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.source>11</maven.compiler.source>
-	</properties>
 
 	<dependencies>
 		<dependency>
