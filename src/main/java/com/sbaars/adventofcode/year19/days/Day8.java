@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
-import lombok.var;
 
 public class Day8 extends Day2019 implements ProcessesImages {
 	public Day8(){

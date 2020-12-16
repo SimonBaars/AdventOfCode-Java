@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import lombok.var;
 
 public class Day12 extends Day2019 {
 	public Day12(){
