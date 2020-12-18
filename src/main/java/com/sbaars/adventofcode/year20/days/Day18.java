@@ -46,7 +46,6 @@ public class Day18 extends Day2020 {
             }
             i++;
             leftHand = resolveExpression(new StringBuilder(s.substring(i+1, s.length()-1)), part1);
-            s.replace(i, s.length(), "x");
         } else {
             leftHand = Long.parseLong(s.substring(s.length()-1, s.length()));
             i = s.length()-1;
