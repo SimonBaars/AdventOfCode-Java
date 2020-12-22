@@ -26,8 +26,8 @@ public class Day22 extends Day2020 {
     @Override
     public Object part1() {
         String[] input = day().split("\n\n");
-        Deque<Long> p1 = Arrays.stream(input[0].split("\n")).filter(e -> !e.startsWith("Player")).map(Long::parseLong).collect(toCollection(ArrayDeque::new));
-        Deque<Long> p2 = Arrays.stream(input[1].split("\n")).filter(e -> !e.startsWith("Player")).map(Long::parseLong).collect(toCollection(ArrayDeque::new));
+        Deque<Long> p1 = getInput(0, input);
+        Deque<Long> p2 = getInput(1, input);
 
         while(p1.size()>0 && p2.size() > 0){
             long l1 = p1.pop();
@@ -51,12 +51,13 @@ public class Day22 extends Day2020 {
     @Override
     public Object part2() {
         String[] input = day().split("\n\n");
-        Deque<Long> p1 = Arrays.stream(input[0].split("\n")).filter(e -> !e.startsWith("Player")).map(Long::parseLong).collect(toCollection(ArrayDeque::new));
-        Deque<Long> p2 = Arrays.stream(input[1].split("\n")).filter(e -> !e.startsWith("Player")).map(Long::parseLong).collect(toCollection(ArrayDeque::new));
+        Deque<Long> p1 = getInput(0, input);
+        Deque<Long> p2 = getInput(1, input);
+        return calcScore(playGame(p1, p2) == Player.P1 ? p1 : p2);
+    }
 
-
-        Deque<Long> winner = playGame(p1, p2) == Player.P1 ? p1 : p2;
-        return calcScore(winner);
+    private ArrayDeque<Long> getInput(int i, String[] input) {
+        return Arrays.stream(input[i].split("\n")).filter(e -> !e.startsWith("Player")).map(Long::parseLong).collect(toCollection(ArrayDeque::new));
     }
 
     public Player playGame(Deque<Long> p1, Deque<Long> p2){
