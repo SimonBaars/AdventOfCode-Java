@@ -46,9 +46,7 @@ public class Day23 extends Day2020 {
                 }
             }
             int d = j % cups.size() + 1;
-            for(int move : toMove) {
-                cups.insertAfter(move, d);
-            }
+            cups.insertAfter(toMove[2], toMove[0], d);
             cups.next();
         }
         System.out.println((System.currentTimeMillis() - mil));

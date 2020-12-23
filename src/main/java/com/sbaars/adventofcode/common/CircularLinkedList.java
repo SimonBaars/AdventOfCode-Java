@@ -75,6 +75,19 @@ public class CircularLinkedList {
         s.prev = d;
     }
 
+    public void insertAfter(int rangeStart, int rangeEnd, int dest){
+        Node s1 = valueMap.get(rangeStart);
+        Node s2 = valueMap.get(rangeEnd);
+        Node d = valueMap.get(dest);
+        Node oldNext = d.next;
+        s1.prev.next = s2.next;
+        s2.next.prev = s1.prev;
+        d.next = s1;
+        s2.next = oldNext;
+        oldNext.prev = s2;
+        s1.prev = d;
+    }
+
     public int size(){
         return valueMap.size();
     }
