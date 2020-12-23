@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year20.days;
 
 import com.google.common.collect.Streams;
 import com.sbaars.adventofcode.common.CircularLinkedList;
+import com.sbaars.adventofcode.common.CircularLinkedList.Node;
 import com.sbaars.adventofcode.year20.Day2020;
 
 import java.util.stream.Collectors;
@@ -31,12 +32,14 @@ public class Day23 extends Day2020 {
 
     private long getSolution(boolean part1) {
         int[] input = day().chars().map(Character::getNumericValue).toArray();
-        CircularLinkedList cups = new CircularLinkedList(Streams.concat(stream(input), part1 ? IntStream.empty() : IntStream.rangeClosed(10,1000000)).toArray());
+        CircularLinkedList cups = new CircularLinkedList(
+                Streams.concat(stream(input), part1 ? IntStream.empty() : IntStream.rangeClosed(10, 1000000)
+        ).toArray());
         for(int i = 0; i<(part1 ? 100 : 10000000); i++){
             int current = cups.current();
             int j;
-            CircularLinkedList.Node next = cups.currentNode().next;
-            CircularLinkedList.Node last = next.next.next;
+            Node next = cups.currentNode().next;
+            Node last = next.next.next;
             for(j = current - 2 + cups.size(); j>0; j--){
                 int n = j % cups.size() + 1;
                 if(next.value != n && next.next.value != n && last.value != n){
