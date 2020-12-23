@@ -53,35 +53,11 @@ public class CircularLinkedList {
         return arr;
     }
 
-    public Node[] nextNodes(int n){
-        Node[] arr = new Node[n];
-        Node node = current;
-        for(int i = 0; i<n; i++){
-            node = node.next;
-            arr[i] = node;
-        }
-        return arr;
-    }
-
     public Node currentNode(){
         return current;
     }
 
-    public void insertAfter(int src, int dest){
-        Node s = valueMap.get(src);
-        Node d = valueMap.get(dest);
-        Node oldNext = d.next;
-        s.prev.next = s.next;
-        s.next.prev = s.prev;
-        d.next = s;
-        s.next = oldNext;
-        oldNext.prev = s;
-        s.prev = d;
-    }
-
     public void insertAfter(Node s1, Node s2, int dest){
-        //Node s1 = valueMap.get(rangeStart);
-        //Node s2 = valueMap.get(rangeEnd);
         Node d = valueMap.get(dest);
         Node oldNext = d.next;
         s1.prev.next = s2.next;
