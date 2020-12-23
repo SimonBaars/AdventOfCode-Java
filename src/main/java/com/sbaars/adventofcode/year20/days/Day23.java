@@ -34,7 +34,6 @@ public class Day23 extends Day2020 {
     private long getSolution(boolean part1) {
         int[] input = day().chars().map(Character::getNumericValue).toArray();
         CircularLinkedList cups = new CircularLinkedList(Streams.concat(stream(input), part1 ? IntStream.empty() : IntStream.rangeClosed(10,1000000)).toArray());
-        long mil = System.currentTimeMillis();
         for(int i = 0; i<(part1 ? 100 : 10000000); i++){
             int current = cups.current();
             int j;
@@ -50,7 +49,6 @@ public class Day23 extends Day2020 {
             cups.insertAfter(next, last, d);
             cups.next();
         }
-        System.out.println((System.currentTimeMillis() - mil));
         cups.setCurrent(1);
         if(part1) return parseLong(stream(cups.next(8)).mapToObj(Integer::toString).collect(Collectors.joining()));
         int[] next = cups.next(2);
