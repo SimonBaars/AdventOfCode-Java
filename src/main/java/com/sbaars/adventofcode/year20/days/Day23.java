@@ -25,36 +25,7 @@ public class Day23 extends Day2020 {
 
     @Override
     public Object part1() {
-//        int[] input = {4,9,6,1,3,8,5,2,7};
-//        LinkedList<Integer> cups = Arrays.stream(input).boxed().collect(Collectors.toCollection(LinkedList::new));
-//        int index = 0;
-//        for(int i = 0; i<100; i++){
-//            System.out.println("\nRound "+(i+1));
-//            int current = cups.get(index);
-//            System.out.println(Arrays.toString(cups.toArray()).replace(Integer.toString(current), "("+current+")"));
-//            int rem1 = cups.remove((index+1)%cups.size());
-//            index = cups.indexOf(current);
-//            int rem2 = cups.remove((index+1)%cups.size());
-//            index = cups.indexOf(current);
-//            int rem3 = cups.remove((index+1)%cups.size());
-//            System.out.println("Pick up "+rem1+", "+rem2+", "+rem3);
-//            int j;
-//            for(j = current - 2 + input.length; j>0; j--){
-//                if(cups.contains(j % input.length + 1)){
-//                    break;
-//                }
-//            }
-//            int dest = cups.indexOf(j % input.length + 1);
-//            System.out.println("Dest: "+(j % input.length + 1)+", "+dest);
-//            cups.add(dest+1, rem3);
-//            cups.add(dest+1, rem2);
-//            cups.add(dest+1, rem1);
-//            index = cups.indexOf(current);
-//            index = (index + 1) % cups.size();
-//        }
         return getSolution(true);
-
-        //return 0;
     }
 
     @Override
@@ -83,19 +54,7 @@ public class Day23 extends Day2020 {
             for(int move : toMove) {
                 cups.insertAfter(move, d);
             }
-//            cups.move(index.in, dest+1);
-//            cups.move((index+2)%cups.size(), dest+1);
-//            cups.move((index+1)%cups.size(), dest+1);
-//            index = cups.indexOf(current);
-//            index = (index + 1) % cups.size();
             cups.next();
-//            if(i%100000==0){
-//                System.out.println(i);
-//            }
-//            if(i>9999998){
-//                System.out.println("\nRound "+(i+1));
-//                System.out.println(Arrays.toString(cups.toArray()).replace(Integer.toString(current), "("+current+")"));
-//            }
         }
         cups.setCurrent(1);
         return Arrays.stream(cups.next(part1 ? 8 : 2)).mapToObj(Integer::toString).collect(Collectors.joining());
