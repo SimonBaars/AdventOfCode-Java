@@ -4,11 +4,9 @@ import com.google.common.collect.Streams;
 import com.sbaars.adventofcode.common.CircularLinkedList;
 import com.sbaars.adventofcode.year20.Day2020;
 
-import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.google.common.primitives.Ints.asList;
 import static java.lang.Long.parseLong;
 import static java.util.Arrays.stream;
 
