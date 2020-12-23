@@ -11,11 +11,14 @@ import java.util.stream.Stream;
 import static java.lang.Long.parseLong;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
 
 public class Day19 extends Day2020 {
     public static void main(String[] args) {
         new Day19().printParts();
     }
+
+    Map<Long, Set<String>> sol = new HashMap<>();
 
     public Day19() {
         super(19);
@@ -28,11 +31,14 @@ public class Day19 extends Day2020 {
 
     private long getSolution(String inputFile) {
         String[] input = inputFile.split("\n\n");
-        int longest = stream(input[1].split("\n")).mapToInt(e -> e.length()).max().getAsInt();
-        Map<Long, Rule> rules = Arrays.stream(input[0].split("\n")).map(e -> e.split(": ")).collect(Collectors.toMap(e -> parseLong(e[0]), e -> new Rule(parseLong(e[0]), e[1])));
-        Map<Long, Set<String>> sol = new HashMap<>();
-        rules.values().stream().peek(e -> System.out.println(e.id)).forEach(e -> e.getPossibilities(rules, sol, longest, 0));
-        return stream(input[1].split("\n")).peek(System.out::println).filter(e -> sol.values().stream().anyMatch(r -> r.contains(e))).count();
+        Map<Long, Rule> rules = Arrays.stream(input[0].split("\n"))
+                .map(e -> e.split(": "))
+                .collect(Collectors.toMap(e -> parseLong(e[0]), e -> new Rule(parseLong(e[0]), e[1])));
+
+        rules.values().forEach(e -> e.getPossibilities(rules, sol));
+        return stream(input[1].split("\n"))
+                .filter(e -> sol.values().stream().anyMatch(r -> r.contains(e)))
+                .count();
     }
 
     @Data
@@ -61,14 +67,19 @@ public class Day19 extends Day2020 {
             }
         }
 
-        public Set<String> getPossibilities(Map<Long, Rule> m, Map<Long, Set<String>> sol, int longest, int depth){
+        public Set<String> getPossibilities(Map<Long, Rule> m, Map<Long, Set<String>> sol){
             if(sol.containsKey(id)) return sol.get(id);
-            if(!letter.isPresent()){
-                Rule[] r = stream(rule1).mapToObj(n -> m.get(n)).toArray(Rule[]::new);
-                Rule[] orRule = stream(rule2).mapToObj(n -> m.get(n)).toArray(Rule[]::new);
-                Set<String> output = r[0].getPossibilities(m, sol, longest, depth);
+//            if(id == 8){
+//                System.out.println("hi");
+//            }
+            if(letter.isEmpty()){
+                Rule[] r = stream(rule1).mapToObj(m::get).toArray(Rule[]::new);
+                Rule[] orRule = stream(rule2).mapToObj(m::get).toArray(Rule[]::new);
+                Set<String> output = r[0].getPossibilities(m, sol);
+                if(sol.containsKey(id)) return sol.get(id);
                 for(int i = 1; i<r.length; i++){
-                    Set<String> output2 = r[i].getPossibilities(m, sol, longest, depth);
+                    Set<String> output2 = r[i].getPossibilities(m, sol);
+                    if(sol.containsKey(id)) return sol.get(id);
                     Set<String> newOne = new HashSet<>();
                     for(String o : output){
                         for(String o2 : output2){
@@ -77,10 +88,12 @@ public class Day19 extends Day2020 {
                     }
                     output = newOne;
                 }
-                if(orRule.length>0 && output.stream().findFirst().get().length()<=longest && depth<4){
-                    Set<String> outputOr = orRule[0].getPossibilities(m, sol, longest, depth);
+                if(orRule.length>0){
+                    Set<String> outputOr = orRule[0].getPossibilities(m, sol);
+                    if(sol.containsKey(id)) return sol.get(id);
                     for(int i = 1; i<orRule.length; i++){
-                        Set<String> outputOr2 = orRule[i].getPossibilities(m, sol, longest, id == orRule[i].id ? depth + 1 : depth);
+                        Set<String> outputOr2 = orRule[i].getPossibilities(m, sol);
+                        if(sol.containsKey(id)) return sol.get(id);
                         Set<String> newOne = new HashSet<>();
                         for(String o : outputOr){
                             for(String o2 : outputOr2){
@@ -94,12 +107,54 @@ public class Day19 extends Day2020 {
                 sol.put(id, output);
                 return output;
             }
-            return new HashSet<>(asList(letter.get()));
+            return new HashSet<>(singletonList(letter.get()));
         }
     }
 
     @Override
     public Object part2() {
-        return getSolution(day().replace("8: 42", "8: 42 | 42 8").replace("11: 42 31", "11: 42 31 | 42 11 31"));
+//        int maxDepth = 2;
+//        StringBuilder s = new StringBuilder("8: 42 ");
+//        StringBuilder s2 = new StringBuilder("11: 42 31 ");
+//        for(int i = 2; i<=maxDepth; i++){
+//            s.append("| ").append(i + 198).append("\n").append(i + 198).append(": ").append("42 ".repeat(i));
+//            s2.append("| ").append(i + 298).append("\n").append(i + 298).append(": ").append("42 ".repeat(i)).append("31 ".repeat(i));
+//
+//        }
+//        return getSolution(day()
+//                .replace("8: 42", s.toString().trim())
+//                .replace("11: 42 31", s2.toString().trim()));
+        int maxDepth = 10;
+        String[] input = day().split("\n\n");
+        Set<String> all = sol.values().stream().flatMap(e -> e.stream()).collect(Collectors.toUnmodifiableSet());
+        Set<String> s42 = sol.get(42L);
+        Set<String> s31 = sol.get(31L);
+        Set<String> s11 = sol.get(11L);
+        for(int i = 2; i<=maxDepth; i++){
+            Set<String> add = new HashSet<>(s42.size() * s31.size());
+            Set<String> add2 = new HashSet<>(s42.size() * s31.size() * s11.size());
+//            for(int i = 0; i<s42.size(); i++){
+//                add.add(s+s);
+//            }
+//            for(String s : s31){
+//                add.add(s+s);
+//            }
+
+            for(String o : s42){
+                for(String o1 : s42){
+                    add.add(o+o1);
+                }
+                for(String o2 : s31){
+                    for(String o3 : s11) {
+                        add2.add(o + o3 + o2);
+                    }
+                }
+            }
+            s42.addAll(add);
+            s11.addAll(add2);
+        }
+        return stream(input[1].split("\n"))
+                .filter(e -> sol.values().stream().anyMatch(r -> r.contains(e)))
+                .count();
     }
 }
