@@ -38,15 +38,16 @@ public class Day23 extends Day2020 {
         for(int i = 0; i<(part1 ? 100 : 10000000); i++){
             int current = cups.current();
             int j;
-            int[] toMove = cups.nextRev(3);
+            CircularLinkedList.Node next = cups.currentNode().next;
+            CircularLinkedList.Node last = next.next.next;
             for(j = current - 2 + cups.size(); j>0; j--){
                 int n = j % cups.size() + 1;
-                if(toMove[0] != n && toMove[1] != n && toMove[2] != n){
+                if(next.value != n && next.next.value != n && last.value != n){
                     break;
                 }
             }
             int d = j % cups.size() + 1;
-            cups.insertAfter(toMove[2], toMove[0], d);
+            cups.insertAfter(next, last, d);
             cups.next();
         }
         System.out.println((System.currentTimeMillis() - mil));

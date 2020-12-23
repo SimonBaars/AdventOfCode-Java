@@ -10,9 +10,9 @@ import static java.util.stream.IntStream.range;
  */
 public class CircularLinkedList {
     public class Node{
-        private int value;
-        private Node prev;
-        private Node next;
+        public int value;
+        public Node prev;
+        public Node next;
     }
 
     private Node current;
@@ -53,14 +53,18 @@ public class CircularLinkedList {
         return arr;
     }
 
-    public int[] nextRev(int n){
-        int[] arr = new int[n];
+    public Node[] nextNodes(int n){
+        Node[] arr = new Node[n];
         Node node = current;
-        for(int i = n-1; i>=0; i--){
+        for(int i = 0; i<n; i++){
             node = node.next;
-            arr[i] = node.value;
+            arr[i] = node;
         }
         return arr;
+    }
+
+    public Node currentNode(){
+        return current;
     }
 
     public void insertAfter(int src, int dest){
@@ -75,9 +79,9 @@ public class CircularLinkedList {
         s.prev = d;
     }
 
-    public void insertAfter(int rangeStart, int rangeEnd, int dest){
-        Node s1 = valueMap.get(rangeStart);
-        Node s2 = valueMap.get(rangeEnd);
+    public void insertAfter(Node s1, Node s2, int dest){
+        //Node s1 = valueMap.get(rangeStart);
+        //Node s2 = valueMap.get(rangeEnd);
         Node d = valueMap.get(dest);
         Node oldNext = d.next;
         s1.prev.next = s2.next;
