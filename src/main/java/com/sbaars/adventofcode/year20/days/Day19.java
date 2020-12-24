@@ -126,7 +126,7 @@ public class Day19 extends Day2020 {
 //                .replace("11: 42 31", s2.toString().trim()));
         int maxDepth = 10;
         String[] input = day().split("\n\n");
-        Set<String> all = sol.values().stream().flatMap(e -> e.stream()).collect(Collectors.toUnmodifiableSet());
+        Set<String> all = sol.values().stream().flatMap(Collection::stream).collect(Collectors.toUnmodifiableSet());
         Set<String> s42 = sol.get(42L);
         Set<String> s31 = sol.get(31L);
         Set<String> s11 = sol.get(11L);
