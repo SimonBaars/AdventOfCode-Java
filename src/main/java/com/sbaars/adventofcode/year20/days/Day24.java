@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
 public class Day24 extends Day2020 {
@@ -22,16 +23,14 @@ public class Day24 extends Day2020 {
 
     @Override
     public Object part1() {
-        var input = Arrays.stream(dayStrings()).map(this::read).collect(toList());
+        var input = stream(dayStrings()).map(this::read).collect(toList());
         for(List<HexDirection> dirs : input){
             Point pos = new Point(0,0);
             for(HexDirection dir : dirs){
                 pos = dir.move(pos);
             }
-            if(visited.contains(pos)){
+            if(!visited.add(pos)){
                 visited.remove(pos);
-            } else {
-                visited.add(pos);
             }
         }
         return visited.size();
@@ -47,10 +46,7 @@ public class Day24 extends Day2020 {
             } else if ((direction = HexDirection.get(dirs.substring(0,1))).isPresent()){
                 res.add(direction.get());
                 dirs = dirs.substring(1);
-            }else {
-                throw new IllegalStateException("Panik!");
             }
-
         }
         return res;
     }
@@ -59,10 +55,7 @@ public class Day24 extends Day2020 {
     public Object part2() {
         for(int i = 0; i<100; i++){
             Set<Point> newPos = new HashSet<>();
-            Set<Point> checkedPos = new HashSet<>();
-            for(Point p : visited) {
-                addNeighbors(visited, newPos, checkedPos, p, true);
-            }
+            visited.forEach(p -> addNeighbors(visited, newPos, new HashSet<>(), p, true));
             visited = newPos;
         }
         return visited.size();
