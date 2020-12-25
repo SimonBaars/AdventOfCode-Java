@@ -6,8 +6,6 @@ public class Day25 extends Day2020 {
     public static void main(String[] args) {
         new Day25().printParts();
     }
-    long cardPublicKey = 1965712L;
-    long doorPublicKey = 19072108L;
 
     public Day25() {
         super(25);
@@ -15,6 +13,8 @@ public class Day25 extends Day2020 {
 
     @Override
     public Object part1() {
+        long cardPublicKey = 1965712L;
+        long doorPublicKey = 19072108L;
         long value = 1;
         for(int loopSize = 1; true; loopSize++) {
             value = transform(value, loopSize-1, loopSize, 7);
