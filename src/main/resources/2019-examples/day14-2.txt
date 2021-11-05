@@ -1,0 +1,7 @@
+9 ORE =&gt; 2 A
+8 ORE =&gt; 3 B
+7 ORE =&gt; 5 C
+3 A, 4 B =&gt; 1 AB
+5 B, 7 C =&gt; 1 BC
+4 C, 1 A =&gt; 1 CA
+2 AB, 3 BC, 4 CA =&gt; 1 FUEL

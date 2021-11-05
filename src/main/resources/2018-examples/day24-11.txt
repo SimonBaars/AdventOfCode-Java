@@ -1,0 +1,5 @@
+Immune System:
+No groups remain.
+Infection:
+Group 1 contains 782 units
+Group 2 contains 4434 units

@@ -1,0 +1,12 @@
+Immune System:
+Group 2 contains 761 units
+Infection:
+Group 1 contains 793 units
+Group 2 contains 4434 units
+
+Infection group 1 would deal defending group 2 183976 damage
+Immune System group 2 would deal defending group 1 19025 damage
+Immune System group 2 would deal defending group 2 19025 damage
+
+Immune System group 2 attacks defending group 1, killing 4 units
+Infection group 1 attacks defending group 2, killing 143 units

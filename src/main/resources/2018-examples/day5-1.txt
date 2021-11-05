@@ -1,0 +1,4 @@
+dabAcCaCBAcCcaDA  The first 'cC' is removed.
+dabAaCBAcCcaDA    This creates 'Aa', which is removed.
+dabCBAcCcaDA      Either 'cC' or 'Cc' are removed (the result is the same).
+dabCBAcaDA        No further actions can be taken.

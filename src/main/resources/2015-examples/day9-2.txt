@@ -1,0 +1,6 @@
+Dublin -&gt; London -&gt; Belfast = 982
+London -&gt; Dublin -&gt; Belfast = 605
+London -&gt; Belfast -&gt; Dublin = 659
+Dublin -&gt; Belfast -&gt; London = 659
+Belfast -&gt; Dublin -&gt; London = 605
+Belfast -&gt; London -&gt; Dublin = 982

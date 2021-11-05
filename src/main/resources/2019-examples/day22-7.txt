@@ -1,0 +1,4 @@
+deal with increment 7
+deal with increment 9
+cut -2
+Result: 6 3 0 7 4 1 8 5 2 9

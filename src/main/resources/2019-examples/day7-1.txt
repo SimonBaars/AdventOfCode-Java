@@ -1,0 +1,3 @@
+    O-------O  O-------O  O-------O  O-------O  O-------O
+0 -&gt;| Amp A |-&gt;| Amp B |-&gt;| Amp C |-&gt;| Amp D |-&gt;| Amp E |-&gt; (to thrusters)
+    O-------O  O-------O  O-------O  O-------O  O-------O

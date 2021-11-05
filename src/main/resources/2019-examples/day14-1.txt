@@ -1,0 +1,6 @@
+10 ORE =&gt; 10 A
+1 ORE =&gt; 1 B
+7 A, 1 B =&gt; 1 C
+7 A, 1 C =&gt; 1 D
+7 A, 1 D =&gt; 1 E
+7 A, 1 E =&gt; 1 FUEL

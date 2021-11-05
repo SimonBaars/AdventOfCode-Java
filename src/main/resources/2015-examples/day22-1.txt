@@ -1,0 +1,21 @@
+-- Player turn --
+- Player has 10 hit points, 0 armor, 250 mana
+- Boss has 13 hit points
+Player casts Poison.
+
+-- Boss turn --
+- Player has 10 hit points, 0 armor, 77 mana
+- Boss has 13 hit points
+Poison deals 3 damage; its timer is now 5.
+Boss attacks for 8 damage.
+
+-- Player turn --
+- Player has 2 hit points, 0 armor, 77 mana
+- Boss has 10 hit points
+Poison deals 3 damage; its timer is now 4.
+Player casts Magic Missile, dealing 4 damage.
+
+-- Boss turn --
+- Player has 2 hit points, 0 armor, 24 mana
+- Boss has 3 hit points
+Poison deals 3 damage. This kills the boss, and the player wins.

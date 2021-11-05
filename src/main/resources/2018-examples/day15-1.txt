@@ -1,0 +1,7 @@
+                 would take their
+These units:   turns in this order:
+  #######           #######
+  #.G.E.#           #.1.2.#
+  #E.G.E#           #3.4.5#
+  #.G.E.#           #.6.7.#
+  #######           #######

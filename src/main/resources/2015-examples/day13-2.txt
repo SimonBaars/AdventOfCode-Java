@@ -1,0 +1,5 @@
+     +41 +46
++55   David    -2
+Carol       Alice
++60    Bob    +54
+     -7  +83

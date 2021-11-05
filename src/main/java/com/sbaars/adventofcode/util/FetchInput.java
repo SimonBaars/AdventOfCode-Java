@@ -7,7 +7,6 @@ import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -51,7 +50,7 @@ public class FetchInput {
     String year = args[0];
     String day = args[1];
     String session = System.getenv("AOCSESSION");
-    new FetchInput(session).runForYear(year);
+    new FetchInput(session).retrieveDay(day, year);
 
   }
 
@@ -63,7 +62,8 @@ public class FetchInput {
   private void retrieveExamples(String day, String year) {
     var matches = getMatchesByXpath(doRequest(year + "/day/" + day), "//pre/code");
     for(int i = 0; i< matches.size(); i++){
-      File file = getFile(day + "-" + (i + 1), year);
+      File file = getFile(day + "-" + (i + 1), year+"-examples");
+      file.getParentFile().mkdirs();
       if(!file.exists()) {
         writeFile(file, matches.get(i));
       }
@@ -78,6 +78,7 @@ public class FetchInput {
 
   private void retrieveInput(String day, String year) {
     File dayFile = getFile(day, year);
+    dayFile.getParentFile().mkdirs();
     if(!dayFile.exists()){
       writeFile(dayFile, doRequest(year + "/day/" + day + "/input"));
     }

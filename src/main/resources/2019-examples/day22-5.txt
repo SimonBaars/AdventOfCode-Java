@@ -1,0 +1,4 @@
+deal with increment 7
+deal into new stack
+deal into new stack
+Result: 0 3 6 9 2 5 8 1 4 7

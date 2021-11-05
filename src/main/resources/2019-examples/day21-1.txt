@@ -1,0 +1,6 @@
+NOT A J
+NOT B T
+AND T J
+NOT C T
+AND T J
+AND D J
