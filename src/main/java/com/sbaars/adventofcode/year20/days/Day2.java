@@ -25,21 +25,14 @@ public class Day2 extends Day2020 {
     }
 
     private long pwCount(Predicate<Password> validator) {
-        List<Password> s = dayStream().map(Day2::mapPassword).collect(Collectors.toList());
-        return s.stream().filter(validator).count();
+        return dayStream().map(Day2::mapPassword).filter(validator).count();
     }
 
     public static Password mapPassword(String s) {
         return readString(s, "%n-%n %c: %s", Password.class);
     }
 
-    @Value
-    @Data
-    public static class Password {
-        long lower;
-        long higher;
-        char character;
-        String password;
+    record Password (long lower, long higher, char character, String password) {
 
         public boolean isValid() {
             long count = password.chars().filter(c -> c == character).count();
