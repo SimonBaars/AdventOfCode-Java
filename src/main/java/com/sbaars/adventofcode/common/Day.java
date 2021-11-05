@@ -27,7 +27,7 @@ public abstract class Day {
 		System.out.println("Part 2: "+part2());
 	}
 
-	protected String getResourceAsString(String resource) {
+	public static String getResourceAsString(String resource) {
 		try {
 			return readFileToString(new File(Day.class.getClassLoader().getResource(resource).getFile()));
 		} catch (IOException e) {
