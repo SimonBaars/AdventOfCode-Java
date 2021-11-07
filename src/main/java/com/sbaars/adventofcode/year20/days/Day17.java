@@ -1,15 +1,8 @@
 package com.sbaars.adventofcode.year20.days;
 
 import com.sbaars.adventofcode.year20.Day2020;
-import lombok.Data;
-import lombok.Value;
-
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-import static java.util.Arrays.stream;
 
 public class Day17 extends Day2020 {
     public static void main(String[] args) {
@@ -65,23 +58,9 @@ public class Day17 extends Day2020 {
         }
     }
 
-    @Data
-    @Value
-    public static class Pos {
-        long x;
-        long y;
-        long z;
-    }
+    public static record Pos (long x, long y, long z) {}
 
-
-    @Data
-    @Value
-    public static class Pos4 {
-        long x;
-        long y;
-        long z;
-        long w;
-    }
+    public static record Pos4 (long x, long y, long z, long w) {}
 
     @Override
     public Object part2() {

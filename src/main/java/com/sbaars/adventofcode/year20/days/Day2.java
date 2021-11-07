@@ -4,11 +4,7 @@ import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static java.lang.Math.toIntExact;
 
 import com.sbaars.adventofcode.year20.Day2020;
-import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import lombok.Data;
-import lombok.Value;
 
 public class Day2 extends Day2020 {
     public static void main(String[] args) {

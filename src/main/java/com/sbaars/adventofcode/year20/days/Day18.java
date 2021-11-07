@@ -1,11 +1,8 @@
 package com.sbaars.adventofcode.year20.days;
 
 import static java.util.Arrays.stream;
-import static java.util.stream.IntStream.range;
 
 import com.sbaars.adventofcode.year20.Day2020;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class Day18 extends Day2020 {

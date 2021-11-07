@@ -1,22 +1,16 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static java.util.Arrays.asList;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.sbaars.adventofcode.year20.Day2020;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.Data;
-import lombok.Value;
 
 public class Day21 extends Day2020 {
     public static void main(String[] args) {
@@ -63,17 +57,14 @@ public class Day21 extends Day2020 {
         return allergens;
     }
 
-    @Data
-    @Value
-    public static class Rule {
-        String[] ingredients;
-        String[] allergens;
-
+    public static record Rule (String[] ingredients, String[] allergens) {
         public Rule (String s){
-            String[] split = s.substring(0, s.length()-1).split(" \\(contains ");
-            this.ingredients = split[0].split(" ");
-            this.allergens = split[1].split(", ");
+            this(getSplit(s)[0].split(" "), getSplit(s)[1].split(", "));
         }
+    }
+
+    private static String[] getSplit(String s) {
+        return s.substring(0, s.length()-1).split(" \\(contains ");
     }
 
     @Override

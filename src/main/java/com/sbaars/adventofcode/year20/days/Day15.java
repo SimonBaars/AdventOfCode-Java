@@ -1,18 +1,10 @@
 package com.sbaars.adventofcode.year20.days;
 
-import com.sbaars.adventofcode.year20.Day2020;
-import lombok.Data;
-import lombok.Value;
-
-import java.util.*;
-
-import static com.google.common.primitives.Longs.asList;
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
-import static java.lang.Long.parseLong;
-import static java.lang.Long.toBinaryString;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static java.util.stream.IntStream.range;
+
+import com.sbaars.adventofcode.year20.Day2020;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Day15 extends Day2020 {
     public static void main(String[] args) {
