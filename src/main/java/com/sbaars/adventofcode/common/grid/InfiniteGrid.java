@@ -1,12 +1,11 @@
-package com.sbaars.adventofcode.common;
+package com.sbaars.adventofcode.common.grid;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class InfiniteGrid {
+public class InfiniteGrid implements Grid {
   final Map<Point, Character> grid = new HashMap<>();
   Point currentPos = new Point(0, 0);
 
@@ -18,11 +17,7 @@ public class InfiniteGrid {
     }
   }
 
-  public int countChar(char...c){
-    return Math.toIntExact(iterate().filter(e -> new String(c).chars().anyMatch(i -> i == e)).count());
-  }
-
   public IntStream iterate(){
-    return Arrays.stream(grid).map(String::new).flatMapToInt(String::chars);
+    return grid.values().stream().mapToInt(Character::getNumericValue);
   }
 }
