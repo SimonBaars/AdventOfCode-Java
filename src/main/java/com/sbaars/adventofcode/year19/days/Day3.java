@@ -1,15 +1,12 @@
 package com.sbaars.adventofcode.year19.days;
 
-import com.sbaars.adventofcode.common.Day;
+import com.google.common.base.Objects;
 import com.sbaars.adventofcode.common.Direction;
-import java.awt.Point;
-import java.io.IOException;
+import com.sbaars.adventofcode.year19.Day2019;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.sbaars.adventofcode.year19.Day2019;
-import lombok.EqualsAndHashCode;
 
 public class Day3 extends Day2019 {
 
@@ -87,10 +84,10 @@ public class Day3 extends Day2019 {
 		}
 	}
 
-	@EqualsAndHashCode class Step {
+	class Step {
 		private final Point point;
-		@EqualsAndHashCode.Exclude private int steps;
-		@EqualsAndHashCode.Exclude private boolean isCombined = false;
+		private int steps;
+		private boolean isCombined = false;
 
 		public Step(Point point, int steps) {
 			this.point = point;
@@ -102,6 +99,19 @@ public class Day3 extends Day2019 {
 				steps+=step.steps;
 				isCombined = true;
 			}
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			Step step = (Step) o;
+			return Objects.equal(point, step.point);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(point);
 		}
 	}
 }

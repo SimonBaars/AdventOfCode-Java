@@ -3,8 +3,6 @@ package com.sbaars.adventofcode.haskell.year20.days;
 import static java.util.Arrays.stream;
 
 import com.sbaars.adventofcode.haskell.year20.HaskellDay2020;
-import com.sbaars.adventofcode.year20.days.Day7.Item;
-import com.sbaars.adventofcode.year20.days.Day7.Trade;
 import com.sbaars.adventofcode.year20.gamepad.Gamepad;
 
 public class Day8 extends HaskellDay2020 {
@@ -19,7 +17,7 @@ public class Day8 extends HaskellDay2020 {
     @Override
     public Object part1()  {
         return stream(new Gamepad(dayStream()).getInstructions())
-                .map(i -> tup(i.getOperation(), i.getNumber()))
+                .map(i -> tup(i.operation(), i.number()))
                 .collect(haskellList());
     }
 

@@ -1,26 +1,17 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.pathfinding.CharGrid2d;
-import java.awt.Point;
-import java.io.IOException;
+import java.awt.*;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 public class Day20 extends Day2019 {
 	char[][] grid;
@@ -32,29 +23,13 @@ public class Day20 extends Day2019 {
 	private Portal entry;
 	private Portal exit;
 
-	@Data @AllArgsConstructor class Portal {
-		Point pos;
-		boolean isOuter;
-	}
+	record Portal (Point pos, boolean isOuter) {}
 
-	@Data @AllArgsConstructor class Route {
-		Portal goal;
-		int distance;
-	}
+	record Route (Portal goal, int distance) {}
 
-	@EqualsAndHashCode(callSuper = true) @ToString(callSuper = true) @AllArgsConstructor class State extends Visited {
-		int totalSteps;
+	record State (Visited vis, int totalSteps) {}
 
-		public State(int totalSteps, Visited vis) {
-			super(vis.pos, vis.level);
-			this.totalSteps = totalSteps;
-		}
-	}
-
-	@Data @AllArgsConstructor @NoArgsConstructor class Visited {
-		Portal pos;
-		int level;
-	}
+	record Visited (Portal pos, int level) {}
 
 	public Day20()  {
 		super(20);
@@ -115,20 +90,20 @@ public class Day20 extends Day2019 {
 	private int findRoutes(boolean b) {
 		final Queue<State> queue = new ArrayDeque<>();
 		final Set<Visited> visited = new HashSet<>();
-		queue.add(new State(-1, new Visited(entry, 0)));
+		queue.add(new State(new Visited(entry, 0), -1));
 		while(true) {
 			State s = queue.poll();
-			if(!routes.containsKey(s.pos)) determineRoutes(s.pos);
-			for(Route route : routes.get(s.pos)) {
-				int level = s.level;
+			if(!routes.containsKey(s.vis.pos)) determineRoutes(s.vis.pos);
+			for(Route route : routes.get(s.vis.pos)) {
+				int level = s.vis.level;
 				if(level == 0 && route.goal.equals(exit)) return route.distance + s.totalSteps;
 				else if(route.goal.equals(exit)) continue;
 				if(b) level+=route.goal.isOuter ? 1 : -1;
-				if(s.level < 0) continue;
+				if(s.vis.level < 0) continue;
 				Visited vis = new Visited(route.goal, level);
 				if(!visited.contains(vis)) {
 					visited.add(vis);
-					queue.add(new State(s.totalSteps + route.distance, vis));
+					queue.add(new State(vis, s.totalSteps + route.distance));
 				}
 			}
 		}

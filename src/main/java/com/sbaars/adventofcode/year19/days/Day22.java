@@ -1,7 +1,6 @@
 package com.sbaars.adventofcode.year19.days;
 
-import com.sbaars.adventofcode.common.Day;
-import java.io.IOException;
+import com.sbaars.adventofcode.year19.Day2019;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,45 +9,41 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.sbaars.adventofcode.year19.Day2019;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Value;
-
 public class Day22 extends Day2019 {
 
 	Move[] moves;
 
 	public Day22()  {
 		super(22);
-		this.moves = Arrays.stream(day().split(System.lineSeparator())).map(Move::new).toArray(Move[]::new);
+		this.moves = Arrays.stream(day().split(System.lineSeparator())).map(Move::parse).toArray(Move[]::new);
 	}
 
 	public static void main(String[] args)  {
 		new Day22().printParts();
 	}
 
-	@AllArgsConstructor enum Action {
+	enum Action {
 		DEAL_WITH_INCREMENT("deal with increment "),
 		DEAL_NEW_STACK("deal into new stack"),
 		CUT("cut ");
 
 		String name;
 
+		private Action(String name){
+			this.name = name;
+		}
+
 		public static Action actionByText(String text) {
 			return Arrays.stream(values()).filter(a -> text.startsWith(a.name)).findAny().get();
 		}
 	}
 
-	@Value @Data class Move {
-		Action action;
-		int amount;
+	record Move (Action action, int amount) {
 
-		public Move(String s) {
-			this.action = Action.actionByText(s);
+		public static Move parse(String s) {
+			Action action = Action.actionByText(s);
 			s = s.replace(action.name, "");
-			if(!s.isEmpty()) amount = Integer.parseInt(s);
-			else amount = 0;
+			return new Move(action, !s.isEmpty() ? Integer.parseInt(s) : 0);
 		}
 
 		public List<Integer> execute(List<Integer> cards) {
@@ -87,7 +82,7 @@ public class Day22 extends Day2019 {
 		}
 	}
 
-	private BigInteger num(long n) {
+	private static BigInteger num(long n) {
 		return new BigInteger(Long.toString(n));
 	}
 

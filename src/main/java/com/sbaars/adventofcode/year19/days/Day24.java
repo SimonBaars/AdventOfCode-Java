@@ -1,7 +1,9 @@
 package com.sbaars.adventofcode.year19.days;
 
-import java.awt.Point;
-import java.io.IOException;
+import com.sbaars.adventofcode.common.grid.CharGrid;
+import com.sbaars.adventofcode.common.grid.Grid;
+import com.sbaars.adventofcode.year19.Day2019;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,22 +15,11 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.sbaars.adventofcode.common.Day;
-
-import com.sbaars.adventofcode.year19.Day2019;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 public class Day24 extends Day2019 {
 
 	private final Set<Grid> grids = new HashSet<>();
 	private Map<Integer, char[][]> layers = new HashMap<>();
 	private final char[][] initialGrid;
-
-	@EqualsAndHashCode @AllArgsConstructor @Data class Grid{
-		char[][] grid;
-	}
 
 	public Day24()  {
 		super(24);
@@ -43,7 +34,7 @@ public class Day24 extends Day2019 {
 	public Object part1()  {
 		char[][] grid = initialGrid;
 		while(true) {
-			if(!grids.add(new Grid(grid))) return calcRes(grid);
+			if(!grids.add(new CharGrid(grid))) return calcRes(grid);
 			char[][] newGrid = copy(grid);
 			final char[][] g = grid;
 			streamGrid(grid).forEach(p -> simulate(g, newGrid, p));
