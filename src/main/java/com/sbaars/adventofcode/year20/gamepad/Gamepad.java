@@ -33,9 +33,9 @@ public class Gamepad {
 
   public void replaceInstruction(String instruction, String replacement, int occurrence) {
     int numMatch = 0;
-    for(int i = 0; i<instructions.length; i++){
-      if(instructions[i].operation.equals(instruction)){
-        if(numMatch == occurrence) {
+    for (int i = 0; i < instructions.length; i++) {
+      if (instructions[i].operation.equals(instruction)) {
+        if (numMatch == occurrence) {
           instructions[i] = new Instruction(replacement, instructions[i].number);
           return;
         }

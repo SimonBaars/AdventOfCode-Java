@@ -10,28 +10,28 @@ import java.util.List;
 
 public class Day6 extends Day2020 {
 
-    public static void main(String[] args) {
-        new Day6().printParts();
-    }
+  public Day6() {
+    super(6);
+  }
 
-    public Day6() {
-        super(6);
-    }
+  public static void main(String[] args) {
+    new Day6().printParts();
+  }
 
-    @Override
-    public Object part1() {
-        return Arrays.stream(day().split("\n\n"))
-                .map(i -> i.replace("\n", ""))
-                .mapToLong(i -> i.chars().distinct().count()).sum();
-    }
+  @Override
+  public Object part1() {
+    return Arrays.stream(day().split("\n\n"))
+        .map(i -> i.replace("\n", ""))
+        .mapToLong(i -> i.chars().distinct().count()).sum();
+  }
 
-    @Override
-    public Object part2() {
-        return Arrays.stream(day().split("\n\n")).mapToInt(group -> {
-            String[] people = group.split("\n");
-            List<Integer> c = new ArrayList<>(asList(people[0].chars().toArray()));
-            range(1, people.length).forEach(i -> c.retainAll(asList(people[i].chars().toArray())));
-            return c.size();
-        }).sum();
-    }
+  @Override
+  public Object part2() {
+    return Arrays.stream(day().split("\n\n")).mapToInt(group -> {
+      String[] people = group.split("\n");
+      List<Integer> c = new ArrayList<>(asList(people[0].chars().toArray()));
+      range(1, people.length).forEach(i -> c.retainAll(asList(people[i].chars().toArray())));
+      return c.size();
+    }).sum();
+  }
 }

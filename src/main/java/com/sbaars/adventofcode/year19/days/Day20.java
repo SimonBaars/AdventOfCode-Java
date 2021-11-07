@@ -14,119 +14,123 @@ import java.util.Queue;
 import java.util.Set;
 
 public class Day20 extends Day2019 {
-	char[][] grid;
-	CharGrid2d charGrid;
-	private final Map<String, Portal[]> portals = new HashMap<>();
-	private final Map<Portal, String> portalLabel = new HashMap<>();
-	private final ArrayListMultimap<Portal, Route> routes = ArrayListMultimap.create();
-	private final List<Portal> portalsToTake = new ArrayList<>();
-	private Portal entry;
-	private Portal exit;
+  private final Map<String, Portal[]> portals = new HashMap<>();
+  private final Map<Portal, String> portalLabel = new HashMap<>();
+  private final ArrayListMultimap<Portal, Route> routes = ArrayListMultimap.create();
+  private final List<Portal> portalsToTake = new ArrayList<>();
+  char[][] grid;
+  CharGrid2d charGrid;
+  private Portal entry;
+  private Portal exit;
 
-	record Portal (Point pos, boolean isOuter) {}
+  public Day20() {
+    super(20);
+    grid = dayGrid();
+    charGrid = new CharGrid2d(grid, false);
 
-	record Route (Portal goal, int distance) {}
+    int[] rows = {2, 26, 80, 104};
+    for (int row : rows) {
+      boolean addPortal = row == rows[0] || row == rows[rows.length - 1];
+      for (int i = 2; i < grid.length - 2; i++) {
+        if (grid[i][row] == '.') {
+          if (Character.isAlphabetic(grid[i][row - 1])) {
+            addPortal("" + grid[i][row - 2] + grid[i][row - 1], new Point(row, i), addPortal);
+            grid[i][row - 1] = '#';
+          } else if (Character.isAlphabetic(grid[i][row + 1])) {
+            addPortal("" + grid[i][row + 1] + grid[i][row + 2], new Point(row, i), addPortal);
+            grid[i][row + 1] = '#';
+          }
+        }
+        if (grid[row][i] == '.') {
+          if (Character.isAlphabetic(grid[row - 1][i])) {
+            addPortal("" + grid[row - 2][i] + grid[row - 1][i], new Point(i, row), addPortal);
+            grid[row - 1][i] = '#';
+          } else if (Character.isAlphabetic(grid[row + 1][i])) {
+            addPortal("" + grid[row + 1][i] + grid[row + 2][i], new Point(i, row), addPortal);
+            grid[row + 1][i] = '#';
+          }
+        }
+      }
+    }
+    portalsToTake.addAll(portalLabel.keySet());
+    portalsToTake.add(exit);
+  }
 
-	record State (Visited vis, int totalSteps) {}
+  public static void main(String[] args) {
+    new Day20().printParts();
+  }
 
-	record Visited (Portal pos, int level) {}
+  public void addPortal(String label, Point pos, boolean outerRing) {
+    Portal p = new Portal(pos, outerRing);
+    if (label.equals("AA")) this.entry = p;
+    else if (label.equals("ZZ")) this.exit = p;
+    else {
+      Portal[] portal = portals.get(label);
+      if (portal == null) {
+        portals.put(label, new Portal[]{p, null});
+      } else portal[1] = p;
+      portalLabel.put(p, label);
+    }
 
-	public Day20()  {
-		super(20);
-		grid = dayGrid();
-		charGrid = new CharGrid2d(grid, false);
+  }
 
-		int[] rows = {2, 26, 80, 104};
-		for(int row : rows) {
-			boolean addPortal = row == rows[0] || row == rows[rows.length-1];
-			for(int i = 2; i<grid.length-2; i++) {
-				if(grid[i][row] == '.') {
-					if(Character.isAlphabetic(grid[i][row-1])) {
-						addPortal(""+grid[i][row-2]+grid[i][row-1], new Point(row, i), addPortal);
-						grid[i][row-1]='#';
-					} else if (Character.isAlphabetic(grid[i][row+1])) {
-						addPortal(""+grid[i][row+1]+grid[i][row+2], new Point(row, i), addPortal);
-						grid[i][row+1]='#';
-					}
-				}
-				if(grid[row][i] == '.') {
-					if(Character.isAlphabetic(grid[row-1][i])) {
-						addPortal(""+grid[row-2][i]+grid[row-1][i], new Point(i, row), addPortal);
-						grid[row-1][i] = '#';
-					} else if (Character.isAlphabetic(grid[row+1][i])) {
-						addPortal(""+grid[row+1][i]+grid[row+2][i], new Point(i, row), addPortal);
-						grid[row+1][i] = '#';
-					}
-				}
-			}
-		}
-		portalsToTake.addAll(portalLabel.keySet());
-		portalsToTake.add(exit);
-	}
+  @Override
+  public Object part1() {
+    return findRoutes(false);
+  }
 
-	public void addPortal(String label, Point pos, boolean outerRing) {
-		Portal p = new Portal(pos, outerRing);
-		if(label.equals("AA")) this.entry = p;
-		else if(label.equals("ZZ")) this.exit = p;
-		else {
-			Portal[] portal = portals.get(label);
-			if(portal == null) {
-				portals.put(label, new Portal[] {p, null});
-			} else portal[1] = p;
-			portalLabel.put(p, label);
-		}
+  private int findRoutes(boolean b) {
+    final Queue<State> queue = new ArrayDeque<>();
+    final Set<Visited> visited = new HashSet<>();
+    queue.add(new State(new Visited(entry, 0), -1));
+    while (true) {
+      State s = queue.poll();
+      if (!routes.containsKey(s.vis.pos)) determineRoutes(s.vis.pos);
+      for (Route route : routes.get(s.vis.pos)) {
+        int level = s.vis.level;
+        if (level == 0 && route.goal.equals(exit)) return route.distance + s.totalSteps;
+        else if (route.goal.equals(exit)) continue;
+        if (b) level += route.goal.isOuter ? 1 : -1;
+        if (s.vis.level < 0) continue;
+        Visited vis = new Visited(route.goal, level);
+        if (!visited.contains(vis)) {
+          visited.add(vis);
+          queue.add(new State(vis, s.totalSteps + route.distance));
+        }
+      }
+    }
+  }
 
-	}
+  private void determineRoutes(Portal p) {
+    for (Portal portal : portalsToTake) {
+      if (!portal.pos.equals(p.pos)) {
+        List<Point> route = charGrid.findPath(p.pos, portal.pos);
+        if (!route.isEmpty()) routes.put(p, new Route(teleport(portal), route.size()));
+      }
+    }
+  }
 
-	public static void main(String[] args)  {
-		new Day20().printParts();
-	}
+  private Portal teleport(Portal portal) {
+    Portal[] thisPortal = portals.get(portalLabel.get(portal));
+    if (portal.equals(exit)) return exit;
+    if (portal.equals(thisPortal[0])) return thisPortal[1];
+    return thisPortal[0];
+  }
 
-	@Override
-	public Object part1()  {
-		return findRoutes(false);
-	}
+  @Override
+  public Object part2() {
+    return findRoutes(true);
+  }
 
-	private int findRoutes(boolean b) {
-		final Queue<State> queue = new ArrayDeque<>();
-		final Set<Visited> visited = new HashSet<>();
-		queue.add(new State(new Visited(entry, 0), -1));
-		while(true) {
-			State s = queue.poll();
-			if(!routes.containsKey(s.vis.pos)) determineRoutes(s.vis.pos);
-			for(Route route : routes.get(s.vis.pos)) {
-				int level = s.vis.level;
-				if(level == 0 && route.goal.equals(exit)) return route.distance + s.totalSteps;
-				else if(route.goal.equals(exit)) continue;
-				if(b) level+=route.goal.isOuter ? 1 : -1;
-				if(s.vis.level < 0) continue;
-				Visited vis = new Visited(route.goal, level);
-				if(!visited.contains(vis)) {
-					visited.add(vis);
-					queue.add(new State(vis, s.totalSteps + route.distance));
-				}
-			}
-		}
-	}
+  record Portal(Point pos, boolean isOuter) {
+  }
 
-	private void determineRoutes(Portal p) {
-		for(Portal portal : portalsToTake) {
-			if(!portal.pos.equals(p.pos)) {
-				List<Point> route = charGrid.findPath(p.pos, portal.pos);
-				if(!route.isEmpty()) routes.put(p, new Route(teleport(portal), route.size()));
-			}
-		}
-	}
+  record Route(Portal goal, int distance) {
+  }
 
-	private Portal teleport(Portal portal) {
-		Portal[] thisPortal = portals.get(portalLabel.get(portal));
-		if(portal.equals(exit)) return exit;
-		if(portal.equals(thisPortal[0])) return thisPortal[1];
-		return thisPortal[0];
-	}
+  record State(Visited vis, int totalSteps) {
+  }
 
-	@Override
-	public Object part2()  {
-		return findRoutes(true);
-	}
+  record Visited(Portal pos, int level) {
+  }
 }

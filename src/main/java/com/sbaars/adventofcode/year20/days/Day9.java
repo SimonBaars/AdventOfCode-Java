@@ -8,43 +8,43 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Day9 extends Day2020 {
-    public Day9() {
-        super(9);
-    }
+  public Day9() {
+    super(9);
+  }
 
-    public static void main(String[] args) {
-        new Day9().printParts();
-    }
+  public static void main(String[] args) {
+    new Day9().printParts();
+  }
 
-    @Override
-    public Object part1() {
-        long[] input = dayNumbers();
-        for (int k = 0; k < input.length - 25; k++) {
-            Set<Long> sums = new HashSet<>();
-            for (int i = k; i < k + 25; i++) {
-                for (int j = i + 1; j < k + 25; j++) {
-                    sums.add(input[i] + input[j]);
-                }
-            }
-            if (!sums.contains(input[k + 25])) {
-                return input[k + 25];
-            }
+  @Override
+  public Object part1() {
+    long[] input = dayNumbers();
+    for (int k = 0; k < input.length - 25; k++) {
+      Set<Long> sums = new HashSet<>();
+      for (int i = k; i < k + 25; i++) {
+        for (int j = i + 1; j < k + 25; j++) {
+          sums.add(input[i] + input[j]);
         }
-        return 0;
+      }
+      if (!sums.contains(input[k + 25])) {
+        return input[k + 25];
+      }
     }
+    return 0;
+  }
 
-	@Override
-	public Object part2()  {
-		long[] input = dayNumbers();
-		long part1Solution = (long)part1();
-		for(int i = 2; i<input.length; i++){
-			for(int j = 0; j<=input.length-i; j++){
-				if(stream(input, j, j + i).sum() == part1Solution){
-					long[] window = copyOfRange(input, j, j+i+1);
-					return stream(window).max().getAsLong() + stream(window).min().getAsLong();
-				}
-			}
-		}
-		return 0;
-	}
+  @Override
+  public Object part2() {
+    long[] input = dayNumbers();
+    long part1Solution = (long) part1();
+    for (int i = 2; i < input.length; i++) {
+      for (int j = 0; j <= input.length - i; j++) {
+        if (stream(input, j, j + i).sum() == part1Solution) {
+          long[] window = copyOfRange(input, j, j + i + 1);
+          return stream(window).max().getAsLong() + stream(window).min().getAsLong();
+        }
+      }
+    }
+    return 0;
+  }
 }

@@ -61,17 +61,17 @@ public class FetchInput {
 
   private void retrieveExamples(String day, String year) {
     var matches = getMatchesByXpath(doRequest(year + "/day/" + day), "//pre/code");
-    for(int i = 0; i< matches.size(); i++){
-      File file = getFile(day + "-" + (i + 1), year+"-examples");
+    for (int i = 0; i < matches.size(); i++) {
+      File file = getFile(day + "-" + (i + 1), year + "-examples");
       file.getParentFile().mkdirs();
-      if(!file.exists()) {
+      if (!file.exists()) {
         writeFile(file, matches.get(i));
       }
     }
   }
 
   private void runForYear(String year) {
-    for(int day = 1; day<=25; day++){
+    for (int day = 1; day <= 25; day++) {
       retrieveDay(Integer.toString(day), year);
     }
   }
@@ -79,7 +79,7 @@ public class FetchInput {
   private void retrieveInput(String day, String year) {
     File dayFile = getFile(day, year);
     dayFile.getParentFile().mkdirs();
-    if(!dayFile.exists()){
+    if (!dayFile.exists()) {
       writeFile(dayFile, doRequest(year + "/day/" + day + "/input"));
     }
   }
@@ -97,11 +97,11 @@ public class FetchInput {
   }
 
   private File getResource(String path) {
-    return new File("src/main/resources/"+path);
+    return new File("src/main/resources/" + path);
   }
 
-  private List<String> getMatchesByXpath(String html, String xpath){
-    try{
+  private List<String> getMatchesByXpath(String html, String xpath) {
+    try {
       TagNode tagNode = new HtmlCleaner().clean(html);
       org.w3c.dom.Document doc = new DomSerializer(
           new CleanerProperties()).createDOM(tagNode);

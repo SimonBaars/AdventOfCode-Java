@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
 
 public class Day18 extends Day2019 {
 
-  private final char[][] grid;
-  private final CharGrid2d charGrid;
-  private final Map<State, Integer> cachedResult = new HashMap<>();
   private static final char[][] CHANGE_GRID = {
       {'@', '#', '@'},
       {'#', '#', '#'},
       {'@', '#', '@'}
   };
+  private final char[][] grid;
+  private final CharGrid2d charGrid;
+  private final Map<State, Integer> cachedResult = new HashMap<>();
   private final Point middle;
 
   public Day18() {
@@ -32,12 +32,6 @@ public class Day18 extends Day2019 {
 
   public static void main(String[] args) {
     new Day18().printParts();
-  }
-
-  record Route(Point start, Point end) {
-  }
-
-  record State(List<Point> me, TreeSet<Character> keys) {
   }
 
   @Override
@@ -131,5 +125,11 @@ public class Day18 extends Day2019 {
     }
     cachedResult.clear();
     return findRoutes(findPos('@'));
+  }
+
+  record Route(Point start, Point end) {
+  }
+
+  record State(List<Point> me, TreeSet<Character> keys) {
   }
 }
