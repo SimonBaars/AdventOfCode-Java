@@ -1,17 +1,13 @@
 package com.sbaars.adventofcode.year19.days;
 
-import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
-import java.awt.Point;
-import java.io.IOException;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import lombok.EqualsAndHashCode;
 
 public class Day17 extends Day2019 {
 
@@ -143,16 +139,7 @@ public class Day17 extends Day2019 {
 	}
 
 	enum Dir{L,R}
-	@EqualsAndHashCode class Instruction{
-		int amount;
-		Dir dir;
-
-		public Instruction(int amount, Dir dir) {
-			super();
-			this.amount = amount;
-			this.dir = dir;
-		}
-
+	record Instruction (int amount, Dir dir) {
 		@Override
 		public String toString() {
 			return dir.name()+","+amount;

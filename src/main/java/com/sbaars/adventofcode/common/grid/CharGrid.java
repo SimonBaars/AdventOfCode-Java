@@ -1,13 +1,12 @@
-package com.sbaars.adventofcode.common;
+package com.sbaars.adventofcode.common.grid;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-public class Grid {
+public class CharGrid implements Grid {
   char[][] grid;
 
-  public Grid(char[][] grid){
+  public CharGrid(char[][] grid){
     this.grid = grid;
   }
 
