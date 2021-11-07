@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year20.days;
 
 import com.sbaars.adventofcode.year20.Day2020;
+import java.util.stream.LongStream;
 
 public class Day1 extends Day2020 {
     public static void main(String[] args) {
@@ -13,8 +14,9 @@ public class Day1 extends Day2020 {
 
     @Override
     public Object part1() {
-        return dayNumberStream().flatMap(a ->
-                dayNumberStream().filter(b -> a + b == 2020L).map(b -> a * b)
+        LongStream nums = dayNumberStream();
+        return nums.flatMap(a ->
+                nums.filter(b -> a + b == 2020L).map(b -> a * b)
         ).findAny().getAsLong();
     }
 

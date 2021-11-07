@@ -1,17 +1,18 @@
 package com.sbaars.adventofcode.year20.days;
 
-import com.sbaars.adventofcode.year20.Day2020;
-import lombok.Data;
-import lombok.Value;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import static java.lang.Long.parseLong;
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
+
+import com.sbaars.adventofcode.year20.Day2020;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Day19 extends Day2020 {
     public static void main(String[] args) {
@@ -41,37 +42,29 @@ public class Day19 extends Day2020 {
                 .count();
     }
 
-    @Data
-    @Value
-    public static class Rule{
-        long id;
-        Optional<String> letter;
-        long[] rule1;
-        long[] rule2;
+    private static Optional<String> getLetter(String rule){
+        return rule.startsWith("\"") ? Optional.of(rule.charAt(1)+"") : Optional.empty();
+    }
 
+    private static long[] getRule(String rule, boolean num){
+        if(rule.startsWith("\"")){
+            return new long[]{};
+        }
+        String[] r = rule.split(" \\| ");
+        if (!num || r.length > 1) {
+            return Arrays.stream(r[num ? 1 : 0].split(" ")).mapToLong(Long::parseLong).toArray();
+        } else {
+            return new long[]{};
+        }
+    }
+
+    public static record Rule (long id, Optional<String> letter, long[] rule1, long[] rule2) {
         public Rule(long id, String rule){
-            this.id = id;
-            if(rule.startsWith("\"")){
-                letter = Optional.of(rule.charAt(1)+"");
-                rule2 = new long[]{};
-                rule1 = new long[]{};
-            } else {
-                letter = Optional.empty();
-                String[] r = rule.split(" \\| ");
-                rule1 = Arrays.stream(r[0].split(" ")).mapToLong(Long::parseLong).toArray();
-                if (r.length > 1) {
-                    rule2 = Arrays.stream(r[1].split(" ")).mapToLong(Long::parseLong).toArray();
-                } else {
-                    rule2 = new long[]{};
-                }
-            }
+            this(id, getLetter(rule), getRule(rule, false), getRule(rule, true));
         }
 
         public Set<String> getPossibilities(Map<Long, Rule> m, Map<Long, Set<String>> sol){
             if(sol.containsKey(id)) return sol.get(id);
-//            if(id == 8){
-//                System.out.println("hi");
-//            }
             if(letter.isEmpty()){
                 Rule[] r = stream(rule1).mapToObj(m::get).toArray(Rule[]::new);
                 Rule[] orRule = stream(rule2).mapToObj(m::get).toArray(Rule[]::new);

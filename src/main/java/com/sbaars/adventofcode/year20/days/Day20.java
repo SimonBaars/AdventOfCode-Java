@@ -14,17 +14,13 @@ import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.year20.Day2020;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import lombok.Data;
-import lombok.Value;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 
 public class Day20 extends Day2020 {
     public static void main(String[] args) {
@@ -51,15 +47,9 @@ public class Day20 extends Day2020 {
         return answer.stream().mapToLong(e -> e).reduce((a,b) -> a * b).getAsLong();
     }
 
-    @Data
-    @Value
-    public static class Grid{
-        long id;
-        char[][] grid;
-
+    public static record Grid (long id, char[][] grid) {
         public Grid(String s){
-            this.id = parseLong(s.substring(5,9));
-            this.grid = stream(s.substring(11).split("\n")).map(String::toCharArray).toArray(char[][]::new);
+            this(parseLong(s.substring(5,9)), stream(s.substring(11).split("\n")).map(String::toCharArray).toArray(char[][]::new));
         }
 
         public Multimap<String, Metadata> getSides(Multimap<String, Metadata> map){
@@ -113,13 +103,7 @@ public class Day20 extends Day2020 {
         }
     }
 
-    @Data
-    @Value
-    public static class Metadata{
-        long id;
-        Direction dir;
-        boolean flipped;
-
+    public static record Metadata (long id, Direction dir, boolean flipped) {
         public boolean validMetadata(List<Metadata> l){
             Map<Direction, Boolean> map = new EnumMap<Direction, Boolean>(Direction.class);
             for(Metadata m : l){

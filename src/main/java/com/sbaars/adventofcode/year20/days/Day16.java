@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import lombok.Data;
-import lombok.Value;
 
 public class Day16 extends Day2020 {
     public static void main(String[] args) {
@@ -41,15 +39,7 @@ public class Day16 extends Day2020 {
         return tickets.stream().flatMapToLong(t -> t.stream().filter(n -> stream(rules).noneMatch(r -> r.check(n))).mapToLong(e -> e)).sum();
     }
 
-    @Data
-    @Value
-    public static class Rule {
-        String name;
-        long lower1;
-        long upper1;
-        long lower2;
-        long upper2;
-
+    record Rule (String name, long lower1, long upper1, long lower2, long upper2) {
         public boolean check(long val) {
             return (val >= lower1 && val <= upper1) || (val >= lower2 && val <= upper2);
         }
