@@ -1,7 +1,7 @@
 package com.sbaars.adventofcode.year19.pathfinding;
 
 import com.sbaars.adventofcode.year19.days.Day15;
-import java.awt.Point;
+import java.awt.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,123 +11,119 @@ import java.util.stream.Collectors;
  * Creates nodes and neighbours from a 2d grid. Each point in the map has an
  * integer value that specifies the cost of crossing that point. If this value
  * is negative, the point is unreachable.
- * 
+ * <p>
  * If diagonal movement is allowed, the Chebyshev distance is used, else
  * Manhattan distance is used.
- * 
+ *
  * @author Ben Ruijl
- * 
  */
 public class Grid2d {
-	private final int[][] map;
-	private final boolean allowDiagonal;
+  private final int[][] map;
+  private final boolean allowDiagonal;
 
-	/**
-	 * A node in a 2d map. This is simply the coordinates of the point.
-	 * 
-	 * @author Ben Ruijl
-	 * 
-	 */
-	public class MapNode implements Node<MapNode> {
-		private final int x, y;
+  public Grid2d(int[][] map, boolean allowDiagonal) {
+    this.map = map;
+    this.allowDiagonal = allowDiagonal;
+  }
 
-		public MapNode(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
+  public List<Point> findPath(Point start, Point end) {
+    return PathFinding.doAStar(new MapNode(start.x, start.y), new MapNode(end.x, end.y)).stream().map(MapNode::toPoint).collect(Collectors.toList());
+  }
 
-		public double getHeuristic(MapNode goal) {
-			if (allowDiagonal) {
-				return Math.max(Math.abs(x - goal.x), Math.abs(y - goal.y));
-			} else {
-				return Math.abs(x - goal.x) + Math.abs(y - goal.y);
-			}
-		}
+  /**
+   * A node in a 2d map. This is simply the coordinates of the point.
+   *
+   * @author Ben Ruijl
+   */
+  public class MapNode implements Node<MapNode> {
+    private final int x, y;
 
-		public double getTraversalCost(MapNode neighbour) {
-			return 1 + map[neighbour.y][neighbour.x];
-		}
+    public MapNode(int x, int y) {
+      this.x = x;
+      this.y = y;
+    }
 
-		public Set<MapNode> getNeighbours() {
-			Set<MapNode> neighbours = new HashSet<MapNode>();
+    public double getHeuristic(MapNode goal) {
+      if (allowDiagonal) {
+        return Math.max(Math.abs(x - goal.x), Math.abs(y - goal.y));
+      } else {
+        return Math.abs(x - goal.x) + Math.abs(y - goal.y);
+      }
+    }
 
-			for (int i = x - 1; i <= x + 1; i++) {
-				for (int j = y - 1; j <= y + 1; j++) {
-					if ((i == x && j == y) || i < 0 || j < 0 || j >= map.length
-							|| i >= map[j].length) {
-						continue;
-					}
+    public double getTraversalCost(MapNode neighbour) {
+      return 1 + map[neighbour.y][neighbour.x];
+    }
 
-					if (!allowDiagonal &&
-					         ((i < x && j < y) ||
-					                 (i < x && j > y) ||
-					                 (i > x && j > y) ||
-					                 (i > x && j < y))) {
-						continue;
-					}
+    public Set<MapNode> getNeighbours() {
+      Set<MapNode> neighbours = new HashSet<MapNode>();
 
-					if (map[j][i] == Day15.WALL || map[j][i] == Day15.UNEXPLORED) {
-						continue;
-					}
+      for (int i = x - 1; i <= x + 1; i++) {
+        for (int j = y - 1; j <= y + 1; j++) {
+          if ((i == x && j == y) || i < 0 || j < 0 || j >= map.length
+              || i >= map[j].length) {
+            continue;
+          }
 
-					// TODO: create cache instead of recreation
-					neighbours.add(new MapNode(i, j));
-				}
-			}
+          if (!allowDiagonal &&
+              ((i < x && j < y) ||
+                  (i < x && j > y) ||
+                  (i > x && j > y) ||
+                  (i > x && j < y))) {
+            continue;
+          }
 
-			return neighbours;
-		}
+          if (map[j][i] == Day15.WALL || map[j][i] == Day15.UNEXPLORED) {
+            continue;
+          }
 
-		@Override
-		public String toString() {
-			return "(" + x + ", " + y + ")";
-		}
+          // TODO: create cache instead of recreation
+          neighbours.add(new MapNode(i, j));
+        }
+      }
 
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + getOuterType().hashCode();
-			result = prime * result + x;
-			result = prime * result + y;
-			return result;
-		}
+      return neighbours;
+    }
 
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			MapNode other = (MapNode) obj;
-			if (!getOuterType().equals(other.getOuterType()))
-				return false;
-			if (x != other.x)
-				return false;
-			if (y != other.y)
-				return false;
-			return true;
-		}
-		
-		public Point toPoint() {
-			return new Point(x, y);
-		}
+    @Override
+    public String toString() {
+      return "(" + x + ", " + y + ")";
+    }
 
-		private Grid2d getOuterType() {
-			return Grid2d.this;
-		}
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + getOuterType().hashCode();
+      result = prime * result + x;
+      result = prime * result + y;
+      return result;
+    }
 
-	}
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      MapNode other = (MapNode) obj;
+      if (!getOuterType().equals(other.getOuterType()))
+        return false;
+      if (x != other.x)
+        return false;
+      return y == other.y;
+    }
 
-	public Grid2d(int[][] map, boolean allowDiagonal) {
-		this.map = map;
-		this.allowDiagonal = allowDiagonal;
-	}
+    public Point toPoint() {
+      return new Point(x, y);
+    }
 
-	public List<Point> findPath(Point start, Point end) {
-		return PathFinding.doAStar(new MapNode(start.x, start.y), new MapNode(end.x, end.y)).stream().map(MapNode::toPoint).collect(Collectors.toList());
-	}
+    private Grid2d getOuterType() {
+      return Grid2d.this;
+    }
+
+  }
 
 }
