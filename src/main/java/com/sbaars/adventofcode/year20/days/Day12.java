@@ -1,16 +1,14 @@
 package com.sbaars.adventofcode.year20.days;
 
-import com.sbaars.adventofcode.common.Direction;
-import com.sbaars.adventofcode.year20.Day2020;
-import lombok.Data;
-import lombok.Value;
-
-import java.awt.*;
-import java.util.List;
-
-import static com.sbaars.adventofcode.common.Direction.*;
+import static com.sbaars.adventofcode.common.Direction.EAST;
+import static com.sbaars.adventofcode.common.Direction.turnDegrees;
 import static java.lang.Math.abs;
 import static java.util.stream.Collectors.toList;
+
+import com.sbaars.adventofcode.common.Direction;
+import com.sbaars.adventofcode.year20.Day2020;
+import java.awt.*;
+import java.util.List;
 
 public class Day12 extends Day2020 {
     public static void main(String[] args) {
@@ -41,12 +39,7 @@ public class Day12 extends Day2020 {
         return dayStream().map(e -> new Flight(e.charAt(0), Integer.parseInt(e.substring(1)))).collect(toList());
     }
 
-    @Data
-    @Value
-    class Flight {
-        char dir;
-        int distance;
-    }
+    record Flight (char dir, int distance) {}
 
     @Override
     public Object part2() {

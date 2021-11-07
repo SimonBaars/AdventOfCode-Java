@@ -28,7 +28,7 @@ public class Day2 extends Day2020 {
         return readString(s, "%n-%n %c: %s", Password.class);
     }
 
-    record Password (long lower, long higher, char character, String password) {
+    public record Password (long lower, long higher, char character, String password) {
 
         public boolean isValid() {
             long count = password.chars().filter(c -> c == character).count();

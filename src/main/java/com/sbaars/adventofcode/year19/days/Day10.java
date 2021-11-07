@@ -1,17 +1,13 @@
 package com.sbaars.adventofcode.year19.days;
 
-import java.awt.Point;
-import java.io.IOException;
+import com.google.common.base.Objects;
+import com.sbaars.adventofcode.year19.Day2019;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import com.sbaars.adventofcode.common.Day;
-
-import com.sbaars.adventofcode.year19.Day2019;
-import lombok.EqualsAndHashCode;
 
 public class Day10 extends Day2019 {
 
@@ -56,9 +52,9 @@ public class Day10 extends Day2019 {
 		return asteroids.stream().map(e -> new Asteroid(asteroid, e)).mapToDouble(e -> e.rotation).distinct().count();
 	}
 
-	@EqualsAndHashCode class Asteroid {
-		@EqualsAndHashCode.Exclude double rotation;
-		@EqualsAndHashCode.Exclude double distance;
+	class Asteroid {
+		double rotation;
+		double distance;
 		Point position;
 
 		public Asteroid(Point center, Point me) {
@@ -75,6 +71,19 @@ public class Day10 extends Day2019 {
 			double theta = Math.atan2(targetPt.y - centerPt.y, targetPt.x - centerPt.x) + Math.PI/2.0;
 			double angle = Math.toDegrees(theta);
 			return angle < 0 ? angle + 360 : angle;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			Asteroid asteroid = (Asteroid) o;
+			return Objects.equal(position, asteroid.position);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hashCode(position);
 		}
 	}
 }

@@ -1,21 +1,18 @@
 package com.sbaars.adventofcode.year20.days;
 
-import com.sbaars.adventofcode.common.ReadsFormattedString;
-import com.sbaars.adventofcode.year20.Day2020;
-import lombok.Data;
-import lombok.Value;
-
-import java.util.*;
-import org.apache.commons.text.TextStringBuilder;
-
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
-import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 import static java.lang.Long.toBinaryString;
-import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.stream.IntStream.range;
+
+import com.sbaars.adventofcode.year20.Day2020;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.apache.commons.text.TextStringBuilder;
 
 public class Day14 extends Day2020 {
     public static void main(String[] args) {
@@ -38,23 +35,14 @@ public class Day14 extends Day2020 {
         return memory.values().stream().mapToLong(e -> e).sum();
     }
 
-    @Data
-    @Value
-    public static class Instruction {
-        String mem;
-        String value;
+    public static record Instruction (String mem, String value) {
 
         public Optional<Mem> getMem(){
             return mem.startsWith("mem") ? of(readString(mem+value, "mem[%n]%n", Mem.class)) : empty();
         }
     }
 
-    @Data
-    @Value
-    public static class Mem {
-        long index;
-        long value;
-    }
+    public static record Mem (long index, long value) {}
 
     @Override
     public Object part2() {
