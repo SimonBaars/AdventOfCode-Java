@@ -20,6 +20,7 @@ public abstract class Day {
   }
 
   public static String getResourceAsString(String resource) {
+    System.out.println(resource);
     try {
       return readFileToString(new File(Day.class.getClassLoader().getResource(resource).getFile()));
     } catch (IOException e) {

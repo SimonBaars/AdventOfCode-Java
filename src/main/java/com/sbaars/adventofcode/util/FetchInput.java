@@ -47,11 +47,10 @@ public class FetchInput {
   }
 
   public static void main(String[] args) throws Exception {
-    String year = args[0];
-    String day = args[1];
+//    String year = args[0];
+//    String day = args[1];
     String session = System.getenv("AOCSESSION");
-    new FetchInput(session).retrieveDay(day, year);
-
+    new FetchInput(session).retrieveDay("1", "2021");
   }
 
   private void retrieveDay(String day, String year) {
