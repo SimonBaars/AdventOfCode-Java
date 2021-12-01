@@ -2,15 +2,10 @@ package com.sbaars.adventofcode.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.HttpCookie;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.util.List;
 import java.util.stream.IntStream;
 import javax.xml.xpath.XPath;
@@ -27,28 +22,12 @@ import org.w3c.dom.NodeList;
 public class FetchInput {
   private final HttpClient client;
 
-  private FetchInput(String session) {
-    CookieHandler.setDefault(new CookieManager());
-
-    HttpCookie sessionCookie = new HttpCookie("session", session);
-    sessionCookie.setPath("/");
-    sessionCookie.setVersion(0);
-
-    try {
-      ((CookieManager) CookieHandler.getDefault()).getCookieStore().add(new URI("https://adventofcode.com"), sessionCookie);
-    } catch (URISyntaxException e) {
-      throw new IllegalStateException(e);
-    }
-
-    this.client = HttpClient.newBuilder()
-        .cookieHandler(CookieHandler.getDefault())
-        .connectTimeout(Duration.ofSeconds(10))
-        .build();
+  private FetchInput() {
+    this.client = WebClient.getClient();
   }
 
   public static void main(String[] args) throws Exception {
-    String session = System.getenv("AOCSESSION");
-    new FetchInput(session).retrieveDay("1", "2021");
+    new FetchInput().retrieveDay("1", "2021");
   }
 
   private void retrieveDay(String day, String year) {

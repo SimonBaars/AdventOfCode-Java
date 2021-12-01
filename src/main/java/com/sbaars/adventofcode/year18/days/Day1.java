@@ -23,13 +23,11 @@ public class Day1 extends Day2018 {
     Set<Long> encountered = new HashSet<>();
     long[] ns = dayNumbers();
     long acc = 0;
-    outerloop:
     while (true) {
       for (long n : ns) {
         acc += n;
-        if (!encountered.add(acc)) break outerloop;
+        if (!encountered.add(acc)) return acc;
       }
     }
-    return acc;
   }
 }

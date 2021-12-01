@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.common;
 
 import static org.apache.commons.io.FileUtils.readFileToString;
 
+import com.sbaars.adventofcode.util.Submit;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,6 +35,14 @@ public abstract class Day {
   public void printParts() {
     System.out.println("Part 1: " + part1());
     System.out.println("Part 2: " + part2());
+  }
+
+  public void submitPart1() {
+    new Submit().submit(part1(), year, day, 1);
+  }
+
+  public void submitPart2() {
+    new Submit().submit(part2(), year, day, 2);
   }
 
   protected String day() {
