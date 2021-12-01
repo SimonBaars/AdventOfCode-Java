@@ -94,7 +94,7 @@ public abstract class Day {
   }
 
   protected LongStream dayNumberStream(String delimiter) {
-    return dayStream(delimiter).filter(e -> !e.equals("")).mapToLong(Long::parseLong);
+    return dayStream(delimiter).filter(e -> !e.isEmpty()).mapToLong(Long::parseLong);
   }
 
   protected char[][] dayGrid() {
