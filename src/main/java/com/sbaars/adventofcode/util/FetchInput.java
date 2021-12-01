@@ -47,8 +47,6 @@ public class FetchInput {
   }
 
   public static void main(String[] args) throws Exception {
-//    String year = args[0];
-//    String day = args[1];
     String session = System.getenv("AOCSESSION");
     new FetchInput(session).retrieveDay("1", "2021");
   }
@@ -64,9 +62,14 @@ public class FetchInput {
       File file = getFile(day + "-" + (i + 1), year + "-examples");
       file.getParentFile().mkdirs();
       if (!file.exists()) {
-        writeFile(file, matches.get(i));
+        writeFile(file, clean(matches.get(i)));
       }
     }
+  }
+
+  // Turn Windows line separators into *nix ones
+  private String clean(String file){
+    return file.replace("\r\n", "\n");
   }
 
   private void runForYear(String year) {
@@ -79,7 +82,7 @@ public class FetchInput {
     File dayFile = getFile(day, year);
     dayFile.getParentFile().mkdirs();
     if (!dayFile.exists()) {
-      writeFile(dayFile, doRequest(year + "/day/" + day + "/input"));
+      writeFile(dayFile, clean(doRequest(year + "/day/" + day + "/input")));
     }
   }
 

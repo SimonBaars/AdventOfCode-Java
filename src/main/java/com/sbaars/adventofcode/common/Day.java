@@ -20,7 +20,6 @@ public abstract class Day {
   }
 
   public static String getResourceAsString(String resource) {
-    System.out.println(resource);
     try {
       return readFileToString(new File(Day.class.getClassLoader().getResource(resource).getFile()));
     } catch (IOException e) {
@@ -86,7 +85,7 @@ public abstract class Day {
   }
 
   protected LongStream dayNumberStream(String delimiter) {
-    return dayStream(delimiter).mapToLong(Long::parseLong);
+    return dayStream(delimiter).filter(e -> !e.equals("")).mapToLong(Long::parseLong);
   }
 
   protected char[][] dayGrid() {
