@@ -1,4 +1,4 @@
-package com.sbaars.adventofcode.year21;
+package com.sbaars.adventofcode.template;
 
 import com.sbaars.adventofcode.common.Day;
 import java.io.IOException;
