@@ -1,8 +1,8 @@
 package com.sbaars.adventofcode.template.days;
 
-import com.sbaars.adventofcode.template.Day2021;
+import com.sbaars.adventofcode.template.Day1999;
 
-public class Day1 extends Day2021 {
+public class Day1 extends Day1999 {
   public Day1() {
     super(1);
   }
