@@ -27,7 +27,7 @@ public class Day3 extends Day2018 {
     for(Claim c : input){
       for(int i = 0; i<c.sizex; i++){
         for(int j = 0; j<c.sizey; j++){
-          Loc loc = new Loc(c.x + i, c.y + i);
+          Loc loc = new Loc(c.x + i, c.y + j);
           if(!all.add(loc)){
             overlap.add(loc);
           }
@@ -39,9 +39,10 @@ public class Day3 extends Day2018 {
 
   @Override
   public Object part2() {
-    String input = day();
-    return input;
+    List<Claim> input = dayStream().map(e -> readString(e, "#%n @ %n,%n: %nx%n", Claim.class)).toList();
+
+    return "";
   }
 
-  record Claim(long id, long x, long y, long sizex, long sizey){}
+  public record Claim(long id, long x, long y, long sizex, long sizey){}
 }

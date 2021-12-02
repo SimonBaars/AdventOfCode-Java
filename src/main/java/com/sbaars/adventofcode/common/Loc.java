@@ -25,6 +25,7 @@
 
 package com.sbaars.adventofcode.common;
 
+import com.google.common.base.Objects;
 import java.awt.geom.Point2D;
 import java.beans.Transient;
 import java.io.Serial;
@@ -203,25 +204,21 @@ public class Loc extends Point2D implements java.io.Serializable {
         this.y += dy;
     }
 
-    /**
-     * Determines whether or not two points are equal. Two instances of
-     * {@code Point2D} are equal if the values of their
-     * {@code x} and {@code y} member fields, representing
-     * their position in the coordinate space, are the same.
-     * @param obj an object to be compared with this {@code Point2D}
-     * @return {@code true} if the object to be compared is
-     *         an instance of {@code Point2D} and has
-     *         the same values; {@code false} otherwise.
-     */
-    public boolean equals(Object obj) {
-        if (obj instanceof Loc) {
-            Loc pt = (Loc)obj;
-            return (x == pt.x) && (y == pt.y);
-        }
-        return super.equals(obj);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+    Loc loc = (Loc) o;
+    return x == loc.x && y == loc.y;
+  }
 
-    /**
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(super.hashCode(), x, y);
+  }
+
+  /**
      * Returns a string representation of this point and its location
      * in the {@code (x,y)} coordinate space. This method is
      * intended to be used only for debugging purposes, and the content

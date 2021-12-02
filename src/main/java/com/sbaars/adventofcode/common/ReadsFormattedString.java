@@ -1,5 +1,7 @@
 package com.sbaars.adventofcode.common;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +39,7 @@ public interface ReadsFormattedString {
       }
     }
     try {
+      checkState(target.getConstructors().length > 0, "Class "+target+" has no constructor!");
       return (T) Arrays.stream(target.getConstructors()).filter(c -> c.getParameterCount() == mappedObjs.size()).findAny().get()//.getConstructor(mappedObjs.stream().map(Object::getClass).toArray(Class[]::new))
           .newInstance(mappedObjs.toArray());
     } catch (Exception e) {
