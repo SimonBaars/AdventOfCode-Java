@@ -14,6 +14,7 @@ public abstract class Day {
   private static final String DEFAULT_DELIMITER = System.lineSeparator();
   protected final int year;
   protected final int day;
+  private int example = 0;
 
   public Day(int year, int day) {
     this.year = year;
@@ -37,6 +38,12 @@ public abstract class Day {
     System.out.println("Part 2: " + part2());
   }
 
+  public void printParts(int example) {
+    this.example = example;
+    System.out.println("Part 1: " + part1());
+    System.out.println("Part 2: " + part2());
+  }
+
   public void submitPart1() {
     new Submit().submit(part1(), year, day, 1);
   }
@@ -46,7 +53,8 @@ public abstract class Day {
   }
 
   protected String day() {
-    return getResourceAsString(year + "/day" + day + ".txt");
+    boolean b = example != 0;
+    return getResourceAsString(year + (b ? "-examples" : "") + "/day" + day + (b ? "-" + example : "") + ".txt");
   }
 
   protected String[] dayStrings() {
