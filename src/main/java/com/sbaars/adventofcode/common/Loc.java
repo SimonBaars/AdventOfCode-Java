@@ -27,72 +27,19 @@ package com.sbaars.adventofcode.common;
 
 import com.google.common.base.Objects;
 import java.awt.*;
-import java.io.Serial;
-import java.io.Serializable;
 
-/**
- * A point representing a location in {@code (x,y)} coordinate space,
- * specified in integer precision.
- *
- * @author Sami Shaio
- * @since 1.0
- */
-public class Loc implements Serializable {
-  /**
-   * The X coordinate of this {@code Point}.
-   * If no X coordinate is set it will default to 0.
-   *
-   * @serial
-   * @see #move(int, int)
-   * @since 1.0
-   */
+public class Loc {
   public final long x;
-
-  /**
-   * The Y coordinate of this {@code Point}.
-   * If no Y coordinate is set it will default to 0.
-   *
-   * @serial
-   * @see #move(int, int)
-   * @since 1.0
-   */
   public final long y;
 
-  /**
-   * Use serialVersionUID from JDK 1.1 for interoperability.
-   */
-  @Serial
-  private static final long serialVersionUID = -5276940640259749850L;
-
-  /**
-   * Constructs and initializes a point at the origin
-   * (0,&nbsp;0) of the coordinate space.
-   *
-   * @since 1.1
-   */
   public Loc() {
     this(0, 0);
   }
 
-  /**
-   * Constructs and initializes a point with the same location as
-   * the specified {@code Point} object.
-   *
-   * @param p a point
-   * @since 1.1
-   */
   public Loc(Loc p) {
     this(p.x, p.y);
   }
 
-  /**
-   * Constructs and initializes a point at the specified
-   * {@code (x,y)} location in the coordinate space.
-   *
-   * @param x the X coordinate of the newly constructed {@code Point}
-   * @param y the Y coordinate of the newly constructed {@code Point}
-   * @since 1.0
-   */
   public Loc(long x, long y) {
     this.x = x;
     this.y = y;
@@ -108,35 +55,14 @@ public class Loc implements Serializable {
     this.y = p.y;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @since 1.2
-   */
   public double getX() {
     return x;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @since 1.2
-   */
   public double getY() {
     return y;
   }
 
-  /**
-   * Translates this point, at location {@code (x,y)},
-   * by {@code dx} along the {@code x} axis and {@code dy}
-   * along the {@code y} axis so that it now represents the point
-   * {@code (x+dx,y+dy)}.
-   *
-   * @param dx the distance to move this point
-   *           along the X axis
-   * @param dy the distance to move this point
-   *           along the Y axis
-   */
   public Loc move(int dx, int dy) {
     return new Loc(x + dx, y + dy);
   }
@@ -163,15 +89,7 @@ public class Loc implements Serializable {
     return Objects.hashCode(super.hashCode(), x, y);
   }
 
-  /**
-   * Returns a string representation of this point and its location
-   * in the {@code (x,y)} coordinate space. This method is
-   * intended to be used only for debugging purposes, and the content
-   * and format of the returned string may vary between implementations.
-   * The returned string may be empty but may not be {@code null}.
-   *
-   * @return a string representation of this point
-   */
+  @Override
   public String toString() {
     return getClass().getName() + "[x=" + x + ",y=" + y + "]";
   }
