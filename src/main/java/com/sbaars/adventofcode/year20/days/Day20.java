@@ -55,9 +55,9 @@ public class Day20 extends Day2020 {
       total += g.countWithoutSides();
     }
     long seaMonsterSize = 15;
-    for (long n = 0; total - n > 0; n += seaMonsterSize) {
-      System.out.println((n / 15) + ". " + (total - n));
-    }
+//    for (long n = 0; total - n > 0; n += seaMonsterSize) {
+//      System.out.println((n / 15) + ". " + (total - n));
+//    }
     return total - (35 * seaMonsterSize);
   }
 
