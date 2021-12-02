@@ -1,5 +1,44 @@
 # adventOfCode(Language.JAVA)
 
+## 2021
+### Days
+- [Day 1](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day1.java)
+- [Day 2](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day2.java)
+- [Day 3](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day3.java)
+- [Day 4](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day4.java)
+- [Day 5](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day5.java)
+- [Day 6](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day6.java)
+- [Day 7](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day7.java)
+- [Day 8](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day8.java)
+- [Day 9](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day9.java)
+- [Day 10](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day10.java)
+- [Day 11](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day11.java)
+- [Day 12](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day12.java)
+- [Day 13](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day13.java)
+- [Day 14](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day14.java)
+- [Day 15](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day15.java)
+- [Day 16](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day16.java)
+- [Day 17](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day17.java)
+- [Day 18](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day18.java)
+- [Day 19](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day19.java)
+- [Day 20](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day20.java)
+- [Day 21](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day21.java)
+- [Day 22](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day22.java)
+- [Day 23](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day23.java)
+- [Day 24](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day24.java)
+- [Day 25](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day25.java)
+
+### Console output
+```
+Day 1:
+Part 1: 1184
+Part 2: 1158
+
+Day 2:
+Part 1: 1507611
+Part 2: 1880593125
+```
+
 ## 2020
 ### Days
 - [Day 1](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day1.java)
@@ -65,6 +104,70 @@ Part 2: 1245
 Day 9:
 Part 1: 373803594
 Part 2: 51152360
+
+Day 10:
+Part 1: 2812
+Part 2: 386869246296064
+
+Day 11:
+Part 1: 2243
+Part 2: 2027
+
+Day 12:
+Part 1: 1578
+Part 2: 66614
+
+Day 13:
+Part 1: 2935
+Part 2: 836024966345345
+
+Day 14:
+Part 1: 14732563016887
+Part 2: 3618217244644
+
+Day 15:
+Part 1: 1294
+Part 2: 573522
+
+Day 16:
+Part 1: 26988
+Part 2: 426362917709
+
+Day 17:
+Part 1: 295
+Part 2: 1972
+
+Day 18:
+Part 1: 9535936849815
+Part 2: 472171581333710
+
+Day 19:
+Part 1: 104
+Part 2: 314
+
+Day 20:
+Part 1: 111936085519519
+Part 2: 1792
+
+Day 21:
+Part 1: 2786
+Part 2: lxjtns,knprxg,knprxg,clg,lxjtns,clg,cxfz,cxfz
+
+Day 22:
+Part 1: 33925
+Part 2: 33441
+
+Day 23:
+Part 1: 69425837
+Part 2: 218882971435
+
+Day 24:
+Part 1: 479
+Part 2: 4135
+
+Day 25:
+Part 1: 16881444
+Part 2: That's all folks
 ```
 
 ## 2019
@@ -216,9 +319,38 @@ I never did the 2018 advent of code puzzles when the event was ongoing. I'm just
 
 ### Days
 - [Day 1](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day1.java)
+- [Day 2](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day2.java)
+- [Day 3](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day3.java)
+- [Day 4](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day4.java)
+- [Day 5](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day5.java)
+- [Day 6](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day6.java)
+- [Day 7](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day7.java)
+- [Day 8](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day8.java)
+- [Day 9](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day9.java)
+- [Day 10](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day10.java)
+- [Day 11](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day11.java)
+- [Day 12](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day12.java)
+- [Day 13](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day13.java)
+- [Day 14](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day14.java)
+- [Day 15](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day15.java)
+- [Day 16](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day16.java)
+- [Day 17](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day17.java)
+- [Day 18](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day18.java)
+- [Day 19](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day19.java)
+- [Day 20](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day20.java)
+- [Day 21](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day21.java)
+- [Day 22](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day22.java)
+- [Day 23](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day23.java)
+- [Day 24](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day24.java)
+- [Day 25](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day25.java)
 
 ### Console output
 ```
+Day 1:
 Part 1: 433
 Part 2: 256
+
+Day 2:
+Part 1: 5456
+Part 2: megsdlpulxvinkatfoyzxcbvq
 ```

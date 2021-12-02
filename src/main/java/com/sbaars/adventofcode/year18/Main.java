@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Main {
   public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException, InvocationTargetException, NoSuchMethodException {
-    for (int day = 1; day <= 1; day++) {
+    for (int day = 1; day <= 25; day++) {
       System.out.println("Day " + day + ":");
       Day instance = (Day) Class.forName("com.sbaars.adventofcode.year18.days.Day" + day).getDeclaredConstructor().newInstance();
       instance.printParts();

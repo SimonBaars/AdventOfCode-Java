@@ -60,17 +60,6 @@ public class Day19 extends Day2020 {
 
   @Override
   public Object part2() {
-//        int maxDepth = 2;
-//        StringBuilder s = new StringBuilder("8: 42 ");
-//        StringBuilder s2 = new StringBuilder("11: 42 31 ");
-//        for(int i = 2; i<=maxDepth; i++){
-//            s.append("| ").append(i + 198).append("\n").append(i + 198).append(": ").append("42 ".repeat(i));
-//            s2.append("| ").append(i + 298).append("\n").append(i + 298).append(": ").append("42 ".repeat(i)).append("31 ".repeat(i));
-//
-//        }
-//        return getSolution(day()
-//                .replace("8: 42", s.toString().trim())
-//                .replace("11: 42 31", s2.toString().trim()));
     int maxDepth = 10;
     String[] input = day().split("\n\n");
     Set<String> all = sol.values().stream().flatMap(Collection::stream).collect(Collectors.toUnmodifiableSet());
@@ -80,13 +69,6 @@ public class Day19 extends Day2020 {
     for (int i = 2; i <= maxDepth; i++) {
       Set<String> add = new HashSet<>(s42.size() * s31.size());
       Set<String> add2 = new HashSet<>(s42.size() * s31.size() * s11.size());
-//            for(int i = 0; i<s42.size(); i++){
-//                add.add(s+s);
-//            }
-//            for(String s : s31){
-//                add.add(s+s);
-//            }
-
       for (String o : s42) {
         for (String o1 : s42) {
           add.add(o + o1);
@@ -105,7 +87,7 @@ public class Day19 extends Day2020 {
         .count();
   }
 
-  public static record Rule(long id, Optional<String> letter, long[] rule1, long[] rule2) {
+  public record Rule(long id, Optional<String> letter, long[] rule1, long[] rule2) {
     public Rule(long id, String rule) {
       this(id, getLetter(rule), getRule(rule, false), getRule(rule, true));
     }

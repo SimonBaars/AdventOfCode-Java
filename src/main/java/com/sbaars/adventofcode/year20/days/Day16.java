@@ -70,7 +70,7 @@ public class Day16 extends Day2020 {
     return ruleIndex.asMap().entrySet().stream().filter(e -> e.getValue().stream().anyMatch(Rule::isDeparture)).mapToLong(e -> myTicket[e.getKey()]).reduce((a, b) -> a * b).getAsLong();
   }
 
-  record Rule(String name, long lower1, long upper1, long lower2, long upper2) {
+  public record Rule(String name, long lower1, long upper1, long lower2, long upper2) {
     public boolean check(long val) {
       return (val >= lower1 && val <= upper1) || (val >= lower2 && val <= upper2);
     }
