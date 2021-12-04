@@ -26,8 +26,8 @@ public class FetchInput {
     this.client = WebClient.getClient();
   }
 
-  public static void main(String[] args) throws Exception {
-    new FetchInput().retrieveDay("3", "2021");
+  public static void main(String[] args) {
+    new FetchInput().retrieveDay("4", "2021");
   }
 
   private void retrieveDay(String day, String year) {
