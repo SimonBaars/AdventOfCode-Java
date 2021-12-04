@@ -5,7 +5,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 public class NumGrid implements Grid {
-  long[][] grid;
+  public long[][] grid;
 
   public NumGrid(String stringToParse, String lineDelimiter, String itemDelimiter) {
     this.grid = numGrid(stringToParse, lineDelimiter, itemDelimiter);
@@ -24,11 +24,44 @@ public class NumGrid implements Grid {
     return res;
   }
 
-  public int countChar(char... c) {
-    return Math.toIntExact(iterate().filter(e -> new String(c).chars().anyMatch(i -> i == e)).count());
+  public long count(long...n) {
+    return iterateLong().filter(e -> LongStream.of(n).anyMatch(i -> i == e)).count();
+  }
+
+  public long countExcept(long...n) {
+    return Math.toIntExact(iterateLong().filter(e -> LongStream.of(n).noneMatch(i -> i == e)).count());
+  }
+
+  public long sum() {
+    return iterateLong().sum();
+  }
+
+  public long sum(long...n) {
+    return iterateLong().filter(e -> LongStream.of(n).anyMatch(i -> i == e)).sum();
+  }
+
+  public long sumExcept(long...n) {
+    return iterateLong().filter(e -> LongStream.of(n).noneMatch(i -> i == e)).sum();
+  }
+
+  public boolean replace(long orig, long replacement){
+    boolean changed = false;
+    for(int i = 0; i< grid.length; i++){
+      for(int j = 0; j< grid[i].length; j++){
+        if(grid[i][j] == orig){
+          grid[i][j] = replacement;
+          changed = true;
+        }
+      }
+    }
+    return changed;
   }
 
   public IntStream iterate() {
     return LongStream.range(0, grid.length).flatMap(i -> LongStream.of(grid[Math.toIntExact(i)])).mapToInt(Math::toIntExact);
+  }
+
+  public LongStream iterateLong() {
+    return LongStream.range(0, grid.length).flatMap(i -> LongStream.of(grid[Math.toIntExact(i)]));
   }
 }
