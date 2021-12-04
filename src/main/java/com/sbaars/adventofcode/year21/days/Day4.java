@@ -1,5 +1,6 @@
 package com.sbaars.adventofcode.year21.days;
 
+import com.sbaars.adventofcode.common.grid.NumGrid;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,9 +25,9 @@ public class Day4 extends Day2021 {
     var in = day();
     String[] split = in.split("\n\n");
     long[] nums = Arrays.stream(split[0].split(",")).mapToLong(Long::parseLong).toArray();
-    List<long[][]> cards = IntStream.range(1, split.length).mapToObj(i -> numGrid(split[i])).toList();
+    List<NumGrid> cards = IntStream.range(1, split.length).mapToObj(i -> split[i]).map(NumGrid::new).toList();
     for(long num : nums){
-        for(long[][] card : cards){
+        for(NumGrid card : cards){
           if(markCard(card, num) && checkCard(card)){
             return result(card, num);
           }
@@ -35,31 +36,16 @@ public class Day4 extends Day2021 {
     return "";
   }
 
-  private long result(long[][] card, long num) {
-    long res = 0;
-    for(int i = 0; i< card.length; i++){
-      for(int j = 0; j< card[i].length; j++){
-        if(card[i][j] != -1){
-          res += card[i][j];
-        }
-      }
-    }
-    return res * num;
+  private long result(NumGrid card, long num) {
+    return card.sumExcept(-1) * num;
   }
 
-  private boolean markCard(long[][] card, long num){
-    for(int i = 0; i< card.length; i++){
-      for(int j = 0; j< card[i].length; j++){
-        if(card[i][j] == num){
-          card[i][j] = -1;
-          return true;
-        }
-      }
-    }
-    return false;
+  private boolean markCard(NumGrid card, long num){
+    return card.replace(num, -1);
   }
 
-  private boolean checkCard(long[][] card){
+  private boolean checkCard(NumGrid grid){
+    long[][] card = grid.grid;
     for(long[] nums : card){
       if(Arrays.stream(nums).allMatch(n -> n==-1)){
         return true;
@@ -76,24 +62,15 @@ public class Day4 extends Day2021 {
     return false;
   }
 
-  private long[][] numGrid(String str) {
-    String[] lines = str.split("\n");
-    long[][] res = new long[lines.length][];
-    for(int i = 0; i<lines.length; i++){
-      res[i] = Arrays.stream(lines[i].split(" ")).map(String::trim).filter(e -> !e.isEmpty()).mapToLong(Long::parseLong).toArray();
-    }
-    return res;
-  }
-
   @Override
   public Object part2() {
     var in = day();
     String[] split = in.split("\n\n");
     long[] nums = Arrays.stream(split[0].split(",")).mapToLong(Long::parseLong).toArray();
-    List<long[][]> cards = IntStream.range(1, split.length).mapToObj(i -> numGrid(split[i])).collect(Collectors.toCollection(ArrayList::new));
+    List<NumGrid> cards = IntStream.range(1, split.length).mapToObj(i -> new NumGrid(split[i])).collect(Collectors.toCollection(ArrayList::new));
     for(long num : nums){
       for(int i = 0; i<cards.size(); i++){
-        long[][] card = cards.get(i);
+        NumGrid card = cards.get(i);
         if(markCard(card, num) && checkCard(card)){
           if(cards.size() == 1){
             return result(card, num);
