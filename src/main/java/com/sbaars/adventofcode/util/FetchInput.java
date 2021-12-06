@@ -27,7 +27,7 @@ public class FetchInput {
   }
 
   public static void main(String[] args) {
-    new FetchInput().retrieveDay("5", "2021");
+    new FetchInput().retrieveDay("6", "2021");
   }
 
   private void retrieveDay(String day, String year) {
@@ -48,7 +48,9 @@ public class FetchInput {
 
   // Turn Windows line separators into *nix ones
   private String clean(String file){
-    return file.replace("\r\n", "\n");
+    return file
+        .replace("\r\n", "\n")
+        .replace("&gt;", ">");
   }
 
   private void runForYear(String year) {

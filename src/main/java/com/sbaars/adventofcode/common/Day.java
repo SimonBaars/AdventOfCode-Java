@@ -102,7 +102,7 @@ public abstract class Day {
   }
 
   protected LongStream dayNumberStream(String delimiter) {
-    return dayStream(delimiter).filter(e -> !e.isEmpty()).mapToLong(Long::parseLong);
+    return dayStream(delimiter).filter(e -> !e.isEmpty()).map(e -> e.replace("\n", "").trim()).mapToLong(Long::parseLong);
   }
 
   protected char[][] dayGrid() {
