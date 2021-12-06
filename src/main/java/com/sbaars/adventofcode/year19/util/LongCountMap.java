@@ -3,6 +3,7 @@ package com.sbaars.adventofcode.year19.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class LongCountMap<K> extends HashMap<K, Long> {
   /**
@@ -54,5 +55,15 @@ public class LongCountMap<K> extends HashMap<K, Long> {
     for (Entry<K, Long> i : input.entrySet()) {
       increment(i.getKey(), i.getValue());
     }
+  }
+
+  public long sumValues() {
+    return values().stream().mapToLong(e -> e).sum();
+  }
+
+  public static LongCountMap<Long> ofFrequencies(LongStream frequencies) {
+    var lcm = new LongCountMap<Long>();
+    frequencies.forEach(lcm::increment);
+    return lcm;
   }
 }
