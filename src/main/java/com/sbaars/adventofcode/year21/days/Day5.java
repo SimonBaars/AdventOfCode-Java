@@ -15,8 +15,6 @@ public class Day5 extends Day2021 {
 
   public static void main(String[] args) {
     new Day5().printParts(1);
-//    new Day5().submitPart1();
-//    new Day5().submitPart2();
   }
 
   @Override
