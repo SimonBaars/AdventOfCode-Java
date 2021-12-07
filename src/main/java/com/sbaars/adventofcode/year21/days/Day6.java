@@ -12,9 +12,6 @@ public class Day6 extends Day2021 {
 
   public static void main(String[] args) throws IOException {
     new Day6().printParts();
-//    System.in.read();
-//    new Day6().submitPart1();
-//    new Day6().submitPart2();
   }
 
   @Override
