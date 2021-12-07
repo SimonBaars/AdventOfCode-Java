@@ -1,5 +1,8 @@
 package com.sbaars.adventofcode.year21.days;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 import com.sbaars.adventofcode.year21.Day2021;
 import java.io.IOException;
 import java.util.stream.LongStream;
@@ -28,7 +31,7 @@ public class Day7 extends Day2021 {
   }
 
   private LongStream getSteps(long guess) {
-    return input().map(n -> guess > n ? guess - n : n - guess);
+    return input().map(n -> max(guess, n) - min(guess, n));
   }
 
   private long sol2(long guess){
