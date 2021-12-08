@@ -4,7 +4,7 @@ import static com.sbaars.adventofcode.common.StringTools.charSubset;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 
-import com.sbaars.adventofcode.common.SmartArray;
+import com.sbaars.adventofcode.common.IntArray;
 import com.sbaars.adventofcode.common.StringTools;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.io.IOException;
@@ -79,7 +79,7 @@ public class Day8 extends Day2021 {
 
   private String getBottomLeft(String[] line, boolean mirror){
     List<String> l = asList(line);
-    SmartArray possible = new SmartArray("abcdefg".chars());
+    IntArray possible = new IntArray("abcdefg".chars());
     l.stream().filter(e -> e.length() >=2 && e.length() <=4)
         .forEach(e -> (mirror ? difference(e) : e).chars().forEach(possible::removeElement));
     if(possible.size()>1){
