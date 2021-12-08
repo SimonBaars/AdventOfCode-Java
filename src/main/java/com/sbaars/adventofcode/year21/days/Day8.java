@@ -45,36 +45,31 @@ public class Day8 extends Day2021 {
   }
 
   private String getNum(String[] line, String w) {
-    switch (w.length()) {
-      case 2:
-        return "1";
-      case 3:
-        return "7";
-      case 4:
-        return "4";
-      case 7:
-        return "8";
-      case 6: {
+    return switch (w.length()) {
+      case 2 -> "1";
+      case 3 -> "7";
+      case 4 -> "4";
+      case 7 -> "8";
+      case 6 -> {
         String bottomLeft = getBottomLeft(line, false);
         if (w.contains(bottomLeft)) {
           if (getMiddle(line, w)) {
-            return "0";
-          } else return "6";
-        } else return "9";
+            yield "0";
+          } else yield "6";
+        } else yield "9";
       }
-      case 5: {
+      case 5 -> {
         String bottomLeft = getBottomLeft(line, false);
         if (w.contains(bottomLeft)) {
-          return "2";
+          yield "2";
         }
         String topRight = getBottomLeft(line, true);
         if (w.contains(topRight)) {
-          return "3";
-        } else return "5";
+          yield "3";
+        } else yield "5";
       }
-      default:
-        throw new IllegalStateException("Unrecognized word " + w);
-    }
+      default -> throw new IllegalStateException("Unrecognized word " + w);
+    };
   }
 
   private String getBottomLeft(String[] line, boolean mirror){
