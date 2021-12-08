@@ -48,8 +48,17 @@ public class SmartArray {
      move(index, --size);
   }
 
-  public void removeElement(int element) {
-    remove(indexOf(element));
+  public boolean removeElement(int element) {
+    if(elementIndex.containsKey(element)) {
+      remove(indexOf(element));
+      elementIndex.remove(element);
+      return true;
+    }
+    return false;
+  }
+
+  public boolean contains(int element){
+    return elementIndex.containsKey(element);
   }
 
   public int[] toArray() {
