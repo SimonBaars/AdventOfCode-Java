@@ -49,25 +49,25 @@ public class Day8 extends Day2021 {
     } else if(w.length() == 7) {
       return "8";
     } else if(w.length() == 6) {
-      String unique1 = getUnique1(line);
-      if(w.contains(unique1)) {
-        if(fitsOneSeven(line, w)){
+      String bottomLeft = getBottomLeft(line);
+      if(w.contains(bottomLeft)) {
+        if(getMiddle(line, w)){
           return "0";
         } else return "6";
       } else return "9";
     } else if(w.length() == 5) {
-      String unique1 = getUnique1(line);
-      if(w.contains(unique1)) {
+      String bottomLeft = getBottomLeft(line);
+      if(w.contains(bottomLeft)) {
         return "2";
       }
-      String unique2 = getUnique2(line);
-      if(w.contains(unique2)){
+      String topRight = getTopRight(line);
+      if(w.contains(topRight)){
         return "3";
       } else return "5";
     } else throw new IllegalStateException("Unrecognized word "+w);
   }
 
-  private String getUnique1(String[] line){
+  private String getBottomLeft(String[] line){
     List<String> l = asList(line);
     List<Integer> possible = new ArrayList<>(asList((int)'a', (int)'b', (int)'c', (int)'d', (int)'e', (int)'f', (int)'g'));
     l.stream().filter(e -> e.length() >=2 && e.length() <=4).forEach(e -> e.chars().forEach(i -> possible.remove(Integer.valueOf(i))));
@@ -81,7 +81,7 @@ public class Day8 extends Day2021 {
     return Stream.of(line).filter(e -> e.length() == 6).map(this::difference).map(e -> (int)e.toCharArray()[0]).collect(Collectors.toSet());
   }
 
-  private String getUnique2(String[] line){
+  private String getTopRight(String[] line){
     List<String> l = asList(line);
     List<Integer> possible = new ArrayList<>(asList((int)'a', (int)'b', (int)'c', (int)'d', (int)'e', (int)'f', (int)'g'));
     l.stream().filter(e -> e.length() >=2 && e.length() <=4)
@@ -98,7 +98,7 @@ public class Day8 extends Day2021 {
     return arr.stream().map(Object::toString).collect(Collectors.joining());
   }
 
-  private boolean fitsOneSeven(String[] line, String a){
+  private boolean getMiddle(String[] line, String a){
     return Stream.of(line).filter(e -> e.length() == 2 || e.length() == 3).allMatch(e -> subset(e, a));
   }
 
