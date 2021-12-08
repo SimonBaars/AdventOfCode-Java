@@ -55,15 +55,20 @@ public class Day8 extends Day2021 {
       return "8";
     } else if(w.length() == 6) {
       String unique1 = getUnique1(line);
+//      System.out.println("Unique 1: "+unique1);
       if(w.contains(unique1)) {
-        return "6";
+        if(fitsOneSeven(line, w)){
+          return "0";
+        } else return "6";
       } else return "9";
     } else if(w.length() == 5) {
       String unique1 = getUnique1(line);
+//      System.out.println("Unique 1: "+unique1);
       if(w.contains(unique1)) {
         return "2";
       }
       String unique2 = getUnique2(line);
+//      System.out.println("Unique 2: "+unique2);
       if(w.contains(unique2)){
         return "3";
       } else return "5";
@@ -104,5 +109,13 @@ public class Day8 extends Day2021 {
     var arr = new ArrayList<>(asList('a', 'b', 'c', 'd', 'e', 'f', 'g'));
     arr.removeAll(a.chars().mapToObj(c -> (char) c).toList());
     return arr.stream().map(e -> e.toString()).collect(Collectors.joining());
+  }
+
+  private boolean fitsOneSeven(String[] line, String a){
+    return Stream.of(line).filter(e -> e.length() == 2 || e.length() == 3).allMatch(e -> subset(e, a));
+  }
+
+  private boolean subset(String a, String b){
+    return a.chars().allMatch(c -> b.chars().anyMatch(d -> d == c));
   }
 }
