@@ -8,4 +8,8 @@ public class StringTools {
     remove.chars().forEach(arr::removeElement);
     return arr.stream().mapToObj(Character::toString).collect(Collectors.joining());
   }
+
+  public static boolean charSubset(String a, String b){
+    return a.chars().allMatch(c -> b.chars().anyMatch(d -> d == c));
+  }
 }
