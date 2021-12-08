@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year21.days;
 
 import static java.util.Arrays.asList;
 
+import com.sbaars.adventofcode.common.StringTools;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,10 +93,8 @@ public class Day8 extends Day2021 {
     return Character.toString(possible.get(0));
   }
 
-  private String difference(String a){
-    var arr = new ArrayList<>(asList('a', 'b', 'c', 'd', 'e', 'f', 'g'));
-    arr.removeAll(a.chars().mapToObj(c -> (char) c).toList());
-    return arr.stream().map(Object::toString).collect(Collectors.joining());
+  private String difference(String a) {
+    return StringTools.removeAll("abcdefg", a);
   }
 
   private boolean getMiddle(String[] line, String a){
