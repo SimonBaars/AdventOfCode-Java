@@ -8,7 +8,6 @@ import static java.util.Collections.reverseOrder;
 import com.sbaars.adventofcode.common.grid.NumGrid;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.awt.*;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +16,7 @@ public class Day9 extends Day2021 {
     super(9);
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     new Day9().printParts();
   }
 
