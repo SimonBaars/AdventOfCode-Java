@@ -2,15 +2,14 @@ package com.sbaars.adventofcode.year21.days;
 
 import com.sbaars.adventofcode.year19.util.LongCountMap;
 import com.sbaars.adventofcode.year21.Day2021;
-import java.io.IOException;
 
 public class Day6 extends Day2021 {
 
-  public Day6() throws IOException {
+  public Day6() {
     super(6);
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     new Day6().printParts();
   }
 

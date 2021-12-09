@@ -7,7 +7,6 @@ import static java.util.Arrays.stream;
 import com.sbaars.adventofcode.common.IntArray;
 import com.sbaars.adventofcode.common.StringTools;
 import com.sbaars.adventofcode.year21.Day2021;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,7 +18,7 @@ public class Day8 extends Day2021 {
     super(8);
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     new Day8().printParts();
   }
 
