@@ -84,6 +84,15 @@ public enum Direction {
   }
 
   public char getInGrid(char[][] grid, Point p, char none) {
+    p = this.move(p);
+    if (p.x >= 0 && p.x < grid.length && p.y >= 0 && p.y < grid[0].length) {
+      return grid[p.x][p.y];
+    }
+    return none;
+  }
+
+  public long getInGrid(long[][] grid, Point p, int none) {
+    p = this.move(p);
     if (p.x >= 0 && p.x < grid.length && p.y >= 0 && p.y < grid[0].length) {
       return grid[p.x][p.y];
     }

@@ -4,7 +4,6 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 import com.sbaars.adventofcode.year21.Day2021;
-import java.io.IOException;
 import java.util.stream.LongStream;
 
 public class Day7 extends Day2021 {
@@ -13,7 +12,7 @@ public class Day7 extends Day2021 {
     super(7);
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     new Day7().printParts();
   }
 
