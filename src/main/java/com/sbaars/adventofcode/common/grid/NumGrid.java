@@ -1,8 +1,11 @@
 package com.sbaars.adventofcode.common.grid;
 
+import java.awt.*;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 public class NumGrid implements Grid {
   public long[][] grid;
@@ -12,7 +15,11 @@ public class NumGrid implements Grid {
   }
 
   public NumGrid(String stringToParse) {
-    this.grid = numGrid(stringToParse, "\n", " ");
+    this(stringToParse, "\n", " ");
+  }
+
+  public NumGrid(long[][] grid) {
+    this.grid = grid;
   }
 
   private long[][] numGrid(String str, String lineDelimiter, String itemDelimiter) {
@@ -63,5 +70,31 @@ public class NumGrid implements Grid {
 
   public LongStream iterateLong() {
     return LongStream.range(0, grid.length).flatMap(i -> LongStream.of(grid[Math.toIntExact(i)]));
+  }
+
+  public Stream<Point> stream() {
+    return IntStream.range(0, grid.length).boxed().flatMap(x -> IntStream.range(0, grid[x].length).mapToObj(y -> new Point(x, y)));
+  }
+
+  @Override
+  public String toString(){
+    StringBuilder res = new StringBuilder();
+    for(long[] nums : grid) res.append(LongStream.of(nums).mapToObj(Long::toString).collect(Collectors.joining(",")));
+    return res.toString();
+  }
+
+  public long get(Point p) {
+    if (p.x >= 0 && p.x < grid.length && p.y >= 0 && p.y < grid[0].length) {
+      return grid[p.x][p.y];
+    }
+    return -1;
+  }
+
+  public int sizeX(){
+    return grid.length;
+  }
+
+  public int sizeY(){
+    return grid[0].length;
   }
 }
