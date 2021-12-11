@@ -97,4 +97,8 @@ public class NumGrid implements Grid {
   public int sizeY(){
     return grid[0].length;
   }
+
+  public void set(Point p, long i) {
+    grid[p.x][p.y] = i;
+  }
 }
