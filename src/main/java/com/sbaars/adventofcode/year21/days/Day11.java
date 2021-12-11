@@ -4,7 +4,6 @@ import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.grid.NumGrid;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.awt.*;
-import java.io.IOException;
 import java.util.Arrays;
 
 public class Day11 extends Day2021 {
@@ -12,11 +11,8 @@ public class Day11 extends Day2021 {
     super(11);
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     new Day11().printParts();
-    System.in.read();
-    new Day11().submitPart1();
-//    new Day11().submitPart2();
   }
 
   @Override
@@ -31,12 +27,8 @@ public class Day11 extends Day2021 {
   }
 
   private long flash(NumGrid in, Point e) {
-    long n = 0;
-    in.grid[e.x][e.y]++;
-    if(in.get(e) == 10){
-      n+=Arrays.stream(Direction.values()).map(d -> d.move(e)).filter(p -> in.get(p) != -1).mapToLong(p -> flash(in, p)).sum() + 1;
-    }
-    return n;
+    in.increment(e);
+    return in.get(e) == 10 ? Arrays.stream(Direction.values()).map(d -> d.move(e)).filter(p -> in.get(p) != -1).mapToLong(p -> flash(in, p)).sum() + 1 : 0;
   }
 
   @Override
