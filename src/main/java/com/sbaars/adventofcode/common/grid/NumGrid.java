@@ -99,6 +99,15 @@ public class NumGrid implements Grid {
   }
 
   public void set(Point p, long i) {
+    if(get(p) == -1) return;
     grid[p.x][p.y] = i;
+  }
+
+  public void increment(Point p) {
+    increment(p, 1);
+  }
+
+  public void increment(Point p, int n) {
+    set(p, get(p)+n);
   }
 }
