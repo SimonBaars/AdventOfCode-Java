@@ -45,7 +45,7 @@ public class Day11 extends Day2021 {
     for(int step = 1; true; step++){
       in.stream().forEach(e -> flash(in, e));
       in.stream().filter(p -> in.get(p) > 9).forEach(p -> in.set(p, 0));
-      if(in.stream().mapToLong(p -> in.get(p)).allMatch(e -> e == 0L)){
+      if(in.stream().mapToLong(in::get).allMatch(e -> e == 0L)){
         return step;
       }
     }
