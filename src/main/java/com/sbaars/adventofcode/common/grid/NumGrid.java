@@ -39,6 +39,28 @@ public class NumGrid implements Grid {
     return Math.toIntExact(iterateLong().filter(e -> LongStream.of(n).noneMatch(i -> i == e)).count());
   }
 
+  public NumGrid mirrorX(){
+    long[][] newGrid = new long[sizeX()][sizeY()];
+    for(int i = 0; i<sizeX(); i++) {
+      for(int j = 0; j<sizeY(); j++) {
+        newGrid[i][sizeY()-j-1] = grid[i][j];
+      }
+    }
+    grid = newGrid;
+    return this;
+  }
+
+  public NumGrid mirrorY(){
+    long[][] newGrid = new long[sizeX()][sizeY()];
+    for(int i = 0; i<sizeX(); i++) {
+      for(int j = 0; j<sizeY(); j++) {
+        newGrid[sizeX()-i-1][j] = grid[i][j];
+      }
+    }
+    grid = newGrid;
+    return this;
+  }
+
   public long sum() {
     return iterateLong().sum();
   }
