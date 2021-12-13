@@ -11,7 +11,7 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public abstract class Day {
-  public static final String DEFAULT_DELIMITER = System.lineSeparator();
+  public static final String DEFAULT_DELIMITER = "\n";
   protected final int year;
   protected final int day;
   protected int example = 0;
