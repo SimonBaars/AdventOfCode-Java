@@ -11,10 +11,10 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public abstract class Day {
-  private static final String DEFAULT_DELIMITER = System.lineSeparator();
+  public static final String DEFAULT_DELIMITER = System.lineSeparator();
   protected final int year;
   protected final int day;
-  private int example = 0;
+  protected int example = 0;
 
   public Day(int year, int day) {
     this.year = year;

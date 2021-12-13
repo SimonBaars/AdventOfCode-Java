@@ -3,45 +3,41 @@ package com.sbaars.adventofcode.year21.days;
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static java.lang.Math.toIntExact;
 
-import com.sbaars.adventofcode.common.grid.NumGrid;
+import com.sbaars.adventofcode.common.grid.Coordinates;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class Day13 extends Day2021 {
+  private final Coordinates dots;
+  private final List<Fold> folds;
+
   public Day13() {
     super(13);
+    var in = day().split("\n\n");
+    dots = new Coordinates(in[0]);
+    folds = Arrays.stream(in[1].split("\n")).map(e -> readString(e, "fold along %s=%n", Fold.class)).toList();
   }
 
   public static void main(String[] args) {
     new Day13().printParts();
-//    new Day13().submitPart1();
-//    new Day13().submitPart2();
   }
 
   @Override
   public Object part1() {
-    var in = day().split("\n\n");
-    var dots = Arrays.stream(in[0].split("\n")).map(e -> e.split(",")).map(e -> new Point(Integer.parseInt(e[0]), Integer.parseInt(e[1]))).collect(Collectors.toSet());
-    var folds = Arrays.stream(in[1].split("\n")).map(e -> readString(e, "fold along %s=%n", Fold.class)).toList();
-    dots = dots.stream().map(e -> e.x>folds.get(0).n ? new Point(toIntExact(folds.get(0).n-(e.x-folds.get(0).n)), e.y) : e).collect(Collectors.toSet());
-    return dots.size();
+    return dots.stream().map(e -> fold(folds.get(0), e)).distinct().count();
   }
 
   public record Fold (String axis, long n){}
 
   @Override
   public Object part2() {
-    var in = day().split("\n\n");
-    var dots = Arrays.stream(in[0].split("\n")).map(e -> e.split(",")).map(e -> new Point(Integer.parseInt(e[0]), Integer.parseInt(e[1]))).collect(Collectors.toSet());
-    var folds = Arrays.stream(in[1].split("\n")).map(e -> readString(e, "fold along %s=%n", Fold.class)).toList();
+    var d = dots;
     for(Fold f : folds) {
-      dots = dots.stream().map(e -> fold(f, e)).collect(Collectors.toSet());
+      d = d.transform(e -> fold(f, e));
     }
-    NumGrid g = new NumGrid(new long[dots.stream().mapToInt(e -> e.y).max().getAsInt()][dots.stream().mapToInt(e -> e.x).max().getAsInt()]);
-    dots.stream().map(e -> new Point(e.y, e.x)).forEach(e -> g.set(e, 1L));
-    return "\n"+g.toString().replace(",", "").replace("0", " ");
+    return "\n"+d.toGrid().toString().replace(",", "").replace("0", " ");
   }
 
   private Point fold(Fold f, Point e) {
