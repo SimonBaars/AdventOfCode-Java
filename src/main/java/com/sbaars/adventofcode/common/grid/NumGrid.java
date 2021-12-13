@@ -101,7 +101,7 @@ public class NumGrid implements Grid {
   @Override
   public String toString(){
     StringBuilder res = new StringBuilder();
-    for(long[] nums : grid) res.append(LongStream.of(nums).mapToObj(Long::toString).collect(Collectors.joining(","))+"\n");
+    for(long[] nums : grid) res.append(LongStream.of(nums).mapToObj(Long::toString).collect(Collectors.joining(","))).append("\n");
     return res.toString();
   }
 
@@ -121,7 +121,7 @@ public class NumGrid implements Grid {
   }
 
   public void set(Point p, long i) {
-    if(get(p) == -1) return;
+    if(get(p) == -1) throw new IllegalStateException("Trying to write to coordinate outside of grid: "+p+", "+i);
     grid[p.x][p.y] = i;
   }
 
