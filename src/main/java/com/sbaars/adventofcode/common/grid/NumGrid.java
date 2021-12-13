@@ -79,7 +79,7 @@ public class NumGrid implements Grid {
   @Override
   public String toString(){
     StringBuilder res = new StringBuilder();
-    for(long[] nums : grid) res.append(LongStream.of(nums).mapToObj(Long::toString).collect(Collectors.joining(",")));
+    for(long[] nums : grid) res.append(LongStream.of(nums).mapToObj(Long::toString).collect(Collectors.joining(","))+"\n");
     return res.toString();
   }
 
