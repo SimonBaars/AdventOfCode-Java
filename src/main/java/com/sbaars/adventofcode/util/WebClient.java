@@ -12,7 +12,7 @@ import java.time.Duration;
 
 public class WebClient {
   public static HttpClient getClient() {
-    String session = getResourceAsString("APIKEY");
+    String session = getResourceAsString("APIKEY").trim();
     CookieHandler.setDefault(new CookieManager());
 
     HttpCookie sessionCookie = new HttpCookie("session", session);
