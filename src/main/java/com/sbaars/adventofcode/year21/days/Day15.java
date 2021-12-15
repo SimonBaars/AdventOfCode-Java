@@ -8,10 +8,12 @@ import java.util.PriorityQueue;
 public class Day15 extends Day2021 {
   public Day15() {
     super(15);
+    this.example = 1;
   }
 
   public static void main(String[] args) {
-    new Day15().printParts(1);
+//    new Day15().printParts(1);
+    System.out.println(new Day15().part2());
 //    new Day15().submitPart1();
 //    new Day15().submitPart2();
   }
@@ -61,6 +63,17 @@ public class Day15 extends Day2021 {
                           int col, int resize)
   {
     long[][] grid = g.grid;
+
+    long[][] grid2 = new long[g.sizeX()*resize][g.sizeY()*resize];
+    for(int i = 0; i < grid2.length; i++)
+    {
+      for(int j = 0; j < grid2[0].length; j++)
+      {
+        grid2[i][j] = (grid[i % grid.length][j % grid.length] + (i/grid.length) + (j/grid[0].length)) % 10;
+//        System.out.println(grid2[i][j]);
+      }
+    }
+
     long[][] dist = new long[g.sizeX()*resize][g.sizeY()*resize];
     int[] dx = { 1, 0 };
     int[] dy = { 0, 1 };
@@ -92,7 +105,8 @@ public class Day15 extends Day2021 {
 
         if (isInsideGrid(rows, cols, dist.length, dist[0].length))
         {
-          long gridNum = (grid[rows % grid.length][cols % grid.length] + (rows/dist.length)) % 10;
+          long gridNum = (grid[rows % grid.length][cols % grid.length] + (rows/grid.length) + (cols/grid[0].length)) % 10;
+//          System.out.println("("+grid[rows % grid.length][cols % grid.length]+" + "+(rows/grid.length)+") % 10 -> " + ((grid[rows % grid.length][cols % grid.length] + (rows/grid.length)) % 10));
           if (dist[rows][cols] > dist[curr.x][curr.y] + gridNum)
           {
 
@@ -154,6 +168,6 @@ public class Day15 extends Day2021 {
   @Override
   public Object part2() {
     var in = new NumGrid(day(), "\n", "");
-    return shortestPath(in, (in.sizeX()*5)-1, (in.sizeY()*5)-1, 5) - 1;
+    return shortestPath(in, (in.sizeX()*5)-1, (in.sizeY()*5)-1, 5);
   }
 }
