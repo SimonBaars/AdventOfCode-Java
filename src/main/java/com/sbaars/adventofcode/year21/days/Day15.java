@@ -24,20 +24,9 @@ public class Day15 extends Day2021 {
 
   record Cell (int x, int y, long distance) {}
 
-  static long shortestPath(NumGrid g, int row,
-                          int col, int resize)
+  static long shortestPath(NumGrid g, int row, int col, int resize)
   {
     long[][] grid = g.grid;
-
-    long[][] grid2 = new long[g.sizeX()*resize][g.sizeY()*resize];
-    for(int i = 0; i < grid2.length; i++)
-    {
-      for(int j = 0; j < grid2[0].length; j++)
-      {
-        grid2[i][j] = (grid[i % grid.length][j % grid.length] + (i/grid.length) + (j/grid[0].length)) % 10;
-      }
-    }
-
     long[][] dist = new long[g.sizeX()*resize][g.sizeY()*resize];
     int[] dx = { 1, 0 };
     int[] dy = { 0, 1 };
@@ -77,7 +66,7 @@ public class Day15 extends Day2021 {
     }
     return dist[dist.length-1][dist[0].length-1];
   }
-  
+
   static boolean isInsideGrid(int i, int j, int sizex, int sizey) {
     return i >= 0 && i < sizex && j >= 0 && j < sizey;
   }
