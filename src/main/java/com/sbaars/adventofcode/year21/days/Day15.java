@@ -8,12 +8,10 @@ import java.util.PriorityQueue;
 public class Day15 extends Day2021 {
   public Day15() {
     super(15);
-    this.example = 1;
   }
 
   public static void main(String[] args) {
-//    new Day15().printParts(1);
-    System.out.println(new Day15().part2());
+    new Day15().printParts();
 //    new Day15().submitPart1();
 //    new Day15().submitPart2();
   }
@@ -105,27 +103,20 @@ public class Day15 extends Day2021 {
 
         if (isInsideGrid(rows, cols, dist.length, dist[0].length))
         {
-          long gridNum = (grid[rows % grid.length][cols % grid.length] + (rows/grid.length) + (cols/grid[0].length)) % 10;
+          long gridNum = grid[rows % grid.length][cols % grid.length] + (rows/grid.length) + (cols/grid[0].length);
+          if(gridNum >= 10) gridNum -= 9;
 //          System.out.println("("+grid[rows % grid.length][cols % grid.length]+" + "+(rows/grid.length)+") % 10 -> " + ((grid[rows % grid.length][cols % grid.length] + (rows/grid.length)) % 10));
           if (dist[rows][cols] > dist[curr.x][curr.y] + gridNum)
           {
-
-            // If Cell is already been reached once,
-            // remove it from priority queue
             if (dist[rows][cols] != Integer.MAX_VALUE)
             {
-              Cell adj = new Cell(rows, cols,
-                  dist[rows][cols]);
-
+              Cell adj = new Cell(rows, cols, dist[rows][cols]);
               pq.remove(adj);
             }
 
-            // Insert cell with updated distance
-            dist[rows][cols] = dist[curr.x][curr.y] +
-                gridNum;
+            dist[rows][cols] = dist[curr.x][curr.y] + gridNum;
 
-            pq.add(new Cell(rows, cols,
-                dist[rows][cols]));
+            pq.add(new Cell(rows, cols, dist[rows][cols]));
           }
         }
       }
