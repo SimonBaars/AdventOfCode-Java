@@ -22,7 +22,7 @@ public class Day15 extends Day2021 {
     return shortestPath(in, in.sizeX()-1, in.sizeY()-1, 1);
   }
 
-  public record Cell(int x, int y, long distance){}
+  record Cell (int x, int y, long distance) {}
 
   static long shortestPath(NumGrid g, int row,
                           int col, int resize)
@@ -30,8 +30,10 @@ public class Day15 extends Day2021 {
     long[][] grid = g.grid;
 
     long[][] grid2 = new long[g.sizeX()*resize][g.sizeY()*resize];
-    for(int i = 0; i < grid2.length; i++) {
-      for(int j = 0; j < grid2[0].length; j++) {
+    for(int i = 0; i < grid2.length; i++)
+    {
+      for(int j = 0; j < grid2[0].length; j++)
+      {
         grid2[i][j] = (grid[i % grid.length][j % grid.length] + (i/grid.length) + (j/grid[0].length)) % 10;
       }
     }
@@ -46,13 +48,9 @@ public class Day15 extends Day2021 {
       }
     }
 
-    // Initialized source distance as
-    // initial grid position value
     dist[0][0] = 0;
 
-    PriorityQueue<Cell> pq = new PriorityQueue<>(row * col, Comparator.comparing(Cell::distance).reversed());
-
-    // Insert source cell to priority queue
+    PriorityQueue<Cell> pq = new PriorityQueue<>(row * col, Comparator.comparing(Cell::distance));
     pq.add(new Cell(0, 0, dist[0][0]));
     while (!pq.isEmpty()) {
       Cell curr = pq.poll();
@@ -60,9 +58,10 @@ public class Day15 extends Day2021 {
         int rows = curr.x + dx[i];
         int cols = curr.y + dy[i];
 
-        if (rows >= 0 && rows < dist.length && cols >= 0 && cols < dist[0].length) {
+        if (isInsideGrid(rows, cols, dist.length, dist[0].length)) {
           long gridNum = grid[rows % grid.length][cols % grid.length] + (rows/grid.length) + (cols/grid[0].length);
-          while(gridNum >= 10) gridNum -= 9;
+          if(gridNum >= 10) gridNum -= 9;
+
           if (dist[rows][cols] > dist[curr.x][curr.y] + gridNum) {
             if (dist[rows][cols] != Integer.MAX_VALUE) {
               Cell adj = new Cell(rows, cols, dist[rows][cols]);
@@ -77,6 +76,10 @@ public class Day15 extends Day2021 {
       }
     }
     return dist[dist.length-1][dist[0].length-1];
+  }
+  
+  static boolean isInsideGrid(int i, int j, int sizex, int sizey) {
+    return i >= 0 && i < sizex && j >= 0 && j < sizey;
   }
 
   @Override
