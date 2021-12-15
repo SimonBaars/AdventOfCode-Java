@@ -11,7 +11,7 @@ public class Day15 extends Day2021 {
   }
 
   public static void main(String[] args) {
-    new Day15().printParts();
+    new Day15().printParts(1);
 //    new Day15().submitPart1();
 //    new Day15().submitPart2();
   }
@@ -19,7 +19,7 @@ public class Day15 extends Day2021 {
   @Override
   public Object part1() {
     var in = new NumGrid(day(), "\n", "");
-    return shortestPath(in, in.sizeX()-1, in.sizeY()-1) - 1;
+    return shortestPath(in, in.sizeX()-1, in.sizeY()-1, 1);
   }
 
   static class Cell
@@ -58,17 +58,17 @@ public class Day15 extends Day2021 {
   // Method to return shortest path from
 // top-corner to bottom-corner in 2D grid
   static long shortestPath(NumGrid g, int row,
-                          int col)
+                          int col, int resize)
   {
     long[][] grid = g.grid;
-    long[][] dist = new long[row][col];
+    long[][] dist = new long[g.sizeX()*resize][g.sizeY()*resize];
     int[] dx = { 1, 0 };
     int[] dy = { 0, 1 };
 
     // Initializing distance array by INT_MAX
-    for(int i = 0; i < row; i++)
+    for(int i = 0; i < dist.length; i++)
     {
-      for(int j = 0; j < col; j++)
+      for(int j = 0; j < dist[0].length; j++)
       {
         dist[i][j] = Integer.MAX_VALUE;
       }
@@ -76,10 +76,9 @@ public class Day15 extends Day2021 {
 
     // Initialized source distance as
     // initial grid position value
-    dist[0][0] = grid[0][0];
+    dist[0][0] = 0;
 
-    PriorityQueue<Cell> pq = new PriorityQueue<Cell>(
-        row * col, new distanceComparator());
+    PriorityQueue<Cell> pq = new PriorityQueue<>(row * col, new distanceComparator());
 
     // Insert source cell to priority queue
     pq.add(new Cell(0, 0, dist[0][0]));
@@ -93,7 +92,8 @@ public class Day15 extends Day2021 {
 
         if (isInsideGrid(rows, cols, dist.length, dist[0].length))
         {
-          if (dist[rows][cols] > dist[curr.x][curr.y] + grid[rows][cols])
+          long gridNum = (grid[rows % grid.length][cols % grid.length] + (rows/dist.length)) % 10;
+          if (dist[rows][cols] > dist[curr.x][curr.y] + gridNum)
           {
 
             // If Cell is already been reached once,
@@ -108,7 +108,7 @@ public class Day15 extends Day2021 {
 
             // Insert cell with updated distance
             dist[rows][cols] = dist[curr.x][curr.y] +
-                grid[rows][cols];
+                gridNum;
 
             pq.add(new Cell(rows, cols,
                 dist[rows][cols]));
@@ -116,7 +116,7 @@ public class Day15 extends Day2021 {
         }
       }
     }
-    return dist[row - 1][col - 1];
+    return dist[dist.length-1][dist[0].length-1];
   }
 
 //
@@ -148,12 +148,12 @@ public class Day15 extends Day2021 {
 
   static boolean isInsideGrid(int i, int j, int sizex, int sizey)
   {
-    return (i >= 0 && i < sizex &&
-        j >= 0 && j < sizey);
+    return (i >= 0 && i < sizex && j >= 0 && j < sizey);
   }
 
   @Override
   public Object part2() {
-    return "";
+    var in = new NumGrid(day(), "\n", "");
+    return shortestPath(in, (in.sizeX()*5)-1, (in.sizeY()*5)-1, 5) - 1;
   }
 }
