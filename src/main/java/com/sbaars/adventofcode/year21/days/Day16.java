@@ -15,8 +15,6 @@ public class Day16 extends Day2021 {
     new Day16().printParts();
   }
 
-
-
   @Override
   public Object part1() {
     return findSum(day());
