@@ -13,18 +13,12 @@ public class Day16 extends Day2021 {
 
   public static void main(String[] args) {
     new Day16().printParts();
-//    new Day16().submitPart1();
-//    new Day16().submitPart2();
   }
 
 
 
   @Override
   public Object part1() {
-//    System.out.println(findSum("D2FE28"));
-//    System.out.println(findSum("38006F45291200"));
-//    System.out.println(findSum("EE00D40C823060"));
-//    System.out.println(findSum("8A004A801A8002F478"));
     return findSum(day());
   }
 
@@ -80,14 +74,6 @@ public class Day16 extends Day2021 {
 
   @Override
   public Object part2() {
-    System.out.println(findSum2("C200B40A82"));
-    System.out.println(findSum2("04005AC33890"));
-    System.out.println(findSum2("880086C3E88112"));
-    System.out.println(findSum2("CE00C43D881120"));
-    System.out.println(findSum2("D8005AC2A8F0"));
-    System.out.println(findSum2("F600BC2D8F"));
-    System.out.println(findSum2("9C005AC2F8F0"));
-    System.out.println(findSum2("9C0141080250320F1802104A08"));
     return findSum2(day());
   }
 
@@ -105,7 +91,6 @@ public class Day16 extends Day2021 {
         break;
       }
       if(in.substring(i).chars().allMatch(e -> e == '0')) break;
-      int version = binToDec(in.substring(i, i+3));
       int id = binToDec(in.substring(i+3, i+6));
       i+=6;
       if(id == 4){
