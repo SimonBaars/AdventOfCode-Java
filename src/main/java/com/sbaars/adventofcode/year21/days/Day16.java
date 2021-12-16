@@ -21,8 +21,7 @@ public class Day16 extends Day2021 {
   }
 
   private long findSum(String hex) {
-    var in = hexToBin(hex.trim());
-    return findPackets(in);
+    return findPackets(hexToBin(hex.trim()));
   }
 
   private long findPackets(String in) {
