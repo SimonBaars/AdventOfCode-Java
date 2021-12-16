@@ -26,8 +26,8 @@ public class Day15 extends Day2021 {
   {
     long[][] grid = g.grid;
     long[][] dist = new long[g.sizeX()*resize][g.sizeY()*resize];
-    int[] dx = { 1, 0 };
-    int[] dy = { 0, 1 };
+    int[] dx = { 1, 0, -1, 0 };
+    int[] dy = { 0, 1, 0, -1 };
 
     for(int i = 0; i < dist.length; i++) {
       for(int j = 0; j < dist[0].length; j++) {
