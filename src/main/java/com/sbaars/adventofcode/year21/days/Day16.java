@@ -74,8 +74,20 @@ public class Day16 extends Day2021 {
     return Integer.parseInt(new BigInteger(s, 2).toString(10));
   }
 
+  long binToLongDec(String s) {
+    return Long.parseLong(new BigInteger(s, 2).toString(10));
+  }
+
   @Override
   public Object part2() {
+    System.out.println(findSum2("C200B40A82"));
+    System.out.println(findSum2("04005AC33890"));
+    System.out.println(findSum2("880086C3E88112"));
+    System.out.println(findSum2("CE00C43D881120"));
+    System.out.println(findSum2("D8005AC2A8F0"));
+    System.out.println(findSum2("F600BC2D8F"));
+    System.out.println(findSum2("9C005AC2F8F0"));
+    System.out.println(findSum2("9C0141080250320F1802104A08"));
     return findSum2(day());
   }
 
@@ -84,11 +96,14 @@ public class Day16 extends Day2021 {
     return findPackets2(in, Integer.MAX_VALUE).get(0);
   }
 
+  int prevI = 0;
   private List<Long> findPackets2(String in, int toParse) {
     List<Long> res = new ArrayList<>();
     long sum = 0;
     for(int i = 0, parsed = 0; i< in.length();parsed++){
-      if(parsed >= toParse) break;
+      if(parsed >= toParse){
+        break;
+      }
       if(in.substring(i).chars().allMatch(e -> e == '0')) break;
       int version = binToDec(in.substring(i, i+3));
       int id = binToDec(in.substring(i+3, i+6));
@@ -102,7 +117,7 @@ public class Day16 extends Day2021 {
             break;
           }
         }
-        res.add((long)binToDec(s));
+        res.add(binToLongDec(s));
       } else {
         int lengthLength = 15;
         boolean b = in.charAt(i) == '1';
@@ -113,14 +128,24 @@ public class Day16 extends Day2021 {
         int length = binToDec(in.substring(i, i+lengthLength));
         i+=lengthLength;
         List<Long> op = findPackets2(in.substring(i, b ? in.length() : (i + length)), b ? length : Integer.MAX_VALUE);
-        performOp(op, id);
-        i += length;
+        res.add(performOp(op, id));
+        i += b ? prevI : length;
       }
+      prevI = i;
     }
     return res;
   }
 
-  private void performOp(List<Long> op, int id) {
-    
+  private long performOp(List<Long> op, int id) {
+    return switch (id) {
+      case 0 -> op.stream().mapToLong(e -> e).sum();
+      case 1 -> op.stream().mapToLong(e -> e).reduce((a,b) -> a*b).getAsLong();
+      case 2 -> op.stream().mapToLong(e -> e).min().getAsLong();
+      case 3 -> op.stream().mapToLong(e -> e).max().getAsLong();
+      case 5 -> op.get(0) > op.get(1) ? 1L : 0L;
+      case 6 -> op.get(0) < op.get(1) ? 1L : 0L;
+      case 7 -> op.get(0).equals(op.get(1)) ? 1L : 0L;
+      default -> throw new IllegalStateException("Not known id: "+id);
+    };
   }
 }
