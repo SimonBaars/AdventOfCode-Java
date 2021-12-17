@@ -9,10 +9,14 @@ public class Day18 extends Day2021 {
 
   public static void main(String[] args) {
     new Day18().printParts();
+//    new Day18().submitPart1();
+//    new Day18().submitPart2();
   }
 
   @Override
   public Object part1() {
+    var in = day();
+
     return "";
   }
 

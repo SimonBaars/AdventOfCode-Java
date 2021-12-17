@@ -6,6 +6,8 @@ import static java.lang.Math.toIntExact;
 
 import com.sbaars.adventofcode.year21.Day2021;
 import java.awt.*;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 public class Day17 extends Day2021 {
   public Day17() {
@@ -14,31 +16,23 @@ public class Day17 extends Day2021 {
 
   public static void main(String[] args) {
     new Day17().printParts();
-//    new Day17().submitPart1();
-//    new Day17().submitPart2();
   }
 
   @Override
   public Object part1() {
+    return getSol().max().getAsLong();
+  }
+
+  private LongStream getSol() {
     var in = readString(day().trim(), "target area: x=%n..%n, y=%n..%n", Target.class);
     var area = new Area(new Point(toIntExact(in.xStart), toIntExact(in.yStart)), new Point(toIntExact(in.xEnd), toIntExact(in.yEnd)));
-    long highest = 0;
-    for(int x = 1; x<500; x++){
-      for(int y = 0; y<500; y++) {
-        Point p = new Point(x, y);
-        long res = simulateSteps(area, p);
-        if(res > highest) {
-          highest = res;
-        }
-      }
-    }
-    return highest;
+    return IntStream.range(-200, 300).boxed().flatMap(x -> IntStream.range(-200, 300).mapToObj(y -> new Point(x, y))).mapToLong(p -> simulateSteps(area, p));
   }
 
   public long simulateSteps(Area target, Point p){
     Point curr = new Point(0,0);
     long highest = 0;
-    while(curr.y>target.bottomRight.y) {
+    while(curr.y>target.topLeft.y && !target.inArea(curr)) {
       curr = new Point(curr.x + p.x, curr.y + p.y);
       p = new Point(p.x > 0 ? p.x - 1 : (p.x < 0 ? p.x - 1 : p.x), p.y - 1);
       if(curr.y > highest) highest = curr.y;
@@ -52,19 +46,7 @@ public class Day17 extends Day2021 {
 
   @Override
   public Object part2() {
-    var in = readString(day().trim(), "target area: x=%n..%n, y=%n..%n", Target.class);
-    var area = new Area(new Point(toIntExact(in.xStart), toIntExact(in.yStart)), new Point(toIntExact(in.xEnd), toIntExact(in.yEnd)));
-    long sum = 0;
-    for(int x = -500; x<500; x++){
-      for(int y = -500; y<500; y++) {
-        Point p = new Point(x, y);
-        long res = simulateSteps(area, p);
-        if(res!=MIN_VALUE) {
-          sum++;
-        }
-      }
-    }
-    return sum;
+    return getSol().filter(e -> e!=MIN_VALUE).count();
   }
 
   public record Target(long xStart, long xEnd, long yStart, long yEnd){}
