@@ -12,10 +12,13 @@ import java.util.stream.IntStream;
 public class Day18 extends Day2021 {
   public Day18() {
     super(18);
+//    System.out.println(add("[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]", "[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]"));
+//    System.out.println(add("[[[[6,6],[6,6]],[[6,0],[6,7]]],[[[7,7],[8,9]],[8,[8,1]]]]", "[2,9]"));
   }
 
   public static void main(String[] args) {
-    new Day18().printParts(8);
+//    new Day18();
+    new Day18().printParts();
 //    new Day18().submitPart1();
 //    new Day18().submitPart2();
   }
@@ -23,63 +26,73 @@ public class Day18 extends Day2021 {
   @Override
   public Object part1() {
     var in = dayStream().filter(e -> !e.isEmpty()).map(this::reduce).collect(Collectors.toCollection(ArrayList::new));
+//    System.out.println("Reducing complete");
     while(in.size()>1){
       String one = in.remove(0);
       String two = in.remove(0);
-      in.add(0, reduce("["+one+","+two+"]"));
+//      System.out.println("One: "+one);
+//      System.out.println("Two: "+two);
+      in.add(0, add(one, two));
+//      System.out.println("Add: "+in.get(0));
     }
+//    System.out.println("Commence magnitude");
     return magnitude(in.get(0));
+  }
+
+  private String add(String one, String two) {
+    return reduce("[" + one + "," + two + "]");
   }
 
   private String reduce(String s) {
     String prev = "";
     while(!prev.equals(s)) {
       prev = s;
-      s = explodeAll(s);
+      s = explode(s);
+      if(prev.equals(s)) s = split(s);
+//      System.out.println(s);
     }
     return s;
   }
 
-  private String explodeAll(String s) {
+  private String split(String s) {
+    for (int i = 0; i < s.length(); i++) {
+      int num = parseNumAt(i, s);
+      if(num>=10) {
+        String pair = "["+(num/2)+","+(num%2==0 ? num/2 : (num/2)+1)+"]";
+        return s.substring(0, i) + pair + s.substring(i + 2);
+      }
+    }
+    return s;
+  }
+
+  private String explode(String s) {
     int depth = 0;
     for(int i = 0; i<s.length()-5; i++){
       if(s.charAt(i) == '[') depth++;
       else if(s.charAt(i) == ']') depth--;
-      if(depth>=4) {
-        String pair = s.substring(i, i + 5);
-        if (pair.replaceFirst("\\[[0-9],[0-9]\\]", "").isEmpty()) {
-          int leftNum = 0;
-          int rightNum = 0;
+      if(depth>4) {
+        String pair = s.substring(i);
+        String repl = pair.replaceFirst("\\[[0-9]*,[0-9]*\\]", "");
+        if (repl.length()<pair.length()) {
+          pair = pair.substring(0, pair.indexOf(']')+1);
+          int leftNum = parseNumAt(1, pair);
+          int rightNum = parseNumAt(pair.length()-2, pair);
           int leftIndex = -1;
           int rightIndex = -1;
           for(int j = i-1; j>=0; j--){
-            char c = s.charAt(j);
-            if(c >= '0' && c <= '9'){
-              leftNum = c - '0';
+            if(isNum(s.charAt(j))){
               leftIndex = j;
               break;
             }
           }
-          for(int k = i+5; k<s.length(); k++){
-            char c = s.charAt(k);
-            if(c >= '0' && c <= '9'){
-              rightNum = c - '0';
+          for(int k = i+pair.length(); k<s.length(); k++){
+            if(isNum(s.charAt(k))){
               rightIndex = k;
               break;
             }
           }
-          leftNum+=s.charAt(i+1)-'0';
-          rightNum+=s.charAt(i+3)-'0';
-          String leftPair = Integer.toString(leftNum);
-          if(leftNum>=10) {
-            leftPair = "["+(leftNum/2)+","+(leftNum%2==0 ? leftNum/2 : (leftNum/2)+1)+"]";
-          }
-          String rightPair = Integer.toString(rightNum);
-          if(rightNum>=10) {
-            rightPair = "["+(rightNum/2)+","+(rightNum%2==0 ? rightNum/2 : (rightNum/2)+1)+"]";
-          }
-          String leftPart = leftIndex == -1 ? s.substring(0, i) : s.substring(0, leftIndex) + leftPair + s.substring(leftIndex+1, i);
-          String rightPart = rightIndex == -1 ? s.substring(i+5) : s.substring(i+5, rightIndex) + rightPair + s.substring(rightIndex+1);
+          String leftPart = leftIndex == -1 ? s.substring(0, i) : s.substring(0, leftIndex-(Integer.toString(parseNumAt(leftIndex, s)).length()-1)) + (leftNum+parseNumAt(leftIndex, s)) + s.substring(leftIndex+1, i);
+          String rightPart = rightIndex == -1 ? s.substring(i+pair.length()) : s.substring(i+pair.length(), rightIndex) + (rightNum+parseNumAt(rightIndex, s)) + s.substring(rightIndex+Integer.toString(parseNumAt(rightIndex, s)).length());
           return leftPart + 0 + rightPart;
         }
       }
@@ -124,6 +137,18 @@ public class Day18 extends Day2021 {
         }
       }
     return s;
+  }
+
+  int parseNumAt(int i, String s){
+    if(!isNum(s.charAt(i))) return -1;
+    int j = i;
+    for(; isNum(s.charAt(j)); j++);
+    for(; isNum(s.charAt(i)); i--);
+    return parseInt(s.substring(i+1, j));
+  }
+
+  boolean isNum(char c){
+    return c >= '0' && c <= '9';
   }
 
   int charToInt(char c){
