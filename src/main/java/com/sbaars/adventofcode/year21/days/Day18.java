@@ -1,9 +1,13 @@
 package com.sbaars.adventofcode.year21.days;
 
+import static java.lang.Integer.parseInt;
+
 import com.sbaars.adventofcode.year21.Day2021;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Day18 extends Day2021 {
   public Day18() {
@@ -24,9 +28,7 @@ public class Day18 extends Day2021 {
       String two = in.remove(0);
       in.add(0, reduce("["+one+","+two+"]"));
     }
-    int[] res = in.get(0).chars().map(c -> charToInt((char)c)).filter(e -> e!=-1).toArray();
-
-    return (((res[0]*3+res[1]*2)*3 + (res[2]*3+res[3]*2)*2)*3 + ((res[4]*3+res[5]*2)*3 + (res[6]*3+res[7]*2)*2)*2);
+    return magnitude(in.get(0));
   }
 
   private String reduce(String s) {
@@ -85,6 +87,45 @@ public class Day18 extends Day2021 {
     return s;
   }
 
+  private int magnitude(String s) {
+    String prev = "";
+    while(!prev.equals(s)) {
+      prev = s;
+      s = calcMag(s);
+    }
+    return Integer.parseInt(s);
+  }
+
+  private String calcMag(String s) {
+    for(int i = 0; i<s.length()-5; i++){
+        String pair = s.substring(i);
+        if (pair.endsWith(pair.replaceFirst("\\[[0-9]*,[0-9]*\\]", ""))) {
+          int leftNum = 0;
+          int rightNum = 0;
+          int leftIndex = -1;
+          int rightIndex = -1;
+          for(int j = i+1; j<s.length(); j++){
+            char c = s.charAt(j);
+            if(c < '0' || c > '9'){
+              leftNum = parseInt(s.substring(i+1, j));
+              leftIndex = j;
+              break;
+            }
+          }
+          for(int k = leftIndex+1; k<s.length(); k++){
+            char c = s.charAt(k);
+            if(c < '0' || c > '9'){
+              rightNum = parseInt(s.substring(leftIndex+1, k));
+              rightIndex = k;
+              break;
+            }
+          }
+          return s.substring(0, i) + ((leftNum*3)+(rightNum*2)) + s.substring(rightIndex+1);
+        }
+      }
+    return s;
+  }
+
   int charToInt(char c){
     int res = c - '0';
     if(res>=0 && res<=9) return res;
@@ -93,7 +134,8 @@ public class Day18 extends Day2021 {
 
   @Override
   public Object part2() {
-    return "";
+    var in = dayStream().filter(e -> !e.isEmpty()).map(this::reduce).collect(Collectors.toCollection(ArrayList::new));
+    return IntStream.range(0, in.size()).boxed().flatMap(x -> IntStream.range(0, in.size()).filter(y -> x!=y).mapToObj(y -> new Point(x, y))).mapToInt(p -> magnitude(reduce("["+in.get(p.x)+","+in.get(p.y)+"]"))).max().getAsInt();
   }
 
   public record Pair (Optional<Pair> p1, Optional<Pair> p2, Optional<Integer> num1, Optional<Integer> num2, Integer depth) { }
