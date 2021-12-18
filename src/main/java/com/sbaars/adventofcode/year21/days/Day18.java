@@ -5,37 +5,26 @@ import static java.lang.Integer.parseInt;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Day18 extends Day2021 {
   public Day18() {
     super(18);
-//    System.out.println(add("[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]", "[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]"));
-//    System.out.println(add("[[[[6,6],[6,6]],[[6,0],[6,7]]],[[[7,7],[8,9]],[8,[8,1]]]]", "[2,9]"));
   }
 
   public static void main(String[] args) {
-//    new Day18();
     new Day18().printParts();
-//    new Day18().submitPart1();
-//    new Day18().submitPart2();
   }
 
   @Override
   public Object part1() {
     var in = dayStream().filter(e -> !e.isEmpty()).map(this::reduce).collect(Collectors.toCollection(ArrayList::new));
-//    System.out.println("Reducing complete");
     while(in.size()>1){
       String one = in.remove(0);
       String two = in.remove(0);
-//      System.out.println("One: "+one);
-//      System.out.println("Two: "+two);
       in.add(0, add(one, two));
-//      System.out.println("Add: "+in.get(0));
     }
-//    System.out.println("Commence magnitude");
     return magnitude(in.get(0));
   }
 
@@ -49,7 +38,6 @@ public class Day18 extends Day2021 {
       prev = s;
       s = explode(s);
       if(prev.equals(s)) s = split(s);
-//      System.out.println(s);
     }
     return s;
   }
@@ -151,17 +139,9 @@ public class Day18 extends Day2021 {
     return c >= '0' && c <= '9';
   }
 
-  int charToInt(char c){
-    int res = c - '0';
-    if(res>=0 && res<=9) return res;
-    return -1;
-  }
-
   @Override
   public Object part2() {
     var in = dayStream().filter(e -> !e.isEmpty()).map(this::reduce).collect(Collectors.toCollection(ArrayList::new));
     return IntStream.range(0, in.size()).boxed().flatMap(x -> IntStream.range(0, in.size()).filter(y -> x!=y).mapToObj(y -> new Point(x, y))).mapToInt(p -> magnitude(reduce("["+in.get(p.x)+","+in.get(p.y)+"]"))).max().getAsInt();
   }
-
-  public record Pair (Optional<Pair> p1, Optional<Pair> p2, Optional<Integer> num1, Optional<Integer> num2, Integer depth) { }
 }
