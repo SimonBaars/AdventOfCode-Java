@@ -83,6 +83,28 @@ public class Loc3D {
     return Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2) + Math.pow(z - p.getZ(), 2));
   }
 
+  public Loc3D flip(int flip) {
+    return switch (flip) {
+      case 0 -> this;
+      case 1 -> new Loc3D(x, -y, -z);
+      case 2 -> new Loc3D(x, -z, y);
+      case 3 -> new Loc3D(-y, -z, x);
+      case 4 -> new Loc3D(-x, -z, -y);
+      case 5 -> new Loc3D(y, -z, -x);
+      default -> throw new IllegalStateException("Invalid flip value: "+flip);
+    };
+  }
+
+  public Loc3D rotate(int rot) {
+    return switch (rot) {
+      case 0 -> this;
+      case 1 -> new Loc3D(-y, x, z);
+      case 2 -> new Loc3D(-x, -y, z);
+      case 3 -> new Loc3D(y, -x, z);
+      default -> throw new IllegalStateException("Invalid rotation value: "+rot);
+    };
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
