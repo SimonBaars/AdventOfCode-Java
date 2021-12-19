@@ -28,32 +28,22 @@ public class Day19 extends Day2021 {
     return findScannerPositions().getLeft().locs.size();
   }
 
-  private static class ScannerVariants {
-    final Scanner[] variations;
-
-    public ScannerVariants(Scanner sc) {
-      variations = new Scanner[24];
-      for (int up = 0; up < 6; up++) {
-        for (int rot = 0; rot < 4; rot++) {
-          variations[rot + up*4] = new Scanner(sc, up, rot);
-        }
+  private Scanner[] scannerVariants(Scanner sc){
+    Scanner[] variations = new Scanner[24];
+    for (int up = 0; up < 6; up++) {
+      for (int rot = 0; rot < 4; rot++) {
+        variations[rot + up*4] = new Scanner(sc, up, rot);
       }
     }
-  }
-
-  private List<ScannerVariants> orientations(List<Scanner> scanners) {
-    List<ScannerVariants> result = new ArrayList<>();
-    for (var s : scanners) result.add(new ScannerVariants(s));
-    return result;
+    return variations;
   }
 
   protected Pair<Scanner, Loc3D[]> findScannerPositions() {
-    var in = Arrays.stream(day().trim().split("\n\n")).map(Scanner::new).toList();
-    var scanners = orientations(in).toArray(ScannerVariants[]::new);
+    Scanner[][] scanners = Arrays.stream(day().trim().split("\n\n")).map(Scanner::new).map(this::scannerVariants).toArray(Scanner[][]::new);
     var orientation = new Scanner[scanners.length];
     var position = new Loc3D[scanners.length];
 
-    orientation[0] = scanners[0].variations[0];
+    orientation[0] = scanners[0][0];
     position[0] = new Loc3D(0,0,0);
 
     Queue<Integer> frontier = new ArrayDeque<>();
@@ -127,9 +117,9 @@ public class Day19 extends Day2021 {
       return Optional.empty();
     }
 
-    public Optional<Pair<Scanner, Loc3D>> match(ScannerVariants other) {
-      for (int i = 0; i < other.variations.length; i++) {
-        var sc = other.variations[i];
+    public Optional<Pair<Scanner, Loc3D>> match(Scanner[] other) {
+      for (int i = 0; i < other.length; i++) {
+        var sc = other[i];
         var mat = findMatch(sc);
         if (mat.isPresent()) return Optional.of(Pair.of(sc, mat.get()));
       }
