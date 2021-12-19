@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.stream.IntStream;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class Day19 extends Day2021 {
@@ -28,11 +29,11 @@ public class Day19 extends Day2021 {
     return findScannerPositions().getLeft().locs.size();
   }
 
-  private Scanner[] scannerVariants(Scanner sc){
+  private Scanner[] scannerVariants(Scanner sc) {
     Scanner[] variations = new Scanner[24];
     for (int up = 0; up < 6; up++) {
       for (int rot = 0; rot < 4; rot++) {
-        variations[rot + up*4] = new Scanner(sc, up, rot);
+        variations[rot + up * 4] = new Scanner(sc, up, rot);
       }
     }
     return variations;
@@ -44,25 +45,22 @@ public class Day19 extends Day2021 {
     var position = new Loc3D[scanners.length];
 
     orientation[0] = scanners[0][0];
-    position[0] = new Loc3D(0,0,0);
+    position[0] = new Loc3D(0, 0, 0);
 
-    Queue<Integer> frontier = new ArrayDeque<>();
-    frontier.add(0);
+    Queue<Integer> frontier = new ArrayDeque<>(List.of(0));
 
     while (!frontier.isEmpty()) {
       var front = frontier.poll();
-      for (int i = 0; i < scanners.length; i++) {
-        if (position[i] == null) {
-          var match = orientation[front].match(scanners[i]);
-          if (match.isPresent()) {
-            orientation[i] = match.get().getLeft();
-            Loc3D one = position[front];
-            Loc3D two = match.get().getRight();
-            position[i] = new Loc3D(one.x+two.x, one.y+two.y, one.z+two.z);
-            frontier.add(i);
-          }
+      IntStream.range(0, scanners.length).filter(i -> position[i] != null).forEach(i -> {
+        var match = orientation[front].match(scanners[i]);
+        if (match.isPresent()) {
+          orientation[i] = match.get().getLeft();
+          Loc3D one = position[front];
+          Loc3D two = match.get().getRight();
+          position[i] = new Loc3D(one.x + two.x, one.y + two.y, one.z + two.z);
+          frontier.add(i);
         }
-      }
+      });
     }
 
     var result = new Scanner(orientation[0].id, new ArrayList<>(orientation[0].locs));
@@ -75,16 +73,16 @@ public class Day19 extends Day2021 {
   @Override
   public Object part2() {
     var p = findScannerPositions().getRight();
-    return IntLoc.range(p.length, p.length).mapToLong(l -> Math.abs(p[l.x].x-p[l.y].x) + Math.abs(p[l.x].y-p[l.y].y) + Math.abs(p[l.x].z-p[l.y].z)).max().getAsLong();
+    return IntLoc.range(p.length, p.length).mapToLong(l -> Math.abs(p[l.x].x - p[l.y].x) + Math.abs(p[l.x].y - p[l.y].y) + Math.abs(p[l.x].z - p[l.y].z)).max().getAsLong();
   }
 
   public record Scanner(long id, List<Loc3D> locs) {
-    public Scanner(){
+    public Scanner() {
       this(0L, List.of());
     }
 
-    public Scanner(String s){
-      this(parseNumAt(12, s), Arrays.stream(s.substring(s.indexOf("\n")+1).split("\n")).map(e -> Arrays.stream(e.split(",")).mapToLong(Long::parseLong).toArray()).map(Loc3D::new).toList());
+    public Scanner(String s) {
+      this(parseNumAt(12, s), Arrays.stream(s.substring(s.indexOf("\n") + 1).split("\n")).map(e -> Arrays.stream(e.split(",")).mapToLong(Long::parseLong).toArray()).map(Loc3D::new).toList());
     }
 
     public Scanner(Scanner other, int up, int rot) {
@@ -111,15 +109,15 @@ public class Day19 extends Day2021 {
     }
   }
 
-  static int parseNumAt(int i, String s){
-    if(!isNum(s.charAt(i))) return -1;
+  static int parseNumAt(int i, String s) {
+    if (!isNum(s.charAt(i))) return -1;
     int j = i;
-    for(; isNum(s.charAt(j)); j++);
-    for(; isNum(s.charAt(i)); i--);
-    return parseInt(s.substring(i+1, j));
+    for (; isNum(s.charAt(j)); j++) ;
+    for (; isNum(s.charAt(i)); i--) ;
+    return parseInt(s.substring(i + 1, j));
   }
 
-  static boolean isNum(char c){
+  static boolean isNum(char c) {
     return c >= '0' && c <= '9';
   }
 }
