@@ -1,15 +1,16 @@
 package com.sbaars.adventofcode.year21.days;
 
 import static java.lang.Integer.parseInt;
-import static java.lang.Math.abs;
 
-import com.google.common.collect.ArrayListMultimap;
+import com.sbaars.adventofcode.common.IntLoc;
 import com.sbaars.adventofcode.common.Loc3D;
 import com.sbaars.adventofcode.year21.Day2021;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Optional;
+import java.util.Queue;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class Day19 extends Day2021 {
@@ -19,60 +20,129 @@ public class Day19 extends Day2021 {
   }
 
   public static void main(String[] args) {
-    new Day19().printParts(6);
-//    new Day19().submitPart1();
-//    new Day19().submitPart2();
+    new Day19().printParts();
   }
 
   @Override
   public Object part1() {
+    return findScannerPositions().getLeft().locs.size();
+  }
+
+  private static class ScannerVariants {
+    final Scanner[] variations;
+
+    public ScannerVariants(Scanner sc) {
+      variations = new Scanner[24];
+      for (int up = 0; up < 6; up++) {
+        for (int rot = 0; rot < 4; rot++) {
+          variations[rot + up*4] = new Scanner(sc, up, rot);
+        }
+      }
+    }
+  }
+
+  private List<ScannerVariants> orientations(List<Scanner> scanners) {
+    List<ScannerVariants> result = new ArrayList<>();
+    for (var s : scanners) result.add(new ScannerVariants(s));
+    return result;
+  }
+
+  protected Pair<Scanner, Loc3D[]> findScannerPositions() {
     var in = Arrays.stream(day().trim().split("\n\n")).map(Scanner::new).toList();
-    for(Scanner s : in) {
-      for(int i = 0; i<s.locs.size(); i++){
-        for(int j = i+1; j<s.locs.size(); j++) {
-          s.mm.put(s.locs().get(i).distance(s.locs.get(j)), Pair.of(s.locs().get(i), s.locs.get(j)));
+    var scanners = orientations(in).toArray(ScannerVariants[]::new);
+    var orientation = new Scanner[scanners.length];
+    var position = new Loc3D[scanners.length];
+
+    orientation[0] = scanners[0].variations[0];
+    position[0] = new Loc3D(0,0,0);
+
+    Queue<Integer> frontier = new ArrayDeque<>();
+    frontier.add(0);
+
+    while (!frontier.isEmpty()) {
+      var front = frontier.poll();
+      for (int i = 0; i < scanners.length; i++) {
+        if (position[i] == null) {
+          var match = orientation[front].match(scanners[i]);
+          if (match.isPresent()) {
+            orientation[i] = match.get().getLeft();
+            Loc3D one = position[front];
+            Loc3D two = match.get().getRight();
+            position[i] = new Loc3D(one.x+two.x, one.y+two.y, one.z+two.z);
+            frontier.add(i);
+          }
         }
       }
     }
-    List<Pair<Scanner, Scanner>> overlap = new ArrayList<>();
-    for(int i = 0; i<in.size(); i++){
-      for(int j = i+1; j<in.size(); j++){
-        long n = overlap(in.get(i), in.get(j));
-        if(n>=12) {
-          overlap.add(Pair.of(in.get(i), in.get(j)));
-          break;
-        }
-      }
+
+    var result = new Scanner(orientation[0].id, new ArrayList<>(orientation[0].locs));
+    for (int i = 1; i < scanners.length; i++) {
+      result.add(orientation[i], position[i]);
     }
-
-
-    return in.stream().flatMap(e -> e.mm.keySet().stream()).distinct().count();
-  }
-
-  private long overlap(Scanner a, Scanner b) {
-    return a.mm.keySet().stream().filter(e -> b.mm.containsKey(e)).flatMap(e -> a.mm.get(e).stream().flatMap(p -> Stream.of(p.getLeft(), p.getRight()))).distinct().count();
-  }
-
-  public Loc3D getRelative(Loc3D l1, Loc3D l2){
-    var s1 = l1.toList().stream().map(Math::abs).sorted().toList();
-    var s2 = l2.toList().stream().map(Math::abs).sorted().toList();
-    var res = Stream.of(abs(s1.get(0) - s2.get(0)), abs(s1.get(1) - s2.get(1)), abs(s1.get(2) - s2.get(2))).sorted().mapToLong(e -> e).toArray();
-    return new Loc3D(res);
+    return Pair.of(result, position);
   }
 
   @Override
   public Object part2() {
-    return "";
+    var p = findScannerPositions().getRight();
+    return IntLoc.range(p.length, p.length).mapToLong(l -> Math.abs(p[l.x].x-p[l.y].x) + Math.abs(p[l.x].y-p[l.y].y) + Math.abs(p[l.x].z-p[l.y].z)).max().getAsLong();
   }
 
-  public record Scanner(long id, List<Loc3D> locs, ArrayListMultimap<Double, Pair<Loc3D, Loc3D>> mm) {
-    public Scanner(String s){
-      this(parseNumAt(12, s), Arrays.stream(s.substring(s.indexOf("\n")+1).split("\n")).map(e -> Arrays.stream(e.split(",")).mapToLong(Long::parseLong).toArray()).map(Loc3D::new).toList(), ArrayListMultimap.create());
+  public record Scanner(long id, List<Loc3D> locs) {
+    public Scanner(){
+      this(0L, List.of());
     }
-  }
 
-  public boolean isDetectedSame(Loc3D l1, Loc3D l2){
-    return l1.toList().stream().map(Math::abs).sorted().toList().equals(l2.toList().stream().map(Math::abs).sorted().toList());
+    public Scanner(String s){
+      this(parseNumAt(12, s), Arrays.stream(s.substring(s.indexOf("\n")+1).split("\n")).map(e -> Arrays.stream(e.split(",")).mapToLong(Long::parseLong).toArray()).map(Loc3D::new).toList());
+    }
+
+    public Scanner(Scanner other, int up, int rot) {
+      this(other.id, other.locs.stream().map(e -> e.flip(up).rotate(rot)).toList());
+    }
+
+    private Optional<Loc3D> findMatch(Scanner s) {
+      for (int i = 0; i < locs.size(); i++) {
+        for (int j = 0; j < s.locs.size(); j++) {
+          var a = locs.get(i);
+          var b = s.locs.get(j);
+          var relx = b.x - a.x;
+          var rely = b.y - a.y;
+          var relz = b.z - a.z;
+          int count = 0;
+          for (int k = 0; k < locs.size(); k++) {
+            if ((count + locs.size() - k) < 12) break;
+            for (int l = 0; l < s.locs.size(); l++) {
+              var m = locs.get(k);
+              var n = s.locs.get(l);
+              if ((relx + m.x) == n.x && (rely + m.y) == n.y && (relz + m.z) == n.z) {
+                count++;
+                if (count >= 12) return Optional.of(new Loc3D(relx, rely, relz));
+                break;
+              }
+            }
+          }
+        }
+      }
+      return Optional.empty();
+    }
+
+    public Optional<Pair<Scanner, Loc3D>> match(ScannerVariants other) {
+      for (int i = 0; i < other.variations.length; i++) {
+        var sc = other.variations[i];
+        var mat = findMatch(sc);
+        if (mat.isPresent()) return Optional.of(Pair.of(sc, mat.get()));
+      }
+      return Optional.empty();
+    }
+
+    public void add(Scanner s, Loc3D p) {
+      for (int l = 0; l < s.locs.size(); l++) {
+        var n = s.locs.get(l);
+        n = new Loc3D(n.x - p.x, n.y - p.y, n.z - p.z);
+        if (!locs.contains(n)) locs.add(n);
+      }
+    }
   }
 
   static int parseNumAt(int i, String s){
