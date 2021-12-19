@@ -1,7 +1,5 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static java.lang.Integer.parseInt;
-
 import com.sbaars.adventofcode.common.IntLoc;
 import com.sbaars.adventofcode.common.Loc3D;
 import com.sbaars.adventofcode.year21.Day2021;
@@ -63,7 +61,7 @@ public class Day19 extends Day2021 {
       });
     }
 
-    var result = new Scanner(orientation[0].id, new ArrayList<>(orientation[0].locs));
+    var result = new Scanner(new ArrayList<>(orientation[0].locs));
     for (int i = 1; i < scanners.length; i++) {
       result.add(orientation[i], position[i]);
     }
@@ -76,17 +74,13 @@ public class Day19 extends Day2021 {
     return IntLoc.range(p.length, p.length).mapToLong(l -> Math.abs(p[l.x].x - p[l.y].x) + Math.abs(p[l.x].y - p[l.y].y) + Math.abs(p[l.x].z - p[l.y].z)).max().getAsLong();
   }
 
-  public record Scanner(long id, List<Loc3D> locs) {
-    public Scanner() {
-      this(0L, List.of());
-    }
-
+  public record Scanner(List<Loc3D> locs) {
     public Scanner(String s) {
-      this(parseNumAt(12, s), Arrays.stream(s.substring(s.indexOf("\n") + 1).split("\n")).map(e -> Arrays.stream(e.split(",")).mapToLong(Long::parseLong).toArray()).map(Loc3D::new).toList());
+      this(Arrays.stream(s.substring(s.indexOf("\n") + 1).split("\n")).map(e -> Arrays.stream(e.split(",")).mapToLong(Long::parseLong).toArray()).map(Loc3D::new).toList());
     }
 
     public Scanner(Scanner other, int up, int rot) {
-      this(other.id, other.locs.stream().map(e -> e.flip(up).rotate(rot)).toList());
+      this(other.locs.stream().map(e -> e.flip(up).rotate(rot)).toList());
     }
 
     private Optional<Loc3D> findMatch(Scanner s) {
@@ -107,17 +101,5 @@ public class Day19 extends Day2021 {
         if (!locs.contains(n)) locs.add(n);
       }
     }
-  }
-
-  static int parseNumAt(int i, String s) {
-    if (!isNum(s.charAt(i))) return -1;
-    int j = i;
-    for (; isNum(s.charAt(j)); j++) ;
-    for (; isNum(s.charAt(i)); i--) ;
-    return parseInt(s.substring(i + 1, j));
-  }
-
-  static boolean isNum(char c) {
-    return c >= '0' && c <= '9';
   }
 }
