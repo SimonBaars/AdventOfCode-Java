@@ -26,33 +26,41 @@
 package com.sbaars.adventofcode.common;
 
 import com.google.common.base.Objects;
-import java.awt.*;
+import java.util.List;
 
-public class Loc {
+public class Loc3D {
   public final long x;
   public final long y;
+  public final long z;
 
-  public Loc() {
-    this(0, 0);
+  public Loc3D() {
+    this(0, 0, 0);
   }
 
-  public Loc(Loc p) {
-    this(p.x, p.y);
+  public Loc3D(Loc3D p) {
+    this(p.x, p.y, p.z);
   }
 
-  public Loc(long x, long y) {
+  public Loc3D(long x, long y, long z) {
     this.x = x;
     this.y = y;
+    this.z = z;
   }
 
-  public Loc(int x, int y) {
+  public Loc3D(int x, int y, int z) {
     this.x = x;
     this.y = y;
+    this.z = z;
   }
 
-  public Loc(Point p) {
-    this.x = p.x;
-    this.y = p.y;
+  public Loc3D(long[] l) {
+    this.x = l[0];
+    this.y = l[1];
+    this.z = l[2];
+  }
+
+  public List<Long> toList(){
+    return List.of(x,y,z);
   }
 
   public double getX() {
@@ -63,16 +71,12 @@ public class Loc {
     return y;
   }
 
-  public Loc move(int dx, int dy) {
-    return new Loc(x + dx, y + dy);
+  public double getZ() {
+    return z;
   }
 
-  public Loc move(Loc l) {
-    return new Loc(x + l.x, y + l.y);
-  }
-
-  public Point getPoint() {
-    return new Point(Math.toIntExact(x), Math.toIntExact(y));
+  public Loc3D move(long dx, long dy, long dz) {
+    return new Loc3D(x + dx, y + dy, z + dz);
   }
 
   @Override
@@ -80,17 +84,21 @@ public class Loc {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     if (!super.equals(o)) return false;
-    Loc loc = (Loc) o;
-    return x == loc.x && y == loc.y;
+    Loc3D loc = (Loc3D) o;
+    return x == loc.x && y == loc.y && z == loc.z;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(x, y);
+    return Objects.hashCode(x, y, z);
   }
 
   @Override
   public String toString() {
-    return getClass().getName() + "[x=" + x + ",y=" + y + "]";
+    return "Loc3D{" +
+        "x=" + x +
+        ", y=" + y +
+        ", z=" + z +
+        '}';
   }
 }
