@@ -7,9 +7,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.sbaars.adventofcode.common.Loc3D;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class Day19 extends Day2021 {
@@ -19,7 +18,7 @@ public class Day19 extends Day2021 {
   }
 
   public static void main(String[] args) {
-    new Day19().printParts(5);
+    new Day19().printParts(6);
 //    new Day19().submitPart1();
 //    new Day19().submitPart2();
   }
@@ -35,12 +34,7 @@ public class Day19 extends Day2021 {
       }
     }
 
-    Set<Loc3D> unique = new HashSet<>();
-    for(Scanner s : in) {
-      s.locs.forEach(e -> unique.add(getRelative(e)));
-    }
-    System.out.println(Arrays.stream(in).flatMap(e -> e.locs.stream()).count());
-    return unique.size();
+    return in.get(0).mm.keySet().stream().filter(e -> in.get(1).mm.containsKey(e)).flatMap(e -> in.get(0).mm.get(e).stream().flatMap(p -> Stream.of(p.getLeft(), p.getRight()))).distinct().count();
   }
 
   public String getRelatives(Loc3D l1){
