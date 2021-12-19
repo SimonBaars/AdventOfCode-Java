@@ -6,6 +6,7 @@ import static java.lang.Math.abs;
 import com.google.common.collect.ArrayListMultimap;
 import com.sbaars.adventofcode.common.Loc3D;
 import com.sbaars.adventofcode.year21.Day2021;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -29,12 +30,27 @@ public class Day19 extends Day2021 {
     for(Scanner s : in) {
       for(int i = 0; i<s.locs.size(); i++){
         for(int j = i+1; j<s.locs.size(); j++) {
-          s.mm.put(getRelative(s.locs().get(i), s.locs.get(j)), Pair.of(s.locs().get(i), s.locs.get(j)));
+          s.mm.put(s.locs().get(i).distance(s.locs.get(j)), Pair.of(s.locs().get(i), s.locs.get(j)));
+        }
+      }
+    }
+    List<Pair<Scanner, Scanner>> overlap = new ArrayList<>();
+    for(int i = 0; i<in.size(); i++){
+      for(int j = i+1; j<in.size(); j++){
+        long n = overlap(in.get(i), in.get(j));
+        if(n>=12) {
+          overlap.add(Pair.of(in.get(i), in.get(j)));
+          break;
         }
       }
     }
 
-    return in.get(0).mm.keySet().stream().filter(e -> in.get(1).mm.containsKey(e)).flatMap(e -> in.get(0).mm.get(e).stream().flatMap(p -> Stream.of(p.getLeft(), p.getRight()))).distinct().count();
+
+    return in.stream().flatMap(e -> e.mm.keySet().stream()).distinct().count();
+  }
+
+  private long overlap(Scanner a, Scanner b) {
+    return a.mm.keySet().stream().filter(e -> b.mm.containsKey(e)).flatMap(e -> a.mm.get(e).stream().flatMap(p -> Stream.of(p.getLeft(), p.getRight()))).distinct().count();
   }
 
   public Loc3D getRelative(Loc3D l1, Loc3D l2){
@@ -49,7 +65,7 @@ public class Day19 extends Day2021 {
     return "";
   }
 
-  public record Scanner(long id, List<Loc3D> locs, ArrayListMultimap<Loc3D, Pair<Loc3D, Loc3D>> mm) {
+  public record Scanner(long id, List<Loc3D> locs, ArrayListMultimap<Double, Pair<Loc3D, Loc3D>> mm) {
     public Scanner(String s){
       this(parseNumAt(12, s), Arrays.stream(s.substring(s.indexOf("\n")+1).split("\n")).map(e -> Arrays.stream(e.split(",")).mapToLong(Long::parseLong).toArray()).map(Loc3D::new).toList(), ArrayListMultimap.create());
     }
