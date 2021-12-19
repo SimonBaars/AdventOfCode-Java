@@ -37,15 +37,11 @@ public class Day19 extends Day2021 {
     return in.get(0).mm.keySet().stream().filter(e -> in.get(1).mm.containsKey(e)).flatMap(e -> in.get(0).mm.get(e).stream().flatMap(p -> Stream.of(p.getLeft(), p.getRight()))).distinct().count();
   }
 
-  public String getRelatives(Loc3D l1){
-    System.out.println(Arrays.toString(List.of(abs(l1.x-l1.y), abs(l1.y - l1.z), abs(l1.z - l1.x)).stream().sorted().toArray()));
-    return Arrays.toString(List.of(abs(l1.x-l1.y), abs(l1.y - l1.z), abs(l1.z - l1.x)).stream().sorted().toArray());
-  }
-
   public Loc3D getRelative(Loc3D l1, Loc3D l2){
     var s1 = l1.toList().stream().map(Math::abs).sorted().toList();
     var s2 = l2.toList().stream().map(Math::abs).sorted().toList();
-    return new Loc3D(abs(s1.get(0) - s2.get(0)), abs(s1.get(1) - s2.get(1)), abs(s1.get(2) - s2.get(2)) );
+    var res = Stream.of(abs(s1.get(0) - s2.get(0)), abs(s1.get(1) - s2.get(1)), abs(s1.get(2) - s2.get(2))).sorted().mapToLong(e -> e).toArray();
+    return new Loc3D(res);
   }
 
   @Override

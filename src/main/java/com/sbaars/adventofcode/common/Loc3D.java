@@ -79,6 +79,10 @@ public class Loc3D {
     return new Loc3D(x + dx, y + dy, z + dz);
   }
 
+  public double distance(Loc3D p) {
+    return Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2) + Math.pow(z - p.getZ(), 2));
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
