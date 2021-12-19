@@ -25,6 +25,8 @@
 
 package com.sbaars.adventofcode.common;
 
+import static java.lang.Math.toIntExact;
+
 import com.google.common.base.Objects;
 import java.awt.*;
 import java.util.stream.IntStream;
@@ -74,7 +76,7 @@ public class Loc {
   }
 
   public Point getPoint() {
-    return new Point(Math.toIntExact(x), Math.toIntExact(y));
+    return new Point(toIntExact(x), toIntExact(y));
   }
 
   public static Stream<Loc> range(int i, int j){
@@ -97,5 +99,13 @@ public class Loc {
   @Override
   public String toString() {
     return getClass().getName() + "[x=" + x + ",y=" + y + "]";
+  }
+
+  public int intX() {
+    return toIntExact(x);
+  }
+
+  public int intY() {
+    return toIntExact(y);
   }
 }
