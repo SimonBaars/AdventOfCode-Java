@@ -83,6 +83,10 @@ public class Loc3D {
     return Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2) + Math.pow(z - p.getZ(), 2));
   }
 
+  public Loc3D distanceTo(Loc3D b) {
+    return new Loc3D(b.x - x, b.y - y, b.z - z);
+  }
+
   public Loc3D flip(int flip) {
     return switch (flip) {
       case 0 -> this;
@@ -125,5 +129,9 @@ public class Loc3D {
         ", y=" + y +
         ", z=" + z +
         '}';
+  }
+
+  public boolean sameDistance(Loc3D m, Loc3D n) {
+    return (x + m.x) == n.x && (y + m.y) == n.y && (z + m.z) == n.z;
   }
 }

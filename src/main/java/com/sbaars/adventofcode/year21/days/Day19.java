@@ -92,38 +92,14 @@ public class Day19 extends Day2021 {
     }
 
     private Optional<Loc3D> findMatch(Scanner s) {
-      for (int i = 0; i < locs.size(); i++) {
-        for (int j = 0; j < s.locs.size(); j++) {
-          var a = locs.get(i);
-          var b = s.locs.get(j);
-          var relx = b.x - a.x;
-          var rely = b.y - a.y;
-          var relz = b.z - a.z;
-          int count = 0;
-          for (int k = 0; k < locs.size(); k++) {
-            if ((count + locs.size() - k) < 12) break;
-            for (int l = 0; l < s.locs.size(); l++) {
-              var m = locs.get(k);
-              var n = s.locs.get(l);
-              if ((relx + m.x) == n.x && (rely + m.y) == n.y && (relz + m.z) == n.z) {
-                count++;
-                if (count >= 12) return Optional.of(new Loc3D(relx, rely, relz));
-                break;
-              }
-            }
-          }
-        }
-      }
-      return Optional.empty();
+      return IntLoc.range(locs.size(), s.locs.size())
+          .map(l -> locs.get(l.x).distanceTo(s.locs.get(l.y)))
+          .filter(rel -> IntLoc.range(locs.size(), s.locs.size()).filter(l -> rel.sameDistance(locs.get(l.x), s.locs.get(l.y))).count() >= 12)
+          .findFirst();
     }
 
     public Optional<Pair<Scanner, Loc3D>> match(Scanner[] other) {
-      for (int i = 0; i < other.length; i++) {
-        var sc = other[i];
-        var mat = findMatch(sc);
-        if (mat.isPresent()) return Optional.of(Pair.of(sc, mat.get()));
-      }
-      return Optional.empty();
+      return Arrays.stream(other).map(e -> Pair.of(e, findMatch(e))).filter(e -> e.getRight().isPresent()).map(e -> Pair.of(e.getLeft(), e.getRight().get())).findFirst();
     }
 
     public void add(Scanner s, Loc3D p) {
