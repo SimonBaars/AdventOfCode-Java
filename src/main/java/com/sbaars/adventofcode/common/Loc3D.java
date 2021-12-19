@@ -83,7 +83,6 @@ public class Loc3D {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
     Loc3D loc = (Loc3D) o;
     return x == loc.x && y == loc.y && z == loc.z;
   }

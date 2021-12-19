@@ -79,7 +79,6 @@ public class Loc {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
     Loc loc = (Loc) o;
     return x == loc.x && y == loc.y;
   }
