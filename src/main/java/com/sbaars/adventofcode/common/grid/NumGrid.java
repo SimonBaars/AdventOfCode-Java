@@ -112,6 +112,13 @@ public class NumGrid implements Grid {
     return -1;
   }
 
+  public long at(Point p) {
+    if (p.x >= 0 && p.x < grid[0].length && p.y >= 0 && p.y < grid.length) {
+      return grid[p.y][p.x];
+    }
+    return -1;
+  }
+
   public int sizeX(){
     return grid.length;
   }
