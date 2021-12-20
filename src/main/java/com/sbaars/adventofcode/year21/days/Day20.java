@@ -46,8 +46,8 @@ public class Day20 extends Day2021 {
     for(int it = 0; it<times; it++){
       int iteration = it;
       NumGrid n = inputCoords.toGrid();
-      for(int i = -1; i<=n.sizeX(); i++){
-        for(int j = -1; j<=n.sizeY(); j++){
+      for(int i = -times; i<=n.sizeX()+times; i++){
+        for(int j = -times; j<=n.sizeY()+times; j++){
           Point thisPoint = new Point(i, j);
           String bin = Stream.of(NORTHWEST, NORTH, NORTHEAST, WEST, CENTER, EAST, SOUTHWEST, SOUTH, SOUTHEAST)
               .map(dir -> Long.toString(n.at(dir.move(thisPoint), iteration%2==1 && replace[0] == '#' ? 1 : 0)))
