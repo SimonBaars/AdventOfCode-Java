@@ -6,8 +6,8 @@ import java.awt.*;
 import java.util.Arrays;
 
 public enum Direction {
-  NORTH(1, 'U'), EAST(4, 'R'), SOUTH(2, 'D'), WEST(3, 'L'),
-  NORTHEAST(4, 'E'), EASTSOUTH(5, 'E'), SOUTHWEST(6, 'E'), WESTNORTH(7, 'E');
+  NORTH(1, 'U'), EAST(4, 'R'), SOUTH(2, 'D'), WEST(3, 'L'), CENTER(8, 'C'),
+  NORTHEAST(4, 'E'), SOUTHEAST(5, 'E'), SOUTHWEST(6, 'E'), NORTHWEST(7, 'E');
 
   public final int num;
   public final int code;
@@ -30,7 +30,7 @@ public enum Direction {
     else if (to.x < from.x) return WEST;
     else if (to.y > from.y) return SOUTH;
     else if (to.y < from.y) return NORTH;
-    throw new IllegalStateException("From and to location are the same: " + from + ", " + to);
+    else return CENTER;
   }
 
   public static Point turn(Point w, boolean b) {
@@ -54,6 +54,10 @@ public enum Direction {
     return new Direction[]{NORTH, EAST, SOUTH, WEST};
   }
 
+  public static Direction[] eightDirections() {
+    return new Direction[]{NORTH, EAST, SOUTH, WEST, NORTHEAST, SOUTHEAST, SOUTHWEST, NORTHWEST};
+  }
+
   public Direction turn(boolean right) {
     int cur = ordinal() + (right ? 1 : -1);
     if (cur == fourDirections().length) cur = 0;
@@ -62,25 +66,17 @@ public enum Direction {
   }
 
   public Point move(Point currentLocation, int amount) {
-    switch (this) {
-      case SOUTH:
-        return new Point(currentLocation.x, currentLocation.y + amount);
-      case NORTH:
-        return new Point(currentLocation.x, currentLocation.y - amount);
-      case EAST:
-        return new Point(currentLocation.x + amount, currentLocation.y);
-      case WEST:
-        return new Point(currentLocation.x - amount, currentLocation.y);
-      case SOUTHWEST:
-        return new Point(currentLocation.x - amount, currentLocation.y + amount);
-      case NORTHEAST:
-        return new Point(currentLocation.x + amount, currentLocation.y - amount);
-      case EASTSOUTH:
-        return new Point(currentLocation.x + amount, currentLocation.y + amount);
-      case WESTNORTH:
-        return new Point(currentLocation.x - amount, currentLocation.y - amount);
-    }
-    throw new IllegalStateException("Non-existent Direction: " + this);
+    return switch (this) {
+      case SOUTH -> new Point(currentLocation.x, currentLocation.y + amount);
+      case NORTH -> new Point(currentLocation.x, currentLocation.y - amount);
+      case EAST -> new Point(currentLocation.x + amount, currentLocation.y);
+      case WEST -> new Point(currentLocation.x - amount, currentLocation.y);
+      case SOUTHWEST -> new Point(currentLocation.x - amount, currentLocation.y + amount);
+      case NORTHEAST -> new Point(currentLocation.x + amount, currentLocation.y - amount);
+      case SOUTHEAST -> new Point(currentLocation.x + amount, currentLocation.y + amount);
+      case NORTHWEST -> new Point(currentLocation.x - amount, currentLocation.y - amount);
+      case CENTER -> new Point(currentLocation.x, currentLocation.y);
+    };
   }
 
   public char getInGrid(char[][] grid, Point p, char none) {
@@ -107,25 +103,17 @@ public enum Direction {
   }
 
   public Direction opposite() {
-    switch (this) {
-      case NORTH:
-        return SOUTH;
-      case SOUTH:
-        return NORTH;
-      case EAST:
-        return WEST;
-      case WEST:
-        return EAST;
-      case NORTHEAST:
-        return SOUTHWEST;
-      case SOUTHWEST:
-        return NORTHEAST;
-      case EASTSOUTH:
-        return WESTNORTH;
-      case WESTNORTH:
-        return EASTSOUTH;
-    }
-    throw new IllegalStateException("Non-existent Direction: " + this);
+    return switch (this) {
+      case NORTH -> SOUTH;
+      case SOUTH -> NORTH;
+      case EAST -> WEST;
+      case WEST -> EAST;
+      case NORTHEAST -> SOUTHWEST;
+      case SOUTHWEST -> NORTHEAST;
+      case SOUTHEAST -> NORTHWEST;
+      case NORTHWEST -> SOUTHEAST;
+      case CENTER -> CENTER;
+    };
   }
 
   public boolean leftOf(Direction robotDir) {

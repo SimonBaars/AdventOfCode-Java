@@ -26,7 +26,7 @@ public class Day11 extends Day2020 {
         for (int j = 0; j < input[0].length; j++) {
           Point p = new Point(i, j);
           char[][] finalInput = input;
-          long occupied = stream(Direction.values()).filter(d ->
+          long occupied = stream(Direction.eightDirections()).filter(d ->
               d.getInGrid(finalInput, d.move(p)) == '#'
           ).count();
           changes = getChanges(input, changes, newGrid, i, j, occupied, 4L);
@@ -74,7 +74,7 @@ public class Day11 extends Day2020 {
 
   private int countOccupied(char[][] input, int i, int j) {
     int occupied = 0;
-    Direction[] dirs = Direction.values();
+    Direction[] dirs = Direction.eightDirections();
     for (Direction dir : dirs) {
       Point p = new Point(i, j);
       p = dir.move(p, 1);
