@@ -28,7 +28,7 @@ public class Day11 extends Day2021 {
 
   private long flash(NumGrid in, Point e) {
     in.increment(e);
-    return in.get(e) == 10 ? Arrays.stream(Direction.values()).map(d -> d.move(e)).filter(p -> in.get(p) != -1).mapToLong(p -> flash(in, p)).sum() + 1 : 0;
+    return in.get(e) == 10 ? Arrays.stream(Direction.eightDirections()).map(d -> d.move(e)).filter(p -> in.get(p) != -1).mapToLong(p -> flash(in, p)).sum() + 1 : 0;
   }
 
   @Override
