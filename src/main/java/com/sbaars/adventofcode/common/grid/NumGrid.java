@@ -112,11 +112,22 @@ public class NumGrid implements Grid {
     return -1;
   }
 
+  /**
+   * The get method doesn't properly work with x and y positions, it assumes x=y and y=x. This one fixes that.
+   * Why not fix `get` you ask? Because I'm afraid it'll break earlier days. That's why.
+   */
   public long at(Point p) {
     if (p.x >= 0 && p.x < grid[0].length && p.y >= 0 && p.y < grid.length) {
       return grid[p.y][p.x];
     }
     return -1;
+  }
+
+  public long at(Point p, int or) {
+    if (p.x >= 0 && p.x < grid[0].length && p.y >= 0 && p.y < grid.length) {
+      return grid[p.y][p.x];
+    }
+    return or;
   }
 
   public int sizeX(){
