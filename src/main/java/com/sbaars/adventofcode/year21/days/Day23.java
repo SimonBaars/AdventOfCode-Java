@@ -13,6 +13,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class Day23 extends Day2021 {
   public Day23() {
@@ -22,13 +23,11 @@ public class Day23 extends Day2021 {
   public static void main(String[] args) {
     new Day23().verify();
     new Day23().printParts();
-//    new Day23().submitPart1();
-//    new Day23().submitPart2();
   }
   
   public void verify(){
     Queue<State> l = getQueue(new State(new int[][]{{0,0},{1,1},{2,2},{3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
-    checkState(l.poll().win());
+    checkState(l.peek().win());
     simulateMoves(l, new HashSet<>());
     checkState(l.isEmpty());
     l = getQueue(new State(new int[][]{{0,0},{1,1},{2,2},{-1,3}}, new int[]{-1,-1,-1,-1,-1,-1,3}));
@@ -107,7 +106,7 @@ public class Day23 extends Day2021 {
     }
 
     public State moveIntoWaiting(int r, int w){
-      int toMove = rooms[r][0] == -1 ? 1 : 0;
+      int toMove = ArrayUtils.lastIndexOf(rooms[r], -1) + 1;
       State s = copy(energy(rooms[r][toMove]) * (energyMultiplier(r, w) + toMove));
       s.waiting[w] = s.rooms[r][toMove];
       s.rooms[r][toMove] = -1;
@@ -186,7 +185,10 @@ public class Day23 extends Day2021 {
     }
 
     public State moveFromWaiting(int w, int r){
-      int toMove = rooms[r][1] == -1 ? 1 : 0;
+      int toMove = ArrayUtils.lastIndexOf(rooms[r], -1);
+      if(toMove == -1){
+        toMove = 0;
+      }
       State s = copy(energy(waiting[w]) * (energyMultiplier(r, w) + toMove));
       s.rooms[r][toMove] = s.waiting[w];
       s.waiting[w] = -1;
@@ -194,7 +196,7 @@ public class Day23 extends Day2021 {
     }
 
     public int[] occupiedRooms(){
-      return IntStream.range(0, rooms.length).filter(e -> IntStream.of(rooms[e]).anyMatch(f -> f!=-1) && !IntStream.of(rooms[e]).allMatch(f -> f==e) && !(rooms[e][0] == -1 && rooms[e][1] == e)).toArray();
+        return IntStream.range(0, rooms.length).filter(e -> IntStream.of(rooms[e]).anyMatch(f -> f!=-1) && !IntStream.of(rooms[e]).allMatch(f -> f==e) && rooms[e][rooms[e].length-1] != e).toArray();
     }
 
     public int[] occupiedWaiting(){
@@ -203,7 +205,7 @@ public class Day23 extends Day2021 {
 
     public int freeRoom(int forWaiting){
       int room = waiting[forWaiting];
-      if(rooms[room][1] != -1 && rooms[room][1] != room) return -1;
+      if(rooms[room][rooms[room].length-1] != -1 && rooms[room][rooms[room].length-1] != room) return -1;
       int r = room + 1;
       for(int i = forWaiting+1; i<=r; i++){
         if(waiting[i] != -1){
