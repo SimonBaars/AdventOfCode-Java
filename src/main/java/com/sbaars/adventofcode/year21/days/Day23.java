@@ -22,7 +22,8 @@ public class Day23 extends Day2021 {
 
   public static void main(String[] args) {
     new Day23().verify();
-    new Day23().printParts();
+    new Day23().printParts(1);
+//    new Day23().part2();
   }
   
   public void verify(){
@@ -38,10 +39,15 @@ public class Day23 extends Day2021 {
     checkState(getMinimum(l, new HashSet<>()) == (100L*4)+(10L*6));
     l = getQueue(new State(new int[][]{{0,0},{2,2},{1,1},{3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
     checkState(getMinimum(l, new HashSet<>()) == (100L*10)+(10L*14));
+    l = getQueue(new State(new int[][]{{0,0,0,0},{2,2,2,2},{1,1,1,1},{3,3,3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
+    checkState(getMinimum(l, new HashSet<>()) == 3240L);
   }
 
   @Override
   public Object part1() {
+    if(example == 1) {
+      return constructField(new int[][]{{1, 0}, {2, 3}, {1, 2}, {3, 0}});
+    }
     return constructField(new int[][]{{2, 1}, {3, 0}, {0, 3}, {1, 2}});
   }
 
@@ -65,7 +71,6 @@ public class Day23 extends Day2021 {
       if(sim.isPresent()) {
         return sim.get();
       }
-//      if(states.size() % 10000 == 5) System.out.println(states.size()+", "+ states.peek().moves);
     }
   }
 
@@ -73,22 +78,21 @@ public class Day23 extends Day2021 {
     State s = states.poll();
     if(stateSet.contains(s)) return Optional.empty();
     stateSet.add(s);
-    if(s.energySpent > 15000) return Optional.empty();
     if(s.win()){
       return Optional.of(s.energySpent);
     }
     int[] occupied = s.occupiedRooms();
-    for(int o : occupied){
-      int[] freeWait = s.freeWaiting(o);
+    for(int r : occupied){
+      int[] freeWait = s.freeWaiting(r);
       for(int w : freeWait){
-        states.add(s.moveIntoWaiting(o, w));
+        states.add(s.moveIntoWaiting(r, w));
       }
     }
     occupied = s.occupiedWaiting();
-    for(int o : occupied){
-      int freeRoom = s.freeRoom(o);
-      if(freeRoom!=-1){
-        states.add(s.moveFromWaiting(o, freeRoom));
+    for(int w : occupied){
+      int r = s.freeRoom(w);
+      if(r!=-1){
+        states.add(s.moveFromWaiting(w, r));
       }
     }
     return Optional.empty();
@@ -196,7 +200,7 @@ public class Day23 extends Day2021 {
     }
 
     public int[] occupiedRooms(){
-        return IntStream.range(0, rooms.length).filter(e -> IntStream.of(rooms[e]).anyMatch(f -> f!=-1) && !IntStream.of(rooms[e]).allMatch(f -> f==e) && rooms[e][rooms[e].length-1] != e).toArray();
+        return IntStream.range(0, rooms.length).filter(e -> !IntStream.of(rooms[e]).allMatch(r->r ==e || r == -1)).toArray();
     }
 
     public int[] occupiedWaiting(){
@@ -222,7 +226,6 @@ public class Day23 extends Day2021 {
 
     // Indexes of free waiting spots
     public int[] freeWaiting(int forRoom){
-      if(rooms[forRoom][0] == forRoom) return new int[0];
       var seeminglyFree = IntStream.range(0, waiting.length).filter(e -> waiting[e] == -1).boxed().collect(Collectors.toCollection(HashSet::new));
       if(seeminglyFree.contains(0) && !seeminglyFree.contains(1)){
         seeminglyFree.remove(0);
@@ -277,6 +280,9 @@ public class Day23 extends Day2021 {
 
   @Override
   public Object part2() {
+    if(example == 1) {
+      return constructField(new int[][]{{1, 3, 3, 0}, {2, 2, 1, 3}, {1, 1, 0, 2}, {3, 0, 2, 0}});
+    }
     return constructField(new int[][]{{2, 3, 3, 1}, {3, 2, 1, 0}, {0, 1, 0, 3}, {1, 0, 2, 2}});
   }
 }
