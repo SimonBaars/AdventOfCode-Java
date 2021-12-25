@@ -45,18 +45,18 @@ public class Day19 extends Day2021 {
     orientation[0] = scanners[0][0];
     position[0] = new Loc3D(0, 0, 0);
 
-    Queue<Integer> frontier = new ArrayDeque<>(List.of(0));
+    Queue<Integer> queue = new ArrayDeque<>(List.of(0));
 
-    while (!frontier.isEmpty()) {
-      var front = frontier.poll();
+    while (!queue.isEmpty()) {
+      var num = queue.poll();
       IntStream.range(0, scanners.length).filter(i -> position[i] != null).forEach(i -> {
-        var match = orientation[front].match(scanners[i]);
+        var match = orientation[num].match(scanners[i]);
         if (match.isPresent()) {
           orientation[i] = match.get().getLeft();
-          Loc3D one = position[front];
+          Loc3D one = position[num];
           Loc3D two = match.get().getRight();
           position[i] = new Loc3D(one.x + two.x, one.y + two.y, one.z + two.z);
-          frontier.add(i);
+          queue.add(i);
         }
       });
     }
@@ -86,7 +86,7 @@ public class Day19 extends Day2021 {
     private Optional<Loc3D> findMatch(Scanner s) {
       return IntLoc.range(locs.size(), s.locs.size())
           .map(l -> locs.get(l.x).distanceTo(s.locs.get(l.y)))
-          .filter(rel -> IntLoc.range(locs.size(), s.locs.size()).filter(l -> rel.sameDistance(locs.get(l.x), s.locs.get(l.y))).count() >= 12)
+          .filter(rel -> IntLoc.range(locs.size(), s.locs.size()).filter(l -> rel.sameDistance(locs.get(l.x), s.locs.get(l.y))).limit(12).count() == 12)
           .findFirst();
     }
 
