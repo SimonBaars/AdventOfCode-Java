@@ -22,8 +22,7 @@ public class Day23 extends Day2021 {
 
   public static void main(String[] args) {
     new Day23().verify();
-    new Day23().printParts(1);
-//    new Day23().part2();
+    new Day23().printParts();
   }
   
   public void verify(){
@@ -227,22 +226,16 @@ public class Day23 extends Day2021 {
     // Indexes of free waiting spots
     public int[] freeWaiting(int forRoom){
       var seeminglyFree = IntStream.range(0, waiting.length).filter(e -> waiting[e] == -1).boxed().collect(Collectors.toCollection(HashSet::new));
-      if(seeminglyFree.contains(0) && !seeminglyFree.contains(1)){
-        seeminglyFree.remove(0);
-      }
-      if(seeminglyFree.contains(6) && !seeminglyFree.contains(5)){
-        seeminglyFree.remove(6);
-      }
       int r = forRoom+1;
       for(int i = r; i>=0; i--){
-        if(!seeminglyFree.contains(r)){
+        if(!seeminglyFree.contains(i)){
           int i2 = i;
           seeminglyFree.removeIf(x -> x<i2);
           break;
         }
       }
       for(int i = r+1; i<waiting.length; i++){
-        if(!seeminglyFree.contains(r)){
+        if(!seeminglyFree.contains(i)){
           int i2 = i;
           seeminglyFree.removeIf(x -> x>i2);
           break;
