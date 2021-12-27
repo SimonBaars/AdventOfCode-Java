@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.stream.IntStream;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class Day19 extends Day2021 {
@@ -49,16 +48,18 @@ public class Day19 extends Day2021 {
 
     while (!queue.isEmpty()) {
       var num = queue.poll();
-      IntStream.range(0, scanners.length).filter(i -> position[i] != null).forEach(i -> {
-        var match = orientation[num].match(scanners[i]);
-        if (match.isPresent()) {
-          orientation[i] = match.get().getLeft();
-          Loc3D one = position[num];
-          Loc3D two = match.get().getRight();
-          position[i] = new Loc3D(one.x + two.x, one.y + two.y, one.z + two.z);
-          queue.add(i);
+      for (int i = 0; i < scanners.length; i++) {
+        if (position[i] == null) {
+          var match = orientation[num].match(scanners[i]);
+          if (match.isPresent()) {
+            orientation[i] = match.get().getLeft();
+            Loc3D one = position[num];
+            Loc3D two = match.get().getRight();
+            position[i] = new Loc3D(one.x + two.x, one.y + two.y, one.z + two.z);
+            queue.add(i);
+          }
         }
-      });
+      }
     }
 
     var result = new Scanner(new ArrayList<>(orientation[0].locs));
@@ -84,10 +85,29 @@ public class Day19 extends Day2021 {
     }
 
     private Optional<Loc3D> findMatch(Scanner s) {
-      return IntLoc.range(locs.size(), s.locs.size())
-          .map(l -> locs.get(l.x).distanceTo(s.locs.get(l.y)))
-          .filter(rel -> IntLoc.range(locs.size(), s.locs.size()).filter(l -> rel.sameDistance(locs.get(l.x), s.locs.get(l.y))).limit(12).count() == 12)
-          .findFirst();
+      for (int i = 0; i < locs.size(); i++) {
+        for (int j = 0; j < s.locs.size(); j++) {
+          var a = locs.get(i);
+          var b = s.locs.get(j);
+          var relx = b.x - a.x;
+          var rely = b.y - a.y;
+          var relz = b.z - a.z;
+          int count = 0;
+          for (int k = 0; k < locs.size(); k++) {
+            if ((count + locs.size() - k) < 12) break;
+            for (int l = 0; l < s.locs.size(); l++) {
+              var m = locs.get(k);
+              var n = s.locs.get(l);
+              if ((relx + m.x) == n.x && (rely + m.y) == n.y && (relz + m.z) == n.z) {
+                count++;
+                if (count >= 12) return Optional.of(new Loc3D(relx, rely, relz));
+                break;
+              }
+            }
+          }
+        }
+      }
+      return Optional.empty();
     }
 
     public Optional<Pair<Scanner, Loc3D>> match(Scanner[] other) {
