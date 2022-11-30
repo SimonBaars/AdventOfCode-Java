@@ -1,14 +1,16 @@
 package com.sbaars.adventofcode.common;
 
-import static org.apache.commons.io.FileUtils.readFileToString;
-
+import com.sbaars.adventofcode.util.FetchInput;
 import com.sbaars.adventofcode.util.Submit;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
+
+import static org.apache.commons.io.FileUtils.readFileToString;
 
 public abstract class Day {
   public static final String DEFAULT_DELIMITER = "\n";
@@ -23,10 +25,19 @@ public abstract class Day {
 
   public static String getResourceAsString(String resource) {
     try {
-      return readFileToString(new File(Day.class.getClassLoader().getResource(resource).getFile()));
+      return readFileToString(getResource(resource));
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
+  }
+
+  public static File getResource(String path) {
+    return new File("src/main/resources/"+path);
+  }
+
+  private String getDayPath() {
+    boolean b = example != 0;
+    return year + (b ? "-examples" : "") + "/day" + day + (b ? "-" + example : "") + ".txt";
   }
 
   public abstract Object part1();
@@ -53,8 +64,7 @@ public abstract class Day {
   }
 
   protected String day() {
-    boolean b = example != 0;
-    return getResourceAsString(year + (b ? "-examples" : "") + "/day" + day + (b ? "-" + example : "") + ".txt");
+    return getResourceAsString(getDayPath());
   }
 
   protected String[] dayStrings() {
@@ -111,5 +121,11 @@ public abstract class Day {
 
   protected char[][] dayGrid(String delimiter) {
     return dayStream(delimiter).map(String::toCharArray).toArray(char[][]::new);
+  }
+
+  public void downloadIfNotDownloaded() {
+    if(!getResource(getDayPath()).exists()) {
+      new FetchInput().retrieveInput(Integer.toString(day), Integer.toString(year));
+    }
   }
 }

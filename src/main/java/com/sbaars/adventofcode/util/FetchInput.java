@@ -1,16 +1,5 @@
 package com.sbaars.adventofcode.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.List;
-import java.util.stream.IntStream;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 import org.apache.commons.io.FileUtils;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;
@@ -19,10 +8,22 @@ import org.htmlcleaner.TagNode;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.stream.IntStream;
+
 public class FetchInput {
   private final HttpClient client;
 
-  private FetchInput() {
+  public FetchInput() {
     this.client = WebClient.getClient();
   }
 
@@ -59,7 +60,7 @@ public class FetchInput {
     }
   }
 
-  private void retrieveInput(String day, String year) {
+  public void retrieveInput(String day, String year) {
     File dayFile = getFile(day, year);
     dayFile.getParentFile().mkdirs();
     if (!dayFile.exists()) {
@@ -86,8 +87,7 @@ public class FetchInput {
   private List<String> getMatchesByXpath(String html, String xpath) {
     try {
       TagNode tagNode = new HtmlCleaner().clean(html);
-      org.w3c.dom.Document doc = new DomSerializer(
-          new CleanerProperties()).createDOM(tagNode);
+      org.w3c.dom.Document doc = new DomSerializer(new CleanerProperties()).createDOM(tagNode);
 
       XPath xpathObj = XPathFactory.newInstance().newXPath();
       NodeList matches = (NodeList) xpathObj.evaluate(xpath, doc, XPathConstants.NODESET);
