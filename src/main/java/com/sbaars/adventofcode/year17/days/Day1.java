@@ -12,23 +12,25 @@ public class Day1 extends Day2017 {
     Day d = new Day1();
     d.downloadIfNotDownloaded();
     d.printParts();
-    d.submitPart1();
-//    new Day1().printParts();
   }
 
   @Override
   public Object part1() {
-    long[] x = dayNumbers();
+    long[] x = dayDigits();
     long sum = 0;
-    if(x[0] == x[x.length-1]) sum+=x[0];
-    for(int i = 1; i<x.length; i++) {
-      if(x[i] == x[i-1]) sum+=x[i];
+    for(int i = 0; i<x.length; i++) {
+      if(x[i] == x[(i+1)%x.length]) sum+=x[i];
     }
     return sum;
   }
 
   @Override
   public Object part2() {
-    return 0;
+    long[] x = dayDigits();
+    long sum = 0;
+    for(int i = 0; i<x.length; i++) {
+      if(x[i] == x[(i+x.length/2)%x.length]) sum+=x[i];
+    }
+    return sum;
   }
 }

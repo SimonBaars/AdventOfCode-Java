@@ -13,13 +13,14 @@ public class Day1 extends Day2022 {
     d.downloadIfNotDownloaded();
     d.printParts();
     d.submitPart1();
+//    d.submitPart2();
   }
 
   @Override
   public Object part1() {
     long[] input = dayNumbers();
     int res = 0;
-    for(int i = 1; i<input.length; i++){
+    for(int i = 0; i<input.length; i++){
       if(input[i-1] > input[i]){
         res++;
       }
