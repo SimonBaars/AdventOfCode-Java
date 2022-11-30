@@ -1,5 +1,6 @@
 package com.sbaars.adventofcode.year22.days;
 
+import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.year22.Day2022;
 
 public class Day1 extends Day2022 {
@@ -8,13 +9,22 @@ public class Day1 extends Day2022 {
   }
 
   public static void main(String[] args) {
-    new Day1().printParts();
+    Day d = new Day1();
+    d.downloadIfNotDownloaded();
+    d.printParts();
+    d.submitPart1();
   }
 
   @Override
   public Object part1() {
-    String input = day();
-    return input;
+    long[] input = dayNumbers();
+    int res = 0;
+    for(int i = 1; i<input.length; i++){
+      if(input[i-1] > input[i]){
+        res++;
+      }
+    }
+    return res;
   }
 
   @Override
