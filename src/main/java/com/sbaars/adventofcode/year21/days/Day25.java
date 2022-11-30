@@ -1,5 +1,6 @@
 package com.sbaars.adventofcode.year21.days;
 
+import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.common.grid.CharGrid;
 import com.sbaars.adventofcode.year21.Day2021;
 
@@ -9,7 +10,9 @@ public class Day25 extends Day2021 {
   }
 
   public static void main(String[] args) {
-    new Day25().printParts();
+    Day d = new Day25();
+    d.downloadIfNotDownloaded();
+    d.printParts();
   }
 
   @Override
