@@ -99,6 +99,10 @@ public abstract class Day {
     return dayNumberStream(delimiter).toArray();
   }
 
+  protected long[] dayDigits() {
+    return day().chars().filter(n -> n >= '0' && n <= '9').mapToLong(n -> n - '0').toArray();
+  }
+
   protected double[] dayDoubles() {
     return dayDoubles(DEFAULT_DELIMITER);
   }
