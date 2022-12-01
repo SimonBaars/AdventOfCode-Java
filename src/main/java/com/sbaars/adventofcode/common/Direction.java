@@ -1,9 +1,9 @@
 package com.sbaars.adventofcode.common;
 
-import static java.lang.Math.abs;
-
 import java.awt.*;
 import java.util.Arrays;
+
+import static java.lang.Math.abs;
 
 public enum Direction {
   NORTH(1, 'U'), EAST(4, 'R'), SOUTH(2, 'D'), WEST(3, 'L'), CENTER(8, 'C'),
@@ -61,7 +61,7 @@ public enum Direction {
   public Direction turn(boolean right) {
     int cur = ordinal() + (right ? 1 : -1);
     if (cur == fourDirections().length) cur = 0;
-    else if (cur == -1) cur = 3;
+    else if (cur == -1) cur = fourDirections().length - 1;
     return fourDirections()[cur];
   }
 
@@ -75,6 +75,20 @@ public enum Direction {
       case NORTHEAST -> new Point(currentLocation.x + amount, currentLocation.y - amount);
       case SOUTHEAST -> new Point(currentLocation.x + amount, currentLocation.y + amount);
       case NORTHWEST -> new Point(currentLocation.x - amount, currentLocation.y - amount);
+      case CENTER -> new Point(currentLocation.x, currentLocation.y);
+    };
+  }
+
+  public Point moveFix(Point currentLocation, int amount) {
+    return switch (this) {
+      case SOUTH -> new Point(currentLocation.x, currentLocation.y + amount);
+      case NORTH -> new Point(currentLocation.x, currentLocation.y - amount);
+      case EAST -> new Point(currentLocation.x - amount, currentLocation.y);
+      case WEST -> new Point(currentLocation.x + amount, currentLocation.y);
+      case SOUTHWEST -> new Point(currentLocation.x + amount, currentLocation.y + amount);
+      case NORTHEAST -> new Point(currentLocation.x - amount, currentLocation.y - amount);
+      case SOUTHEAST -> new Point(currentLocation.x - amount, currentLocation.y + amount);
+      case NORTHWEST -> new Point(currentLocation.x + amount, currentLocation.y - amount);
       case CENTER -> new Point(currentLocation.x, currentLocation.y);
     };
   }
