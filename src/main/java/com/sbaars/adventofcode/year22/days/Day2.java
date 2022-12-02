@@ -50,11 +50,11 @@ public class Day2 extends Day2022 {
     }
 
     private Outcome calculateOutcome(Shape sa, Shape sb) {
-      if(sa == sb) { //draw
+      if(sa == sb) {
         return DRAW;
-      } else if(sa.ordinal() == ((sb.ordinal() + 1) % Shape.values().length)) { //loss
+      } else if(sa.ordinal() == ((sb.ordinal() + 1) % Shape.values().length)) {
         return LOSS;
-      } else return WIN; //win
+      } else return WIN;
     }
 
     private long getScore2() {
