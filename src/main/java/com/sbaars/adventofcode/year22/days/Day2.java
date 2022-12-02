@@ -1,11 +1,13 @@
 package com.sbaars.adventofcode.year22.days;
 
-import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.io.IOException;
+import java.util.stream.Stream;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.year22.days.Day2.Outcome.*;
+import static com.sbaars.adventofcode.year22.days.Day2.Shape.*;
 
 public class Day2 extends Day2022 {
   public Day2() {
@@ -13,23 +15,18 @@ public class Day2 extends Day2022 {
   }
 
   public static void main(String[] args) throws IOException {
-    Day d = new Day2();
-    d.downloadIfNotDownloaded();
-    d.printParts();
-//    System.in.read();
-//    d.submitPart1();
-//    d.submitPart2();
+    new Day2().printParts();
   }
 
   enum Shape {ROCK, PAPER, SCISSOR};
-  enum Outcome {DRAW, WIN, LOOSE};
+  enum Outcome {DRAW, WIN, LOSS};
 
   public record Game(String a, String b) {
     private Shape getShape(String s){
       return switch (s) {
-        case "A", "X" -> Shape.ROCK;
-        case "B", "Y" -> Shape.PAPER;
-        case "C", "Z" -> Shape.SCISSOR;
+        case "A", "X" -> ROCK;
+        case "B", "Y" -> PAPER;
+        case "C", "Z" -> SCISSOR;
         default -> throw new RuntimeException(s);
       };
     }
@@ -38,38 +35,44 @@ public class Day2 extends Day2022 {
       return Shape.values()[(s.ordinal() + desired.ordinal()) % Shape.values().length];
     }
 
-    private long getScore() {
+    private long getScore1() {
+      return getScore(getShape(b));
+    }
+
+    private long getScore(Shape sb) {
       Shape sa = getShape(a);
-      Shape sb = getShape(b);
       long baseScore = sb.ordinal()+1;
-//      ?System.out.println(baseScore +", "+sa+", "+sb+", draw="+(sa == sb)+", win="+(sa.ordinal() == ((sb.ordinal() + 1) % Shape.values().length)));
+      return switch(calculateOutcome(sa, sb)) {
+        case LOSS -> baseScore;
+        case WIN -> baseScore + 6;
+        case DRAW -> baseScore + 3;
+      };
+    }
+
+    private Outcome calculateOutcome(Shape sa, Shape sb) {
       if(sa == sb) { //draw
-        return baseScore + 3;
-      } else if(sa.ordinal() == ((sb.ordinal() + 1) % Shape.values().length)) {//loss
-        return baseScore;
-      } else return baseScore + 6; //loss
+        return DRAW;
+      } else if(sa.ordinal() == ((sb.ordinal() + 1) % Shape.values().length)) { //loss
+        return LOSS;
+      } else return WIN; //win
     }
 
     private long getScore2() {
-      Shape sa = getShape(a);
-      Shape sb = choose(sa, b.equals("X")?Outcome.LOOSE:b.equals("Y")?Outcome.DRAW:Outcome.WIN);
-      long baseScore = sb.ordinal()+1;
-//      System.out.println(baseScore +", "+sa+", "+sb+", draw="+(sa == sb)+", win="+(sa.ordinal() == ((sb.ordinal() + 1) % Shape.values().length)));
-      if(sa == sb) { //draw
-        return baseScore + 3;
-      } else if(sa.ordinal() == ((sb.ordinal() + 1) % Shape.values().length)) {//loss
-        return baseScore;
-      } else return baseScore + 6; //loss
+      return getScore(choose(getShape(a), b.equals("X")? LOSS :b.equals("Y")?Outcome.DRAW: WIN));
     }
   }
 
   @Override
   public Object part1() {
-    return dayStream().map(String::trim).map(s -> readString(s, "%s %s", Game.class)).mapToLong(Game::getScore).sum();
+    return input().mapToLong(Game::getScore1).sum();
   }
 
   @Override
   public Object part2() {
-    return dayStream().map(String::trim).map(s -> readString(s, "%s %s", Game.class)).mapToLong(Game::getScore2).sum();
+    return input().mapToLong(Game::getScore2).sum();
+  }
+
+  private Stream<Game> input() {
+    return dayStream().map(String::trim).map(s -> readString(s, "%s %s", Game.class));
   }
 }
