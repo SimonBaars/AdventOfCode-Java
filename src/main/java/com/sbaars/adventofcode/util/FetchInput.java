@@ -36,7 +36,7 @@ public class FetchInput {
     retrieveExamples(day, year);
   }
 
-  private void retrieveExamples(String day, String year) {
+  public void retrieveExamples(String day, String year) {
     var matches = getMatchesByXpath(doRequest(year + "/day/" + day), "//pre/code");
     for (int i = 0; i < matches.size(); i++) {
       File file = getFile(day + "-" + (i + 1), year + "-examples");

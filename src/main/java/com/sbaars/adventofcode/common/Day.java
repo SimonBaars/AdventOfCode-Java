@@ -132,4 +132,8 @@ public abstract class Day {
       new FetchInput().retrieveInput(Integer.toString(day), Integer.toString(year));
     }
   }
+
+    public void downloadExample() {
+      new FetchInput().retrieveExamples(Integer.toString(day), Integer.toString(year));
+    }
 }

@@ -15,6 +15,7 @@ public class Day1 extends Day2022 {
     Day d = new Day1();
     d.downloadIfNotDownloaded();
     d.printParts();
+//    System.in.read();
 //    d.submitPart1();
 //    d.submitPart2();
   }
