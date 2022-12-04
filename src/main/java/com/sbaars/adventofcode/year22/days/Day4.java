@@ -17,27 +17,27 @@ public class Day4 extends Day2022 {
     new Day4().printParts();
   }
 
-    public record Assignment(long aStart, long aEnd, long bStart, long bEnd){
-      public boolean contained(){
-        return (aStart>=bStart && aEnd<=bEnd) || (bStart>=aStart && bEnd<=aEnd);
-      }
-
-      public boolean overlap(){
-        return aStart <= bEnd && aEnd >= bStart;
-      }
+  public record Assignment(long aStart, long aEnd, long bStart, long bEnd){
+    public boolean contained(){
+      return (aStart>=bStart && aEnd<=bEnd) || (bStart>=aStart && bEnd<=aEnd);
     }
 
-    @Override
-    public Object part1() {
-      return input().filter(Assignment::contained).count();
+    public boolean overlap(){
+      return aStart <= bEnd && aEnd >= bStart;
     }
+  }
 
-    private Stream<Assignment> input() {
-      return dayStream().map(String::trim).map(s -> readString(s, "%n-%n,%n-%n", Assignment.class));
-    }
+  @Override
+  public Object part1() {
+    return input().filter(Assignment::contained).count();
+  }
 
-    @Override
-    public Object part2() {
-      return input().filter(Assignment::overlap).count();
-    }
+  private Stream<Assignment> input() {
+    return dayStream().map(String::trim).map(s -> readString(s, "%n-%n,%n-%n", Assignment.class));
+  }
+
+  @Override
+  public Object part2() {
+    return input().filter(Assignment::overlap).count();
+  }
 }
