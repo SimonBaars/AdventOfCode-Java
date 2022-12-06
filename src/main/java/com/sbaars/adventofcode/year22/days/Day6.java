@@ -1,6 +1,5 @@
 package com.sbaars.adventofcode.year22.days;
 
-import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.io.IOException;
@@ -13,32 +12,25 @@ public class Day6 extends Day2022 {
   }
 
   public static void main(String[] args) throws IOException {
-    Day d = new Day6();
-    d.downloadIfNotDownloaded();
-//    d.downloadExample();
-    d.printParts();
-    System.in.read();
-//    d.submitPart1();
-    d.submitPart2();
+    new Day6().printParts();
   }
 
-  @Override
-  public Object part1() {
-    String s = day();
-    for(int i = 0; i<s.length(); i++){
-      Set<Integer> chars = Set.copyOf(s.substring(i, i+4).chars().mapToObj(e -> e).toList());
-      if(chars.size() == 4) return i+4;
+    @Override
+    public Object part1() {
+      return calculateAnswer(4);
     }
-    return "";
-  }
 
-  @Override
-  public Object part2() {
-    String s = day();
-    for(int i = 0; i<s.length(); i++){
-      Set<Integer> chars = Set.copyOf(s.substring(i, i+14).chars().mapToObj(e -> e).toList());
-      if(chars.size() == 14) return i+14;
+    private int calculateAnswer(int size) {
+      String s = day();
+      for(int i = 0; i<s.length(); i++){
+        Set<Integer> chars = Set.copyOf(s.substring(i, i+size).chars().boxed().toList());
+        if(chars.size() == size) return i+size;
+      }
+      return 0;
     }
-    return "";
-  }
+
+    @Override
+    public Object part2() {
+      return calculateAnswer(14);
+    }
 }
