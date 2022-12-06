@@ -3,7 +3,7 @@ package com.sbaars.adventofcode.year22.days;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.stream.IntStream;
 
 public class Day6 extends Day2022 {
 
@@ -22,11 +22,7 @@ public class Day6 extends Day2022 {
 
   private int calculateAnswer(int size) {
     String s = day();
-    for(int i = 0; i<s.length(); i++){
-      Set<Integer> chars = Set.copyOf(s.substring(i, i+size).chars().boxed().toList());
-      if(chars.size() == size) return i+size;
-    }
-    return 0;
+    return IntStream.range(0, s.length()).filter(i -> s.substring(i, i+size).chars().distinct().count() == size).findFirst().getAsInt() + size;
   }
 
   @Override
