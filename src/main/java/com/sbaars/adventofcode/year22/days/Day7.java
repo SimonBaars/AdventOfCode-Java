@@ -18,10 +18,10 @@ public class Day7 extends Day2022 {
     Day d = new Day7();
 //    d.downloadIfNotDownloaded();
 //    d.downloadExample();
-    d.printParts();
+//    d.printParts();
 //    System.in.read();
-    d.submitPart1();
-//    d.submitPart2();
+//    d.submitPart1();
+    d.submitPart2();
   }
 
   public record Node(Map<String, Node> children, long size){}
@@ -29,13 +29,8 @@ public class Day7 extends Day2022 {
 
   @Override
   public Object part1() {
-//    Node parent = new Node(null, new ArrayList<>(), 0);
     List<String> commands = Arrays.asList(dayStrings()).stream().toList();
-//    new Node("/", null, new ArrayList<>(), 0)
     Node root = findChildren(commands);
-//    for(int i = 1; i< commands.length; i++) {
-//      findChildren("")
-//    }
     return sumSize(root);
   }
 
@@ -48,8 +43,6 @@ public class Day7 extends Day2022 {
         String command = c.substring(2);
         if (command.startsWith("cd")) {
           String folder = command.substring(3);
-//          System.out.println(folder);
-//          i++;
           if (folder.equals("..")) break;
           i++;
           children.put(folder, findChildren(commands));
@@ -78,8 +71,21 @@ public class Day7 extends Day2022 {
     return total;
   }
 
+  public List<Long> sumSize(Node n, long sizeRoot) {
+    List<Long> total = new ArrayList<>();
+    for(Node node : n.children.values()) {
+      if(node.size>=sizeRoot-(70000000-30000000) && !node.children.isEmpty()) {
+        total.add(node.size);
+      }
+      total.addAll(sumSize(node, sizeRoot));
+    }
+    return total;
+  }
+
   @Override
   public Object part2() {
-    return "";
+    List<String> commands = Arrays.asList(dayStrings()).stream().toList();
+    Node root = findChildren(commands);
+    return sumSize(root, root.size()).stream().mapToLong(e -> e).min().getAsLong();
   }
 }
