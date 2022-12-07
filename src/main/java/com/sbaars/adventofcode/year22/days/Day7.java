@@ -1,11 +1,13 @@
 package com.sbaars.adventofcode.year22.days;
 
-import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
@@ -17,13 +19,7 @@ public class Day7 extends Day2022 implements HasRecursion {
   }
 
   public static void main(String[] args) throws IOException {
-    Day d = new Day7();
-//    d.downloadIfNotDownloaded();
-//    d.downloadExample();
-    d.printParts();
-//    System.in.read();
-//    d.submitPart1();
-//    d.submitPart2();
+    new Day7().printParts();
   }
 
   public record Node(Map<String, Node> children, long size){}

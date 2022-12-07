@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class Tree<T> {
-    public enum TreeReversal {CONTINUE, DOWN, UP}
+    public enum TreeTraversal {CONTINUE, DOWN, UP}
     private final Node<T> rootNode;
 
     public Tree(T rootNodeData) {
         this.rootNode = new Node<T>(rootNodeData);
     }
+
+//    public Tree(Function<T, Pair<TreeTraversal, >> func, Stream<T> things) {
+//
+//    }
 
     private class Node<T> {
         final T data;
