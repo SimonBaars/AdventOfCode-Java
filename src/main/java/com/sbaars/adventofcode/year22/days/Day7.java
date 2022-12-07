@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year22.days;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 
-public class Day7 extends Day2022 {
+public class Day7 extends Day2022 implements HasRecursion {
 
   public Day7() {
     super(7);

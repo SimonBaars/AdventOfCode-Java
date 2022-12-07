@@ -1,17 +1,19 @@
 package com.sbaars.adventofcode.year21.days;
 
+import com.sbaars.adventofcode.common.HasRecursion;
+import com.sbaars.adventofcode.common.grid.NumGrid;
+import com.sbaars.adventofcode.year21.Day2021;
+
+import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.sbaars.adventofcode.common.Direction.fourDirections;
 import static java.lang.Math.toIntExact;
 import static java.util.Arrays.stream;
 import static java.util.Collections.reverseOrder;
 
-import com.sbaars.adventofcode.common.grid.NumGrid;
-import com.sbaars.adventofcode.year21.Day2021;
-import java.awt.*;
-import java.util.HashSet;
-import java.util.Set;
-
-public class Day9 extends Day2021 {
+public class Day9 extends Day2021 implements HasRecursion {
   public Day9() {
     super(9);
   }

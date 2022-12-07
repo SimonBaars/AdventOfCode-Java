@@ -1,14 +1,16 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static java.lang.Long.parseLong;
-
+import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class Day24 extends Day2021 {
+import static java.lang.Long.parseLong;
+
+public class Day24 extends Day2021 implements HasRecursion {
 
   public Day24() {
     super(24);

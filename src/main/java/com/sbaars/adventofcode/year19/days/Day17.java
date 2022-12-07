@@ -76,17 +76,16 @@ public class Day17 extends Day2019 {
 
   private String findPatterns(List<Instruction> instructions) {
     List<List<Instruction>> patterns = new ArrayList<>();
-    String patternString = "";
+    StringBuilder patternString = new StringBuilder();
     int start = 0;
     for (int i = 0; i < instructions.size() - 1; i++) {
       List<Instruction> pattern = existing(instructions, patterns, i);
       if (pattern != null && start == i) {
         start += pattern.size();
         i += pattern.size() - 1;
-        patternString += "," + patterns.indexOf(pattern);
-        continue;
+        patternString.append(",").append(patterns.indexOf(pattern));
       } else if (start != i && (pattern != null || occurrences(instructions, instructions.subList(start, i + 1)) < 3)) {
-        patternString += "," + patterns.size();
+        patternString.append(",").append(patterns.size());
         patterns.add(instructions.subList(start, i));
         start = i;
         i--;

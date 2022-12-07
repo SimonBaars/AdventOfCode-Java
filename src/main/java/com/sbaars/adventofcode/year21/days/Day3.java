@@ -1,12 +1,14 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static java.lang.Integer.parseInt;
-
+import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Day3 extends Day2021 {
+import static java.lang.Integer.parseInt;
+
+public class Day3 extends Day2021 implements HasRecursion {
   public Day3() {
     super(3);
   }
@@ -18,19 +20,19 @@ public class Day3 extends Day2021 {
   @Override
   public Object part1() {
     var in = dayStrings();
-    String most = "";
-    String least = "";
+    StringBuilder most = new StringBuilder();
+    StringBuilder least = new StringBuilder();
 
     for(int i = 0; i<in[0].length(); i++){
       if(moreZeros(in, i)){
-        most+="0";
-        least+="1";
+        most.append("0");
+        least.append("1");
       } else {
-        most+="1";
-        least+="0";
+        most.append("1");
+        least.append("0");
       }
     }
-    return parseInt(most, 2) * parseInt(least, 2);
+    return parseInt(most.toString(), 2) * parseInt(least.toString(), 2);
   }
 
   private boolean moreZeros(String[] in, int i) {

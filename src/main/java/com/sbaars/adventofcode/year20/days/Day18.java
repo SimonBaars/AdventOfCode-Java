@@ -1,11 +1,12 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static java.util.Arrays.stream;
-
+import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.year20.Day2020;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class Day18 extends Day2020 {
+import static java.util.Arrays.stream;
+
+public class Day18 extends Day2020 implements HasRecursion {
   public Day18() {
     super(18);
   }

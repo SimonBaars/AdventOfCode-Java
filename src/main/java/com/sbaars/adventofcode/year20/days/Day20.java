@@ -1,26 +1,19 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static com.sbaars.adventofcode.common.Direction.EAST;
-import static com.sbaars.adventofcode.common.Direction.NORTH;
-import static com.sbaars.adventofcode.common.Direction.SOUTH;
-import static com.sbaars.adventofcode.common.Direction.WEST;
-import static java.lang.Long.parseLong;
-import static java.util.Arrays.stream;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Streams;
 import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.year20.Day2020;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
+
+import static com.sbaars.adventofcode.common.Direction.*;
+import static java.lang.Long.parseLong;
+import static java.util.Arrays.stream;
 
 public class Day20 extends Day2020 {
   public Day20() {
@@ -39,7 +32,7 @@ public class Day20 extends Day2020 {
     Map<String, Collection<Metadata>> map2 = map.asMap();
     List<Long> answer = new ArrayList<>();
     for (Grid g : input) {
-      List<String> possibleSides = Streams.concat(g.findSides(false).values().stream(), g.findSides(true).values().stream()).collect(Collectors.toList());
+      List<String> possibleSides = Streams.concat(g.findSides(false).values().stream(), g.findSides(true).values().stream()).toList();
       if (possibleSides.stream().filter(e -> map2.get(e).size() > 1).count() == 4L) {
         answer.add(g.id);
       }
@@ -117,7 +110,7 @@ public class Day20 extends Day2020 {
     }
   }
 
-  public static record Metadata(long id, Direction dir, boolean flipped) {
+  public record Metadata(long id, Direction dir, boolean flipped) {
     public boolean validMetadata(List<Metadata> l) {
       Map<Direction, Boolean> map = new EnumMap<Direction, Boolean>(Direction.class);
       for (Metadata m : l) {

@@ -97,7 +97,7 @@ public class Day24 extends Day2019 {
   }
 
   private long count(char[][] grid, char c) {
-    return streamGrid(grid).filter(p -> get(grid, p) == '#').count();
+    return streamGrid(grid).filter(p -> get(grid, p) == c).count();
   }
 
   private void simulate(int layer, char[][] newGrid, Point p) {

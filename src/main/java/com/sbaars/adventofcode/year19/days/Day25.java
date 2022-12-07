@@ -23,7 +23,7 @@ public class Day25 extends Day2019 {
       while ((res = ic.run()) != IntcodeComputer.STOP_CODE) System.out.print((char) res);
       try {
         ic.setInput(new BufferedReader(new InputStreamReader(System.in)).readLine() + "\n");
-      } catch (Exception e) {
+      } catch (Exception ignored) {
       }
     }
   }

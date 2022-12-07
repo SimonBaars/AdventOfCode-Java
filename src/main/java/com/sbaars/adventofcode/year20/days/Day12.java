@@ -1,14 +1,15 @@
 package com.sbaars.adventofcode.year20.days;
 
+import com.sbaars.adventofcode.common.Direction;
+import com.sbaars.adventofcode.year20.Day2020;
+
+import java.awt.*;
+import java.util.List;
+
 import static com.sbaars.adventofcode.common.Direction.EAST;
 import static com.sbaars.adventofcode.common.Direction.turnDegrees;
 import static java.lang.Math.abs;
 import static java.util.stream.Collectors.toList;
-
-import com.sbaars.adventofcode.common.Direction;
-import com.sbaars.adventofcode.year20.Day2020;
-import java.awt.*;
-import java.util.List;
 
 public class Day12 extends Day2020 {
   public Day12() {
@@ -26,16 +27,9 @@ public class Day12 extends Day2020 {
     Point location = new Point(0, 0);
     for (Flight f : input) {
       switch (f.dir) {
-        case 'L':
-        case 'R':
-          face = face.turnDegrees(f.distance, f.dir == 'R');
-          break;
-        case 'F':
-          location = face.move(location, f.distance);
-          break;
-        default:
-          location = Direction.getByDir(f.dir).move(location, f.distance);
-          break;
+        case 'L', 'R' -> face = face.turnDegrees(f.distance, f.dir == 'R');
+        case 'F' -> location = face.move(location, f.distance);
+        default -> location = Direction.getByDir(f.dir).move(location, f.distance);
       }
     }
     return abs(location.x) + abs(location.y);
@@ -52,16 +46,9 @@ public class Day12 extends Day2020 {
     Point location = new Point(0, 0);
     for (Flight f : input) {
       switch (f.dir) {
-        case 'L':
-        case 'R':
-          waypoint = turnDegrees(waypoint, f.distance, f.dir == 'R');
-          break;
-        case 'F':
-          location = new Point(location.x + (waypoint.x * f.distance), location.y + (waypoint.y * f.distance));
-          break;
-        default:
-          waypoint = Direction.getByDir(f.dir).move(waypoint, f.distance);
-          break;
+        case 'L', 'R' -> waypoint = turnDegrees(waypoint, f.distance, f.dir == 'R');
+        case 'F' -> location = new Point(location.x + (waypoint.x * f.distance), location.y + (waypoint.y * f.distance));
+        default -> waypoint = Direction.getByDir(f.dir).move(waypoint, f.distance);
       }
     }
     return abs(location.x) + abs(location.y);

@@ -1,16 +1,14 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static java.util.Arrays.asList;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.sbaars.adventofcode.year20.Day2020;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
+import static java.util.Map.Entry.comparingByKey;
 
 public class Day21 extends Day2020 {
   public Day21() {
@@ -29,16 +27,7 @@ public class Day21 extends Day2020 {
   public Object part1() {
     Rule[] input = Arrays.stream(day().split("\n")).map(Rule::new).toArray(Rule[]::new);
     Multimap<String, String> allergens = getAllergens(input);
-
-    long total = 0;
-    for (Rule r : input) {
-      for (String ingredient : r.ingredients) {
-        if (!allergens.containsValue(ingredient)) {
-          total++;
-        }
-      }
-    }
-    return total;
+    return Arrays.stream(input).flatMap(r -> Arrays.stream(r.ingredients)).filter(i -> !allergens.containsValue(i)).count();
   }
 
   private Multimap<String, String> getAllergens(Rule[] input) {
@@ -65,7 +54,7 @@ public class Day21 extends Day2020 {
   public Object part2() {
     Rule[] input = Arrays.stream(day().split("\n")).map(Rule::new).toArray(Rule[]::new);
     Multimap<String, String> allergens = getAllergens(input);
-    return allergens.asMap().entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).map(e -> e.getValue().stream().findAny().get()).collect(Collectors.joining(","));
+    return allergens.asMap().entrySet().stream().sorted(comparingByKey()).map(e -> e.getValue().stream().findAny().get()).collect(Collectors.joining(","));
   }
 
   public static record Rule(String[] ingredients, String[] allergens) {

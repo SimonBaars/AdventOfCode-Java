@@ -1,18 +1,16 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
-
+import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.common.HexDirection;
 import com.sbaars.adventofcode.year20.Day2020;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
-public class Day24 extends Day2020 {
+import java.awt.*;
+import java.util.List;
+import java.util.*;
+
+import static java.util.Arrays.stream;
+
+public class Day24 extends Day2020 implements HasRecursion {
   Set<Point> visited = new HashSet<>();
 
   public Day24() {
@@ -25,7 +23,7 @@ public class Day24 extends Day2020 {
 
   @Override
   public Object part1() {
-    var input = stream(dayStrings()).map(this::read).collect(toList());
+    var input = stream(dayStrings()).map(this::read).toList();
     for (List<HexDirection> dirs : input) {
       Point pos = new Point(0, 0);
       for (HexDirection dir : dirs) {

@@ -119,9 +119,7 @@ public class Day18 extends Day2019 {
   @Override
   public Object part2() {
     for (int y = 0; y < CHANGE_GRID.length; y++) {
-      for (int x = 0; x < CHANGE_GRID[y].length; x++) {
-        grid[middle.y - 1 + y][middle.x - 1 + x] = CHANGE_GRID[y][x];
-      }
+      System.arraycopy(CHANGE_GRID[y], 0, grid[middle.y - 1 + y], middle.x - 1, CHANGE_GRID[y].length);
     }
     cachedResult.clear();
     return findRoutes(findPos('@'));

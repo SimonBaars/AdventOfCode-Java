@@ -34,10 +34,10 @@ public class Day23 extends Day2019 {
     long input;
     while (true) {
       boolean idle = true;
-      for (int i = 0; i < ic.length; i++) {
-        if ((input = ic[i].run()) != IntcodeComputer.STOP_CODE) {
+      for (IntcodeComputer intcodeComputer : ic) {
+        if ((input = intcodeComputer.run()) != IntcodeComputer.STOP_CODE) {
           int pc = Math.toIntExact(input);
-          long x = ic[i].run(), y = ic[i].run();
+          long x = intcodeComputer.run(), y = intcodeComputer.run();
           if (pc == 255) {
             if (returnNatY) return y;
             nat[0] = x;

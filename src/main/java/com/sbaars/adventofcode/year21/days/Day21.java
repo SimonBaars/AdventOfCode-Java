@@ -1,13 +1,15 @@
 package com.sbaars.adventofcode.year21.days;
 
 import com.google.common.base.Objects;
+import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.year21.Day2021;
+import org.apache.commons.math3.util.Pair;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.math3.util.Pair;
 
-public class Day21 extends Day2021 {
+public class Day21 extends Day2021 implements HasRecursion {
   public Day21() {
     super(21);
   }
@@ -53,7 +55,7 @@ public class Day21 extends Day2021 {
     return Math.max(universes.getFirst(), universes.getSecond());
   }
 
-  private Pair<Long, Long> universes (Map<State, Pair<Long, Long>> m, State s) {
+  private Pair<Long, Long> universes(Map<State, Pair<Long, Long>> m, State s) {
     Pair<Long, Long> wins = new Pair<>(0L, 0L);
     if(m.containsKey(s)) {
       return m.get(s);
