@@ -6,6 +6,7 @@ import com.sbaars.adventofcode.util.Submit;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -17,6 +18,9 @@ public abstract class Day {
   protected final int year;
   protected final int day;
   protected int example = 0;
+
+  private Object solutionPart1;
+  private Object solutionPart2;
 
   public Day(int year, int day) {
     this.year = year;
@@ -45,6 +49,10 @@ public abstract class Day {
   public abstract Object part2();
 
   public void printParts() {
+    solutionPart1 = part1();
+    solutionPart2 = part2();
+    if(solutionPart1 instanceof Optional) solutionPart1 = ((Optional<?>)solutionPart1).get();
+    if(solutionPart2 instanceof Optional) solutionPart1 = ((Optional<?>)solutionPart1).get();
     System.out.println("Part 1: " + part1());
     System.out.println("Part 2: " + part2());
   }
@@ -56,11 +64,17 @@ public abstract class Day {
   }
 
   public void submitPart1() {
-    new Submit().submit(part1(), year, day, 1);
+    if(solutionPart1 == null) solutionPart1 = part1();
+    if(example == 0 && solutionPart1 != null) {
+      new Submit().submit(solutionPart1, year, day, 1);
+    }
   }
 
   public void submitPart2() {
-    new Submit().submit(part2(), year, day, 2);
+    if(solutionPart2 == null) solutionPart2 = part1();
+    if(example == 0 && solutionPart2 != null) {
+      new Submit().submit(solutionPart2, year, day, 2);
+    }
   }
 
   protected String day() {

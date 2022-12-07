@@ -1,17 +1,19 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
-
 import com.google.common.collect.ImmutableListMultimap;
+import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.year19.util.CountMap;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class Day12 extends Day2021 {
+import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
+
+public class Day12 extends Day2021 implements HasRecursion {
 
   public static final String START = "start";
 

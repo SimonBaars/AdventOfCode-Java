@@ -1,12 +1,13 @@
 package com.sbaars.adventofcode.year21.days;
 
 import com.sbaars.adventofcode.common.Direction;
+import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.common.grid.NumGrid;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.awt.*;
 import java.util.Arrays;
 
-public class Day11 extends Day2021 {
+public class Day11 extends Day2021 implements HasRecursion {
   public Day11() {
     super(11);
   }

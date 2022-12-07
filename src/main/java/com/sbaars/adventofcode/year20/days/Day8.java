@@ -19,7 +19,7 @@ public class Day8 extends Day2020 {
   public Object part1() {
     Gamepad gamepad = new Gamepad(dayStream());
     Set<Integer> visited = new HashSet<>();
-    while (visited.add(gamepad.executeInstruction())) ;
+    while (visited.add(gamepad.executeInstruction()));
     return gamepad.getAccumulator();
   }
 

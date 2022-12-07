@@ -2,6 +2,8 @@ package com.sbaars.adventofcode.year21.days;
 
 import com.sbaars.adventofcode.year21.Day2021;
 
+import java.util.stream.IntStream;
+
 public class Day1 extends Day2021 {
   public Day1() {
     super(1);
@@ -14,24 +16,12 @@ public class Day1 extends Day2021 {
   @Override
   public Object part1() {
     long[] input = dayNumbers();
-    int res = 0;
-    for(int i = 1; i<input.length; i++){
-      if(input[i-1] < input[i]){
-        res++;
-      }
-    }
-    return res;
+    return IntStream.range(1, input.length).filter(i -> input[i-1] < input[i]).count();
   }
 
   @Override
   public Object part2() {
     long[] input = dayNumbers();
-    int res = 0;
-    for(int i = 3; i<input.length; i++){
-      if(input[i-3] + input[i-2] + input[i-1] < input[i] + input[i-2] + input[i-1]){
-        res++;
-      }
-    }
-    return res;
+    return IntStream.range(3, input.length).filter(i -> input[i-3] + input[i-2] + input[i-1] < input[i] + input[i-2] + input[i-1]).count();
   }
 }
