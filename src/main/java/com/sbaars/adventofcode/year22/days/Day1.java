@@ -33,6 +33,6 @@ public class Day1 extends Day2022 {
   }
 
   private LongStream input () {
-    return Arrays.stream(day().split("\n\n")).mapToLong(s -> Arrays.stream(s.split("\n")).map(String::trim).mapToLong(e -> Long.parseLong(e)).sum());
+    return Arrays.stream(day().split("\n\n")).mapToLong(s -> Arrays.stream(s.split("\n")).map(String::trim).mapToLong(Long::parseLong).sum());
   }
 }

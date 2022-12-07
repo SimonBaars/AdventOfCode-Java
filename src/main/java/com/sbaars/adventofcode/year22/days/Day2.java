@@ -54,7 +54,8 @@ public class Day2 extends Day2022 {
         return DRAW;
       } else if(sa.ordinal() == ((sb.ordinal() + 1) % Shape.values().length)) {
         return LOSS;
-      } else return WIN;
+      }
+      return WIN;
     }
 
     private long getScore2() {
