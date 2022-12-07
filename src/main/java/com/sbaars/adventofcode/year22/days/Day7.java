@@ -5,6 +5,7 @@ import com.sbaars.adventofcode.year22.Day2022;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 
@@ -18,10 +19,10 @@ public class Day7 extends Day2022 {
     Day d = new Day7();
 //    d.downloadIfNotDownloaded();
 //    d.downloadExample();
-//    d.printParts();
+    d.printParts();
 //    System.in.read();
 //    d.submitPart1();
-    d.submitPart2();
+//    d.submitPart2();
   }
 
   public record Node(Map<String, Node> children, long size){}
@@ -29,23 +30,20 @@ public class Day7 extends Day2022 {
 
   @Override
   public Object part1() {
-    List<String> commands = Arrays.asList(dayStrings()).stream().toList();
-    Node root = findChildren(commands);
-    return sumSize(root);
+    return sumSize(findChildren(dayStrings(), new AtomicInteger(0)));
   }
 
-  int i = 1;
-  public Node findChildren(List<String> commands) {
+  public Node findChildren(String[] commands, AtomicInteger index) {
     Map<String, Node> children = new HashMap<>();
-    for(; i<commands.size(); i++) {
-      String c = commands.get(i);
+    for(; index.get()<commands.length; index.incrementAndGet()) {
+      String c = commands[index.get()];
       if (c.charAt(0) == '$') {
         String command = c.substring(2);
         if (command.startsWith("cd")) {
           String folder = command.substring(3);
           if (folder.equals("..")) break;
-          i++;
-          children.put(folder, findChildren(commands));
+          index.incrementAndGet();
+          children.put(folder, findChildren(commands, index));
         }
       } else {
         if(c.startsWith("dir")) {
@@ -84,8 +82,7 @@ public class Day7 extends Day2022 {
 
   @Override
   public Object part2() {
-    List<String> commands = Arrays.asList(dayStrings()).stream().toList();
-    Node root = findChildren(commands);
-    return sumSize(root, root.size()).stream().mapToLong(e -> e).min().getAsLong();
+    Node root = findChildren(dayStrings(), new AtomicInteger(0));
+    return sumSize(root, root.size).stream().mapToLong(e -> e).min().getAsLong();
   }
 }
