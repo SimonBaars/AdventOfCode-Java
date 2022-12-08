@@ -1,6 +1,5 @@
 package com.sbaars.adventofcode.year22.days;
 
-import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.grid.NumGrid;
 import com.sbaars.adventofcode.year22.Day2022;
@@ -15,13 +14,7 @@ public class Day8 extends Day2022 {
   }
 
   public static void main(String[] args) throws IOException {
-    Day d = new Day8();
-//    d.downloadIfNotDownloaded();
-//    d.downloadExample();
-    d.printParts();
-//    System.in.read();
-//    d.submitPart1();
-//    d.submitPart2();
+    new Day8().printParts();
   }
 
   @Override
@@ -45,6 +38,12 @@ public class Day8 extends Day2022 {
     return false;
   }
 
+  @Override
+  public Object part2() {
+    NumGrid grid = new NumGrid(day(), "\n", "");
+    return grid.stream().mapToLong(p -> scenicScore(grid, p)).max().getAsLong();
+  }
+
   private long scenicScore(NumGrid grid, Point p) {
     Direction[] dirs = Direction.fourDirections();
     long num = grid.get(p);
@@ -62,12 +61,5 @@ public class Day8 extends Day2022 {
       score*=s;
     }
     return score;
-  }
-
-
-  @Override
-  public Object part2() {
-    NumGrid grid = new NumGrid(day(), "\n", "");
-    return grid.stream().mapToLong(p -> scenicScore(grid, p)).max().getAsLong();
   }
 }
