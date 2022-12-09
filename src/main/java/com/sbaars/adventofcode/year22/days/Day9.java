@@ -27,7 +27,7 @@ public class Day9 extends Day2022 {
 //    d.submitPart2();
   }
 
-  public record Move(String dir, long n){}
+  public record Move(char dir, long n){}
 
   @Override
   public Object part1() {
@@ -40,14 +40,14 @@ public class Day9 extends Day2022 {
   }
 
   private int simulateRope(int size) {
-    List<Move> moves = dayStream().map(s -> readString(s, "%s %n", Move.class)).toList();
+    List<Move> moves = dayStream().map(s -> readString(s, "%c %n", Move.class)).toList();
     Point head = new Point();
     List<Point> tail = new java.util.ArrayList<>(IntStream.range(0, size).mapToObj(i -> new Point()).toList());
     HashSet<Point> visited = new HashSet<>();
     visited.add(head);
 
     for(Move m : moves) {
-      Direction dir = Direction.getByDirCode(m.dir.charAt(0));
+      Direction dir = Direction.getByDirCode(m.dir);
       for(int i = 0; i<m.n; i++) {
         head = dir.move(head);
         for(int j = 0; j<tail.size(); j++) {
