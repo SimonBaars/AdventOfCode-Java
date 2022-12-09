@@ -14,7 +14,7 @@ public class Day1 extends Day2022 {
   public static void main(String[] args) {
     Day d = new Day1();
     d.downloadIfNotDownloaded();
-//    d.downloadExample();
+    d.downloadExample();
     d.printParts();
 //    System.in.read();
 //    d.submitPart1();
