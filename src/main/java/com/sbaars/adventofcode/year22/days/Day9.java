@@ -31,46 +31,18 @@ public class Day9 extends Day2022 {
 
   @Override
   public Object part1() {
-    List<Move> moves = dayStream().map(s -> readString(s, "%s %n", Move.class)).toList();
-    Point p1 = new Point();
-    Point p2 = new Point();
-    HashSet<Point> vis = new HashSet<>();
-    vis.add(p2);
-    for(Move m : moves) {
-      Direction dir = Direction.getByDirCode(m.dir.charAt(0));
-      for(int i = 0; i<m.n; i++) {
-        p1 = dir.move(p1);
-        Point p12 = p1, p22 = p2;
-        if(Arrays.stream(Direction.values()).noneMatch(d -> d.move(p22).equals(p12))) {
-          if(p1.x > p2.x && p1.y == p2.y) {
-            p2 = Direction.EAST.move(p2);
-          } else if(p1.x < p2.x && p1.y == p2.y){
-            p2 = Direction.WEST.move(p2);
-          } else if(p1.x == p2.x && p1.y > p2.y) {
-            p2 = Direction.SOUTH.move(p2);
-          } else if(p1.x == p2.x && p1.y < p2.y){
-            p2 = Direction.NORTH.move(p2);
-          } else if(p1.x > p2.x && p1.y > p2.y) {
-            p2 = Direction.SOUTHEAST.move(p2);
-          } else if(p1.x < p2.x && p1.y < p2.y){
-            p2 = Direction.NORTHWEST.move(p2);
-          } else if(p1.x < p2.x && p1.y > p2.y) {
-            p2 = Direction.SOUTHWEST.move(p2);
-          } else if(p1.x > p2.x && p1.y < p2.y){
-            p2 = Direction.NORTHEAST.move(p2);
-          } else throw new IllegalStateException();
-        }
-        vis.add(p2);
-      }
-    }
-    return vis.size();
+    return simulateRope(1);
   }
 
   @Override
   public Object part2() {
+    return simulateRope(9);
+  }
+
+  private int simulateRope(int size) {
     List<Move> moves = dayStream().map(s -> readString(s, "%s %n", Move.class)).toList();
     Point p1 = new Point();
-    List<Point> p2 = new java.util.ArrayList<>(IntStream.range(0, 9).mapToObj(i -> new Point()).toList());
+    List<Point> p2 = new java.util.ArrayList<>(IntStream.range(0, size).mapToObj(i -> new Point()).toList());
     HashSet<Point> vis = new HashSet<>();
     vis.add(p1);
 
