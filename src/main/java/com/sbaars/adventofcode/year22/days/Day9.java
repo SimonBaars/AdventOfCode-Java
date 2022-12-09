@@ -4,6 +4,7 @@ import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +36,7 @@ public class Day9 extends Day2022 {
   private int simulateRope(int size) {
     List<Move> moves = dayStream().map(s -> readString(s, "%c %n", Move.class)).toList();
     Point head = new Point();
-    List<Point> tail = new java.util.ArrayList<>(IntStream.range(0, size).mapToObj(i -> new Point()).toList());
+    List<Point> tail = new ArrayList<>(IntStream.range(0, size).mapToObj(i -> new Point()).toList());
     HashSet<Point> visited = new HashSet<>();
     visited.add(head);
 

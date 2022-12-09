@@ -142,12 +142,14 @@ public abstract class Day {
   }
 
   public void downloadIfNotDownloaded() {
-    if(!getResource(getDayPath()).exists()) {
+    if(example == 0 && !getResource(getDayPath()).exists()) {
       new FetchInput().retrieveInput(Integer.toString(day), Integer.toString(year));
     }
   }
 
     public void downloadExample() {
-      new FetchInput().retrieveExamples(Integer.toString(day), Integer.toString(year));
+      if(example > 0 && !getResource(getDayPath()).exists()) {
+        new FetchInput().retrieveExamples(Integer.toString(day), Integer.toString(year));
+      }
     }
 }
