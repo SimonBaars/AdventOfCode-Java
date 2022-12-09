@@ -41,46 +41,45 @@ public class Day9 extends Day2022 {
 
   private int simulateRope(int size) {
     List<Move> moves = dayStream().map(s -> readString(s, "%s %n", Move.class)).toList();
-    Point p1 = new Point();
-    List<Point> p2 = new java.util.ArrayList<>(IntStream.range(0, size).mapToObj(i -> new Point()).toList());
-    HashSet<Point> vis = new HashSet<>();
-    vis.add(p1);
+    Point head = new Point();
+    List<Point> tail = new java.util.ArrayList<>(IntStream.range(0, size).mapToObj(i -> new Point()).toList());
+    HashSet<Point> visited = new HashSet<>();
+    visited.add(head);
 
     for(Move m : moves) {
       Direction dir = Direction.getByDirCode(m.dir.charAt(0));
       for(int i = 0; i<m.n; i++) {
-//        NumGrid g = new NumGrid(new long[6][6]);
-        p1 = dir.move(p1);
-//        g.set(new Point(Math.abs(p1.x), Math.abs(p1.y)), 11);
-        for(int j = 0; j<p2.size(); j++) {
-          Point p12 = j == 0 ? p1 : p2.get(j - 1), p22 = p2.get(j);
-          Point p23 = p22;
-          if (Arrays.stream(Direction.values()).noneMatch(d -> d.move(p23).equals(p12))) {
-            if (p12.x > p22.x && p12.y == p22.y) {
-              p22 = Direction.EAST.move(p22);
-            } else if (p12.x < p22.x && p12.y == p22.y) {
-              p22 = Direction.WEST.move(p22);
-            } else if (p12.x == p22.x && p12.y > p22.y) {
-              p22 = Direction.SOUTH.move(p22);
-            } else if (p12.x == p22.x && p12.y < p22.y) {
-              p22 = Direction.NORTH.move(p22);
-            } else if (p12.x > p22.x && p12.y > p22.y) {
-              p22 = Direction.SOUTHEAST.move(p22);
-            } else if (p12.x < p22.x && p12.y < p22.y) {
-              p22 = Direction.NORTHWEST.move(p22);
-            } else if (p12.x < p22.x && p12.y > p22.y) {
-              p22 = Direction.SOUTHWEST.move(p22);
-            } else if (p12.x > p22.x && p12.y < p22.y) {
-              p22 = Direction.NORTHEAST.move(p22);
-            } else throw new IllegalStateException();
-          }
-          p2.set(j, p22);
-          if(j == p2.size()-1) vis.add(p22);
-//          g.set(new Point(Math.abs(p22.x), Math.abs(p22.y)), j+1);
+        head = dir.move(head);
+        for(int j = 0; j<tail.size(); j++) {
+          Point t = j == 0 ? head : tail.get(j - 1);
+          tail.set(j, moveRope(t, tail.get(j)));
+          if(j == tail.size()-1) visited.add(tail.get(j));
         }
-//        System.out.println(g);
       }
     }
-    return vis.size();
+    return visited.size();
+  }
+
+  private static Point moveRope(Point head, Point tail) {
+    if (Arrays.stream(Direction.values()).noneMatch(d -> d.move(tail).equals(head))) {
+      if (head.x > tail.x && head.y == tail.y) {
+        return Direction.EAST.move(tail);
+      } else if (head.x < tail.x && head.y == tail.y) {
+        return Direction.WEST.move(tail);
+      } else if (head.x == tail.x && head.y > tail.y) {
+        return Direction.SOUTH.move(tail);
+      } else if (head.x == tail.x && head.y < tail.y) {
+        return Direction.NORTH.move(tail);
+      } else if (head.x > tail.x && head.y > tail.y) {
+        return Direction.SOUTHEAST.move(tail);
+      } else if (head.x < tail.x && head.y < tail.y) {
+        return Direction.NORTHWEST.move(tail);
+      } else if (head.x < tail.x && head.y > tail.y) {
+        return Direction.SOUTHWEST.move(tail);
+      } else if (head.x > tail.x && head.y < tail.y) {
+        return Direction.NORTHEAST.move(tail);
+      } else throw new IllegalStateException();
+    }
+    return tail;
   }
 }
