@@ -116,6 +116,10 @@ public enum Direction {
     return move(currentLocation, 1);
   }
 
+  public Point moveFix(Point currentLocation) {
+    return moveFix(currentLocation, 1);
+  }
+
   public Direction opposite() {
     return switch (this) {
       case NORTH -> SOUTH;

@@ -52,7 +52,7 @@ public abstract class Day {
     solutionPart1 = part1();
     solutionPart2 = part2();
     if(solutionPart1 instanceof Optional) solutionPart1 = ((Optional<?>)solutionPart1).get();
-    if(solutionPart2 instanceof Optional) solutionPart1 = ((Optional<?>)solutionPart1).get();
+    if(solutionPart2 instanceof Optional) solutionPart2 = ((Optional<?>)solutionPart2).get();
     System.out.println("Part 1: " + part1());
     System.out.println("Part 2: " + part2());
   }
