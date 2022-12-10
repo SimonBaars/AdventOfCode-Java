@@ -42,15 +42,12 @@ public class Day10 extends Day2022 {
     List<T> res = new ArrayList<>();
     for(String op : dayStrings()) {
       res.add(func.apply(cycle, x));
-      if(op.equals("noop")) {
-        cycle++;
-      } else if(op.startsWith("addx")) {
-        long add = Long.parseLong(op.substring(5));
+      if(op.startsWith("addx")) {
         cycle++;
         res.add(func.apply(cycle, x));
-        cycle++;
-        x+=add;
+        x+=Long.parseLong(op.substring(5));
       }
+      cycle++;
     }
     return res.stream();
   }
