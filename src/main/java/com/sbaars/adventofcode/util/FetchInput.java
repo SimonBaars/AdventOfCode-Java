@@ -72,7 +72,7 @@ public class FetchInput {
     return getResource(year + "/day" + day + ".txt");
   }
 
-  private void writeFile(File file, String content) {
+  public static void writeFile(File file, String content) {
     try {
       FileUtils.writeStringToFile(file, content);
     } catch (IOException e) {
