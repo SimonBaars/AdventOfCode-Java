@@ -33,7 +33,7 @@ public class Day10 extends Day2022 {
 
   private String getPixel(long cycle, long x) {
     long i = (cycle -1) % 40;
-    return (i == 0 ? "\n" : "") + (List.of(x -1, x, x +1).contains(i) ? "#" : ".");
+    return (i == 0 ? "\n" : "") + (List.of(x -1, x, x +1).contains(i) ? "██" : "░░");
   }
 
   private<T> Stream<T> performOp(BiFunction<Long, Long, T> func) {
