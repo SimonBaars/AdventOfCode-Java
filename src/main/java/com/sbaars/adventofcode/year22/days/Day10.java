@@ -59,7 +59,7 @@ public class Day10 extends Day2022 {
 
   // Write any arbitrary String to an ascii art program
   public Object part3() {
-    String message = "SIMON";
+    String message = " ☆☺☆ ";
     String[] input = genInput(message);
     FetchInput.writeFile(new File("src/main/resources/2022-day10-part3/"+message+".txt"), String.join("\n", input));
     return "Part 3: "+performOp(input, this::getPixel).collect(Collectors.joining());
