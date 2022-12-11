@@ -148,8 +148,8 @@ public abstract class Day {
   }
 
     public void downloadExample() {
-      if(example > 0 && !getResource(getDayPath()).exists()) {
+//      if(example > 0 && !getResource(getDayPath()).exists()) {
         new FetchInput().retrieveExamples(Integer.toString(day), Integer.toString(year));
-      }
+//      }
     }
 }

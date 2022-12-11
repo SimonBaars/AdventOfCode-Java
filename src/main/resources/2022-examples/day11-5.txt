@@ -1,0 +1,4 @@
+Monkey 0 inspected items 101 times.
+Monkey 1 inspected items 95 times.
+Monkey 2 inspected items 7 times.
+Monkey 3 inspected items 105 times.
