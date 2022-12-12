@@ -1,6 +1,5 @@
 package com.sbaars.adventofcode.year22.days;
 
-import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.common.grid.NumGrid;
 import com.sbaars.adventofcode.year22.Day2022;
 
@@ -15,13 +14,7 @@ public class Day12 extends Day2022 {
   }
 
   public static void main(String[] args) {
-    Day d = new Day12();
-    d.downloadIfNotDownloaded();
-    d.downloadExample();
-    d.printParts();
-//    System.in.read();
-//    d.submitPart1();
-//    d.submitPart2();
+    new Day12().printParts();
   }
 
   @Override
@@ -40,7 +33,7 @@ public class Day12 extends Day2022 {
     currentLevel.add(p9);
     visited.add(p9);
 
-    long steps = 0;
+    long steps = 1;
     while(!currentLevel.isEmpty()){
       Set<Point> level = new HashSet<>(currentLevel);
       currentLevel.clear();
@@ -48,13 +41,12 @@ public class Day12 extends Day2022 {
         long current = g.get(p);
         if(current == 'S') current = 'a';
         for(Point p2 : g.streamDirs(p).toList()) {
-          if((current == 'y' || current == 'z') && g.get(p2) == 'E') return steps+1;
+          if((current == 'y' || current == 'z') && g.get(p2) == 'E') return steps;
           if(g.get(p2) <= current+1 && visited.add(p2)) {
             currentLevel.add(p2);
           }
         }
       }
-      steps++;
     }
     return Long.MAX_VALUE;
   }
