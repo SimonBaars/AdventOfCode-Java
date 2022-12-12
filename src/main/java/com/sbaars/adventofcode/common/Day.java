@@ -53,8 +53,8 @@ public abstract class Day {
     solutionPart2 = part2();
     if(solutionPart1 instanceof Optional) solutionPart1 = ((Optional<?>)solutionPart1).get();
     if(solutionPart2 instanceof Optional) solutionPart2 = ((Optional<?>)solutionPart2).get();
-    System.out.println("Part 1: " + part1());
-    System.out.println("Part 2: " + part2());
+    System.out.println("Part 1: " + solutionPart1);
+    System.out.println("Part 2: " + solutionPart2);
   }
 
   public void printParts(int example) {
@@ -142,14 +142,20 @@ public abstract class Day {
   }
 
   public void downloadIfNotDownloaded() {
-    if(example == 0 && !getResource(getDayPath()).exists()) {
+    int oldExample = example;
+    example = 0;
+    if(!getResource(getDayPath()).exists()) {
       new FetchInput().retrieveInput(Integer.toString(day), Integer.toString(year));
     }
+    example = oldExample;
   }
 
     public void downloadExample() {
-//      if(example > 0 && !getResource(getDayPath()).exists()) {
+      int oldExample = example;
+      example = 1;
+      if(!getResource(getDayPath()).exists()) {
         new FetchInput().retrieveExamples(Integer.toString(day), Integer.toString(year));
-//      }
+      }
+      example = oldExample;
     }
 }
