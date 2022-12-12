@@ -59,7 +59,7 @@ public class Day10 extends Day2022 {
 
   // Write any arbitrary String to an ascii art program
   public Object part3() {
-    String message = " ☆☺☆ ";
+    String message = " Joost";
     String[] input = genInput(message);
     FetchInput.writeFile(new File("src/main/resources/2022-day10-part3/"+message+".txt"), String.join("\n", input));
     return "Part 3: "+performOp(input, this::getPixel).collect(Collectors.joining());
@@ -67,7 +67,7 @@ public class Day10 extends Day2022 {
 
   public String[] genInput(String message) {
     int width = 40;
-    int height = 9;
+    int height = 11;
     boolean[] desiredPixels = convertStringToAscii(message, width, height);
     return generateInstructions(width, height, desiredPixels).toArray(String[]::new);
   }
@@ -97,14 +97,11 @@ public class Day10 extends Day2022 {
 
   private static boolean[] convertStringToAscii(String message, int width, int height) {
     boolean[] desiredPixels = new boolean[height * width];
-    BufferedImage bufferedImage = new BufferedImage(
-            width, height,
-            BufferedImage.TYPE_INT_RGB);
+    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     Graphics graphics = bufferedImage.getGraphics();
     Graphics2D graphics2D = (Graphics2D) graphics;
-    graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    graphics2D.drawString(message, 0, height);
+    graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    graphics2D.drawString(message, 0, height-2);
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         desiredPixels[(y* width)+x] = bufferedImage.getRGB(x, y) > -7777216;

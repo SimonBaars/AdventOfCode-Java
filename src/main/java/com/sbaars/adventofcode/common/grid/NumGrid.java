@@ -1,5 +1,7 @@
 package com.sbaars.adventofcode.common.grid;
 
+import com.sbaars.adventofcode.common.Direction;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -149,5 +151,17 @@ public class NumGrid implements Grid {
 
   public void increment(Point p, int n) {
     set(p, get(p)+n);
+  }
+
+  public Stream<Point> streamDirs(Point p) {
+    return Arrays.stream(Direction.fourDirections()).map(d -> d.move(p));
+  }
+
+  public Point find(long l) {
+    return stream().filter(p -> get(p) == l).findFirst().get();
+  }
+
+  public Stream<Point> findAll(long l) {
+    return stream().filter(p -> get(p) == l);
   }
 }
