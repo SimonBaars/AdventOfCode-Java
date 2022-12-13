@@ -2,11 +2,17 @@ package com.sbaars.adventofcode.util;
 
 import com.sbaars.adventofcode.common.IntArray;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StringUtils {
     public static String[] lines(String s) {
         return s.split("\n");
+    }
+
+    public static Stream<String> streamLines(String s) {
+        return Arrays.stream(lines(s));
     }
 
     public static String removeAll(String str, String remove) {

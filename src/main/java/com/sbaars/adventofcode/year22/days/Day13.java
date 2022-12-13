@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.sbaars.adventofcode.util.StringUtils.streamLines;
 import static java.lang.Integer.parseInt;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -33,7 +34,8 @@ public class Day13 extends Day2022 {
 
   @Override
   public Object part2() {
-    var in = Arrays.stream((day()+"\n[[2]]\n[[6]]").replace("\n\n", "\n").split("\n"))
+    var in = streamLines(day()+"\n[[2]]\n[[6]]")
+            .filter(s -> !s.isEmpty())
             .map(this::node)
             .sorted((a, b) -> compare(a, b).map(c -> c ? -1 : 1).orElse(0))
             .toList();
