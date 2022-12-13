@@ -1,9 +1,5 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static com.google.common.base.Preconditions.checkState;
-
-import com.google.common.base.MoreObjects;
-import com.sbaars.adventofcode.year21.Day2021;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -13,7 +9,12 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import com.google.common.base.MoreObjects;
+import com.sbaars.adventofcode.year21.Day2021;
 import org.apache.commons.lang3.ArrayUtils;
+
+import static com.sbaars.adventofcode.util.AOCUtils.verify;
 
 public class Day23 extends Day2021 {
   public Day23() {
@@ -21,25 +22,25 @@ public class Day23 extends Day2021 {
   }
 
   public static void main(String[] args) {
-    new Day23().verify();
+    new Day23().doChecks();
     new Day23().printParts();
   }
   
-  public void verify(){
+  public void doChecks(){
     Queue<State> l = getQueue(new State(new int[][]{{0,0},{1,1},{2,2},{3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
-    checkState(l.peek().win());
+    verify(l.peek().win());
     simulateMoves(l, new HashSet<>());
-    checkState(l.isEmpty());
+    verify(l.isEmpty());
     l = getQueue(new State(new int[][]{{0,0},{1,1},{2,2},{-1,3}}, new int[]{-1,-1,-1,-1,-1,-1,3}));
     simulateMoves(l, new HashSet<>());
-    checkState(l.size() == 1);
-    checkState(l.poll().win());
+    verify(l.size() == 1);
+    verify(l.poll().win());
     l = getQueue(new State(new int[][]{{0,0},{2,1},{1,2},{3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
-    checkState(getMinimum(l, new HashSet<>()) == (100L*4)+(10L*6));
+    verify(getMinimum(l, new HashSet<>()) == (100L*4)+(10L*6));
     l = getQueue(new State(new int[][]{{0,0},{2,2},{1,1},{3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
-    checkState(getMinimum(l, new HashSet<>()) == (100L*10)+(10L*14));
+    verify(getMinimum(l, new HashSet<>()) == (100L*10)+(10L*14));
     l = getQueue(new State(new int[][]{{0,0,0,0},{2,2,2,2},{1,1,1,1},{3,3,3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
-    checkState(getMinimum(l, new HashSet<>()) == 3240L);
+    verify(getMinimum(l, new HashSet<>()) == 3240L);
   }
 
   @Override
