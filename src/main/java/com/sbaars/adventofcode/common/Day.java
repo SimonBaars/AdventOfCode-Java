@@ -5,13 +5,12 @@ import com.sbaars.adventofcode.network.Submit;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
-
-import static org.apache.commons.io.FileUtils.readFileToString;
 
 public abstract class Day {
   public static final String DEFAULT_DELIMITER = "\n";
@@ -29,7 +28,7 @@ public abstract class Day {
 
   public static String getResourceAsString(String resource) {
     try {
-      return readFileToString(getResource(resource));
+      return Files.readString(getResource(resource).toPath());
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
