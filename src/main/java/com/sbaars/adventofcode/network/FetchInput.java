@@ -1,6 +1,5 @@
 package com.sbaars.adventofcode.network;
 
-import org.apache.commons.io.FileUtils;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;
 import org.htmlcleaner.HtmlCleaner;
@@ -17,6 +16,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -74,7 +75,7 @@ public class FetchInput {
 
   public static void writeFile(File file, String content) {
     try {
-      FileUtils.writeStringToFile(file, content);
+      Files.write(file.toPath(), content.getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
