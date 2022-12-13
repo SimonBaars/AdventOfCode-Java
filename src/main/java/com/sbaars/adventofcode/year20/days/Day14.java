@@ -1,18 +1,14 @@
 package com.sbaars.adventofcode.year20.days;
 
+import com.sbaars.adventofcode.year20.Day2020;
+
+import java.util.*;
+
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static java.lang.Long.parseLong;
 import static java.lang.Long.toBinaryString;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-
-import com.sbaars.adventofcode.year20.Day2020;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import org.apache.commons.text.TextStringBuilder;
 
 public class Day14 extends Day2020 {
   public Day14() {
@@ -27,10 +23,9 @@ public class Day14 extends Day2020 {
   public Object part1() {
     Instruction[] input = getInput();
     Map<Long, Long> memory = new HashMap<>();
-    final TextStringBuilder currentMask = new TextStringBuilder();
+    StringBuilder currentMask = new StringBuilder();
     for (Instruction i : input) {
-      i.getMem().ifPresentOrElse(m -> memory.put(m.index, m.value | parseLong(currentMask.toString(), 2)),
-          () -> currentMask.set(i.value).replaceAll("X", "0"));
+      i.getMem().ifPresentOrElse(m -> memory.put(m.index, m.value | parseLong(currentMask.toString(), 2)), () -> currentMask.replace(0, currentMask.length(), i.value.replaceAll("X", "0")));
     }
     return memory.values().stream().mapToLong(e -> e).sum();
   }
@@ -85,13 +80,12 @@ public class Day14 extends Day2020 {
     return bin;
   }
 
-  public static record Instruction(String mem, String value) {
-
+  public record Instruction(String mem, String value) {
     public Optional<Mem> getMem() {
       return mem.startsWith("mem") ? of(readString(mem + value, "mem[%n]%n", Mem.class)) : empty();
     }
   }
 
-  public static record Mem(long index, long value) {
+  public record Mem(long index, long value) {
   }
 }

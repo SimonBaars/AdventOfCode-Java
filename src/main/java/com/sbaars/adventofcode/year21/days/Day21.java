@@ -3,7 +3,7 @@ package com.sbaars.adventofcode.year21.days;
 import com.google.common.base.Objects;
 import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.year21.Day2021;
-import org.apache.commons.math3.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,15 +52,15 @@ public class Day21 extends Day2021 implements HasRecursion {
   @Override
   public Object part2() {
     Pair<Long, Long> universes = universes(new HashMap<>(), new State(7, 2, 0, 0, true));
-    return Math.max(universes.getFirst(), universes.getSecond());
+    return Math.max(universes.getLeft(), universes.getRight());
   }
 
   private Pair<Long, Long> universes(Map<State, Pair<Long, Long>> m, State s) {
-    Pair<Long, Long> wins = new Pair<>(0L, 0L);
+    Pair<Long, Long> wins = Pair.of(0L, 0L);
     if(m.containsKey(s)) {
       return m.get(s);
     } else if(Math.max(s.score[0], s.score[1]) >= 21){
-      return new Pair<>(s.move ? 0L : 1L, s.move ? 1L : 0L);
+      return Pair.of(s.move ? 0L : 1L, s.move ? 1L : 0L);
     }
     for(int i = 1; i<=3; i++){
       for(int j = 1; j<=3; j++){
@@ -69,7 +69,7 @@ public class Day21 extends Day2021 implements HasRecursion {
           while(newTurn>10) newTurn-=10;
           int newScore = s.score[s.move ? 0 : 1] + newTurn;
           Pair<Long, Long> newWins = universes(m, new State(s.move ? newTurn : s.turn[0], s.move ? s.turn[1] : newTurn, s.move ? newScore : s.score[0], s.move ? s.score[1] : newScore, !s.move));
-          wins = new Pair<>(wins.getFirst() + newWins.getFirst(), wins.getSecond() + newWins.getSecond());
+          wins = Pair.of(wins.getLeft() + newWins.getLeft(), wins.getRight() + newWins.getRight());
         }
       }
     }
