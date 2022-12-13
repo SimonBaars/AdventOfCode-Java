@@ -1,7 +1,7 @@
 package com.sbaars.adventofcode.year22.days;
 
 import com.sbaars.adventofcode.common.Either;
-import com.sbaars.adventofcode.common.StringUtils;
+import com.sbaars.adventofcode.util.StringUtils;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.Arrays;

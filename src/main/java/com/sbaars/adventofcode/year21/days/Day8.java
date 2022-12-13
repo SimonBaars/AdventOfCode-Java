@@ -1,16 +1,17 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static com.sbaars.adventofcode.common.StringTools.charSubset;
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
-
 import com.sbaars.adventofcode.common.IntArray;
-import com.sbaars.adventofcode.common.StringTools;
+import com.sbaars.adventofcode.util.StringUtils;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.sbaars.adventofcode.util.StringUtils.charSubset;
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 
 public class Day8 extends Day2021 {
 
@@ -87,7 +88,7 @@ public class Day8 extends Day2021 {
   }
 
   private String difference(String a) {
-    return StringTools.removeAll("abcdefg", a);
+    return StringUtils.removeAll("abcdefg", a);
   }
 
   private boolean getMiddle(String[] line, String a){

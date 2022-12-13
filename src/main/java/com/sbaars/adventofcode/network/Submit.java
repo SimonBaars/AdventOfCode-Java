@@ -1,4 +1,4 @@
-package com.sbaars.adventofcode.util;
+package com.sbaars.adventofcode.network;
 
 import java.net.URI;
 import java.net.http.HttpClient;

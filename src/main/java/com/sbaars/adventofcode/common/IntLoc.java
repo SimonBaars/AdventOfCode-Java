@@ -25,7 +25,6 @@
 
 package com.sbaars.adventofcode.common;
 
-import com.google.common.base.Objects;
 import java.awt.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -80,13 +79,18 @@ public class IntLoc {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    IntLoc loc = (IntLoc) o;
-    return x == loc.x && y == loc.y;
+
+    IntLoc intLoc = (IntLoc) o;
+
+    if (x != intLoc.x) return false;
+    return y == intLoc.y;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(x, y);
+    int result = x;
+    result = 31 * result + y;
+    return result;
   }
 
   @Override

@@ -1,12 +1,13 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static com.google.common.primitives.Ints.asList;
-import static java.util.stream.IntStream.range;
-
 import com.sbaars.adventofcode.year20.Day2020;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.IntStream.range;
 
 public class Day6 extends Day2020 {
 
@@ -29,8 +30,8 @@ public class Day6 extends Day2020 {
   public Object part2() {
     return Arrays.stream(day().split("\n\n")).mapToInt(group -> {
       String[] people = group.split("\n");
-      List<Integer> c = new ArrayList<>(asList(people[0].chars().toArray()));
-      range(1, people.length).forEach(i -> c.retainAll(asList(people[i].chars().toArray())));
+      List<Integer> c = people[0].chars().boxed().collect(toCollection(ArrayList::new));
+      range(1, people.length).forEach(i -> c.retainAll(people[i].chars().boxed().toList()));
       return c.size();
     }).sum();
   }

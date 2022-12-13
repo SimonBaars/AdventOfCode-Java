@@ -1,7 +1,7 @@
 package com.sbaars.adventofcode.common;
 
-import com.sbaars.adventofcode.util.FetchInput;
-import com.sbaars.adventofcode.util.Submit;
+import com.sbaars.adventofcode.network.FetchInput;
+import com.sbaars.adventofcode.network.Submit;
 
 import java.io.File;
 import java.io.IOException;
