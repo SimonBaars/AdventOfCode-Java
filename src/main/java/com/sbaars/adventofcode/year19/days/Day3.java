@@ -41,18 +41,10 @@ public class Day3 extends Day2019 {
     for (Walk walk : walks1) {
       for (; walk.distance > 0; walk.distance--) {
         switch (walk.dir) {
-          case NORTH:
-            y++;
-            break;
-          case SOUTH:
-            y--;
-            break;
-          case WEST:
-            x--;
-            break;
-          case EAST:
-            x++;
-            break;
+          case NORTH -> y++;
+          case SOUTH -> y--;
+          case WEST -> x--;
+          case EAST -> x++;
         }
         performStep(walkedLocations, collect, intersectingLocations, x, y, steps);
         steps++;

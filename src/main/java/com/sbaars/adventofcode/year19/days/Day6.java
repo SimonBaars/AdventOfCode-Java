@@ -2,12 +2,12 @@ package com.sbaars.adventofcode.year19.days;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.sbaars.adventofcode.year19.Day2019;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class Day6 extends Day2019 {
   ArrayListMultimap<String, String> orbits = ArrayListMultimap.create();
@@ -72,6 +72,6 @@ public class Day6 extends Day2019 {
   }
 
   public List<String> findOrbit(String orbitValue) {
-    return orbits.asMap().entrySet().stream().filter(e -> e.getValue().contains(orbitValue)).map(e -> e.getKey()).collect(Collectors.toList());
+    return orbits.asMap().entrySet().stream().filter(e -> e.getValue().contains(orbitValue)).map(Entry::getKey).toList();
   }
 }
