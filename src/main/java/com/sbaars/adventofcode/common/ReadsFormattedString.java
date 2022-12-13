@@ -1,10 +1,10 @@
 package com.sbaars.adventofcode.common;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.sbaars.adventofcode.util.AOCUtils.verify;
 
 public interface ReadsFormattedString {
   static <T> T readString(String s, String pattern, Class<T> target) {
@@ -12,18 +12,11 @@ public interface ReadsFormattedString {
     while (s.length() > 0) {
       if (pattern.length() > 1 && pattern.charAt(0) == '%') {
         int size = mappedObjs.size();
-        switch (pattern.charAt(1)) {
-          case 'n':
-            mappedObjs.add(crunchNumber(s, pattern));
-            break;
-          case 'c':
-            mappedObjs.add(s.charAt(0));
-            break;
-          case 's':
-            mappedObjs.add(crunchString(s, pattern));
-            break;
-          default:
-            break;
+        switch ( pattern.charAt( 1 ) )
+        {
+          case 'n' -> mappedObjs.add(crunchNumber(s, pattern));
+          case 'c' -> mappedObjs.add(s.charAt(0));
+          case 's' -> mappedObjs.add(crunchString(s, pattern));
         }
         if (mappedObjs.size() != size) {
           s = s.substring(mappedObjs.get(size).toString().length());
@@ -39,7 +32,7 @@ public interface ReadsFormattedString {
       }
     }
     try {
-      checkState(target.getConstructors().length > 0, "Class "+target+" has no constructor!");
+      verify(target.getConstructors().length > 0, "Class "+target+" has no constructor!");
       return (T) Arrays.stream(target.getConstructors()).filter(c -> c.getParameterCount() == mappedObjs.size()).findAny().get()//.getConstructor(mappedObjs.stream().map(Object::getClass).toArray(Class[]::new))
           .newInstance(mappedObjs.toArray());
     } catch (Exception e) {
