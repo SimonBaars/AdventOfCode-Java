@@ -25,7 +25,6 @@
 
 package com.sbaars.adventofcode.common;
 
-import com.google.common.base.Objects;
 import java.util.List;
 
 public class Loc3D {
@@ -113,13 +112,20 @@ public class Loc3D {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    Loc3D loc = (Loc3D) o;
-    return x == loc.x && y == loc.y && z == loc.z;
+
+    Loc3D loc3D = (Loc3D) o;
+
+    if (x != loc3D.x) return false;
+    if (y != loc3D.y) return false;
+    return z == loc3D.z;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(x, y, z);
+    int result = (int) (x ^ (x >>> 32));
+    result = 31 * result + (int) (y ^ (y >>> 32));
+    result = 31 * result + (int) (z ^ (z >>> 32));
+    return result;
   }
 
   @Override

@@ -1,12 +1,13 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-
 import com.sbaars.adventofcode.year20.Day2020;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+
+import static java.util.stream.Collectors.toSet;
 
 public class Day4 extends Day2020 {
   private static final Map<String, String> expected = Map.of("byr", "^(200[0-2]|19[2-9][0-9])$",
@@ -41,7 +42,7 @@ public class Day4 extends Day2020 {
   }
 
   public boolean valid1(String[] passport) {
-    return Arrays.stream(passport).map(s -> s.substring(0, 3)).collect(toImmutableSet()).containsAll(expected.keySet());
+    return Arrays.stream(passport).map(s -> s.substring(0, 3)).collect(toSet()).containsAll(expected.keySet());
   }
 
   public boolean valid2(String[] passport) {

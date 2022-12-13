@@ -1,4 +1,4 @@
-package com.sbaars.adventofcode.util;
+package com.sbaars.adventofcode.network;
 
 import static com.sbaars.adventofcode.common.Day.getResourceAsString;
 

@@ -25,12 +25,11 @@
 
 package com.sbaars.adventofcode.common;
 
-import static java.lang.Math.toIntExact;
-
-import com.google.common.base.Objects;
 import java.awt.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static java.lang.Math.toIntExact;
 
 public class Loc {
   public final long x;
@@ -87,13 +86,18 @@ public class Loc {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
+
     Loc loc = (Loc) o;
-    return x == loc.x && y == loc.y;
+
+    if (x != loc.x) return false;
+    return y == loc.y;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(x, y);
+    int result = (int) (x ^ (x >>> 32));
+    result = 31 * result + (int) (y ^ (y >>> 32));
+    return result;
   }
 
   @Override

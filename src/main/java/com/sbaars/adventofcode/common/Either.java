@@ -3,14 +3,12 @@ package com.sbaars.adventofcode.common;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkState;
-
 public class Either<A, B> {
     private final Optional<A> a;
     private final Optional<B> b;
 
     public Either(A a, B b){
-        checkState(a == null || b == null);
+        if(!(a == null || b == null)) throw new IllegalStateException();
         this.a = Optional.ofNullable(a);
         this.b = Optional.ofNullable(b);
     }

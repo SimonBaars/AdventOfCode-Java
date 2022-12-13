@@ -1,4 +1,4 @@
-package com.sbaars.adventofcode.util;
+package com.sbaars.adventofcode.network;
 
 import org.apache.commons.io.FileUtils;
 import org.htmlcleaner.CleanerProperties;

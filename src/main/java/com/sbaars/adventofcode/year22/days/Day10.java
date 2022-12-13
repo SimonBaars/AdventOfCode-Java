@@ -1,6 +1,6 @@
 package com.sbaars.adventofcode.year22.days;
 
-import com.sbaars.adventofcode.util.FetchInput;
+import com.sbaars.adventofcode.network.FetchInput;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.awt.*;

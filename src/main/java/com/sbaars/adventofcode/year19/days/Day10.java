@@ -1,7 +1,7 @@
 package com.sbaars.adventofcode.year19.days;
 
-import com.google.common.base.Objects;
 import com.sbaars.adventofcode.year19.Day2019;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
@@ -77,13 +77,15 @@ public class Day10 extends Day2019 {
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
+
       Asteroid asteroid = (Asteroid) o;
-      return Objects.equal(position, asteroid.position);
+
+      return position.equals(asteroid.position);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(position);
+      return position.hashCode();
     }
   }
 }
