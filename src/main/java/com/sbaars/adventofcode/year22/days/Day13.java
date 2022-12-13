@@ -2,12 +2,17 @@ package com.sbaars.adventofcode.year22.days;
 
 import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.common.Either;
+import com.sbaars.adventofcode.common.StringUtils;
 import com.sbaars.adventofcode.year22.Day2022;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
-import static java.util.Optional.of;
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static java.util.stream.IntStream.range;
 
 public class Day13 extends Day2022 {
   public Day13() {
@@ -28,36 +33,30 @@ public class Day13 extends Day2022 {
 
   @Override
   public Object part1() {
-    var in = day().split("\n\n");
-    List<Integer> indices = new ArrayList<>();
-    for(int i = 0; i<in.length; i++){
-      String[] pair = in[i].split("\n");
-      String left = pair[0];
-      String right = pair[1];
-      if(compare(node(left, findLevels(left)), node(right, findLevels(right))).orElse(false)){
-        indices.add(i+1);
-      }
-    }
-    return indices.stream().mapToInt(e -> e).sum();
+    var in = Arrays.stream(day().split("\n\n")).map(StringUtils::lines).toArray(String[][]::new);
+    return range(0, in.length).filter(i -> compare(node(in[i][0]), node(in[i][1])).orElse(false)).map(i -> i+1).sum();
+  }
+
+  private Node node(String s) {
+    return parseNode(s, findLevels(s));
   }
 
   public int[] findLevels(String str) {
-    Map<Character, Character> m = Map.of(']', '[');
+    int level = 0;
     int[] levels = new int[str.length()];
-    Stack<Character> s = new Stack<>();
     for(int i = 0; i<levels.length; i++) {
       char c = str.charAt(i);
-      if(m.containsKey(c)){
-        s.pop();
-      } else if(m.containsValue(c)) {
-        s.push(c);
+      if (c == '[') {
+        level++;
+      } else if (c == ']') {
+        level--;
       }
-      levels[i] = s.size();
+      levels[i] = level;
     }
     return levels;
   }
 
-  public Node node(String s, int[] levels) {
+  public Node parseNode(String s, int[] levels) {
 //    System.out.println(s);
     if(s.charAt(0) >= '0' && s.charAt(0) <= '9') return new Node(new Either<>(null, Integer.parseInt(s)));
     if(s.equals("[]")) return new Node(new Either<>(new ArrayList<>(), null));
@@ -73,7 +72,7 @@ public class Day13 extends Day2022 {
     commas.add(levels.length-1);
     List<Node> subNodes = new ArrayList<>();
     for(int i = 1; i<commas.size(); i++){
-      subNodes.add(node(s.substring(commas.get(i-1)+1, commas.get(i)), Arrays.copyOfRange(levels, commas.get(i-1)+1, commas.get(i))));
+      subNodes.add(parseNode(s.substring(commas.get(i-1)+1, commas.get(i)), Arrays.copyOfRange(levels, commas.get(i-1)+1, commas.get(i))));
     }
     return new Node(new Either<>(subNodes, null));
   }
@@ -99,7 +98,7 @@ public class Day13 extends Day2022 {
   @Override
   public Object part2() {
     var in = Arrays.stream((day()+"\n[[2]]\n[[6]]").replace("\n\n", "\n").split("\n"))
-            .map(s -> node(s, findLevels(s)))
+            .map(s -> parseNode(s, findLevels(s)))
             .sorted((a, b) -> compare(a, b).map(c -> c ? -1 : 1).orElse(0))
             .toList();
     return (in.indexOf(new Node(new Either<>(List.of(new Node(new Either<>(List.of(new Node(new Either<>(null, 2))), null))), null))) + 1) * (in.indexOf(new Node(new Either<>(List.of(new Node(new Either<>(List.of(new Node(new Either<>(null, 6))), null))), null))) + 1);
