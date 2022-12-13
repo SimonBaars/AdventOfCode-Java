@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -41,43 +42,21 @@ public class Day13 extends Day2022 {
     return parseNode(s, findLevels(s));
   }
 
-  public int[] findLevels(String str) {
-    int level = 0;
-    int[] levels = new int[str.length()];
-    for(int i = 0; i<levels.length; i++) {
-      char c = str.charAt(i);
-      if (c == '[') {
-        level++;
-      } else if (c == ']') {
-        level--;
-      }
-      levels[i] = level;
-    }
-    return levels;
+  private int[] findLevels(String str) {
+    AtomicInteger l = new AtomicInteger();
+    return str.chars().map(c -> l.addAndGet(c == '[' ? 1 : c == ']' ? -1 : 0)).toArray();
   }
 
-  public Node parseNode(String s, int[] levels) {
-//    System.out.println(s);
+  private Node parseNode(String s, int[] levels) {
     if(s.charAt(0) >= '0' && s.charAt(0) <= '9') return new Node(new Either<>(null, Integer.parseInt(s)));
     if(s.equals("[]")) return new Node(new Either<>(new ArrayList<>(), null));
     int currentLevel = levels[0];
-    List<Integer> commas = new ArrayList<>();
-    commas.add(0);
-    for(int i = 0; i<levels.length; i++) {
-      char c = s.charAt(i);
-      if(levels[i] == currentLevel && c == ',') {
-        commas.add(i);
-      }
-    }
-    commas.add(levels.length-1);
-    List<Node> subNodes = new ArrayList<>();
-    for(int i = 1; i<commas.size(); i++){
-      subNodes.add(parseNode(s.substring(commas.get(i-1)+1, commas.get(i)), Arrays.copyOfRange(levels, commas.get(i-1)+1, commas.get(i))));
-    }
+    int[] commas = range(0, levels.length).filter(i -> i == 0 || i == levels.length - 1 || levels[i] == currentLevel && s.charAt(i) == ',').toArray();
+    List<Node> subNodes = range(1, commas.length).mapToObj(i -> parseNode(s.substring(commas[i-1]+1, commas[i]), Arrays.copyOfRange(levels, commas[i-1]+1, commas[i]))).toList();
     return new Node(new Either<>(subNodes, null));
   }
 
-  public Optional<Boolean> compare(Node a, Node b) {
+  private Optional<Boolean> compare(Node a, Node b) {
     if(a.value.isB() && b.value.isB()) {
       int na = a.value.getB();
       int nb = b.value.getB();
