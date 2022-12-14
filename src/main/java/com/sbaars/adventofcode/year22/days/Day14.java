@@ -4,6 +4,7 @@ import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.common.location.MutableLoc;
 import com.sbaars.adventofcode.common.location.Range;
+import com.sbaars.adventofcode.util.AOCUtils;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.stream.Stream;
 
 import static com.sbaars.adventofcode.common.Direction.*;
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.common.grid.InfiniteGrid.toInfiniteGrid;
 
 public class Day14 extends Day2022 {
   public Day14() {
@@ -45,13 +47,7 @@ public class Day14 extends Day2022 {
   }
 
   private static InfiniteGrid constructWalls(List<List<Loc>> in) {
-    InfiniteGrid g = new InfiniteGrid();
-    for(List<Loc> rock : in) {
-      for(int i = 1; i<rock.size(); i++) {
-        new Range(rock.get(i-1), rock.get(i)).stream().forEach(l -> g.set(l, '#'));
-      }
-    }
-    return g;
+    return in.stream().flatMap(AOCUtils::connectedPairs).flatMap(p -> new Range(p.getA(), p.getB()).stream()).collect(toInfiniteGrid('#'));
   }
 
   private static int simulateSand(boolean part1, InfiniteGrid g) {
