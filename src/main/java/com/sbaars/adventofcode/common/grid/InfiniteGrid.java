@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.common.grid;
 
-import java.awt.*;
+import com.sbaars.adventofcode.common.location.Loc;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -10,12 +11,12 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 public class InfiniteGrid implements Grid {
-  final Map<Point, Character> grid = new HashMap<>();
+  final Map<Loc, Character> grid = new HashMap<>();
 
   public InfiniteGrid(char[][] g) {
     for (int i = 0; i < g.length; i++) {
       for (int j = 0; j < g[0].length; j++) {
-        grid.put(new Point(j, i), g[i][j]);
+        grid.put(new Loc(j, i), g[i][j]);
       }
     }
   }
@@ -26,21 +27,21 @@ public class InfiniteGrid implements Grid {
     return grid.values().stream().mapToInt(e -> e);
   }
 
-  public Optional<Character> get(Point p) {
+  public Optional<Character> get(Loc p) {
     return grid.containsKey(p) ? of(grid.get(p)) : empty();
   }
 
-  public void set(Point p, char c) {
+  public void set(Loc p, char c) {
     grid.put(p, c);
   }
 
   public String toString() {
-    int minX = grid.keySet().stream().mapToInt(e -> e.x).min().getAsInt();
-    int minY = grid.keySet().stream().mapToInt(e -> e.y).min().getAsInt();
-    int maxX = grid.keySet().stream().mapToInt(e -> e.x).max().getAsInt();
-    int maxY = grid.keySet().stream().mapToInt(e -> e.y).max().getAsInt();
-    CharGrid g = new CharGrid(' ', maxX+1-minX, maxY+1-minY);
-    grid.forEach((p, i) -> g.set(new Point(p.x-minX, p.y-minY), i));
+    long minX = grid.keySet().stream().mapToLong(e -> e.x).min().getAsLong();
+    long minY = grid.keySet().stream().mapToLong(e -> e.y).min().getAsLong();
+    long maxX = grid.keySet().stream().mapToLong(e -> e.x).max().getAsLong();
+    long maxY = grid.keySet().stream().mapToLong(e -> e.y).max().getAsLong();
+    CharGrid g = new CharGrid(' ', new Loc(maxX+1-minX, maxY+1-minY));
+    grid.forEach((p, i) -> g.set(new Loc(p.x-minX, p.y-minY), i));
     return g.toString();
   }
 }
