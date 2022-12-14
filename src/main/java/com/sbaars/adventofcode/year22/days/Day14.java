@@ -1,6 +1,5 @@
 package com.sbaars.adventofcode.year22.days;
 
-import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.year22.Day2022;
 
@@ -9,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static com.sbaars.adventofcode.common.Direction.*;
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static java.util.stream.IntStream.rangeClosed;
 
@@ -29,7 +30,12 @@ public class Day14 extends Day2022 {
     return amountOfSand(true);
   }
 
-  public int amountOfSand (boolean part1) {
+  @Override
+  public Object part2() {
+    return amountOfSand(false);
+  }
+
+  public int amountOfSand(boolean part1) {
     List<List<Point>> in = dayStream().map(s -> Arrays.asList(s.split(" -> ")).stream().map(s2 -> readString(s2, "%n,%n", Pos.class)).map(p -> new Point(Math.toIntExact(p.x), Math.toIntExact(p.y))).toList()).collect(Collectors.toCollection(ArrayList::new));
     if(!part1) {
       int maxY = in.stream().flatMapToInt(e -> e.stream().mapToInt(f -> f.y)).max().getAsInt() + 2;
@@ -54,32 +60,15 @@ public class Day14 extends Day2022 {
     Point sandOrigin = new Point(500, 0);
     Point fallingSand = sandOrigin;
     while(part1 ? fallingSand.y<950 : g.get(sandOrigin).isEmpty()) {
-      Point moveTo = Direction.SOUTH.move(fallingSand);
-      var destination = g.get(moveTo);
-      if(destination.isEmpty()) {
+      Point finalFallingSand = fallingSand;
+      Point moveTo = Stream.of(SOUTH, SOUTHWEST, SOUTHEAST, CENTER).map(d -> d.move(finalFallingSand)).filter(p -> g.get(p).isEmpty()).findFirst().get();
+      if(moveTo.equals(fallingSand)) {
+        g.set(fallingSand, 'o');
+        fallingSand = sandOrigin;
+      } else {
         fallingSand = moveTo;
-        continue;
       }
-      moveTo = Direction.SOUTHWEST.move(fallingSand);
-      destination = g.get(moveTo);
-      if(destination.isEmpty()) {
-        fallingSand = moveTo;
-        continue;
-      }
-      moveTo = Direction.SOUTHEAST.move(fallingSand);
-      destination = g.get(moveTo);
-      if(destination.isEmpty()) {
-        fallingSand = moveTo;
-        continue;
-      }
-      g.set(fallingSand, 'o');
-      fallingSand = sandOrigin;
     }
     return g.countChar('o');
-  }
-
-  @Override
-  public Object part2() {
-    return amountOfSand(false);
   }
 }
