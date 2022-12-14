@@ -57,14 +57,14 @@ public class CharGrid implements Grid {
   }
 
   public char get(Point p) {
-    if (p.x >= 0 && p.x < grid.length && p.y >= 0 && p.y < grid[0].length) {
-      return grid[p.x][p.y];
+    if (p.x >= 0 && p.x < grid[0].length && p.y >= 0 && p.y < grid.length) {
+      return grid[p.y][p.x];
     }
-    return ' ';
+    return 0;
   }
 
   public void set(Point p, char i) {
-    if(get(p) == ' ') throw new IllegalStateException("Trying to write to coordinate outside of grid: "+p+", "+i);
-    grid[p.x][p.y] = i;
+    if(get(p) == 0) throw new IllegalStateException("Trying to write to coordinate outside of grid: "+p+", "+i);
+    grid[p.y][p.x] = i;
   }
 }
