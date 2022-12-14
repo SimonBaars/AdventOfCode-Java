@@ -3,7 +3,7 @@ package com.sbaars.adventofcode.year21.days;
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static java.math.BigInteger.ZERO;
 
-import com.sbaars.adventofcode.common.Loc3D;
+import com.sbaars.adventofcode.common.location.Loc3D;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.math.BigInteger;
 import java.util.ArrayList;

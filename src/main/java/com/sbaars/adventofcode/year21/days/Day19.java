@@ -1,7 +1,7 @@
 package com.sbaars.adventofcode.year21.days;
 
-import com.sbaars.adventofcode.common.IntLoc;
-import com.sbaars.adventofcode.common.Loc3D;
+import com.sbaars.adventofcode.common.location.IntLoc;
+import com.sbaars.adventofcode.common.location.Loc3D;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.util.ArrayDeque;
 import java.util.ArrayList;

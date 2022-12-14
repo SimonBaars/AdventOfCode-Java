@@ -10,7 +10,7 @@ import static com.sbaars.adventofcode.common.Direction.SOUTHWEST;
 import static com.sbaars.adventofcode.common.Direction.WEST;
 import static com.sbaars.adventofcode.common.Direction.NORTHWEST;
 
-import com.sbaars.adventofcode.common.IntLoc;
+import com.sbaars.adventofcode.common.location.IntLoc;
 import com.sbaars.adventofcode.common.grid.CharGrid;
 import com.sbaars.adventofcode.common.grid.Coordinates;
 import com.sbaars.adventofcode.common.grid.NumGrid;

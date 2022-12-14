@@ -3,7 +3,7 @@ package com.sbaars.adventofcode.year21.days;
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 
 import com.sbaars.adventofcode.common.Direction;
-import com.sbaars.adventofcode.common.Loc;
+import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.awt.*;
 import java.util.List;

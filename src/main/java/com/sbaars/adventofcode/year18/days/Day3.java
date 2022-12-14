@@ -2,7 +2,7 @@ package com.sbaars.adventofcode.year18.days;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 
-import com.sbaars.adventofcode.common.Loc;
+import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year18.Day2018;
 import java.util.HashSet;
 import java.util.List;
