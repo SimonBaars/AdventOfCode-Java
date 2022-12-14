@@ -48,11 +48,6 @@ public class Loc {
     this.y = y;
   }
 
-  public Loc(int x, int y) {
-    this.x = x;
-    this.y = y;
-  }
-
   public Loc(Point p) {
     this.x = p.x;
     this.y = p.y;
