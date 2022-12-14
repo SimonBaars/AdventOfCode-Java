@@ -1,7 +1,8 @@
 package com.sbaars.adventofcode.common.location;
 
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static java.util.stream.IntStream.rangeClosed;
 
 public class Range {
     private final Loc start;
@@ -13,6 +14,8 @@ public class Range {
     }
 
     public Stream<Loc> stream(){
-        return IntStream.range(Math.min(start.intX(), end.intX()), Math.max(start.intX(), end.intX())).boxed().flatMap(x -> IntStream.range(Math.min(start.intY(), end.intY()), Math.max(start.intY(), end.intY())).mapToObj(y -> new Loc(x, y)));
+        return rangeClosed(Math.min(start.intX(), end.intX()), Math.max(start.intX(), end.intX()))
+                .boxed()
+                .flatMap(x -> rangeClosed(Math.min(start.intY(), end.intY()), Math.max(start.intY(), end.intY())).mapToObj(y -> new Loc(x, y)));
     }
 }
