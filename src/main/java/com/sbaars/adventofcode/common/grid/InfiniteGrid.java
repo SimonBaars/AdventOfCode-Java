@@ -40,7 +40,6 @@ public class InfiniteGrid implements Grid {
     int maxX = grid.keySet().stream().mapToInt(e -> e.x).max().getAsInt();
     int maxY = grid.keySet().stream().mapToInt(e -> e.y).max().getAsInt();
     CharGrid g = new CharGrid(' ', maxX+1-minX, maxY+1-minY);
-    System.out.println(g.grid.length+", "+g.grid[0].length);
     grid.forEach((p, i) -> g.set(new Point(p.x-minX, p.y-minY), i));
     return g.toString();
   }
