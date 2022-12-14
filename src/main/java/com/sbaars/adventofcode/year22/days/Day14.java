@@ -1,9 +1,10 @@
 package com.sbaars.adventofcode.year22.days;
 
+import com.sbaars.adventofcode.common.Loc;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.year22.Day2022;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,11 +37,16 @@ public class Day14 extends Day2022 {
   }
 
   public int amountOfSand(boolean part1) {
-    List<List<Point>> in = dayStream().map(s -> Arrays.asList(s.split(" -> ")).stream().map(s2 -> readString(s2, "%n,%n", Pos.class)).map(p -> new Point(Math.toIntExact(p.x), Math.toIntExact(p.y))).toList()).collect(Collectors.toCollection(ArrayList::new));
+    List<List<Point>> in = dayStream().map(s -> Arrays.asList(s.split(" -> ")).stream().map(s2 -> readString(s2, "%n,%n", Loc.class).getPoint()).toList()).collect(Collectors.toCollection(ArrayList::new));
     if(!part1) {
       int maxY = in.stream().flatMapToInt(e -> e.stream().mapToInt(f -> f.y)).max().getAsInt() + 2;
       in.add(List.of(new Point(0, maxY), new Point(999, maxY)));
     }
+    InfiniteGrid g = constructWalls(in);
+    return simulateSand(part1, g);
+  }
+
+  private static InfiniteGrid constructWalls(List<List<Point>> in) {
     InfiniteGrid g = new InfiniteGrid();
     for(List<Point> rock : in) {
       for(int i = 1; i<rock.size(); i++) {
@@ -57,6 +63,10 @@ public class Day14 extends Day2022 {
         }
       }
     }
+    return g;
+  }
+
+  private static int simulateSand(boolean part1, InfiniteGrid g) {
     Point sandOrigin = new Point(500, 0);
     Point fallingSand = sandOrigin;
     while(part1 ? fallingSand.y<950 : g.get(sandOrigin).isEmpty()) {
