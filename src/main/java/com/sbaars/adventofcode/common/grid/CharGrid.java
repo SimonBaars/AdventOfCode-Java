@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.common.grid;
 
-import java.awt.*;
+import com.sbaars.adventofcode.common.location.Loc;
+
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
@@ -15,10 +16,10 @@ public class CharGrid implements Grid {
     grid = Arrays.stream(s.split("\n")).map(String::toCharArray).toArray(char[][]::new);
   }
 
-  public CharGrid(char c, int sizex, int sizey) {
-    this.grid = new char[sizey][sizex];
-    for(int y = 0; y<sizey; y++) {
-      for(int x = 0; x<sizex; x++) {
+  public CharGrid(char c, Loc size) {
+    this.grid = new char[size.intY()][size.intX()];
+    for(int y = 0; y<size.y; y++) {
+      for(int x = 0; x<size.x; x++) {
         grid[y][x] = c;
       }
     }
@@ -56,15 +57,15 @@ public class CharGrid implements Grid {
     return res.toString();
   }
 
-  public char get(Point p) {
+  public char get(Loc p) {
     if (p.x >= 0 && p.x < grid[0].length && p.y >= 0 && p.y < grid.length) {
-      return grid[p.y][p.x];
+      return grid[p.intY()][p.intX()];
     }
     return 0;
   }
 
-  public void set(Point p, char i) {
+  public void set(Loc p, char i) {
     if(get(p) == 0) throw new IllegalStateException("Trying to write to coordinate outside of grid: "+p+", "+i);
-    grid[p.y][p.x] = i;
+    grid[p.intY()][p.intX()] = i;
   }
 }

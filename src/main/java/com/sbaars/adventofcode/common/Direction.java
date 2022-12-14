@@ -1,5 +1,7 @@
 package com.sbaars.adventofcode.common;
 
+import com.sbaars.adventofcode.common.location.Loc;
+
 import java.awt.*;
 import java.util.Arrays;
 
@@ -79,6 +81,20 @@ public enum Direction {
     };
   }
 
+  public Loc move(Loc currentLocation, int amount) {
+    return switch (this) {
+      case SOUTH -> new Loc(currentLocation.x, currentLocation.y + amount);
+      case NORTH -> new Loc(currentLocation.x, currentLocation.y - amount);
+      case EAST -> new Loc(currentLocation.x + amount, currentLocation.y);
+      case WEST -> new Loc(currentLocation.x - amount, currentLocation.y);
+      case SOUTHWEST -> new Loc(currentLocation.x - amount, currentLocation.y + amount);
+      case NORTHEAST -> new Loc(currentLocation.x + amount, currentLocation.y - amount);
+      case SOUTHEAST -> new Loc(currentLocation.x + amount, currentLocation.y + amount);
+      case NORTHWEST -> new Loc(currentLocation.x - amount, currentLocation.y - amount);
+      case CENTER -> new Loc(currentLocation.x, currentLocation.y);
+    };
+  }
+
   public Point moveFix(Point currentLocation, int amount) {
     return switch (this) {
       case SOUTH -> new Point(currentLocation.x, currentLocation.y + amount);
@@ -113,6 +129,10 @@ public enum Direction {
   }
 
   public Point move(Point currentLocation) {
+    return move(currentLocation, 1);
+  }
+
+  public Loc move(Loc currentLocation) {
     return move(currentLocation, 1);
   }
 
