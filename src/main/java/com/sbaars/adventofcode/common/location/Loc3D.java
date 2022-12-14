@@ -23,7 +23,7 @@
  * questions.
  */
 
-package com.sbaars.adventofcode.common;
+package com.sbaars.adventofcode.common.location;
 
 import java.util.List;
 

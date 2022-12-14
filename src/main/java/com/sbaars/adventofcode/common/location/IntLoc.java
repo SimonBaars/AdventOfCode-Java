@@ -23,58 +23,56 @@
  * questions.
  */
 
-package com.sbaars.adventofcode.common;
+package com.sbaars.adventofcode.common.location;
 
 import java.awt.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static java.lang.Math.toIntExact;
+public class IntLoc {
+  public final int x;
+  public final int y;
 
-public class Loc {
-  public final long x;
-  public final long y;
-
-  public Loc() {
+  public IntLoc() {
     this(0, 0);
   }
 
-  public Loc(Loc p) {
+  public IntLoc(IntLoc p) {
     this(p.x, p.y);
   }
 
-  public Loc(long x, long y) {
+  public IntLoc(int x, int y) {
     this.x = x;
     this.y = y;
   }
 
-  public Loc(Point p) {
+  public IntLoc(Point p) {
     this.x = p.x;
     this.y = p.y;
   }
 
-  public long getX() {
+  public int getX() {
     return x;
   }
 
-  public long getY() {
+  public int getY() {
     return y;
   }
 
-  public Loc move(int dx, int dy) {
-    return new Loc(x + dx, y + dy);
+  public IntLoc move(int dx, int dy) {
+    return new IntLoc(x + dx, y + dy);
   }
 
-  public Loc move(Loc l) {
-    return new Loc(x + l.x, y + l.y);
+  public IntLoc move(IntLoc l) {
+    return new IntLoc(x + l.x, y + l.y);
   }
 
   public Point getPoint() {
-    return new Point(toIntExact(x), toIntExact(y));
+    return new Point(Math.toIntExact(x), Math.toIntExact(y));
   }
 
-  public static Stream<Loc> range(int i, int j){
-    return IntStream.range(0, i).boxed().flatMap(x -> IntStream.range(0, j).mapToObj(y -> new Loc(x, y)));
+  public static Stream<IntLoc> range(int i, int j){
+    return IntStream.range(0, i).boxed().flatMap(x -> IntStream.range(0, j).mapToObj(y -> new IntLoc(x, y)));
   }
 
   @Override
@@ -82,29 +80,21 @@ public class Loc {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    Loc loc = (Loc) o;
+    IntLoc intLoc = (IntLoc) o;
 
-    if (x != loc.x) return false;
-    return y == loc.y;
+    if (x != intLoc.x) return false;
+    return y == intLoc.y;
   }
 
   @Override
   public int hashCode() {
-    int result = (int) (x ^ (x >>> 32));
-    result = 31 * result + (int) (y ^ (y >>> 32));
+    int result = x;
+    result = 31 * result + y;
     return result;
   }
 
   @Override
   public String toString() {
     return getClass().getName() + "[x=" + x + ",y=" + y + "]";
-  }
-
-  public int intX() {
-    return toIntExact(x);
-  }
-
-  public int intY() {
-    return toIntExact(y);
   }
 }
