@@ -1,5 +1,7 @@
 package com.sbaars.adventofcode.common.location;
 
+import com.sbaars.adventofcode.common.Pair;
+
 import java.util.stream.Stream;
 
 import static java.util.stream.IntStream.rangeClosed;
@@ -11,6 +13,11 @@ public class Range {
     public Range(Loc start, Loc end) {
         this.start = start;
         this.end = end;
+    }
+
+    public Range(Pair<Loc, Loc> pair) {
+        this.start = pair.a();
+        this.end = pair.b();
     }
 
     public Stream<Loc> stream(){

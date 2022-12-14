@@ -1,15 +1,11 @@
 package com.sbaars.adventofcode.year21.days;
 
+import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.location.IntLoc;
 import com.sbaars.adventofcode.common.location.Loc3D;
 import com.sbaars.adventofcode.year21.Day2021;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
-import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.*;
 
 public class Day19 extends Day2021 {
 
