@@ -2,8 +2,8 @@ package com.sbaars.adventofcode.year21.days;
 
 import com.google.common.base.Objects;
 import com.sbaars.adventofcode.common.HasRecursion;
+import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.year21.Day2021;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.HashMap;

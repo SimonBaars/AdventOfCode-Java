@@ -47,7 +47,7 @@ public class Day14 extends Day2022 {
   }
 
   private static InfiniteGrid constructWalls(List<List<Loc>> in) {
-    return in.stream().flatMap(AOCUtils::connectedPairs).flatMap(p -> new Range(p.getA(), p.getB()).stream()).collect(toInfiniteGrid('#'));
+    return in.stream().flatMap(AOCUtils::connectedPairs).map(Range::new).flatMap(Range::stream).collect(toInfiniteGrid('#'));
   }
 
   private static int simulateSand(boolean part1, InfiniteGrid g) {

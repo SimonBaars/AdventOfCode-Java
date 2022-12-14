@@ -1,8 +1,8 @@
 package com.sbaars.adventofcode.year20.days;
 
 import com.sbaars.adventofcode.common.HasRecursion;
+import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.year20.Day2020;
-import org.apache.commons.lang3.tuple.Pair;
 
 import static java.util.Arrays.stream;
 
@@ -62,7 +62,7 @@ public class Day18 extends Day2020 implements HasRecursion {
           return resolveExpression(new StringBuilder(s.substring(0, i - 3)), true) + leftHand;
         } else {
           var sol = solve(leftSide, false);
-          return getSolution(sol.getRight(), leftSide, sol.getKey() + leftHand, false);
+          return getSolution(sol.getRight(), leftSide, sol.getLeft() + leftHand, false);
         }
       }
     } else if (i == 0) {

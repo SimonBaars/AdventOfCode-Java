@@ -2,25 +2,10 @@ package com.sbaars.adventofcode.common;
 
 import java.util.Objects;
 
-public class Pair<A, B> {
-    private final A a;
-    private final B b;
+public record Pair<A, B>(A a, B b) {
 
-    public Pair(A a, B b){
-        this.a = a;
-        this.b = b;
-    }
-
-    public static<A, B> Pair<A, B> of(A a, B b) {
+    public static <A, B> Pair<A, B> of(A a, B b) {
         return new Pair(a, b);
-    }
-
-    public A getA() {
-        return a;
-    }
-
-    public B getB() {
-        return b;
     }
 
     @Override
@@ -34,10 +19,11 @@ public class Pair<A, B> {
         return Objects.equals(b, either.b);
     }
 
-    @Override
-    public int hashCode() {
-        int result = a != null ? a.hashCode() : 0;
-        result = 31 * result + (b != null ? b.hashCode() : 0);
-        return result;
+    public A getLeft() {
+        return a;
+    }
+
+    public B getRight() {
+        return b;
     }
 }
