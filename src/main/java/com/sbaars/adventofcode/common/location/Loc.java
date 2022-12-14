@@ -32,8 +32,8 @@ import java.util.stream.Stream;
 import static java.lang.Math.toIntExact;
 
 public class Loc {
-  public long x;
-  public long y;
+  public final long x;
+  public final long y;
 
   public Loc() {
     this(0, 0);
@@ -49,8 +49,7 @@ public class Loc {
   }
 
   public Loc(Point p) {
-    this.x = p.x;
-    this.y = p.y;
+    this(p.x, p.y);
   }
 
   public long getX() {
@@ -63,16 +62,6 @@ public class Loc {
 
   public Loc move(int dx, int dy) {
     return new Loc(x + dx, y + dy);
-  }
-
-  public Loc set(long x, long y) {
-    this.x = x;
-    this.y = y;
-    return this;
-  }
-
-  public Loc set(Loc l) {
-    return set(l.x, l.y);
   }
 
   public Loc move(Loc l) {
@@ -91,9 +80,7 @@ public class Loc {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-
     Loc loc = (Loc) o;
-
     if (x != loc.x) return false;
     return y == loc.y;
   }

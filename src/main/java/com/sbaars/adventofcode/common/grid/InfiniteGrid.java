@@ -36,10 +36,10 @@ public class InfiniteGrid implements Grid {
   }
 
   public String toString() {
-    long minX = grid.keySet().stream().mapToLong(e -> e.x).min().getAsLong();
-    long minY = grid.keySet().stream().mapToLong(e -> e.y).min().getAsLong();
-    long maxX = grid.keySet().stream().mapToLong(e -> e.x).max().getAsLong();
-    long maxY = grid.keySet().stream().mapToLong(e -> e.y).max().getAsLong();
+    long minX = grid.keySet().stream().mapToLong(e -> e.x).min().orElse(0);
+    long minY = grid.keySet().stream().mapToLong(e -> e.y).min().orElse(0);
+    long maxX = grid.keySet().stream().mapToLong(e -> e.x).max().orElse(0);
+    long maxY = grid.keySet().stream().mapToLong(e -> e.y).max().orElse(0);
     CharGrid g = new CharGrid(' ', new Loc(maxX+1-minX, maxY+1-minY));
     grid.forEach((p, i) -> g.set(new Loc(p.x-minX, p.y-minY), i));
     return g.toString();

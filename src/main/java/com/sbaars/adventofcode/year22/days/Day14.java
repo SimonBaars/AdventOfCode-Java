@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year22.days;
 
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
+import com.sbaars.adventofcode.common.location.MutableLoc;
 import com.sbaars.adventofcode.common.location.Range;
 import com.sbaars.adventofcode.year22.Day2022;
 
@@ -55,11 +56,11 @@ public class Day14 extends Day2022 {
 
   private static int simulateSand(boolean part1, InfiniteGrid g) {
     Loc sandOrigin = new Loc(500, 0);
-    Loc fallingSand = sandOrigin;
-    while(part1 ? fallingSand.y<950 : g.get(sandOrigin).isEmpty()) {
-      Loc moveTo = Stream.of(SOUTH, SOUTHWEST, SOUTHEAST, CENTER).map(d -> d.move(fallingSand)).filter(p -> g.get(p).isEmpty()).findFirst().get();
-      if(moveTo.equals(fallingSand)) {
-        g.set(fallingSand, 'o');
+    MutableLoc fallingSand = new MutableLoc(sandOrigin);
+    while(part1 ? fallingSand.get().y<950 : g.get(sandOrigin).isEmpty()) {
+      Loc moveTo = Stream.of(SOUTH, SOUTHWEST, SOUTHEAST, CENTER).map(d -> d.move(fallingSand.get())).filter(p -> g.get(p).isEmpty()).findFirst().get();
+      if(moveTo.equals(fallingSand.get())) {
+        g.set(fallingSand.get(), 'o');
         fallingSand.set(sandOrigin);
       } else {
         fallingSand.set(moveTo);
