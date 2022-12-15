@@ -38,19 +38,6 @@ public class Day15 extends Day2022 {
   public Object part2() {
     List<Range> posList = input();
     Range target = new Range(new Loc(0, 0), new Loc(4000000, 4000000));
-    return input().stream()
-            .flatMap(p -> stream(fourDirections()).flatMap(d -> d.move(p.start, p.distance() + 1).walk(d.turnSteps(3), p.distance() + 1)))
-            .filter(target::inRange)
-            .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
-            .peek(System.out::println)
-            .mapToLong(l -> l.x * 4000000 + l.y)
-            .findAny()
-            .getAsLong();
-  }
-
-  public Object part3() {
-    List<Range> posList = input();
-    Range target = new Range(new Loc(0, 0), new Loc(4000000, 4000000));
     List<Range> lines = posList.stream()
             .flatMap(p -> stream(fourDirections()).map(d -> new Range(d.move(p.start, p.distance()), d.turn().move(p.start, p.distance()))))
             .toList();
@@ -59,6 +46,19 @@ public class Day15 extends Day2022 {
             .flatMap(Loc::fourDirs)
             .peek(System.out::println)
             .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
+            .mapToLong(l -> l.x * 4000000 + l.y)
+            .findAny()
+            .getAsLong();
+  }
+
+  public Object part3() {
+    List<Range> posList = input();
+    Range target = new Range(new Loc(0, 0), new Loc(4000000, 4000000));
+    return input().stream()
+            .flatMap(p -> stream(fourDirections()).flatMap(d -> d.move(p.start, p.distance() + 1).walk(d.turnSteps(3), p.distance() + 1)))
+            .filter(target::inRange)
+            .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
+            .peek(System.out::println)
             .mapToLong(l -> l.x * 4000000 + l.y)
             .findAny()
             .getAsLong();
