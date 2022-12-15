@@ -84,7 +84,7 @@ public class Day15 extends Day2022 {
       double x3=x2+h*(y1-y0)/d;
       double y3=y2-h*(x1-x0)/d;
 //      return Stream.concat(new Loc((long)x2, (long)y2).eightDirs(), new Loc((long)x3, (long)y3).eightDirs());
-      return inter.stream().filter(l -> target.inRange(l));
+      return inter.stream().filter(l -> target.inRange(l)).map(l -> l.expand(1000000));
     }).peek(System.out::println).filter(l -> target.inRange(l)).filter(l -> posList.stream().allMatch(p -> l.distance(p.sensor) > p.distance())).findAny().get();
 //    for(int i = 0; i<4000000; i++) {
 //      List<Range> safeRange = new ArrayList<>();
