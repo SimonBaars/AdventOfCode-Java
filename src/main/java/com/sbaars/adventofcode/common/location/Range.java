@@ -25,4 +25,8 @@ public class Range {
                 .boxed()
                 .flatMap(x -> rangeClosed(Math.min(start.intY(), end.intY()), Math.max(start.intY(), end.intY())).mapToObj(y -> new Loc(x, y)));
     }
+
+    public boolean inRange(Loc l) {
+        return l.x >= start.x && l.y >=start.y && l.x <= end.x && l.y <= end.y;
+    }
 }
