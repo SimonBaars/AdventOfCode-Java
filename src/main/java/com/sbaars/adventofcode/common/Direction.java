@@ -75,6 +75,10 @@ public enum Direction {
     return new Direction[]{NORTHEAST, SOUTHEAST, SOUTHWEST, NORTHWEST};
   }
 
+  public Direction turn() {
+    return turn(true);
+  }
+
   public Direction turn(boolean right) {
     int cur = ordinal() + (right ? 1 : -1);
     if (cur == fourDirections().length) cur = 0;

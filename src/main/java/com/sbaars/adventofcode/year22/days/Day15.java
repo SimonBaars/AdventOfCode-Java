@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 import static com.sbaars.adventofcode.common.Direction.fourDirections;
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static com.sbaars.adventofcode.common.grid.InfiniteGrid.toInfiniteGrid;
+import static com.sbaars.adventofcode.util.AOCUtils.allPairs;
 import static java.util.Arrays.stream;
 
 public class Day15 extends Day2022 {
@@ -20,6 +21,7 @@ public class Day15 extends Day2022 {
 
   public static void main(String[] args) {
     new Day15().printParts();
+    System.out.println(new Day15().part3());
   }
 
   @Override
@@ -28,7 +30,7 @@ public class Day15 extends Day2022 {
     InfiniteGrid g = posList.stream().flatMap(Range::flatten).collect(toInfiniteGrid('X'));
     return IntStream.range(-1000000, 5000000) // These values were found by trial-and-error
             .mapToObj(i -> new Loc(i, 2000000))
-            .filter(l -> posList.stream().anyMatch(p -> l.distance(p.start) <= p.distance() && g.get(l).isEmpty()))
+            .filter(l -> posList.stream().anyMatch(p -> p.inDiamond(l) && g.get(l).isEmpty()))
             .count();
   }
 
@@ -39,7 +41,24 @@ public class Day15 extends Day2022 {
     return input().stream()
             .flatMap(p -> stream(fourDirections()).flatMap(d -> d.move(p.start, p.distance() + 1).walk(d.turnSteps(3), p.distance() + 1)))
             .filter(target::inRange)
-            .filter(l -> posList.stream().allMatch(p -> l.distance(p.start) > p.distance()))
+            .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
+            .peek(System.out::println)
+            .mapToLong(l -> l.x * 4000000 + l.y)
+            .findAny()
+            .getAsLong();
+  }
+
+  public Object part3() {
+    List<Range> posList = input();
+    Range target = new Range(new Loc(0, 0), new Loc(4000000, 4000000));
+    List<Range> lines = posList.stream()
+            .flatMap(p -> stream(fourDirections()).map(d -> new Range(d.move(p.start, p.distance()), d.turn().move(p.start, p.distance()))))
+            .toList();
+    return allPairs(lines).flatMap(p -> p.a().intersectsWith(p.b()).stream())
+            .filter(target::inRange)
+            .flatMap(Loc::fourDirs)
+            .peek(System.out::println)
+            .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
             .mapToLong(l -> l.x * 4000000 + l.y)
             .findAny()
             .getAsLong();
