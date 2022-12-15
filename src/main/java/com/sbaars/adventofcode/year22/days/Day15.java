@@ -44,7 +44,6 @@ public class Day15 extends Day2022 {
     return allPairs(lines).flatMap(p -> p.a().intersectsWith(p.b()).stream())
             .filter(target::inRange)
             .flatMap(Loc::fourDirs)
-            .peek(System.out::println)
             .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
             .mapToLong(l -> l.x * 4000000 + l.y)
             .findAny()
@@ -58,7 +57,6 @@ public class Day15 extends Day2022 {
             .flatMap(p -> stream(fourDirections()).flatMap(d -> d.move(p.start, p.distance() + 1).walk(d.turnSteps(3), p.distance() + 1)))
             .filter(target::inRange)
             .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
-            .peek(System.out::println)
             .mapToLong(l -> l.x * 4000000 + l.y)
             .findAny()
             .getAsLong();
