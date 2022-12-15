@@ -26,7 +26,7 @@ public class Day15 extends Day2022 {
   public Object part1() {
     List<Range> posList = input();
     InfiniteGrid g = posList.stream().flatMap(Range::flatten).collect(toInfiniteGrid('X'));
-    return IntStream.range(-1000000, 5000000)
+    return IntStream.range(-1000000, 5000000) // These values were found by trial-and-error
             .mapToObj(i -> new Loc(i, 2000000))
             .filter(l -> posList.stream().anyMatch(p -> l.distance(p.start) <= p.distance() && g.get(l).isEmpty()))
             .count();
