@@ -123,4 +123,8 @@ public class Loc {
   public Stream<Loc> walk(Direction dir, long howFar) {
     return IntStream.range(0, toIntExact(howFar)).mapToObj(i -> dir.move(this, i));
   }
+
+  public Stream<Loc> fourDirs() {
+    return Arrays.stream(Direction.fourDirections()).map(d -> d.move(this));
+  }
 }
