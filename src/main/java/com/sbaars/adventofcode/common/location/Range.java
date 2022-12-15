@@ -58,59 +58,22 @@ public class Range {
     }
 
     public Optional<Loc> intersectsWith(Range r) {
-        long x1 = start.x;
-        long y1 = start.y;
-        long x2 = end.x;
-        long y2 = end.y;
-        long x3 = r.start.x;
-        long y3 = r.start.y;
-        long x4 = r.end.x;
-        long y4 = r.end.y;
-        long denominator = (x1-x2)*(y3-y4)-(y1-y2)*(y3-x4);
-        if(denominator == 0) return empty();
-        double px = ((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/denominator;
-        double py = ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/denominator;
-        return of(new Loc((long)px, (long)py));
-    }
-
-    public Optional<Loc> intersectsWith2(Range r) {
-        long x1 = start.x;
-        long y1 = start.y;
-        long x2 = end.x;
-        long y2 = end.y;
-        long x3 = r.start.x;
-        long y3 = r.start.y;
-        long x4 = r.end.x;
-        long y4 = r.end.y;
-        double denominator = (x1-x2)*(y3-y4)-(y1-y2)*(y3-x4);
-        if(denominator == 0) return empty();
-        double t = ((x1-x3)*(y3-y4)-(y1-y3)*(x3-x4))/denominator;
-        return of(new Loc((long)t*(x2-x1), (long)t*(y2-y1)));
-    }
-
-    public Optional<Loc> intersectsWith3(Range r)
-    {
-        double p0_x = start.x;
-        double p0_y = start.y;
-        double p1_x = end.x;
-        double p1_y = end.y;
-        double p2_x = r.start.x;
-        double p2_y = r.start.y;
-        double p3_x = r.end.x;
-        double p3_y = r.end.y;
+        double x0 = start.x;
+        double y0 = start.y;
+        double x1 = end.x;
+        double y1 = end.y;
+        double x2 = r.start.x;
+        double y2 = r.start.y;
+        double x3 = r.end.x;
+        double y3 = r.end.y;
         double s1_x, s1_y, s2_x, s2_y;
-        s1_x = p1_x - p0_x;     s1_y = p1_y - p0_y;
-        s2_x = p3_x - p2_x;     s2_y = p3_y - p2_y;
+        s1_x = x1 - x0;     s1_y = y1 - y0;
+        s2_x = x3 - x2;     s2_y = y3 - y2;
 
         double s, t;
-        s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
-        t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
-
-        if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
-        {
-            return of(new Loc(round(p0_x + (t * s1_x)), round(p0_y + (t * s1_y))));
-        }
-
-        return empty(); // No collision
+        double denom = -s2_x * s1_y + s1_x * s2_y;
+        s = (-s1_y * (x0 - x2) + s1_x * (y0 - y2)) / denom;
+        t = ( s2_x * (y0 - y2) - s2_y * (x0 - x2)) / denom;
+        return s >= 0 && s <= 1 && t >= 0 && t <= 1 ? of(new Loc(round(x0 + (t * s1_x)), round(y0 + (t * s1_y)))) : empty();
     }
 }
