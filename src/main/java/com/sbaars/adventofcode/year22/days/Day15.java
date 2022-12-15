@@ -5,14 +5,13 @@ import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.DoubleLoc;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.common.location.Range;
-import com.sbaars.adventofcode.util.AOCUtils;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.List;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static com.sbaars.adventofcode.common.grid.InfiniteGrid.toInfiniteGrid;
-import static java.lang.Math.*;
+import static java.lang.Math.round;
 
 public class Day15 extends Day2022 {
   public Day15() {
@@ -64,25 +63,28 @@ public class Day15 extends Day2022 {
     posList.forEach(p -> g.set(p.beacon, 'B'));
     Range target = new Range(new Loc(0, 0), new Loc(4000000, 4000000));
     Loc cor = new Loc(3068581, 3017867);
-    System.out.println(posList.stream().allMatch(p -> cor.distance(p.sensor) > p.distance()));
+    System.out.println(target.inRange(cor) && posList.stream().allMatch(p -> cor.distance(p.sensor) > p.distance()));
 
-    return AOCUtils.allPairs(posList).flatMap(p -> {
-      Pos p1 = p.a();
-      Pos p2 = p.b();
-      List<Loc> inter = circleCircleIntersectionPoints(p1.sensor, p2.sensor, p1.distance(), p2.distance());
-      long r0 = p1.sensor.distance(p1.beacon);
-      long r1 = p2.sensor.distance(p2.beacon);
-      long r2 = p1.sensor.distance(p2.sensor);
-      if(r0 == r1 + r2){
-        long xDiff = abs(p1.sensor.x-p2.sensor.x);
-        long yDiff = abs(p1.sensor.y-p2.sensor.y);
-        System.out.println(new Loc(p2.sensor.x+xDiff, p1.sensor.y+yDiff));
-      }
-//      long xDiff = abs(p1.sensor.x-p2.sensor.x);
-//      long yDiff = abs(p1.sensor.y-p2.sensor.y);
-//      return Stream.concat(new Loc((long)x2, (long)y2).eightDirs(), new Loc((long)x3, (long)y3).eightDirs());
-      return inter.stream().filter(l -> target.inRange(l)).flatMap(l -> l.expand(1));
-    }).filter(l -> target.inRange(l)).filter(l -> posList.stream().allMatch(p -> l.distance(p.sensor) > p.distance())).findAny().get();
+//    return AOCUtils.allPairs(posList).flatMap(p -> {
+//      Pos p1 = p.a();
+//      Pos p2 = p.b();
+//      List<Loc> inter = circleCircleIntersectionPoints(p1.sensor, p2.sensor, p1.distance(), p2.distance());
+//      long r0 = p1.sensor.distance(p1.beacon);
+//      long r1 = p2.sensor.distance(p2.beacon);
+//      long r2 = p1.sensor.distance(p2.sensor);
+//      if(r0 == r1 + r2){
+//        long xDiff = abs(p1.sensor.x-p2.sensor.x);
+//        long yDiff = abs(p1.sensor.y-p2.sensor.y);
+//        System.out.println(new Loc(p2.sensor.x+xDiff, p1.sensor.y+yDiff));
+//      }
+////      long xDiff = abs(p1.sensor.x-p2.sensor.x);
+////      long yDiff = abs(p1.sensor.y-p2.sensor.y);
+////      return Stream.concat(new Loc((long)x2, (long)y2).eightDirs(), new Loc((long)x3, (long)y3).eightDirs());
+//      return inter.stream().filter(l -> target.inRange(l)).flatMap(l -> l.expand(1));
+//    }).filter(l -> target.inRange(l)).filter(l -> posList.stream().allMatch(p -> l.distance(p.sensor) > p.distance())).findAny().get();
+    return posList.stream().flatMap(p -> {
+      return List.of(new Loc(p.sensor.x, p.sensor.y+p.distance()), new Loc(p.sensor.x, p.sensor.y-p.distance()), new Loc(p.sensor.x+p.distance(), p.sensor.y), new Loc(p.sensor.x-p.distance(), p.sensor.y)).stream().flatMap(l -> l.expand(10000)).filter(l -> l.distance(p.sensor) == p.distance()+1);
+    }).filter(target::inRange).filter(l -> posList.stream().allMatch(p -> l.distance(p.sensor) > p.distance())).findAny().get();
 //    for(int i = 0; i<4000000; i++) {
 //      List<Range> safeRange = new ArrayList<>();
 //      for (Pos p : posList) {
