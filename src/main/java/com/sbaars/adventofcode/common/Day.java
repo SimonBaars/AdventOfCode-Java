@@ -48,9 +48,9 @@ public abstract class Day {
   public abstract Object part2();
 
   public void printParts() {
-//    solutionPart1 = part1();
-//    if(solutionPart1 instanceof Optional) solutionPart1 = ((Optional<?>)solutionPart1).get();
-//    System.out.println("Part 1: " + solutionPart1);
+    solutionPart1 = part1();
+    if(solutionPart1 instanceof Optional) solutionPart1 = ((Optional<?>)solutionPart1).get();
+    System.out.println("Part 1: " + solutionPart1);
     solutionPart2 = part2();
     if(solutionPart2 instanceof Optional) solutionPart2 = ((Optional<?>)solutionPart2).get();
     System.out.println("Part 2: " + solutionPart2);

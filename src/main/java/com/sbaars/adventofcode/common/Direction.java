@@ -96,7 +96,7 @@ public enum Direction {
     };
   }
 
-  public Loc move(Loc currentLocation, int amount) {
+  public Loc move(Loc currentLocation, long amount) {
     return switch (this) {
       case SOUTH -> new Loc(currentLocation.x, currentLocation.y + amount);
       case NORTH -> new Loc(currentLocation.x, currentLocation.y - amount);
