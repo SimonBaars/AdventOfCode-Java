@@ -1,17 +1,20 @@
 package com.sbaars.adventofcode.year22.days;
 
 import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.DoubleLoc;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.common.location.Range;
 import com.sbaars.adventofcode.year22.Day2022;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static com.sbaars.adventofcode.common.grid.InfiniteGrid.toInfiniteGrid;
 import static java.lang.Math.round;
+import static java.lang.Math.toIntExact;
 
 public class Day15 extends Day2022 {
   public Day15() {
@@ -82,9 +85,12 @@ public class Day15 extends Day2022 {
 ////      return Stream.concat(new Loc((long)x2, (long)y2).eightDirs(), new Loc((long)x3, (long)y3).eightDirs());
 //      return inter.stream().filter(l -> target.inRange(l)).flatMap(l -> l.expand(1));
 //    }).filter(l -> target.inRange(l)).filter(l -> posList.stream().allMatch(p -> l.distance(p.sensor) > p.distance())).findAny().get();
-    return posList.stream().flatMap(p -> {
-      return List.of(new Loc(p.sensor.x, p.sensor.y+p.distance()), new Loc(p.sensor.x, p.sensor.y-p.distance()), new Loc(p.sensor.x+p.distance(), p.sensor.y), new Loc(p.sensor.x-p.distance(), p.sensor.y)).stream().flatMap(l -> l.expand(10000)).filter(l -> l.distance(p.sensor) == p.distance()+1);
-    }).filter(target::inRange).filter(l -> posList.stream().allMatch(p -> l.distance(p.sensor) > p.distance())).findAny().get();
+//    return posList.stream().flatMap(p -> {
+//      return List.of(new Loc(p.sensor.x, p.sensor.y+p.distance()), new Loc(p.sensor.x, p.sensor.y-p.distance()), new Loc(p.sensor.x+p.distance(), p.sensor.y), new Loc(p.sensor.x-p.distance(), p.sensor.y)).stream().flatMap(l -> l.expand(10000)).filter(l -> l.distance(p.sensor) == p.distance()+1);
+//    }).filter(target::inRange).filter(l -> posList.stream().allMatch(p -> l.distance(p.sensor) > p.distance())).findAny().get();
+    return posList.stream().flatMap(p ->
+                    Arrays.stream(Direction.fourDirections()).flatMap(d -> d.move(p.sensor, toIntExact(p.distance()) + 1).walk(d.turnSteps(3), toIntExact(p.distance() + 2)))
+            ).filter(target::inRange).filter(l -> posList.stream().allMatch(p -> l.distance(p.sensor) > p.distance())).findAny().get();
 //    for(int i = 0; i<4000000; i++) {
 //      List<Range> safeRange = new ArrayList<>();
 //      for (Pos p : posList) {

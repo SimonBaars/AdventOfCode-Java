@@ -4,6 +4,7 @@ import com.sbaars.adventofcode.common.location.Loc;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import static java.lang.Math.abs;
 
@@ -58,6 +59,20 @@ public enum Direction {
 
   public static Direction[] eightDirections() {
     return new Direction[]{NORTH, EAST, SOUTH, WEST, NORTHEAST, SOUTHEAST, SOUTHWEST, NORTHWEST};
+  }
+
+  public static Direction[] round() {
+    return new Direction[]{NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST};
+  }
+
+  public Direction turnSteps(int steps) {
+    Direction[] d = round();
+    int index = IntStream.range(0, d.length).filter(i -> d[i] == this).findFirst().getAsInt();
+    return d[(index + steps) % d.length];
+  }
+
+  public static Direction[] diagonals() {
+    return new Direction[]{NORTHEAST, SOUTHEAST, SOUTHWEST, NORTHWEST};
   }
 
   public Direction turn(boolean right) {
