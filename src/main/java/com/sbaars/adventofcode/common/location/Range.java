@@ -5,6 +5,7 @@ import com.sbaars.adventofcode.common.Pair;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static java.lang.Math.round;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.IntStream.rangeClosed;
@@ -107,21 +108,9 @@ public class Range {
 
         if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
         {
-            return of(new Loc((long)(p0_x + (t * s1_x)), (long)(p0_y + (t * s1_y))));
+            return of(new Loc(round(p0_x + (t * s1_x)), round(p0_y + (t * s1_y))));
         }
 
         return empty(); // No collision
     }
-
-
-//    public Optional<Loc> intersectsWith2(Range r) {
-//        long x1 = start.x;
-//        long y1 = start.y;
-//        long x2 = end.x;
-//        long y2 = end.y;
-//        long x3 = r.start.x;
-//        long y3 = r.start.y;
-//        long x4 = r.end.x;
-//        long y4 = r.end.y;
-//    }
 }
