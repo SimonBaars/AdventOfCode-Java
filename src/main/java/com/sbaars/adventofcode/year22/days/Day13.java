@@ -54,8 +54,11 @@ public class Day13 extends Day2022 {
   private Node node(String s, int[] levels) {
     if(s.charAt(0) >= '0' && s.charAt(0) <= '9') return node(parseInt(s));
     if(s.equals("[]")) return node(List.of());
-    int[] commas = range(0, levels.length).filter(i -> i == 0 || i == levels.length - 1 || levels[i] == levels[0] && s.charAt(i) == ',').toArray();
-    return node(range(1, commas.length).mapToObj(i -> node(s.substring(commas[i-1]+1, commas[i]))).toList());
+    int[] commas = range(0, levels.length)
+            .filter(i -> i == 0 || i == levels.length - 1 || levels[i] == levels[0] && s.charAt(i) == ',')
+            .toArray();
+    return node(range(1, commas.length)
+            .mapToObj(i -> node(s.substring(commas[i-1]+1, commas[i]))).toList());
   }
 
   private Optional<Boolean> compare(Node a, Node b) {
