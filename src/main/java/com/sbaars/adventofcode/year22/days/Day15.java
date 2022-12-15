@@ -70,22 +70,19 @@ public class Day15 extends Day2022 {
       Pos p1 = p.a();
       Pos p2 = p.b();
       List<Loc> inter = circleCircleIntersectionPoints(p1.sensor, p2.sensor, p1.distance(), p2.distance());
-      int x0 = p1.sensor.intX();
-      int x1 = p2.sensor.intX();
-      int y0 = p1.sensor.intY();
-      int y1 = p2.sensor.intY();
       long r0 = p1.sensor.distance(p1.beacon);
       long r1 = p2.sensor.distance(p2.beacon);
-      double d= sqrt((x1-x0)^2 + (y1-y0)^2);
-      double a=(pow(r0,2)-pow(r1,2)+pow(d, 2))/(2*d);
-      double h=sqrt(pow(r0,2)-pow(a,2));
-      double x2=x0+a*(x1-x0)/d;
-      double y2=y0+a*(y1-y0)/d;
-      double x3=x2+h*(y1-y0)/d;
-      double y3=y2-h*(x1-x0)/d;
+      long r2 = p1.sensor.distance(p2.sensor);
+      if(r0 == r1 + r2){
+        long xDiff = abs(p1.sensor.x-p2.sensor.x);
+        long yDiff = abs(p1.sensor.y-p2.sensor.y);
+        System.out.println(new Loc(p2.sensor.x+xDiff, p1.sensor.y+yDiff));
+      }
+//      long xDiff = abs(p1.sensor.x-p2.sensor.x);
+//      long yDiff = abs(p1.sensor.y-p2.sensor.y);
 //      return Stream.concat(new Loc((long)x2, (long)y2).eightDirs(), new Loc((long)x3, (long)y3).eightDirs());
-      return inter.stream().filter(l -> target.inRange(l)).flatMap(l -> l.expand(1000000));
-    }).peek(System.out::println).filter(l -> target.inRange(l)).filter(l -> posList.stream().allMatch(p -> l.distance(p.sensor) > p.distance())).findAny().get();
+      return inter.stream().filter(l -> target.inRange(l)).flatMap(l -> l.expand(1));
+    }).filter(l -> target.inRange(l)).filter(l -> posList.stream().allMatch(p -> l.distance(p.sensor) > p.distance())).findAny().get();
 //    for(int i = 0; i<4000000; i++) {
 //      List<Range> safeRange = new ArrayList<>();
 //      for (Pos p : posList) {
