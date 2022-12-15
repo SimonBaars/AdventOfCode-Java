@@ -104,4 +104,8 @@ public class Loc {
   public int intY() {
     return toIntExact(y);
   }
+
+  public long distance(Loc pt) {
+    return Math.abs(pt.x-x) + Math.abs(pt.y-y);
+  }
 }
