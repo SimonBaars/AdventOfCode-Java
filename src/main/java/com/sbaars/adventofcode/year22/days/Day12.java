@@ -27,11 +27,11 @@ public class Day12 extends Day2022 {
     return new NumGrid(Arrays.stream(dayGrid()).map(e -> new String(e).chars().mapToLong(f -> f).toArray()).toArray(long[][]::new));
   }
 
-  private long findExit(Point p9, NumGrid g) {
+  private long findExit(Point start, NumGrid g) {
     Set<Point> visited = new HashSet<>();
     Set<Point> currentLevel = new HashSet<>();
-    currentLevel.add(p9);
-    visited.add(p9);
+    currentLevel.add(start);
+    visited.add(start);
 
     long steps = 1;
     while(!currentLevel.isEmpty()){
@@ -47,6 +47,7 @@ public class Day12 extends Day2022 {
           }
         }
       }
+      steps++;
     }
     return Long.MAX_VALUE;
   }
