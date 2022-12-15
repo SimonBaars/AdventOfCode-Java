@@ -119,4 +119,8 @@ public class Loc {
   public Stream<Loc> expand(long howMuch) {
     return new Range(new Loc(x-(howMuch/2), y-(howMuch/2)), new Loc(x+(howMuch/2), y+(howMuch/2))).stream();
   }
+
+  public Stream<Loc> walk(Direction dir, int howFar) {
+    return IntStream.range(0, howFar).mapToObj(i -> dir.move(this, i));
+  }
 }
