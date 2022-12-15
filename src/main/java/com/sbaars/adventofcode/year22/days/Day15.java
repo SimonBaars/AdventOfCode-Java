@@ -33,7 +33,7 @@ public class Day15 extends Day2022 {
   public Object part2() {
     List<Range> posList = input();
     Range target = new Range(new Loc(0, 0), new Loc(4000000, 4000000));
-    return input().stream().filter(p -> p.flatten().allMatch(target::inRange)).flatMap(p ->
+    return input().stream().flatMap(p ->
                     stream(fourDirections()).flatMap(d -> d.move(p.start, p.distance() + 1).walk(d.turnSteps(3), p.distance() + 1))
             ).filter(target::inRange).filter(l -> posList.stream().allMatch(p -> l.distance(p.start) > p.distance())).mapToLong(l -> l.x * 4000000 + l.y).findAny().getAsLong();
   }
