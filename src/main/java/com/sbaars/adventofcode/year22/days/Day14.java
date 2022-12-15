@@ -37,7 +37,12 @@ public class Day14 extends Day2022 {
   }
 
   public int amountOfSand(boolean part1) {
-    List<List<Loc>> in = dayStream().map(s -> Arrays.asList(s.split(" -> ")).stream().map(s2 -> readString(s2, "%n,%n", Loc.class)).toList()).collect(Collectors.toCollection(ArrayList::new));
+    List<List<Loc>> in = dayStream()
+            .map(s -> Arrays.asList(s.split(" -> "))
+                    .stream()
+                    .map(s2 -> readString(s2, "%n,%n", Loc.class))
+                    .toList())
+            .collect(Collectors.toCollection(ArrayList::new));
     if(!part1) {
       long maxY = in.stream().flatMapToLong(e -> e.stream().mapToLong(f -> f.y)).max().getAsLong() + 2;
       in.add(List.of(new Loc(0, maxY), new Loc(999, maxY)));
@@ -47,14 +52,22 @@ public class Day14 extends Day2022 {
   }
 
   private static InfiniteGrid constructWalls(List<List<Loc>> in) {
-    return in.stream().flatMap(AOCUtils::connectedPairs).map(Range::new).flatMap(Range::stream).collect(toInfiniteGrid('#'));
+    return in.stream()
+            .flatMap(AOCUtils::connectedPairs)
+            .map(Range::new)
+            .flatMap(Range::stream)
+            .collect(toInfiniteGrid('#'));
   }
 
   private static int simulateSand(boolean part1, InfiniteGrid g) {
     Loc sandOrigin = new Loc(500, 0);
     MutableLoc fallingSand = new MutableLoc(sandOrigin);
     while(part1 ? fallingSand.get().y<950 : g.get(sandOrigin).isEmpty()) {
-      Loc moveTo = Stream.of(SOUTH, SOUTHWEST, SOUTHEAST, CENTER).map(d -> d.move(fallingSand.get())).filter(p -> g.get(p).isEmpty()).findFirst().get();
+      Loc moveTo = Stream.of(SOUTH, SOUTHWEST, SOUTHEAST, CENTER)
+              .map(d -> d.move(fallingSand.get()))
+              .filter(p -> g.get(p).isEmpty())
+              .findFirst()
+              .get();
       if(moveTo.equals(fallingSand.get())) {
         g.set(fallingSand.get(), 'o');
         fallingSand.set(sandOrigin);
