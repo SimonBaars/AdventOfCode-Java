@@ -26,16 +26,23 @@ public class Day15 extends Day2022 {
   public Object part1() {
     List<Range> posList = input();
     InfiniteGrid g = posList.stream().flatMap(Range::flatten).collect(toInfiniteGrid('X'));
-    return IntStream.range(-1000000, 5000000).mapToObj(i -> new Loc(i, 2000000)).filter(l -> posList.stream().anyMatch(p -> l.distance(p.start) <= p.distance() && g.get(l).isEmpty())).count();
+    return IntStream.range(-1000000, 5000000)
+            .mapToObj(i -> new Loc(i, 2000000))
+            .filter(l -> posList.stream().anyMatch(p -> l.distance(p.start) <= p.distance() && g.get(l).isEmpty()))
+            .count();
   }
 
   @Override
   public Object part2() {
     List<Range> posList = input();
     Range target = new Range(new Loc(0, 0), new Loc(4000000, 4000000));
-    return input().stream().flatMap(p ->
-                    stream(fourDirections()).flatMap(d -> d.move(p.start, p.distance() + 1).walk(d.turnSteps(3), p.distance() + 1))
-            ).filter(target::inRange).filter(l -> posList.stream().allMatch(p -> l.distance(p.start) > p.distance())).mapToLong(l -> l.x * 4000000 + l.y).findAny().getAsLong();
+    return input().stream()
+            .flatMap(p -> stream(fourDirections()).flatMap(d -> d.move(p.start, p.distance() + 1).walk(d.turnSteps(3), p.distance() + 1)))
+            .filter(target::inRange)
+            .filter(l -> posList.stream().allMatch(p -> l.distance(p.start) > p.distance()))
+            .mapToLong(l -> l.x * 4000000 + l.y)
+            .findAny()
+            .getAsLong();
   }
 
   private List<Range> input() {
