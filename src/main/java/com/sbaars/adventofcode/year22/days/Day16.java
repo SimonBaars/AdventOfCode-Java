@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static com.sbaars.adventofcode.util.AOCUtils.allPairs;
+import static java.util.List.of;
 
 public class Day16 extends Day2022 {
 
@@ -67,26 +68,14 @@ public class Day16 extends Day2022 {
         if(s.open.size() == openable.size()) { // All valves are open, time to chill
           newStates.add(new State2(s.open, valves.get("AA"), valves.get("AA"), flow));
         }
-        boolean couldOpen = false;
-        boolean iCanOpen = s.me.flow > 0 && !s.open.containsKey(s.me.name);
-        boolean eleFriendCanOpen = s.elephant.flow > 0 && !s.open.containsKey(s.elephant.name);
-        couldOpen = openValve(iCanOpen, false, valves, newStates, s, flow);
-        couldOpen = openValve(false, eleFriendCanOpen, valves, newStates, s, flow);
-        couldOpen = openValve(iCanOpen, eleFriendCanOpen, valves, newStates, s, flow);
-        if(s.elephant.flow > 0 && !s.open.containsKey(s.elephant.name)) {
-          Map<String, Long> newOpen = new HashMap<>(s.open);
-          newOpen.put(s.elephant.name, s.elephant.flow);
-          Arrays.stream(s.me.others.split(", ")).forEach(name -> newStates.add(new State2(newOpen, valves.get(name), s.elephant, flow)));
-          couldOpen = true;
+        int nStates = newStates.size();
+        newStates.addAll(openValve(s.me, s.elephant, false, valves, s, flow));
+        newStates.addAll(openValve(s.elephant, s.me, false, valves, s, flow));
+        newStates.addAll(openValve(s.me, s.elephant, true, valves, s, flow));
+        if(newStates.size() == nStates) { // If there are no valves to be opened, we walk
+          allPairs(of(s.me.others.split(", ")), of(s.elephant.others.split(", ")))
+                  .forEach(p -> newStates.add(new State2(s.open, valves.get(p.a()), valves.get(p.b()), flow)));
         }
-        if(s.me.flow > 0 && !s.open.containsKey(s.me.name) && s.elephant.flow > 0 && !s.open.containsKey(s.elephant.name)) {
-          Map<String, Long> newOpen = new HashMap<>(s.open);
-          newOpen.put(s.me.name, s.me.flow);
-          newOpen.put(s.elephant.name, s.elephant.flow);
-          newStates.add(new State2(newOpen, s.me, s.elephant, flow));
-          couldOpen = true;
-        }
-        if(!couldOpen) allPairs(List.of(s.me.others.split(", ")), List.of(s.elephant.others.split(", "))).forEach(p -> newStates.add(new State2(s.open, valves.get(p.a()), valves.get(p.b()), flow)));
       }
       states = newStates;
       if(kpis.containsKey(minutes)){
@@ -97,22 +86,16 @@ public class Day16 extends Day2022 {
     return states.stream().mapToLong(State2::totalFlow).max().getAsLong();
   }
 
-  private static boolean openValve(boolean iCanOpen, boolean elefriendCanOpen, Map<String, Valve> valves, Set<State2> newStates, State2 s, long flow) {
-    if(iCanOpen || elefriendCanOpen) {
+  private List<State2> openValve(Valve v1, Valve v2, boolean both, Map<String, Valve> valves, State2 s, long flow) {
+    if(v1.flow > 0 && !s.open.containsKey(v1.name) && (!both || (v2.flow > 0 && !s.open.containsKey(v2.name)))) {
       Map<String, Long> newOpen = new HashMap<>(s.open);
-      if (iCanOpen) newOpen.put(s.me.name, s.me.flow);
-      if (elefriendCanOpen) newOpen.put(s.elephant.name, s.elephant.flow);
-      if (iCanOpen) {
-        Arrays.stream(s.elephant.others.split(", ")).forEach(name -> newStates.add(new State2(newOpen, s.me, valves.get(name), flow)));
-      } else if (elefriendCanOpen) {
-        Arrays.stream(s.me.others.split(", ")).forEach(name -> newStates.add(new State2(newOpen, valves.get(name), s.elephant, flow)));
-      } else {
-        newStates.add(new State2(newOpen, s.me, s.elephant, flow));
+      newOpen.put(v1.name, v1.flow);
+      if(both) {
+        newOpen.put(v2.name, v2.flow);
+        return of(new State2(newOpen, v1, v2, flow));
       }
-      return true;
+      return Arrays.stream(v2.others.split(", ")).map(name -> new State2(newOpen, v1, valves.get(name), flow)).toList();
     }
-    return false;
+    return of();
   }
-
-  private
 }
