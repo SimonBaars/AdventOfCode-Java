@@ -67,16 +67,26 @@ public class Day16 extends Day2022 {
         if(s.open.size() == openable.size()) { // All valves are open, time to chill
           newStates.add(new State2(s.open, valves.get("AA"), valves.get("AA"), flow));
         }
+        boolean couldOpen = false;
         boolean iCanOpen = s.me.flow > 0 && !s.open.containsKey(s.me.name);
-        boolean elefriendCanOpen = s.elephant.flow > 0 && !s.open.containsKey(s.elephant.name);
-        if(iCanOpen || elefriendCanOpen) {
+        boolean eleFriendCanOpen = s.elephant.flow > 0 && !s.open.containsKey(s.elephant.name);
+        couldOpen = openValve(iCanOpen, false, valves, newStates, s, flow);
+        couldOpen = openValve(false, eleFriendCanOpen, valves, newStates, s, flow);
+        couldOpen = openValve(iCanOpen, eleFriendCanOpen, valves, newStates, s, flow);
+        if(s.elephant.flow > 0 && !s.open.containsKey(s.elephant.name)) {
           Map<String, Long> newOpen = new HashMap<>(s.open);
-          if(iCanOpen) newOpen.put(s.me.name, s.me.flow);
-          if(elefriendCanOpen) newOpen.put(s.elephant.name, s.elephant.flow);
-          if(iCanOpen) Arrays.stream(s.elephant.others.split(", ")).forEach(name -> newStates.add(new State2(newOpen, s.me, valves.get(name), flow)));
-          else if(elefriendCanOpen) Arrays.stream(s.me.others.split(", ")).forEach(name -> newStates.add(new State2(newOpen, valves.get(name), s.elephant, flow)));
-          else newStates.add(new State2(newOpen, s.me, s.elephant, flow));
-        } else allPairs(List.of(s.me.others.split(", ")), List.of(s.elephant.others.split(", "))).forEach(p -> newStates.add(new State2(s.open, valves.get(p.a()), valves.get(p.b()), flow)));
+          newOpen.put(s.elephant.name, s.elephant.flow);
+          Arrays.stream(s.me.others.split(", ")).forEach(name -> newStates.add(new State2(newOpen, valves.get(name), s.elephant, flow)));
+          couldOpen = true;
+        }
+        if(s.me.flow > 0 && !s.open.containsKey(s.me.name) && s.elephant.flow > 0 && !s.open.containsKey(s.elephant.name)) {
+          Map<String, Long> newOpen = new HashMap<>(s.open);
+          newOpen.put(s.me.name, s.me.flow);
+          newOpen.put(s.elephant.name, s.elephant.flow);
+          newStates.add(new State2(newOpen, s.me, s.elephant, flow));
+          couldOpen = true;
+        }
+        if(!couldOpen) allPairs(List.of(s.me.others.split(", ")), List.of(s.elephant.others.split(", "))).forEach(p -> newStates.add(new State2(s.open, valves.get(p.a()), valves.get(p.b()), flow)));
       }
       states = newStates;
       if(kpis.containsKey(minutes)){
@@ -86,4 +96,23 @@ public class Day16 extends Day2022 {
     }
     return states.stream().mapToLong(State2::totalFlow).max().getAsLong();
   }
+
+  private static boolean openValve(boolean iCanOpen, boolean elefriendCanOpen, Map<String, Valve> valves, Set<State2> newStates, State2 s, long flow) {
+    if(iCanOpen || elefriendCanOpen) {
+      Map<String, Long> newOpen = new HashMap<>(s.open);
+      if (iCanOpen) newOpen.put(s.me.name, s.me.flow);
+      if (elefriendCanOpen) newOpen.put(s.elephant.name, s.elephant.flow);
+      if (iCanOpen) {
+        Arrays.stream(s.elephant.others.split(", ")).forEach(name -> newStates.add(new State2(newOpen, s.me, valves.get(name), flow)));
+      } else if (elefriendCanOpen) {
+        Arrays.stream(s.me.others.split(", ")).forEach(name -> newStates.add(new State2(newOpen, valves.get(name), s.elephant, flow)));
+      } else {
+        newStates.add(new State2(newOpen, s.me, s.elephant, flow));
+      }
+      return true;
+    }
+    return false;
+  }
+
+  private
 }
