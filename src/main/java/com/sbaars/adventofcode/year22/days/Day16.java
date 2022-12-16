@@ -29,12 +29,14 @@ public class Day16 extends Day2022 {
     private final int index;
     private final long totalFlow;
     public final List<Long> flow;
+    public final List<String> path;
 
-    public State(Map<String, Long> open, int index, long totalFlow, List<Long> flow) {
+    public State(Map<String, Long> open, int index, long totalFlow, List<Long> flow, List<String> path) {
       this.open = open;
       this.index = index;
       this.totalFlow = totalFlow;
       this.flow = flow;
+      this.path = path;
     }
 
     public Map<String, Long> open() {
@@ -142,7 +144,7 @@ public class Day16 extends Day2022 {
     Set<String> openable = in.stream().filter(s -> s.flow > 0).map(Valve::name).collect(Collectors.toSet());
     Map<String, Integer> indices = IntStream.range(0, in.size()).boxed().collect(Collectors.toMap(i -> in.get(i).name, i -> i));
     Set<State> states = new HashSet<>();
-    states.add(new State(new HashMap<>(), 0, 0, new ArrayList<>()));
+    states.add(new State(new HashMap<>(), 0, 0, new ArrayList<>(), new ArrayList<>()));
     for(int minutes = 1; minutes<=30; minutes++) {
       Set<State> newStates = new HashSet<>();
       for(State s : states) {
@@ -150,19 +152,35 @@ public class Day16 extends Day2022 {
         long flow = s.open.values().stream().mapToLong(e -> e).sum() + s.totalFlow;
         List<Long> newFlow = new ArrayList<>(s.flow);
         newFlow.add(s.open.values().stream().mapToLong(e -> e).sum());
+        List<String> newPath = new ArrayList<>(s.path);
+        newPath.add(v.name);
         if(s.open.size() == openable.size()) { // All valves are open, time to chill
-          newStates.add(new State(s.open, 0, flow, newFlow));
+          newStates.add(new State(s.open, 0, flow, newFlow, newPath));
         }
         if(v.flow > 0 && !s.open.containsKey(v.name)) {
           Map<String, Long> newOpen = new HashMap<>(s.open);
           newOpen.put(v.name, v.flow);
-          newStates.add(new State(newOpen, s.index, flow, newFlow));
+          newStates.add(new State(newOpen, s.index, flow, newFlow, newPath));
         }
-        Arrays.stream(v.others.split(", ")).forEach(name -> newStates.add(new State(s.open, indices.get(name), flow, newFlow)));
+        Arrays.stream(v.others.split(", ")).forEach(name -> newStates.add(new State(s.open, indices.get(name), flow, newFlow, newPath)));
       }
       states = newStates;
     }
-    return states.stream().mapToLong(s -> s.totalFlow() + s.open.values().stream().mapToLong(e -> e).sum()).max().getAsLong();
+    for(State s : states) {
+      if(List.of(0L, 0L, 0L, 0L, 0L, 20L, 20L, 20L, 44L, 44L, 44L, 44L, 67L, 67L, 67L, 86L, 86L, 86L, 86L, 86L, 86L, 86L, 86L, 86L, 86L, 86L, 101L, 101L, 101L, 110L).equals(s.flow)){
+        System.out.println(s);
+      }
+    }
+    return states.stream().mapToLong(s -> Math.max(s.flow.stream().mapToLong(e -> e).sum(), s.totalFlow())).max().getAsLong();
+  }
+
+  public static <T> boolean startsWith(List<T> string, List<T> prefix) {
+    final int stringSize = string.size();
+    final int prefixSize = prefix.size();
+    if (prefixSize > stringSize) {
+      return false;
+    }
+    return prefix.equals(string.subList(0, prefixSize));
   }
 
   @Override
