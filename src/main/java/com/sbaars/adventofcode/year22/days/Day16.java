@@ -6,7 +6,6 @@ import com.sbaars.adventofcode.year22.Day2022;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 
@@ -20,14 +19,14 @@ public class Day16 extends Day2022 {
     Day d = new Day16();
     d.downloadIfNotDownloaded();
     d.downloadExample();
-    d.printParts(1);
+    d.printParts();
 //    System.in.read();
-//    d.submitPart1();
+    d.submitPart1();
 //    d.submitPart2();
   }
 
   public record Valve(String name, long flow, String others) {}
-  public record State(Map<String, Long> open, List<String> path, int index) {}
+  public record State(Map<String, Long> open, int index, long totalFlow) {}
 
   @Override
   public Object part1() {
@@ -38,25 +37,26 @@ public class Day16 extends Day2022 {
         return readString(s, "Valve %s has flow rate=%n; tunnel leads to valve %s", Valve.class);
       }
     }).toList();
-    Map<String, Integer> indices = IntStream.range(0, in.size()).boxed().collect(Collectors.toMap(i -> this.in.get(i).name, i -> i));
-    List<State> states = new ArrayList<>();
-    return walk(0, 0, new HashMap<>(), new HashSet<>());
-  }
-
-  private long walk(int mins, int index, Map<String, Long> open, Set<String> visited) {
-    long flow = open.values().stream().mapToLong(e -> e).sum();
-    if(mins == 30){
-//      System.out.println(Arrays.toString(open.keySet().toArray()));
-      return flow;
+    Map<String, Integer> indices = IntStream.range(0, in.size()).boxed().collect(Collectors.toMap(i -> in.get(i).name, i -> i));
+    Set<State> states = new HashSet<>();
+    states.add(new State(new HashMap<>(), 0, 0));
+    for(int minutes = 0; minutes<30; minutes++) {
+      Set<State> newStates = new HashSet<>();
+      for(State s : states) {
+        Valve v = in.get(s.index);
+        long flow = s.open.values().stream().mapToLong(e -> e).sum() + s.totalFlow;
+//        List<String> newPath = new ArrayList<>(s.path);
+//        newPath.add(v.name);
+        if(v.flow > 0 && !s.open.containsKey(v.name)) {
+          Map<String, Long> newOpen = new HashMap<>(s.open);
+          newOpen.put(v.name, v.flow);
+          newStates.add(new State(newOpen, s.index, flow));
+        }
+        Arrays.stream(v.others.split(", ")).forEach(name -> newStates.add(new State(s.open, indices.get(name), flow)));
+      }
+      states = newStates;
     }
-    Valve v = in.get(index);
-//    if(!visited.add(v.name)) return 0;
-    List<Long> options = new ArrayList<>();
-    if(v.flow > 0 && !open.containsKey(v.name)) {
-      open.put(v.name, v.flow);
-      options.add(walk(mins + 1, index, new HashMap<>(open), new HashSet<>(visited)));
-    }
-    return flow + LongStream.concat(options.stream().mapToLong(e -> e), Arrays.stream(v.others.split(", ")).mapToLong(s -> walk(mins + 1, indices.get(s), new HashMap<>(open), new HashSet<>(visited)))).max().orElse(0);
+    return states.stream().mapToLong(State::totalFlow).max().getAsLong();
   }
 
   @Override
