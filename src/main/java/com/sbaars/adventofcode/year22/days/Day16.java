@@ -27,7 +27,7 @@ public class Day16 extends Day2022 {
   }
 
   public record Valve(String name, long flow, String others) {}
-  public record State(Map<String, Long> open, List<String> path, int mins, int index) {}
+  public record State(Map<String, Long> open, List<String> path, int index) {}
 
   @Override
   public Object part1() {
@@ -39,7 +39,7 @@ public class Day16 extends Day2022 {
       }
     }).toList();
     Map<String, Integer> indices = IntStream.range(0, in.size()).boxed().collect(Collectors.toMap(i -> this.in.get(i).name, i -> i));
-    List<State> states =
+    List<State> states = new ArrayList<>();
     return walk(0, 0, new HashMap<>(), new HashSet<>());
   }
 
