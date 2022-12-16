@@ -72,7 +72,8 @@ public class Day16 extends Day2022 {
     Map<String, Integer> indices = IntStream.range(0, in.size()).boxed().collect(Collectors.toMap(i -> in.get(i).name, i -> i));
     Set<State2> states = new HashSet<>();
     states.add(new State2(new HashMap<>(), 0, 0, 0));
-    for(int minutes = 0; minutes<30; minutes++) {
+    Map<Integer, Long> kpis = Map.of(5, 25L, 10, 50L, 15, 100L, 20, 125L, 25, 150L);
+    for(int minutes = 0; minutes<26; minutes++) {
       Set<State2> newStates = new HashSet<>();
       for(State2 s : states) {
 
@@ -105,6 +106,11 @@ public class Day16 extends Day2022 {
         if(!couldOpen) allPairs(List.of(myValve.others.split(", ")), List.of(eleValve.others.split(", "))).forEach(p -> newStates.add(new State2(s.open, indices.get(p.a()), indices.get(p.b()), flow)));
       }
       states = newStates;
+      if(kpis.containsKey(minutes)){
+        long kpi = kpis.get(minutes);
+        states = states.stream().filter(e -> e.totalFlow>=kpi).collect(Collectors.toSet());
+      }
+      System.out.println(minutes+", "+states.size());
     }
     return states.stream().mapToLong(State2::totalFlow).max().getAsLong();
   }
