@@ -20,9 +20,9 @@ public class Day16 extends Day2022 {
     Day d = new Day16();
     d.downloadIfNotDownloaded();
     d.downloadExample();
-    d.printParts();
+    d.printParts(1);
 //    System.in.read();
-    d.submitPart1();
+//    d.submitPart1();
 //    d.submitPart2();
   }
 
@@ -72,7 +72,8 @@ public class Day16 extends Day2022 {
     Map<String, Integer> indices = IntStream.range(0, in.size()).boxed().collect(Collectors.toMap(i -> in.get(i).name, i -> i));
     Set<State2> states = new HashSet<>();
     states.add(new State2(new HashMap<>(), 0, 0, 0));
-    Map<Integer, Long> kpis = Map.of(5, 25L, 10, 50L, 15, 100L, 20, 125L, 25, 150L);
+    Map<Integer, Long> kpis = Map.of(5, 41L, 10, 78L, 15, 81L, 20, 81L, 25, 81L); // Example KPIs
+//    Map<Integer, Long> kpis = Map.of(5, 25L, 10, 50L, 15, 100L, 20, 140L, 25, 160L);
     for(int minutes = 0; minutes<26; minutes++) {
       Set<State2> newStates = new HashSet<>();
       for(State2 s : states) {
@@ -80,8 +81,8 @@ public class Day16 extends Day2022 {
         Valve myValve = in.get(s.myIndex);
         Valve eleValve = in.get(s.elephantIndex);
         long flow = s.open.values().stream().mapToLong(e -> e).sum() + s.totalFlow;
-        if(s.open.keySet().equals(openable)) { // All valves are open, time to chill
-          newStates.add(new State2(s.open, s.myIndex, s.elephantIndex, flow));
+        if(s.open.size() == openable.size()) { // All valves are open, time to chill
+          newStates.add(new State2(s.open, 0, 0, flow));
         }
         boolean couldOpen = false;
         if(myValve.flow > 0 && !s.open.containsKey(myValve.name)) {
@@ -108,9 +109,15 @@ public class Day16 extends Day2022 {
       states = newStates;
       if(kpis.containsKey(minutes)){
         long kpi = kpis.get(minutes);
-        states = states.stream().filter(e -> e.totalFlow>=kpi).collect(Collectors.toSet());
+        states = states.stream().filter(e -> e.open.values().stream().mapToLong(f -> f).sum()>=kpi).collect(Collectors.toSet());
+        System.out.println("Apply KPI");
       }
       System.out.println(minutes+", "+states.size());
+    }
+    for(State2 s : states) {
+      if(s.totalFlow == 1706) {
+        System.out.println(s);
+      }
     }
     return states.stream().mapToLong(State2::totalFlow).max().getAsLong();
   }
