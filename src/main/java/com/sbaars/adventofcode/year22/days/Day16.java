@@ -5,10 +5,10 @@ import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
 import static com.sbaars.adventofcode.util.AOCUtils.allPairs;
+import static java.util.stream.IntStream.range;
 
 public class Day16 extends Day2022 {
 
@@ -20,7 +20,7 @@ public class Day16 extends Day2022 {
     Day d = new Day16();
     d.downloadIfNotDownloaded();
     d.downloadExample();
-    d.printParts(1);
+    d.printParts();
 //    System.in.read();
 //    d.submitPart1();
 //    d.submitPart2();
@@ -39,9 +39,9 @@ public class Day16 extends Day2022 {
         return readString(s, "Valve %s has flow rate=%n; tunnel leads to valve %s", Valve.class);
       }
     }).toList();
-    Map<String, Integer> indices = IntStream.range(0, in.size()).boxed().collect(Collectors.toMap(i -> in.get(i).name, i -> i));
+    Map<String, Integer> indices = range(0, in.size()).boxed().collect(Collectors.toMap(i -> in.get(i).name, i -> i));
     Set<State> states = new HashSet<>();
-    states.add(new State(new HashMap<>(), 0, 0));
+    states.add(new State(new HashMap<>(), range(0, in.size()).filter(i -> in.get(i).name.equals("AA")).findFirst().getAsInt(), 0));
     for(int minutes = 0; minutes<30; minutes++) {
       Set<State> newStates = new HashSet<>();
       for(State s : states) {
@@ -69,11 +69,11 @@ public class Day16 extends Day2022 {
       }
     }).toList();
     Set<String> openable = in.stream().filter(s -> s.flow > 0).map(Valve::name).collect(Collectors.toSet());
-    Map<String, Integer> indices = IntStream.range(0, in.size()).boxed().collect(Collectors.toMap(i -> in.get(i).name, i -> i));
+    Map<String, Integer> indices = range(0, in.size()).boxed().collect(Collectors.toMap(i -> in.get(i).name, i -> i));
     Set<State2> states = new HashSet<>();
-    states.add(new State2(new HashMap<>(), 0, 0, 0));
-    Map<Integer, Long> kpis = Map.of(5, 41L, 10, 78L, 15, 81L, 20, 81L, 25, 81L); // Example KPIs
-//    Map<Integer, Long> kpis = Map.of(5, 25L, 10, 50L, 15, 100L, 20, 140L, 25, 160L);
+    states.add(new State2(new HashMap<>(), range(0, in.size()).filter(i -> in.get(i).name.equals("AA")).findFirst().getAsInt(), range(0, in.size()).filter(i -> in.get(i).name.equals("AA")).findFirst().getAsInt(), 0));
+//    Map<Integer, Long> kpis = Map.of(5, 41L, 10, 78L, 15, 81L, 20, 81L, 25, 81L); // Example KPIs
+    Map<Integer, Long> kpis = Map.of(5, 25L, 10, 50L, 15, 100L, 20, 140L, 25, 160L);
     for(int minutes = 0; minutes<26; minutes++) {
       Set<State2> newStates = new HashSet<>();
       for(State2 s : states) {
