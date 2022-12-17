@@ -1,13 +1,17 @@
 package com.sbaars.adventofcode.common.grid;
 
+import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.location.Loc;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.Optional.empty;
@@ -46,11 +50,9 @@ public class InfiniteGrid implements Grid {
   }
 
   public String toString() {
-    long minX = grid.keySet().stream().mapToLong(e -> e.x).min().orElse(0);
-    long minY = grid.keySet().stream().mapToLong(e -> e.y).min().orElse(0);
-    long maxX = grid.keySet().stream().mapToLong(e -> e.x).max().orElse(0);
-    long maxY = grid.keySet().stream().mapToLong(e -> e.y).max().orElse(0);
-    CharGrid g = new CharGrid(' ', new Loc(maxX+1-minX, maxY+1-minY));
+    long minX = minX();
+    long minY = minY();
+    CharGrid g = new CharGrid(' ', new Loc(width(), height()));
     grid.forEach((p, i) -> g.set(new Loc(p.x-minX, p.y-minY), i));
     return g.toString();
   }
@@ -59,7 +61,47 @@ public class InfiniteGrid implements Grid {
     final Supplier<Map<Loc, Character>> supplier = HashMap::new;
     final BiConsumer<Map<Loc, Character>, Loc> accumulator = (a, b) -> a.put(b, c);
     final BinaryOperator<Map<Loc, Character>> combiner = (a, b) -> {a.putAll(b); return a;};
-    final Function<Map<Loc, Character>, InfiniteGrid> finisher = a -> new InfiniteGrid(a);
+    final Function<Map<Loc, Character>, InfiniteGrid> finisher = InfiniteGrid::new;
     return Collector.of(supplier, accumulator, combiner, finisher);
+  }
+
+  public boolean canPlace(InfiniteGrid g, long r, long c) {
+    return g.grid.keySet().stream().map(l -> l.move(c, r)).noneMatch(grid::containsKey);
+  }
+
+  public boolean canPlace(InfiniteGrid g) {
+    return g.grid.keySet().stream().noneMatch(grid::containsKey);
+  }
+
+  public long minY() {
+    return grid.keySet().stream().mapToLong(e -> e.y).min().orElse(0);
+  }
+
+  public long maxY() {
+    return grid.keySet().stream().mapToLong(e -> e.y).max().orElse(0);
+  }
+
+  public long minX() {
+    return grid.keySet().stream().mapToLong(e -> e.x).min().orElse(0);
+  }
+
+  public long maxX() {
+    return grid.keySet().stream().mapToLong(e -> e.x).max().orElse(0);
+  }
+
+  public InfiniteGrid move(long x, long y) {
+    return new InfiniteGrid(grid.entrySet().stream().map(e -> new Pair<>(e.getKey().move(x, y), e.getValue())).collect(Collectors.toMap(Pair::a, Pair::b)));
+  }
+
+  public void place(InfiniteGrid s) {
+    s.grid.forEach(this::set);
+  }
+
+  public long height() {
+    return maxY()+1-minY();
+  }
+
+  public long width() {
+    return maxX()+1-minX();
   }
 }
