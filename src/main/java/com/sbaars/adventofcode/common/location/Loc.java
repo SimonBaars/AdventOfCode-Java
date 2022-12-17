@@ -67,6 +67,10 @@ public class Loc {
     return new Loc(x + dx, y + dy);
   }
 
+  public Loc move(long dx, long dy) {
+    return new Loc(x + dx, y + dy);
+  }
+
   public Loc move(Loc l) {
     return new Loc(x + l.x, y + l.y);
   }

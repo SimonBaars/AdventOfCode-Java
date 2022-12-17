@@ -52,7 +52,8 @@ public class FetchInput {
   private String clean(String file){
     return file
         .replace("\r\n", "\n")
-        .replace("&gt;", ">");
+        .replace("&gt;", ">")
+            .replace("&lt;", "<");
   }
 
   private void runForYear(String year) {
