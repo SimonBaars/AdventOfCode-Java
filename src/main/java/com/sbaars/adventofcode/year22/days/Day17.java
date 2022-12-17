@@ -31,15 +31,14 @@ public class Day17 extends Day2022 {
     long numberOfRocks = 1000000000000L;
     State cycleStart = simulateShapeMoves(numberOfRocks, s -> s.cycleReset && s.fallenRocks != 0);
     State nextCycle = simulateShapeMoves(numberOfRocks, s -> s.cycleReset && s.fallenRocks > cycleStart.fallenRocks);
-    long rocks = cycleStart.fallenRocks;
-    long height = cycleStart.height;
-    while(rocks<numberOfRocks){
-      rocks += nextCycle.fallenRocks - cycleStart.fallenRocks;
-      height += nextCycle.height - cycleStart.height;
-    }
-    long overshoot = rocks - numberOfRocks;
+    long rocksPerCycle = nextCycle.fallenRocks - cycleStart.fallenRocks;
+    long numberOfCycles = numberOfRocks / rocksPerCycle;
+    long totalRocks = rocksPerCycle * numberOfCycles + cycleStart.fallenRocks;
+    long heightPerCycle = nextCycle.height - cycleStart.height;
+    long totalHeight = heightPerCycle * numberOfCycles + cycleStart.height;
+    long overshoot = totalRocks - numberOfRocks;
     State atOvershoot = simulateShapeMoves(numberOfRocks, s -> s.fallenRocks == cycleStart.fallenRocks - overshoot);
-    return height - (cycleStart.height - atOvershoot.height);
+    return totalHeight - (cycleStart.height - atOvershoot.height);
   }
 
   private State simulateShapeMoves(long iterations, Predicate<State> exitCondition) {
