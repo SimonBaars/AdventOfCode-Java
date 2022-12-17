@@ -19,7 +19,7 @@ public class Day16 extends Day2022 {
     new Day16().printParts();
   }
 
-  public record Valve(String name, long flow, String others) {}
+  public record Valve(String name, long flow, List<String> others) {}
   public record State(Map<String, Long> open, Valve valve, long totalFlow) {}
   public record State2(Map<String, Long> open, Valve me, Valve elephant, long totalFlow) {}
 
@@ -37,7 +37,7 @@ public class Day16 extends Day2022 {
           newOpen.put(s.valve.name, s.valve.flow);
           newStates.add(new State(newOpen, s.valve, flow));
         }
-        Arrays.stream(s.valve.others.split(", ")).forEach(name -> newStates.add(new State(s.open, valves.get(name), flow)));
+        s.valve.others.stream().forEach(name -> newStates.add(new State(s.open, valves.get(name), flow)));
       }
       states = newStates;
     }
@@ -45,13 +45,7 @@ public class Day16 extends Day2022 {
   }
 
   private Map<String, Valve> input() {
-    return dayStream().map(s -> {
-      try {
-        return readString(s, "Valve %s has flow rate=%n; tunnels lead to valves %s", Valve.class);
-      } catch (IllegalStateException e) {
-        return readString(s, "Valve %s has flow rate=%n; tunnel leads to valve %s", Valve.class);
-      }
-    }).collect(Collectors.toMap(v -> v.name, v -> v));
+    return dayStream().map(s -> readString(s, "Valve %s has flow rate=%n; tunnel%u lead%u to valve%u %ls", Valve.class)).collect(Collectors.toMap(v -> v.name, v -> v));
   }
 
   @Override
@@ -73,7 +67,7 @@ public class Day16 extends Day2022 {
         newStates.addAll(openValve(s.elephant, s.me, false, valves, s, flow));
         newStates.addAll(openValve(s.me, s.elephant, true, valves, s, flow));
         if(newStates.size() == nStates) { // If there are no valves to be opened, we walk
-          allPairs(of(s.me.others.split(", ")), of(s.elephant.others.split(", ")))
+          allPairs(s.me.others, s.elephant.others)
                   .forEach(p -> newStates.add(new State2(s.open, valves.get(p.a()), valves.get(p.b()), flow)));
         }
       }
@@ -94,7 +88,7 @@ public class Day16 extends Day2022 {
         newOpen.put(v2.name, v2.flow);
         return of(new State2(newOpen, v1, v2, flow));
       }
-      return Arrays.stream(v2.others.split(", ")).map(name -> new State2(newOpen, v1, valves.get(name), flow)).toList();
+      return v2.others.stream().map(name -> new State2(newOpen, v1, valves.get(name), flow)).toList();
     }
     return of();
   }

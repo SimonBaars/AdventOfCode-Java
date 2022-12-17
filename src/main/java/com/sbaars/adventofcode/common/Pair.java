@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.common;
 
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 public record Pair<A, B>(A a, B b) {
 
@@ -25,5 +26,9 @@ public record Pair<A, B>(A a, B b) {
 
     public B getRight() {
         return b;
+    }
+
+    public<C, D> Pair<C, D> map(BiFunction<A, B, Pair<C, D>> func) {
+        return func.apply(a(), b());
     }
 }

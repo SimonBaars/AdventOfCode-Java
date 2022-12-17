@@ -33,4 +33,8 @@ public class AOCUtils {
     public static<A, B> Stream<Pair<A, B>> allPairs(List<A> l1, List<B> l2) {
         return range(0, l1.size()).boxed().flatMap(i -> l2.stream().map(b -> new Pair<>(l1.get(i), b)));
     }
+
+    public static<E> E last(List<E> list) {
+        return list.get(list.size() - 1);
+    }
 }
