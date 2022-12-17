@@ -28,17 +28,17 @@ public class Day17 extends Day2022 {
 
   @Override
   public Object part2() {
-    long iterations = 1000000000000L;
-    State cycleStart = simulateShapeMoves(iterations, s -> s.cycleReset && s.fallenRocks != 0);
-    State nextCycle = simulateShapeMoves(iterations, s -> s.cycleReset && s.fallenRocks > cycleStart.fallenRocks);
+    long numberOfRocks = 1000000000000L;
+    State cycleStart = simulateShapeMoves(numberOfRocks, s -> s.cycleReset && s.fallenRocks != 0);
+    State nextCycle = simulateShapeMoves(numberOfRocks, s -> s.cycleReset && s.fallenRocks > cycleStart.fallenRocks);
     long rocks = cycleStart.fallenRocks;
     long height = cycleStart.height;
-    while(rocks<iterations){
+    while(rocks<numberOfRocks){
       rocks += nextCycle.fallenRocks - cycleStart.fallenRocks;
       height += nextCycle.height - cycleStart.height;
     }
-    long overshoot = rocks - iterations;
-    State atOvershoot = simulateShapeMoves(iterations, s -> s.fallenRocks == cycleStart.fallenRocks - overshoot);
+    long overshoot = rocks - numberOfRocks;
+    State atOvershoot = simulateShapeMoves(numberOfRocks, s -> s.fallenRocks == cycleStart.fallenRocks - overshoot);
     return height - (cycleStart.height - atOvershoot.height);
   }
 
