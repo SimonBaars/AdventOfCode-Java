@@ -3,6 +3,7 @@ package com.sbaars.adventofcode.common;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.sbaars.adventofcode.common.Pair.of;
 import static com.sbaars.adventofcode.util.AOCUtils.verify;
@@ -83,7 +84,7 @@ public interface ReadsFormattedString {
               case 'c' -> e.charAt(0);
               default -> e;
             }
-    ).toList(), mapped.b());
+    ).collect(Collectors.toCollection(ArrayList::new)), mapped.b());
   }
 
   private static Pair<String, Integer> crunchString(String s, String pattern) {
