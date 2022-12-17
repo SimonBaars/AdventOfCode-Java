@@ -15,18 +15,22 @@ import static java.util.Optional.of;
 
 public interface ReadsFormattedString {
   static <T> T readString(String s, String pattern, Class<T> target, Class<?>...nested) {
-    return readString(s, pattern, ",", target, nested);
+    return readString(s, pattern, ",", ",", target, nested);
   }
 
   static <T> T readString(String s, String pattern, String listSeparator, Class<T> target, Class<?>...nested) {
+    return readString(s, pattern, listSeparator, listSeparator, target, nested);
+  }
+
+  static <T> T readString(String s, String pattern, String listSeparator, String valueSeparator, Class<T> target, Class<?>...nested) {
     List<Object> mappedObjs = new ArrayList<>();
     int listIndex = 0;
     while (s.length() > 0) {
       if (pattern.length() > 1 && pattern.charAt(0) == '%') {
         char c = pattern.charAt(1);
-        var data = crunch(s, pattern, listSeparator, c == 'l' && pattern.charAt(2) == '(' ? nested[listIndex] : null);
+        var data = crunch(s, pattern, listSeparator, valueSeparator, c == 'l' || c == 'm' && pattern.charAt(2) == '(' ? nested[listIndex] : null);
         if (data.isPresent()) {
-          if(c == 'l' && pattern.charAt(2) == '(') listIndex++;
+          if((c == 'l' || c == 'm') && pattern.charAt(2) == '(') listIndex++;
           var d = data.get();
           mappedObjs.add(d.a());
           s = s.substring(d.b());
@@ -50,7 +54,7 @@ public interface ReadsFormattedString {
     }
   }
 
-  private static<T> Optional<Tuple<?, Integer, Integer>> crunch(String s, String pattern, String listSeparator, Class<T> target) {
+  private static Optional<Tuple<?, Integer, Integer>> crunch(String s, String pattern, String listSeparator, String valueSeparator, Class<?> target) {
     char c = pattern.charAt(1);
     return switch (c) {
       case 'd' -> of(crunchDouble(s, pattern));
@@ -58,6 +62,7 @@ public interface ReadsFormattedString {
       case 'i' -> of(crunchInteger(s, pattern));
       case 'l' -> of(crunchList(s, pattern, listSeparator, target));
       case 'c' -> of(of(s.charAt(0), 1, 2));
+      case 'm' -> of(crunchMap(s, pattern, listSeparator, valueSeparator, target));
       case 's', 'u' -> of(crunchString(s, pattern));
       default -> null;
     };
@@ -76,6 +81,21 @@ public interface ReadsFormattedString {
   }
 
   private static<T> Tuple<List<?>, Integer, Integer> crunchList(String s, String pattern, String listSeparator, Class<T> target) {
+    char type = pattern.charAt(2);
+    var mapped = crunchString(s, pattern);
+    return of(stream(mapped.a().split(listSeparator)).map(String::trim).map(e ->
+            switch (type) {
+              case 'd' -> parseDouble(e);
+              case 'n' -> parseLong(e);
+              case 'i' -> parseInt(e);
+              case 'c' -> e.charAt(0);
+              case '(' -> readString(e, pattern.substring(3, pattern.indexOf(')')), target);
+              default -> e;
+            }
+    ).collect(Collectors.toCollection(ArrayList::new)), mapped.b(), type == '(' ? pattern.indexOf(')') + 1 : 3);
+  }
+
+  private static<T> Tuple<Map<?, ?>, Integer, Integer> crunchList(String s, String pattern, String listSeparator, Class<T> target) {
     char type = pattern.charAt(2);
     var mapped = crunchString(s, pattern);
     return of(stream(mapped.a().split(listSeparator)).map(String::trim).map(e ->
