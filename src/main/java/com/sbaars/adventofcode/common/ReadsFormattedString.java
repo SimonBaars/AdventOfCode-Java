@@ -14,19 +14,17 @@ import static java.util.Arrays.stream;
 import static java.util.Optional.of;
 
 public interface ReadsFormattedString {
-  @SafeVarargs
-  static <T> T readString(String s, String pattern, Class<T>...target) {
-    return readString(s, pattern, ",", target);
+  static <T> T readString(String s, String pattern, Class<T> target, Class<?>...nested) {
+    return readString(s, pattern, ",", target, nested);
   }
 
-  @SafeVarargs
-  static <T> T readString(String s, String pattern, String listSeparator, Class<T>...target) {
+  static <T> T readString(String s, String pattern, String listSeparator, Class<T> target, Class<?>...nested) {
     List<Object> mappedObjs = new ArrayList<>();
-    int listIndex = 1;
+    int listIndex = 0;
     while (s.length() > 0) {
       if (pattern.length() > 1 && pattern.charAt(0) == '%') {
         char c = pattern.charAt(1);
-        var data = crunch(s, pattern, listSeparator, c == 'l' && pattern.charAt(2) == '(' ? target[listIndex] : null);
+        var data = crunch(s, pattern, listSeparator, c == 'l' && pattern.charAt(2) == '(' ? nested[listIndex] : null);
         if (data.isPresent()) {
           if(c == 'l' && pattern.charAt(2) == '(') listIndex++;
           var d = data.get();
@@ -45,8 +43,8 @@ public interface ReadsFormattedString {
       }
     }
     try {
-      verify(target[0].getConstructors().length > 0, "Class "+target+" has no constructor!");
-      return (T) stream(target[0].getConstructors()).filter(c -> c.getParameterCount() == mappedObjs.size()).findAny().get().newInstance(mappedObjs.toArray());
+      verify(target.getConstructors().length > 0, "Class "+target+" has no constructor!");
+      return (T) stream(target.getConstructors()).filter(c -> c.getParameterCount() == mappedObjs.size()).findAny().get().newInstance(mappedObjs.toArray());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -86,7 +84,7 @@ public interface ReadsFormattedString {
               case 'n' -> parseLong(e);
               case 'i' -> parseInt(e);
               case 'c' -> e.charAt(0);
-              case '(' -> readString(s.substring(0, mapped.b()), pattern.substring(3, pattern.indexOf(')')), target);
+              case '(' -> readString(e, pattern.substring(3, pattern.indexOf(')')), target);
               default -> e;
             }
     ).collect(Collectors.toCollection(ArrayList::new)), mapped.b(), type == '(' ? pattern.indexOf(')') + 1 : 3);

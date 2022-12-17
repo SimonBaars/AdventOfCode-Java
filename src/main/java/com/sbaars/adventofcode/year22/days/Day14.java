@@ -8,7 +8,6 @@ import com.sbaars.adventofcode.util.AOCUtils;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,23 +35,23 @@ public class Day14 extends Day2022 {
     return amountOfSand(false);
   }
 
+  public record Path(List<Loc> locs) {}
+
   public int amountOfSand(boolean part1) {
-    List<List<Loc>> in = dayStream()
-            .map(s -> Arrays.asList(s.split(" -> "))
-                    .stream()
-                    .map(s2 -> readString(s2, "%n,%n", Loc.class))
-                    .toList())
-            .collect(Collectors.toCollection(ArrayList::new));
+    List<Path> paths = dayStream()
+            .map(s -> readString(s, "%l(%n,%n)", " -> ", Path.class, Loc.class))
+                    .collect(Collectors.toCollection(ArrayList::new));
     if(!part1) {
-      long maxY = in.stream().flatMapToLong(e -> e.stream().mapToLong(f -> f.y)).max().getAsLong() + 2;
-      in.add(List.of(new Loc(0, maxY), new Loc(999, maxY)));
+      long maxY = paths.stream().flatMapToLong(e -> e.locs.stream().mapToLong(f -> f.y)).max().getAsLong() + 2;
+      paths.add(new Path(List.of(new Loc(0, maxY), new Loc(999, maxY))));
     }
-    InfiniteGrid g = constructWalls(in);
+    InfiniteGrid g = constructWalls(paths);
     return simulateSand(part1, g);
   }
 
-  private static InfiniteGrid constructWalls(List<List<Loc>> in) {
-    return in.stream()
+  private static InfiniteGrid constructWalls(List<Path> paths) {
+    return paths.stream()
+            .map(Path::locs)
             .flatMap(AOCUtils::connectedPairs)
             .map(Range::new)
             .flatMap(Range::stream)
