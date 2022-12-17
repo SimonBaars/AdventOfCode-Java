@@ -17,12 +17,21 @@ public class Day17 extends Day2022 {
 
   public static void main(String[] args) {
     Day d = new Day17();
-    d.downloadIfNotDownloaded();
-    d.downloadExample();
-    d.printParts();
+//    System.out.println(d.part2());
+//    d.downloadIfNotDownloaded();
+//    d.downloadExample();
+//    d.printParts();
 //    System.in.read();
-    d.submitPart1();
+//    d.submitPart1();
 //    d.submitPart2();
+    long rocks = 1709;
+    long height = 2642;
+    while(rocks<1000000000000L){
+      rocks +=1725;
+      height+=2694;
+    }
+    System.out.println(rocks +", "+height);
+    System.out.println((1561739130578L-187L));
   }
 
   public record Shape(int w, int h, int b, int t, InfiniteGrid g) {}
@@ -41,8 +50,8 @@ public class Day17 extends Day2022 {
     char[] chars = day().trim().toCharArray();
     int i = 0;
     int shapeIndex = 0;
-    long heighest = 0;
-    InfiniteGrid s = shapes[shapeIndex].move(3, heighest - 4);
+    long highest = 0;
+    InfiniteGrid s = shapes[shapeIndex].move(3, highest - 4);
     for(int fallenRocks = 0; fallenRocks<2022; i++) {
       if(i>=chars.length) i = 0;
       char c = chars[i];
@@ -66,10 +75,10 @@ public class Day17 extends Day2022 {
 //        i--;
         g.place(s);
         shapeIndex = (shapeIndex + 1) % shapes.length;
-        long oldHeighest = heighest;
-        heighest = Math.min(s.minY(), heighest);
-        addWall(g, toIntExact((oldHeighest - heighest) + shapes[shapeIndex].height()));
-        s = shapes[shapeIndex].move(3, heighest - 3 - shapes[shapeIndex].height());
+        long oldHeighest = highest;
+        highest = Math.min(s.minY(), highest);
+        addWall(g, toIntExact((oldHeighest - highest) + shapes[shapeIndex].height()));
+        s = shapes[shapeIndex].move(3, highest - 3 - shapes[shapeIndex].height());
         fallenRocks++;
       }
 
@@ -78,7 +87,7 @@ public class Day17 extends Day2022 {
 //      tog.place(s);
 //      System.out.println(tog);
     }
-    return Math.abs(heighest);
+    return Math.abs(highest);
   }
 
   private void addWall(InfiniteGrid g, int n) {
@@ -91,6 +100,64 @@ public class Day17 extends Day2022 {
 
   @Override
   public Object part2() {
-    return "";
+    InfiniteGrid[] shapes = new InfiniteGrid[]{
+            new InfiniteGrid(new char[][]{"####".toCharArray()}),
+            new InfiniteGrid(new HashMap<>(Map.of(new Loc(1, 0), '#', new Loc(0, 1), '#', new Loc(1, 1), '#', new Loc(2, 1), '#', new Loc(1, 2), '#'))),
+            new InfiniteGrid(new HashMap<>(Map.of(new Loc(2, 0), '#', new Loc(0, 2), '#', new Loc(1, 2), '#', new Loc(2, 2), '#', new Loc(2, 1), '#'))),
+            new InfiniteGrid(new char[][]{{'#'}, {'#'}, {'#'}, {'#'}}),
+            new InfiniteGrid(new char[][]{{'#', '#'}, {'#', '#'}})
+    };
+    InfiniteGrid g = new InfiniteGrid(new char[][]{"+-------+".toCharArray()});
+    addWall(g, 4);
+    char[] chars = day().trim().toCharArray();
+    int i = 0;
+    int shapeIndex = 0;
+    long highest = 0;
+    InfiniteGrid s = shapes[shapeIndex].move(3, highest - 4);
+    long it = 0;
+    for(long fallenRocks = 0; fallenRocks<1000000000000L; i++) {
+
+      if(i>=chars.length) i = 0;
+      if(/*0 == (fallenRocks-1709) % 1725 */ fallenRocks == 5159-109 || fallenRocks == 3434-109) {
+        System.out.println("i: "+i);
+        System.out.println("shape: "+shapeIndex);
+        System.out.println("highest: "+Math.abs(highest));
+        System.out.println("fallen: "+fallenRocks);
+      }
+      char c = chars[i];
+
+      if(c == '>') {
+        InfiniteGrid moved = s.move(1, 0);
+        if(g.canPlace(moved)) {
+          s = moved;
+        }
+      } else if(c == '<') {
+        InfiniteGrid moved = s.move(-1, 0);
+        if(g.canPlace(moved)) {
+          s = moved;
+        }
+      }
+
+      InfiniteGrid moved = s.move(0, 1);
+      if(g.canPlace(moved)) {
+        s = moved;
+      } else {
+//        i--;
+        g.place(s);
+        shapeIndex = (shapeIndex + 1) % shapes.length;
+        long oldHeighest = highest;
+        highest = Math.min(s.minY(), highest);
+        addWall(g, toIntExact((oldHeighest - highest) + shapes[shapeIndex].height()));
+        s = shapes[shapeIndex].move(3, highest - 3 - shapes[shapeIndex].height());
+        fallenRocks++;
+      }
+
+//      InfiniteGrid tog = new InfiniteGrid();
+//      tog.place(g);
+//      tog.place(s);
+//      System.out.println(tog);
+      it++;
+    }
+    return Math.abs(highest);
   }
 }
