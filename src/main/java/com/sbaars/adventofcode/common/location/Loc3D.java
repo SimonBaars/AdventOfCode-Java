@@ -46,12 +46,6 @@ public class Loc3D {
     this.z = z;
   }
 
-  public Loc3D(int x, int y, int z) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-  }
-
   public Loc3D(long[] l) {
     this.x = l[0];
     this.y = l[1];
