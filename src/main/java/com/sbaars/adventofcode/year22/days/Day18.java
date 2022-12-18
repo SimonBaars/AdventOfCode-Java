@@ -27,14 +27,18 @@ public class Day18 extends Day2022 {
   @Override
   public Object part1() {
     List<Loc3D> locs = dayStream().map(s -> readString(s, "%n,%n,%n", Loc3D.class)).toList();
-    return (locs.size()*6L)-locs.stream().flatMap(l -> Arrays.stream(HexDirection.values()).map(d -> d.move(l, 1))).filter(locs::contains).count();
+    long connecting = locs.stream()
+            .flatMap(l -> Arrays.stream(HexDirection.values()).map(d -> d.move(l, 1)))
+            .filter(locs::contains)
+            .count();
+    return (locs.size() * 6L) - connecting;
   }
 
   @Override
   public Object part2() {
     List<Loc3D> locs = dayStream().map(s -> readString(s, "%n,%n,%n", Loc3D.class)).toList();
     List<Loc3D> connecting = locs.stream().flatMap(l -> Arrays.stream(HexDirection.values()).map(d -> d.move(l, 1))).collect(Collectors.toCollection(ArrayList::new));
-    List<Loc3D> exterior = connecting.stream().filter(l -> locs.contains(l)).collect(Collectors.toCollection(ArrayList::new));
+    List<Loc3D> exterior = connecting.stream().filter(locs::contains).toList();
     connecting.removeAll(exterior);
     List<Set<Loc3D>> pockets = connecting.stream().map(l -> new HashSet<>(Set.of(l))).collect(Collectors.toCollection(ArrayList::new));
     int trapped = 0;
@@ -52,9 +56,7 @@ public class Day18 extends Day2022 {
           j--;
         }
       }
-      System.out.println(i);
     }
-
     return (locs.size()*6L) - exterior.size() - trapped;
   }
 }
