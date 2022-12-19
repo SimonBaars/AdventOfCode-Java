@@ -55,31 +55,29 @@ public class Day19 extends Day2022 {
           LongCountMap<String> perTurn = new LongCountMap<>(s.perTurn);
           boolean buildGeode = s.inventory.get("ore") >= b.geodeOre && s.inventory.get("obsidian") >= b.geodeObsidian;
           boolean buildObsidian = s.inventory.get("ore") >= b.obsidianOre && s.inventory.get("clay") >= b.obsidianClay;
-          if (!buildGeode && !buildObsidian && s.target.equals("ore") && s.inventory.get("ore") >= b.oreCost) {
+          boolean buildOre = s.target.equals("ore") && s.inventory.get("ore") >= b.oreCost;
+          boolean buildClay = s.target.equals("clay") && s.inventory.get("ore") >= b.clayCost;
+          perTurn.forEach(s.inventory::increment);
+          if (!buildGeode && !buildObsidian && buildOre) {
             s.inventory.increment("ore", -b.oreCost);
             s.perTurn.increment("ore");
-            perTurn.forEach(s.inventory::increment);
             getStates(s.inventory, s.perTurn, "ore", "clay").forEach(newStates::add);
-          } else if (!buildGeode && !buildObsidian && s.target.equals("clay") && s.inventory.get("ore") >= b.clayCost) {
+          } else if (!buildGeode && !buildObsidian && buildClay) {
             s.inventory.increment("ore", -b.clayCost);
             s.perTurn.increment("clay");
-            perTurn.forEach(s.inventory::increment);
             getStates(s.inventory, s.perTurn, "ore", "clay", "obsidian").forEach(newStates::add);
           } else if (!buildGeode && buildObsidian) {
             s.inventory.increment("ore", -b.obsidianOre);
             s.inventory.increment("clay", -b.obsidianClay);
             s.perTurn.increment("obsidian");
-            perTurn.forEach(s.inventory::increment);
             getStates(s.inventory, s.perTurn, "ore", "clay", "obsidian", "geode").forEach(newStates::add);
           } else if (buildGeode) {
             s.inventory.increment("ore", -b.geodeOre);
             s.inventory.increment("obsidian", -b.geodeObsidian);
             s.perTurn.increment("geode");
-            perTurn.forEach(s.inventory::increment);
             getStates(s.inventory, s.perTurn, "ore", "clay", "obsidian", "geode").forEach(newStates::add);
           } else {
             newStates.add(s);
-            perTurn.forEach(s.inventory::increment);
           }
 
         }
