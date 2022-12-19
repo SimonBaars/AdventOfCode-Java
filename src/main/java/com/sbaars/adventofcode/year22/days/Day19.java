@@ -26,11 +26,7 @@ public class Day19 extends Day2022 {
   }
 
   public record Input(long n, long oreCost, long clayCost, long obsidianOre, long obsidianClay, long geodeOre, long geodeObsidian) {}
-  public record State(LongCountMap<String> inventory, LongCountMap<String> perTurn, String target) {
-    public long score() {
-      return inventory.get("ore") + inventory.get("clay") + inventory.get("obsidian") + inventory.get("geode");
-    }
-  }
+  public record State(LongCountMap<String> inventory, LongCountMap<String> perTurn, String target) {}
 
   @Override
   public Object part1() {
@@ -56,7 +52,7 @@ public class Day19 extends Day2022 {
       states.forEach(s -> s.perTurn.increment("ore"));
 
       for (int i = 0; i < minutes; i++) {
-        TopUniqueElements<State> newStates = new TopUniqueElements<>(capacity, comparing(State::score));
+        TopUniqueElements<State> newStates = new TopUniqueElements<>(capacity, comparing(state -> state.inventory.sumValues()));
         for (State s : states) {
           LongCountMap<String> perTurn = new LongCountMap<>(s.perTurn);
           boolean buildGeode = s.inventory.get("ore") >= b.geodeOre && s.inventory.get("obsidian") >= b.geodeObsidian;
