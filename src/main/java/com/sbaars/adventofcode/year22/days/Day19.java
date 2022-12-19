@@ -6,6 +6,7 @@ import com.sbaars.adventofcode.year19.util.LongCountMap;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.LongStream;
@@ -33,6 +34,10 @@ public class Day19 extends Day2022 {
     private long score() {
        return inventory.get("ore") + (inventory.get("clay") * 2) + (inventory.get("obsidian") * 3) + (inventory.get("geode") * 4);
     }
+
+    private long score2(int a, int b, int c, int d) {
+      return (inventory.get("ore") * a) + (inventory.get("clay") * b) + (inventory.get("obsidian") * c) + (inventory.get("geode") * d);
+    }
   }
 
   @Override
@@ -44,7 +49,19 @@ public class Day19 extends Day2022 {
 
   @Override
   public Object part2() {
-    return getQuality(3, 32,1000000, State::score)
+//    for(int i = 2; i<=5; i++) {
+//
+//      for(int j = 2; j<=10; j++) {
+//        for(int k = 2; k<=20; k++) {
+//      int finalI = i;
+//          int finalJ = j;
+//          int finalK = k;
+//          System.out.println(i+", "+j+", "+k+": "+getQuality(3, 32, 500000, a1 -> a1.score2(finalI, finalJ, finalK))
+//              .mapToLong(e -> e)
+//              .reduce((a, b) -> a * b)
+//              .getAsLong());
+//    }}}
+    return getQuality(3, 32, 1000000, a1 -> a1.score())
             .mapToLong(e -> e)
             .reduce((a, b) -> a * b)
             .getAsLong();
@@ -52,16 +69,15 @@ public class Day19 extends Day2022 {
 
   private Stream<Long> getQuality(int limit, int minutes, int capacity, Function<State, Long> compare) {
     List<Input> l = dayStream().map(s -> readString(s, "Blueprint %n: Each ore robot costs %n ore. Each clay robot costs %n ore. Each obsidian robot costs %n ore and %n clay. Each geode robot costs %n ore and %n obsidian.", " ", Input.class)).limit(limit).toList();
-    List<Long> quality = new ArrayList<>();
-    for(Input b : l) {
-      TopUniqueElements<State> states = new TopUniqueElements<>(capacity, comparing(compare));
+    return l.parallelStream().map(b -> {
+      Collection<State> states = new ArrayList<>(2);
       states.add(new State(new LongCountMap<>(), new LongCountMap<>(), "ore"));
       states.add(new State(new LongCountMap<>(), new LongCountMap<>(), "clay"));
       states.forEach(s -> s.perTurn.increment("ore"));
 
       for (int i = 0; i < minutes; i++) {
         TopUniqueElements<State> newStates = new TopUniqueElements<>(capacity, comparing(compare));
-        for (State s : new ArrayList<>(states)) {
+        for (State s : states) {
           LongCountMap<String> perTurn = new LongCountMap<>(s.perTurn);
           boolean buildGeode = s.inventory.get("ore") >= b.geodeOre && s.inventory.get("obsidian") >= b.geodeObsidian;
           boolean buildObsidian = s.inventory.get("ore") >= b.obsidianOre && s.inventory.get("clay") >= b.obsidianClay;
@@ -103,11 +119,10 @@ public class Day19 extends Day2022 {
 
         }
         states = newStates;
-        System.out.println("Minute "+(i+1)+": States "+states.size());
+//        System.out.println("Minute "+(i+1)+": States "+states.size());
       }
-      System.out.println("Blueprint "+b.n+" done, states="+states.size()+", maxGeodes="+states.stream().mapToLong(e -> e.inventory.get("geode")).max().orElse(0L));
-      quality.add(states.stream().mapToLong(e -> e.inventory.get("geode")).max().orElse(0L));
-    }
-    return quality.stream();
+//      System.out.println("Blueprint "+b.n+" done, states="+states.size()+", maxGeodes="+states.stream().mapToLong(e -> e.inventory.get("geode")).max().orElse(0L));
+      return states.stream().mapToLong(e -> e.inventory.get("geode")).max().orElse(0L);
+    });
   }
 }
