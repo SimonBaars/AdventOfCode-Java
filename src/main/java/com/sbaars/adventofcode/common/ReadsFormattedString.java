@@ -19,7 +19,6 @@ public interface ReadsFormattedString {
   }
 
   static <T> T readString(String s, String pattern, String listSeparator, Class<T> target, Class<?>...nested) {
-//    System.out.println(s+", "+pattern);
     List<Object> mappedObjs = new ArrayList<>();
     int listIndex = 0;
     while (s.length() > 0) {
@@ -94,10 +93,8 @@ public interface ReadsFormattedString {
 
   private static Tuple<String, Integer, Integer> crunchString(String s, String pattern) {
     if(pattern.length()<=2) return of(s, s.length(), 2);
-    int next = pattern.indexOf('%', pattern.charAt(1) == 'l' ? pattern.lastIndexOf(')') : 2);
-//    if(next == -1 && pattern.charAt(1) == 'l') next =
+    int next = pattern.indexOf('%', 2);
     String substring = pattern.substring(pattern.charAt(1) == 'l' ? 3 : 2, next == -1 ? pattern.length() : next);
-//    System.out.println(substring);
     int end = substring.isEmpty() ? s.length() : s.indexOf(substring);
     verify(end != -1, "Malformatted pattern ("+pattern+") for string ("+s+")");
     return Tuple.of(s.substring(0, end), end, 2);
