@@ -38,13 +38,13 @@ public class Day18 extends Day2022 {
     List<Loc3D> exterior = connecting.stream().filter(locs::contains).toList();
     LongCountMap<Set<Loc3D>> pockets = connecting.stream().filter(l -> !locs.contains(l)).map(l -> new HashSet<>(Set.of(l))).collect(toCountMap());
     var trapped = new AtomicLong();
-    for(int i = 0; i<2000; i++) {
+    for(int i = 0; i<100; i++) {
       LongCountMap<Set<Loc3D>> newPockets = new LongCountMap<>();
       pockets.forEach((pocket, n) -> {
         Set<Loc3D> spread = pocket.stream().flatMap(l -> Arrays.stream(HexDirection.values()).map(d -> d.move(l, 1))).filter(l -> !locs.contains(l)).collect(Collectors.toSet());
+        spread.addAll(pocket);
         if(spread.size() == pocket.size()) {
           trapped.addAndGet(n);
-          System.out.println("Pocket of size "+n+" found");
         } else if(spread.size()<=connecting.size()) {
           var matching = newPockets.keySet().stream().filter(e -> e.stream().anyMatch(spread::contains)).findAny();
           matching.ifPresentOrElse(c -> {
@@ -54,7 +54,6 @@ public class Day18 extends Day2022 {
         }
       });
       pockets = newPockets;
-      System.out.println(i);
     }
     return (locs.size()*6L) - exterior.size() - trapped.get();
   }
