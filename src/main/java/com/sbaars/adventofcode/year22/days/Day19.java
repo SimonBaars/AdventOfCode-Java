@@ -26,17 +26,11 @@ public class Day19 extends Day2022 {
     System.out.println(new Day19().part2());
   }
 
-  public record Blueprint(long n, List<Robot> robotList) {}
-  public record Robot (String name, List<Cost> costs) {}
-  public record Cost (long n, String name) {}
   public record Input(long n, long oreCost, long clayCost, long obsidianOre, long obsidianClay, long geodeOre, long geodeObsidian) {}
+
   public record State(LongCountMap<String> inventory, LongCountMap<String> perTurn, String target) {
     private long score() {
        return inventory.get("ore") + (inventory.get("clay") * 2) + (inventory.get("obsidian") * 3) + (inventory.get("geode") * 4);
-    }
-
-    private long score2(int a, int b, int c, int d) {
-      return (inventory.get("ore") * a) + (inventory.get("clay") * b) + (inventory.get("obsidian") * c) + (inventory.get("geode") * d);
     }
   }
 
@@ -49,19 +43,7 @@ public class Day19 extends Day2022 {
 
   @Override
   public Object part2() {
-//    for(int i = 2; i<=5; i++) {
-//
-//      for(int j = 2; j<=10; j++) {
-//        for(int k = 2; k<=20; k++) {
-//      int finalI = i;
-//          int finalJ = j;
-//          int finalK = k;
-//          System.out.println(i+", "+j+", "+k+": "+getQuality(3, 32, 500000, a1 -> a1.score2(finalI, finalJ, finalK))
-//              .mapToLong(e -> e)
-//              .reduce((a, b) -> a * b)
-//              .getAsLong());
-//    }}}
-    return getQuality(3, 32, 1000000, a1 -> a1.score())
+    return getQuality(3, 32, 1000000, State::score)
             .mapToLong(e -> e)
             .reduce((a, b) -> a * b)
             .getAsLong();
