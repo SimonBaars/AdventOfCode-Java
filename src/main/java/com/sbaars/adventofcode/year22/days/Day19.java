@@ -90,6 +90,56 @@ public class Day19 extends Day2022 {
 
   @Override
   public Object part2() {
-    return "";
+    List<Input> l = dayStream().map(s -> readString(s, "Blueprint %n: Each ore robot costs %n ore. Each clay robot costs %n ore. Each obsidian robot costs %n ore and %n clay. Each geode robot costs %n ore and %n obsidian.", " ", Input.class)).limit(3).toList();
+    long quality = 0;
+    for(Input b : l) {
+      Set<State> states = new HashSet<>();
+      states.add(new State(new LongCountMap<>(), new LongCountMap<>(), "ore"));
+      states.add(new State(new LongCountMap<>(), new LongCountMap<>(), "clay"));
+      states.forEach(s -> s.perTurn.increment("ore"));
+
+      for (int i = 0; i < 32; i++) {
+        for (State s : new ArrayList<>(states)) {
+          LongCountMap<String> perTurn = new LongCountMap<>(s.perTurn);
+
+          if (s.target.equals("ore") && s.inventory.get("ore") >= b.oreCost) {
+            s.inventory.increment("ore", -b.oreCost);
+            s.perTurn.increment("ore");
+            perTurn.forEach(s.inventory::increment);
+            states.add(new State(new LongCountMap<>(s.inventory), new LongCountMap<>(s.perTurn), "clay"));
+          } else if (s.target.equals("clay") && s.inventory.get("ore") >= b.clayCost) {
+            s.inventory.increment("ore", -b.clayCost);
+            s.perTurn.increment("clay");
+            perTurn.forEach(s.inventory::increment);
+            states.add(new State(new LongCountMap<>(s.inventory), new LongCountMap<>(s.perTurn), "ore"));
+            states.add(new State(new LongCountMap<>(s.inventory), new LongCountMap<>(s.perTurn), "obsidian"));
+          } else if (s.target.equals("obsidian") && s.inventory.get("ore") >= b.obsidianOre && s.inventory.get("clay") >= b.obsidianClay) {
+            s.inventory.increment("ore", -b.obsidianOre);
+            s.inventory.increment("clay", -b.obsidianClay);
+            s.perTurn.increment("obsidian");
+            perTurn.forEach(s.inventory::increment);
+            states.add(new State(new LongCountMap<>(s.inventory), new LongCountMap<>(s.perTurn), "ore"));
+            states.add(new State(new LongCountMap<>(s.inventory), new LongCountMap<>(s.perTurn), "clay"));
+            states.add(new State(new LongCountMap<>(s.inventory), new LongCountMap<>(s.perTurn), "geode"));
+          } else if (s.target.equals("geode") && s.inventory.get("ore") >= b.geodeOre && s.inventory.get("obsidian") >= b.geodeObsidian) {
+            s.inventory.increment("ore", -b.geodeOre);
+            s.inventory.increment("obsidian", -b.geodeObsidian);
+            s.perTurn.increment("geode");
+            perTurn.forEach(s.inventory::increment);
+            states.add(new State(new LongCountMap<>(s.inventory), new LongCountMap<>(s.perTurn), "ore"));
+//            states.add(new State(new LongCountMap<>(s.inventory), new LongCountMap<>(s.perTurn), "clay"));
+            states.add(new State(new LongCountMap<>(s.inventory), new LongCountMap<>(s.perTurn), "obsidian"));
+          } else {
+            perTurn.forEach(s.inventory::increment);
+          }
+
+
+        }
+        System.out.println("Minute "+(i+1)+": States "+states.size());
+      }
+      System.out.println("Blueprint "+b.n+" done, states="+states.size()+", maxGeodes="+states.stream().mapToLong(e -> e.inventory.get("geode")).max().getAsLong());
+      quality += states.stream().mapToLong(e -> e.inventory.get("geode")).max().getAsLong() * b.n;
+    }
+    return quality;
   }
 }
