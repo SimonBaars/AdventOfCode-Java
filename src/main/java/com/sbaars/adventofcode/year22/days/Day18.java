@@ -36,8 +36,7 @@ public class Day18 extends Day2022 {
     List<Loc3D> locs = dayStream().map(s -> readString(s, "%n,%n,%n", Loc3D.class)).toList();
     List<Loc3D> connecting = locs.stream().flatMap(l -> Arrays.stream(HexDirection.values()).map(d -> d.move(l, 1))).collect(Collectors.toCollection(ArrayList::new));
     List<Loc3D> exterior = connecting.stream().filter(locs::contains).toList();
-    connecting.removeAll(exterior);
-    LongCountMap<Set<Loc3D>> pockets = connecting.stream().map(l -> new HashSet<>(Set.of(l))).collect(toCountMap());
+    LongCountMap<Set<Loc3D>> pockets = connecting.stream().filter(l -> !locs.contains(l)).map(l -> new HashSet<>(Set.of(l))).collect(toCountMap());
     var trapped = new AtomicLong();
     for(int i = 0; i<2000; i++) {
       LongCountMap<Set<Loc3D>> newPockets = new LongCountMap<>();
