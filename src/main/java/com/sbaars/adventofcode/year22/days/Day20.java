@@ -15,7 +15,7 @@ public class Day20 extends Day2022 {
     Day20 d = new Day20();
     d.downloadIfNotDownloaded();
     d.downloadExample();
-    d.printParts(1);
+    d.printParts();
 //    System.in.read();
 //    d.submitPart1();
 //    d.submitPart2();
@@ -29,12 +29,13 @@ public class Day20 extends Day2022 {
     var nodes = new ArrayList<>(in.valueMap);
     for(int i = 0; i<nodes.size(); i++) {
       var toMove = nodes.get(i);
-      System.out.println(toMove.value+" moves");
+      if(toMove.value == 0) continue;
 //      var moveTo = in.valueMap.get(Math.floorMod(in.valueMap.indexOf(toMove) + toMove.value, nodes.size()));
       var moveTo = toMove.move(toMove.value, nodes.size());
+//      System.out.println(toMove.value+" moves after "+moveTo.value);
       in.insertAfter(toMove, moveTo);
       System.out.println(Arrays.toString(in.next(nodes.size())));
-      System.out.println(Arrays.toString(in.prev(nodes.size())));
+//      System.out.println(Arrays.toString(in.prev(nodes.size())));
     }
     while(in.current() != 0) {
       in.next();
