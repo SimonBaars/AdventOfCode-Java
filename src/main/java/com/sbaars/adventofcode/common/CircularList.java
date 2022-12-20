@@ -9,10 +9,10 @@ import java.util.List;
 public class CircularList {
   public final List<Node> valueMap = new ArrayList<>();
   private Node current;
-  public CircularList(int[] elements) {
+  public CircularList(long[] elements) {
     Node prev = null;
     Node first = null;
-    for (int element : elements) {
+    for (long element : elements) {
       Node n = new Node();
       n.value = element;
       n.prev = prev;
@@ -26,7 +26,7 @@ public class CircularList {
     this.current = first;
   }
 
-  public int current() {
+  public long current() {
     return current.value;
   }
 
@@ -34,8 +34,8 @@ public class CircularList {
     current = current.next;
   }
 
-  public int[] next(int n) {
-    int[] arr = new int[n];
+  public long[] next(int n) {
+    long[] arr = new long[n];
     Node node = current;
     for (int i = 0; i < n; i++) {
       node = node.next;
@@ -44,8 +44,8 @@ public class CircularList {
     return arr;
   }
 
-  public int[] prev(int n) {
-    int[] arr = new int[n];
+  public long[] prev(int n) {
+    long[] arr = new long[n];
     Node node = current;
     for (int i = 0; i < n; i++) {
       node = node.prev;
@@ -71,7 +71,7 @@ public class CircularList {
     return valueMap.size();
   }
 
-  public int[] toArray() {
+  public long[] toArray() {
     return next(size());
   }
 
@@ -83,15 +83,15 @@ public class CircularList {
   }
 
   public class Node {
-    public int value;
+    public long value;
     public Node prev;
     public Node next;
 
-    public Node move(int value, int size) {
+    public Node move(long value, int size) {
       Node n = this;
       if(value < 0) value--;
       int movesNeeded = Math.floorMod(value, size);
-      for(int i = 0; i<movesNeeded; i++) {
+      for(long i = 0; i<movesNeeded; i++) {
         n = n.next;
       }
       return n;
