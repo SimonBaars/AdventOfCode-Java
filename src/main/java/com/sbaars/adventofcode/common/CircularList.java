@@ -59,6 +59,7 @@ public class CircularList {
   }
 
   public void insertAfter(Node s1, Node s2) {
+    if(s1 == s2 || s1.prev == s2) return;
     s1.prev.next = s1.next;
     s1.next.prev = s1.prev;
     s2.next.prev = s1;
@@ -89,8 +90,7 @@ public class CircularList {
 
     public Node move(long value, int size) {
       Node n = this;
-      if(value < 0) value--;
-      int movesNeeded = Math.floorMod(value, size);
+      int movesNeeded = Math.floorMod(value, size-1);
       for(long i = 0; i<movesNeeded; i++) {
         n = n.next;
       }

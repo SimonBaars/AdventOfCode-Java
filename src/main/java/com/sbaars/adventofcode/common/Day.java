@@ -26,6 +26,11 @@ public abstract class Day {
     this.day = day;
   }
 
+  public Day setExample(int example) {
+    this.example = example;
+    return this;
+  }
+
   public static String getResourceAsString(String resource) {
     try {
       return Files.readString(getResource(resource).toPath());

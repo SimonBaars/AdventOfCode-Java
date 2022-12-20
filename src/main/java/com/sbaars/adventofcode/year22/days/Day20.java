@@ -4,7 +4,6 @@ import com.sbaars.adventofcode.common.CircularList;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Day20 extends Day2022 {
   public Day20() {
@@ -12,59 +11,34 @@ public class Day20 extends Day2022 {
   }
 
   public static void main(String[] args) {
-    Day20 d = new Day20();
-    d.downloadIfNotDownloaded();
-    d.downloadExample();
-    d.printParts();
-//    System.in.read();
-//    d.submitPart1();
-//    d.submitPart2();
+    new Day20().printParts();
   }
 
   @Override
   public Object part1() {
-//    System.out.println(dayNumberStream().count());
-//    System.out.println(dayNumberStream().distinct().count());
     CircularList in = new CircularList(dayNumberStream().toArray());
     var nodes = new ArrayList<>(in.valueMap);
     for(int i = 0; i<nodes.size(); i++) {
       var toMove = nodes.get(i);
-      if(toMove.value == 0) continue;
-//      var moveTo = in.valueMap.get(Math.floorMod(in.valueMap.indexOf(toMove) + toMove.value, nodes.size()));
       var moveTo = toMove.move(toMove.value, nodes.size());
-//      System.out.println(toMove.value+" moves after "+moveTo.value);
       in.insertAfter(toMove, moveTo);
-//      System.out.println(Arrays.toString(in.next(nodes.size())));
-//      System.out.println(Arrays.toString(in.prev(nodes.size())));
     }
-    System.out.println(Arrays.toString(in.toArray()));
-    while(in.current() != 0) {
-      in.next();
-    }
+    in.setCurrent(nodes.stream().filter(n -> n.value == 0).findAny().get());
     long[] nums = in.next(3000);
     return nums[1000-1] + nums[2000-1] + nums[3000-1];
   }
 
   @Override
   public Object part2() {
-//    System.out.println(dayNumberStream().count());
-//    System.out.println(dayNumberStream().distinct().count());
-    CircularList in = new CircularList(dayNumberStream().map(l -> l * 811589153).toArray());
+    CircularList in = new CircularList(dayNumberStream().map(l -> l * 811589153L).toArray());
     var nodes = new ArrayList<>(in.valueMap);
     for(int j = 0; j<10; j++) {
       for (int i = 0; i < nodes.size(); i++) {
         var toMove = nodes.get(i);
-        if (toMove.value == 0) continue;
-        //      var moveTo = in.valueMap.get(Math.floorMod(in.valueMap.indexOf(toMove) + toMove.value, nodes.size()));
         var moveTo = toMove.move(toMove.value, nodes.size());
-        //      System.out.println(toMove.value+" moves after "+moveTo.value);
         in.insertAfter(toMove, moveTo);
-        //      System.out.println(Arrays.toString(in.next(nodes.size())));
-        //      System.out.println(Arrays.toString(in.prev(nodes.size())));
       }
-      System.out.println(j);
     }
-    System.out.println(Arrays.toString(in.toArray()));
     in.setCurrent(nodes.stream().filter(n -> n.value == 0).findAny().get());
     long[] nums = in.next(3000);
     return nums[1000-1] + nums[2000-1] + nums[3000-1];
