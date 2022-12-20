@@ -89,6 +89,7 @@ public class CircularList {
 
     public Node move(int value, int size) {
       Node n = this;
+      if(value < 0) value--;
       int movesNeeded = Math.floorMod(value, size);
       for(int i = 0; i<movesNeeded; i++) {
         n = n.next;
