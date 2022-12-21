@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
-import static com.sbaars.adventofcode.util.AOCUtils.binarySearch;
+import static com.sbaars.adventofcode.util.AOCUtils.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -43,15 +43,7 @@ public class Day21 extends Day2022 {
 
   private long diff(Map<String, Object> in, long[] valid, long i) {
     if(valid.length == 2) {
-      long i2 = i * (valid[1]-valid[0]);
-      if (i != 0 && i2 / (valid[1]-valid[0]) != i) {
-        return Long.MAX_VALUE;
-      }
-      long i3 = i2 + valid[0];
-      if (i3 - valid[0] != i2) {
-        return Long.MAX_VALUE;
-      }
-      i = i3;
+      i = safeAdd(safeMultiply(i, valid[1]-valid[0]), valid[0]);
     }
     var newIn = new HashMap<>(in);
     newIn.put("humn", i);
@@ -79,7 +71,11 @@ public class Day21 extends Day2022 {
             } else if(s.equals("root")){
               return of(new Pair<>(m1, m2));
             }
-            in.put(s, doSum(sum.op, m1, m2));
+            try {
+              in.put(s, doSum(sum.op, m1, m2));
+            } catch (IllegalStateException e) {
+              return empty();
+            }
           }
         }
       }
@@ -88,10 +84,10 @@ public class Day21 extends Day2022 {
 
   private static Object doSum(char op, long m1, long m2) {
     return switch (op) {
-      case '+' -> m1 + m2;
-      case '-' -> m1 - m2;
+      case '+' -> safeAdd(m1, m2);
+      case '-' -> safeSubtract(m1, m2);
       case '/' -> m1 / m2;
-      case '*' -> m1 * m2;
+      case '*' -> safeMultiply(m1, m2);
       default -> throw new IllegalStateException("Unexpected value: " + op);
     };
   }

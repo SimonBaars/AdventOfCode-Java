@@ -103,4 +103,28 @@ public class AOCUtils {
     public static long binarySearch(Function<Long, Long> testFunction) {
         return binarySearch(testFunction, 0, 0, Long.MAX_VALUE);
     }
+
+    public static long safeMultiply(long a, long b){
+        long res = a * b;
+        if (b != 0 && res / b != a) {
+            throw new IllegalStateException("It is not safe to multiply "+a+" by "+b+": long overflow will occur");
+        }
+        return res;
+    }
+
+    public static long safeAdd(long a, long b){
+        long res = a + b;
+        if ((b < 0 && res > a) || (b > 0 && res < a)) {
+            throw new IllegalStateException("It is not safe to add "+a+" by "+b+": long overflow will occur");
+        }
+        return res;
+    }
+
+    public static long safeSubtract(long a, long b){
+        long res = a - b;
+        if ((b > 0 && res > a) || (b < 0 && res < a)) {
+            throw new IllegalStateException("It is not safe to subtract "+a+" by "+b+": long overflow will occur");
+        }
+        return res;
+    }
 }
