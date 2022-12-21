@@ -38,7 +38,7 @@ public class Day21 extends Day2022 {
   public Object part2() {
     Map<String, Object> in = input();
     long[] valid = LongStream.range(0, Long.MAX_VALUE).filter(i -> diff(in, new long[]{}, i) != Long.MAX_VALUE).limit(2).toArray();
-    return (binarySearch(i -> diff(in, valid, i), valid[0], Long.MAX_VALUE/(valid[1]-valid[0])) * (valid[1]-valid[0])) + valid[0] /* need to do -2 because apparently solution is not unique :( */;
+    return (binarySearch(i -> diff(in, valid, i), valid[0], Long.MAX_VALUE/(valid[1]-valid[0])) * (valid[1]-valid[0])) + valid[0];
   }
 
   private long diff(Map<String, Object> in, long[] valid, long i) {
