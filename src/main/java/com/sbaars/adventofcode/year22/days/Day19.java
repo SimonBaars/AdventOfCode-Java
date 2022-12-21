@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static com.sbaars.adventofcode.util.AOCUtils.zip;
 import static java.util.Comparator.comparing;
 import static java.util.stream.LongStream.rangeClosed;

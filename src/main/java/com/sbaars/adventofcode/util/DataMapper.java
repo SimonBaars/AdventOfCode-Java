@@ -1,4 +1,6 @@
-package com.sbaars.adventofcode.common;
+package com.sbaars.adventofcode.util;
+
+import com.sbaars.adventofcode.common.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ import static java.lang.Long.parseLong;
 import static java.util.Arrays.stream;
 import static java.util.Optional.of;
 
-public interface ReadsFormattedString {
+public interface DataMapper {
   static <T> T readString(String s, String pattern, Class<T> target, Class<?>...nested) {
     return readString(s, pattern, ",", target, nested);
   }

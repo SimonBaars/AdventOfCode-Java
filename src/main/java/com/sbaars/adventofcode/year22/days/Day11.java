@@ -5,7 +5,7 @@ import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.List;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day11 extends Day2022 {
   public Day11() {

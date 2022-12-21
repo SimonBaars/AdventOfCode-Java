@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.sbaars.adventofcode.common.Direction.*;
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static com.sbaars.adventofcode.common.grid.InfiniteGrid.toInfiniteGrid;
 
 public class Day14 extends Day2022 {

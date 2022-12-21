@@ -5,7 +5,7 @@ import com.sbaars.adventofcode.year15.Day2015;
 
 import java.util.function.ToLongFunction;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day2 extends Day2015 {
   public Day2() {

@@ -9,7 +9,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.lang.Math.toIntExact;
 
 public class Day5 extends Day2022 {

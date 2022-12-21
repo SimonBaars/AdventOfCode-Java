@@ -1,6 +1,6 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ArrayUtils.subarray;
