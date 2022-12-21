@@ -3,6 +3,7 @@ package com.sbaars.adventofcode.year22.days;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,49 @@ public class Day21 extends Day2022 {
 
   @Override
   public Object part2() {
-    return "";
+    Map<String, Object> in = dayStream().map(s -> readString(s, "%s: %s", Monkey.class)).collect(Collectors.toMap(e -> e.name, e -> {
+      try {
+        return readString(e.sum, "%s %c %s", Sum.class);
+      } catch (IllegalStateException s) {
+        return Long.parseLong(e.sum);
+      }
+    }));
+
+    for(long i = 3469704899000L; i<3470000000000L; i+=1L){
+//      System.out.println(i);
+      var newIn = new HashMap<>(in);
+      newIn.put("humn", i);
+      if(calculateRes(newIn)){
+        return i;
+      }
+    }
+    return 0;
+  }
+
+  public boolean calculateRes(Map<String, Object> in) {
+    while(in.get("root") instanceof Sum) {
+      for (String s : new ArrayList<>(in.keySet())) {
+        Object o = in.get(s);
+        if(o instanceof Sum) {
+          Sum sum = (Sum)o;
+          if(in.get(sum.monkey1) instanceof Long && in.get(sum.monkey2) instanceof Long) {
+            long m1 = (Long)in.get(sum.monkey1);
+            long m2 = (Long)in.get(sum.monkey2);
+            if(s.equals("root")){
+//              System.out.println(m1+", "+m2);
+              return m1 == m2;
+            }
+            in.put(s, switch (sum.op) {
+              case '+' -> m1+m2;
+              case '-' -> m1-m2;
+              case '/' -> m1/m2;
+              case '*' -> m1*m2;
+              default -> throw new IllegalStateException("Unexpected value: " + sum.op);
+            });
+          }
+        }
+      }
+    }
+    return false;
   }
 }
