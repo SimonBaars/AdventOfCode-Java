@@ -88,8 +88,11 @@ public class AOCUtils {
             long res2 = testFunction.apply(l2);
             long diff2 = Math.abs(res2 - target);
             if(diff2 == 0) return l2;
-            if(diff1 <= diff2) high = l2-1;
-            if (diff1 >= diff2) low = l1+1;
+            if(diff1 == Long.MAX_VALUE && diff2 == Long.MAX_VALUE) high = l1-1;
+            else {
+                if (diff1 <= diff2) high = l2 - 1;
+                if (diff1 >= diff2) low = l1 + 1;
+            }
         }
     }
 
