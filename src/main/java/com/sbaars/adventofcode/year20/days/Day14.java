@@ -4,7 +4,7 @@ import com.sbaars.adventofcode.year20.Day2020;
 
 import java.util.*;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.lang.Long.parseLong;
 import static java.lang.Long.toBinaryString;
 import static java.util.Optional.empty;

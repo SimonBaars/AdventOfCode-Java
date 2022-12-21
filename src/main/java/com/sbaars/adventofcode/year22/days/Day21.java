@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static com.sbaars.adventofcode.util.AOCUtils.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;

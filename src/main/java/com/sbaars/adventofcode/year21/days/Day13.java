@@ -1,6 +1,6 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.lang.Math.toIntExact;
 
 import com.sbaars.adventofcode.common.grid.Coordinates;

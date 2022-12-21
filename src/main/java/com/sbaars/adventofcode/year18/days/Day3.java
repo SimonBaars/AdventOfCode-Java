@@ -1,6 +1,6 @@
 package com.sbaars.adventofcode.year18.days;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year18.Day2018;

@@ -5,7 +5,7 @@ import com.sbaars.adventofcode.year22.Day2022;
 import java.io.IOException;
 import java.util.stream.Stream;
 
-import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static com.sbaars.adventofcode.year22.days.Day2.Outcome.*;
 import static com.sbaars.adventofcode.year22.days.Day2.Shape.*;
 
