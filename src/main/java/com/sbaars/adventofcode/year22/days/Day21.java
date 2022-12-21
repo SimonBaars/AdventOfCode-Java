@@ -1,5 +1,6 @@
 package com.sbaars.adventofcode.year22.days;
 
+import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.sbaars.adventofcode.common.ReadsFormattedString.readString;
+import static com.sbaars.adventofcode.util.AOCUtils.binarySearch;
 
 public class Day21 extends Day2022 {
   public Day21() {
@@ -15,13 +17,7 @@ public class Day21 extends Day2022 {
   }
 
   public static void main(String[] args) {
-    Day21 d = new Day21();
-    d.downloadIfNotDownloaded();
-    d.downloadExample();
-    d.printParts();
-//    System.in.read();
-//    d.submitPart1();
-//    d.submitPart2();
+    new Day21().printParts();
   }
 
   public record Monkey (String name, String sum) {}
@@ -29,80 +25,55 @@ public class Day21 extends Day2022 {
 
   @Override
   public Object part1() {
-    Map<String, Object> in = dayStream().map(s -> readString(s, "%s: %s", Monkey.class)).collect(Collectors.toMap(e -> e.name, e -> {
-      try {
-        return readString(e.sum, "%s %c %s", Sum.class);
-      } catch (IllegalStateException s) {
-        return Long.parseLong(e.sum);
-      }
-    }));
-    while(in.get("root") instanceof Sum) {
-      for (String s : new ArrayList<>(in.keySet())) {
-        Object o = in.get(s);
-        if(o instanceof Sum) {
-          Sum sum = (Sum)o;
-          if(in.get(sum.monkey1) instanceof Long && in.get(sum.monkey2) instanceof Long) {
-            long m1 = (Long)in.get(sum.monkey1);
-            long m2 = (Long)in.get(sum.monkey2);
-            in.put(s, switch (sum.op) {
-              case '+' -> m1+m2;
-              case '-' -> m1-m2;
-              case '/' -> m1/m2;
-              case '*' -> m1*m2;
-              default -> throw new IllegalStateException("Unexpected value: " + sum.op);
-            });
-          }
-        }
-      }
-    }
-    return in.get("root");
+    Map<String, Object> in = input();
+    Pair<Long, Long> res = calculateRes(in);
+    return doSum(((Sum)in.get("root")).op, res.a(), res.b());
   }
 
   @Override
   public Object part2() {
-    Map<String, Object> in = dayStream().map(s -> readString(s, "%s: %s", Monkey.class)).collect(Collectors.toMap(e -> e.name, e -> {
+    Map<String, Object> in = input();
+    return binarySearch(i -> {
+      var newIn = new HashMap<>(in);
+      newIn.put("humn", i);
+      var res = calculateRes(newIn);
+      return res.a() - res.b();
+    }, 0, 10000000000000L)-2 /* need to do -2 because apparently solution is not unique :( */;
+  }
+
+  private Map<String, Object> input() {
+    return dayStream().map(s -> readString(s, "%s: %s", Monkey.class)).collect(Collectors.toMap(e -> e.name, e -> {
       try {
         return readString(e.sum, "%s %c %s", Sum.class);
       } catch (IllegalStateException s) {
         return Long.parseLong(e.sum);
       }
     }));
-
-    for(long i = 3469704899000L; i<3470000000000L; i+=1L){
-//      System.out.println(i);
-      var newIn = new HashMap<>(in);
-      newIn.put("humn", i);
-      if(calculateRes(newIn)){
-        return i;
-      }
-    }
-    return 0;
   }
 
-  public boolean calculateRes(Map<String, Object> in) {
-    while(in.get("root") instanceof Sum) {
+  public Pair<Long, Long> calculateRes(Map<String, Object> in) {
+    while(true) {
       for (String s : new ArrayList<>(in.keySet())) {
         Object o = in.get(s);
-        if(o instanceof Sum) {
-          Sum sum = (Sum)o;
-          if(in.get(sum.monkey1) instanceof Long && in.get(sum.monkey2) instanceof Long) {
-            long m1 = (Long)in.get(sum.monkey1);
-            long m2 = (Long)in.get(sum.monkey2);
+        if(o instanceof Sum sum) {
+          if(in.get(sum.monkey1) instanceof Long m1 && in.get(sum.monkey2) instanceof Long m2) {
             if(s.equals("root")){
-//              System.out.println(m1+", "+m2);
-              return m1 == m2;
+              return new Pair<>(m1, m2);
             }
-            in.put(s, switch (sum.op) {
-              case '+' -> m1+m2;
-              case '-' -> m1-m2;
-              case '/' -> m1/m2;
-              case '*' -> m1*m2;
-              default -> throw new IllegalStateException("Unexpected value: " + sum.op);
-            });
+            in.put(s, doSum(sum.op, m1, m2));
           }
         }
       }
     }
-    return false;
+  }
+
+  private static Object doSum(char op, Long m1, Long m2) {
+    return switch (op) {
+      case '+' -> m1 + m2;
+      case '-' -> m1 - m2;
+      case '/' -> m1 / m2;
+      case '*' -> m1 * m2;
+      default -> throw new IllegalStateException("Unexpected value: " + op);
+    };
   }
 }

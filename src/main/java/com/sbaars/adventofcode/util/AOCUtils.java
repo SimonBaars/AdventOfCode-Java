@@ -4,6 +4,7 @@ import com.sbaars.adventofcode.common.Pair;
 
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -73,5 +74,30 @@ public class AOCUtils {
         return (a.isParallel() || b.isParallel())
                 ? StreamSupport.stream(split, true)
                 : StreamSupport.stream(split, false);
+    }
+
+    public static long binarySearch(Function<Long, Long> testFunction, long target, long low, long high) {
+        while(true) {
+            if(low == high) return low;
+            long size = (high - low) / 3;
+            long l1 = low + size;
+            long res1 = testFunction.apply(l1);
+            long diff1 = Math.abs(res1 - target);
+            if(diff1 == 0) return l1;
+            long l2 = l1 + size;
+            long res2 = testFunction.apply(l2);
+            long diff2 = Math.abs(res2 - target);
+            if(diff2 == 0) return l2;
+            if(diff1 <= diff2) high = l2-1;
+            if (diff1 >= diff2) low = l1+1;
+        }
+    }
+
+    public static long binarySearch(Function<Long, Long> testFunction, long low, long high) {
+        return binarySearch(testFunction, 0, low, high);
+    }
+
+    public static long binarySearch(Function<Long, Long> testFunction) {
+        return binarySearch(testFunction, 0, 0, Long.MAX_VALUE);
     }
 }
