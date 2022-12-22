@@ -48,4 +48,6 @@ public class Either<A, B> {
         result = 31 * result + (b != null ? b.hashCode() : 0);
         return result;
     }
+
+
 }

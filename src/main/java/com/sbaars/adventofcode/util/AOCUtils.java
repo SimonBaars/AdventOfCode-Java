@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.util;
 
 import com.sbaars.adventofcode.common.Either;
+import com.sbaars.adventofcode.common.EitherList;
 import com.sbaars.adventofcode.common.Pair;
 
 import java.util.*;
@@ -129,8 +130,8 @@ public class AOCUtils {
         return res;
     }
 
-    public static List<Either<String, Long>> alternating(String s) {
-        List<Either<String, Long>> either = new ArrayList<>();
+    public static EitherList<String, Long> alternating(String s) {
+        EitherList<String, Long> either = new EitherList<>();
         while(!s.isEmpty()) {
             boolean digit = Character.isDigit(s.charAt(0));
             int i;

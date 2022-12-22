@@ -64,15 +64,11 @@ public class Day22 extends Day2022 {
   public long solve(boolean cube) {
     String[] in = day().split("\n\n");
     InfiniteGrid g = new InfiniteGrid(in[0]);
-    var instr = alternating(in[1].trim());
-    Me me = new Me(g.grid.keySet().stream().filter(l -> g.getChar(l) == '.' && l.y == 0).findFirst().get(), EAST);
-    for(var instruction : instr) {
-      if(instruction.isA()) {
-        me = new Me(me.l, me.d.turn(instruction.getA().equals("R")));
-      } else {
-        me = walk(cube, g, me, instruction.getB());
-      }
-    }
+    Me me = alternating(in[1].trim()).reduce(
+            new Me(g.grid.keySet().stream().filter(l -> g.getChar(l) == '.' && l.y == 0).findFirst().get(), EAST),
+            (dir, m) -> new Me(m.l, m.d.turn(dir.equals("R"))),
+            (steps, m) -> walk(cube, g, m, steps)
+    );
     return (1000 * (me.l.y + 1)) + (4 * (me.l.x + 1)) + me.d.ordinal() - 1 + (me.d == NORTH ? 4 : 0);
   }
 
@@ -109,7 +105,6 @@ public class Day22 extends Day2022 {
     long diff =  me.d.diagonal() ? me.l.x - oldSquare.start.x : me.l.y - oldSquare.start.y;
     long newX = targetSide.d == WEST ? newSquare.start.x : targetSide.d == EAST ? newSquare.end.x : targetSide.d == me.d ? newSquare.end.x - diff : newSquare.start.x + diff;
     long newY = targetSide.d == NORTH ? newSquare.start.y : targetSide.d == SOUTH ? newSquare.end.y : targetSide.d == me.d ? newSquare.end.y - diff : newSquare.start.y + diff;
-
     return new Me(new Loc(newX, newY), targetSide.d.opposite());
   }
 
