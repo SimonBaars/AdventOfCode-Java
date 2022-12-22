@@ -15,6 +15,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.sbaars.adventofcode.common.Direction.*;
+import static com.sbaars.adventofcode.util.AOCUtils.alternating;
 
 public class Day22 extends Day2022 {
   private final int CUBE_SIZE = 50;
@@ -53,35 +54,36 @@ public class Day22 extends Day2022 {
     return solve(true);
   }
 
-  public long solve (boolean cube) {
+  public long solve(boolean cube) {
     String[] in = day().split("\n\n");
     InfiniteGrid g = new InfiniteGrid(in[0]);
-    String instr = in[1].trim();
+    var instr = alternating(in[1].trim());
     Me me = new Me(g.grid.keySet().stream().filter(l -> g.getChar(l) == '.' && l.y == 0).findFirst().get(), EAST);
-    while(!instr.isEmpty()) {
-      if(instr.charAt(0) == 'L' || instr.charAt(0) == 'R') {
-        me = new Me(me.l, me.d.turn(instr.charAt(0) == 'R'));
-        instr = instr.substring(1);
+    for(var instruction : instr) {
+      if(instruction.isA()) {
+        me = new Me(me.l, me.d.turn(instruction.getA().equals("R")));
       } else {
-        int i;
-        for(i=0; i<instr.length() && Character.isDigit(instr.charAt(i)); i++);
-        int n = Integer.parseInt(instr.substring(0, i));
-        instr = instr.substring(i);
-        for(i = 0; i<n; i++) {
-          Loc newLoc = me.d.move(me.l);
-          var atPos = g.get(newLoc);
-          if(atPos.isPresent() && atPos.get() == '.') {
-            me = new Me(newLoc, me.d);
-          } else if(atPos.isEmpty()) {
-            Me newMe = cube ? moveCubic(me) : move(g, me);
-            if(g.get(newMe.l).get() == '.') {
-              me = newMe;
-            }
-          }
+        me = walk(cube, g, me, instruction.getB());
+      }
+    }
+    return (1000 * (me.l.y + 1)) + (4 * (me.l.x + 1)) + me.d.ordinal() - 1 + (me.d == NORTH ? 4 : 0);
+  }
+
+  private Me walk(boolean cube, InfiniteGrid g, Me me, long steps) {
+    for(int i = 0; i<steps; i++) {
+      Loc newLoc = me.d.move(me.l);
+      var atPos = g.get(newLoc);
+      if(atPos.isPresent() && atPos.get() == '.') {
+        me = new Me(newLoc, me.d);
+      } else if(atPos.isEmpty()) {
+        Me oldMe = me;
+        me = cube ? moveCubic(me) : move(g, me);
+        if(g.get(me.l).get() != '.') {
+          return oldMe;
         }
       }
     }
-    return (1000 * (me.l.y+1)) + (4 * (me.l.x + 1)) + me.d.ordinal() - 1 + (me.d == NORTH ? 4 : 0);
+    return me;
   }
 
   private Me move(InfiniteGrid g, Me me) {

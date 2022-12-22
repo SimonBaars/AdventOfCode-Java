@@ -1,5 +1,6 @@
 package com.sbaars.adventofcode.util;
 
+import com.sbaars.adventofcode.common.Either;
 import com.sbaars.adventofcode.common.Pair;
 
 import java.util.*;
@@ -126,5 +127,18 @@ public class AOCUtils {
             throw new IllegalStateException("It is not safe to subtract "+a+" by "+b+": long overflow will occur");
         }
         return res;
+    }
+
+    public static List<Either<String, Long>> alternating(String s) {
+        List<Either<String, Long>> either = new ArrayList<>();
+        while(!s.isEmpty()) {
+            boolean digit = Character.isDigit(s.charAt(0));
+            int i;
+            for(i=0; i<s.length() && digit == Character.isDigit(s.charAt(i)); i++);
+            String substring = s.substring(0, i);
+            either.add(new Either<>(!digit ? substring : null, digit ? Long.parseLong(substring) : null));
+            s = s.substring(i);
+        }
+        return either;
     }
 }
