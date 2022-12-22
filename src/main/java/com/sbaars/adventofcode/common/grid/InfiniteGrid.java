@@ -36,7 +36,11 @@ public class InfiniteGrid implements Grid {
   }
 
   public InfiniteGrid() {
-    this.grid = new HashMap<>();
+    this(new HashMap<>());
+  }
+
+  public InfiniteGrid(String s) {
+    this(new CharGrid(s).grid);
   }
 
   public IntStream iterate() {
@@ -45,6 +49,10 @@ public class InfiniteGrid implements Grid {
 
   public Optional<Character> get(Loc p) {
     return grid.containsKey(p) ? of(grid.get(p)) : empty();
+  }
+
+  public char getChar(Loc p) {
+    return get(p).orElse((char)0);
   }
 
   public void set(Loc p, char c) {
