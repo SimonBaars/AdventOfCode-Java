@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.sbaars.adventofcode.common.Direction.*;
 import static com.sbaars.adventofcode.util.AOCUtils.alternating;
+import static java.util.stream.IntStream.range;
 
 public class Day22 extends Day2022 {
   private final int CUBE_SIZE = 50;
@@ -31,7 +31,14 @@ public class Day22 extends Day2022 {
   public record Me (Loc l, Direction d) {}
   public record Location(int c, Direction d) {}
 
-  List<Range> cubes = List.of(cube(0, 3), cube(0, 2), cube(1, 2), cube(1, 1), cube(1, 0), cube(2, 0));
+  List<Range> squares = List.of(
+          square(0, 3),
+          square(0, 2),
+          square(1, 2),
+          square(1, 1),
+          square(1, 0),
+          square(2, 0)
+  );
   Map<Location, Location> sides = Map.of(
           new Location(5, EAST), new Location(2, EAST),
           new Location(5, SOUTH), new Location(3, EAST),
@@ -95,17 +102,18 @@ public class Day22 extends Day2022 {
   }
 
   private Me moveCubic(Me me) {
-    int cube = IntStream.range(0, cubes.size()).filter(i -> cubes.get(i).inRange(me.l)).findFirst().getAsInt();
-    var tele = sides.get(new Location(cube, me.d));
-    Range oldCube = cubes.get(cube);
-    Range newCube = cubes.get(tele.c);
-    long diff =  me.d.diagonal() ? me.l.x - oldCube.start.x : me.l.y - oldCube.start.y;
-    long newX = tele.d == WEST ? newCube.start.x : tele.d == EAST ? newCube.end.x : tele.d == me.d ? newCube.end.x - diff : newCube.start.x + diff;
-    long newY = tele.d == NORTH ? newCube.start.y : tele.d == SOUTH ? newCube.end.y : tele.d == me.d ? newCube.end.y - diff : newCube.start.y + diff;
-    return new Me(new Loc(newX, newY), tele.d.opposite());
+    int oldSquareIndex = range(0, squares.size()).filter(i -> squares.get(i).inRange(me.l)).findFirst().getAsInt();
+    var targetSide = sides.get(new Location(oldSquareIndex, me.d));
+    Range oldSquare = squares.get(oldSquareIndex);
+    Range newSquare = squares.get(targetSide.c);
+    long diff =  me.d.diagonal() ? me.l.x - oldSquare.start.x : me.l.y - oldSquare.start.y;
+    long newX = targetSide.d == WEST ? newSquare.start.x : targetSide.d == EAST ? newSquare.end.x : targetSide.d == me.d ? newSquare.end.x - diff : newSquare.start.x + diff;
+    long newY = targetSide.d == NORTH ? newSquare.start.y : targetSide.d == SOUTH ? newSquare.end.y : targetSide.d == me.d ? newSquare.end.y - diff : newSquare.start.y + diff;
+
+    return new Me(new Loc(newX, newY), targetSide.d.opposite());
   }
 
-  private Range cube(int x, int y) {
+  private Range square(int x, int y) {
     Loc a = new Loc(x * CUBE_SIZE, y * CUBE_SIZE);
     return new Range(a, new Loc(a.x+CUBE_SIZE-1, a.y+CUBE_SIZE-1));
   }
