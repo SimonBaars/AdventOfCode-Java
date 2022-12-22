@@ -32,15 +32,15 @@ public class Day22 extends Day2022 {
   public record Location(int c, Direction d) {}
 
   List<Range> cubes = List.of(cube(0, 3), cube(0, 2), cube(1, 2), cube(1, 1), cube(1, 0), cube(2, 0));
-  Map<Location, Location> todo = Map.of(
-          new Location(5, EAST), new Location(2, EAST), // A
-          new Location(5, SOUTH), new Location(3, EAST), // B
-          new Location(5, NORTH), new Location(0, SOUTH), // C
-          new Location(3, WEST), new Location(1, NORTH), // D
-          new Location(2, SOUTH), new Location(0, EAST), // E
-          new Location(4, NORTH), new Location(0, WEST), // F
-          new Location(4, WEST), new Location(1, WEST)  // G
-  ).entrySet().stream()
+  Map<Location, Location> sides = Map.of(
+          new Location(5, EAST), new Location(2, EAST),
+          new Location(5, SOUTH), new Location(3, EAST),
+          new Location(5, NORTH), new Location(0, SOUTH),
+          new Location(3, WEST), new Location(1, NORTH),
+          new Location(2, SOUTH), new Location(0, EAST),
+          new Location(4, NORTH), new Location(0, WEST),
+          new Location(4, WEST), new Location(1, WEST)
+  ).entrySet().stream() // This stream makes the map bidirectional
           .flatMap(e -> Stream.of(Pair.of(e.getKey(), e.getValue()), Pair.of(e.getValue(), e.getKey())))
           .collect(Collectors.toMap(Pair::a, Pair::b));
 
@@ -96,7 +96,7 @@ public class Day22 extends Day2022 {
 
   private Me moveCubic(Me me) {
     int cube = IntStream.range(0, cubes.size()).filter(i -> cubes.get(i).inRange(me.l)).findFirst().getAsInt();
-    var tele = todo.get(new Location(cube, me.d));
+    var tele = sides.get(new Location(cube, me.d));
     Range oldCube = cubes.get(cube);
     Range newCube = cubes.get(tele.c);
     long diff =  me.d.diagonal() ? me.l.x - oldCube.start.x : me.l.y - oldCube.start.y;
