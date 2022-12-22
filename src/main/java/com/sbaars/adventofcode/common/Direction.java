@@ -173,6 +173,14 @@ public enum Direction {
     };
   }
 
+  public boolean diagonal() {
+    return this == NORTH || this == SOUTH;
+  }
+
+  public boolean horizontal() {
+    return this == EAST || this == WEST;
+  }
+
   public boolean leftOf(Direction robotDir) {
     int n = this.ordinal() - 1;
     if (n == -1) n = values().length - 1;
