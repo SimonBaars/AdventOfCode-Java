@@ -26,7 +26,6 @@ public class Day22 extends Day2022 {
 
   public record Me (Loc l, Direction d) {}
   public record Location(int c, Direction d) {}
-  public record Instruction(Location go, boolean translate) {}
 
   Map<Integer, Range> cubes = Map.of(
           5, new Range(50, 0, 99, 49)/*5*/,
@@ -36,16 +35,16 @@ public class Day22 extends Day2022 {
           2, new Range(0, 100, 49, 149)/*2*/,
           1, new Range(0, 150, 49, 199)/*1*/
   );
-  Map<Location, Instruction> todo = Map.of(
-          new Location(6, EAST), new Instruction(new Location(3, EAST), true), // A
-          new Location(6, SOUTH), new Instruction(new Location(4, EAST), false), // B
-          new Location(6, NORTH), new Instruction(new Location(1, SOUTH), false), // C
-          new Location(4, WEST), new Instruction(new Location(2, NORTH), false), // D
-          new Location(3, SOUTH), new Instruction(new Location(1, EAST), false), // E
-          new Location(5, NORTH), new Instruction(new Location(1, WEST), false), // F
-          new Location(5, WEST), new Instruction(new Location(2, WEST), true)  // G
+  Map<Location, Location> todo = Map.of(
+          new Location(6, EAST), new Location(3, EAST), // A
+          new Location(6, SOUTH), new Location(4, EAST), // B
+          new Location(6, NORTH), new Location(1, SOUTH), // C
+          new Location(4, WEST), new Location(2, NORTH), // D
+          new Location(3, SOUTH), new Location(1, EAST), // E
+          new Location(5, NORTH), new Location(1, WEST), // F
+          new Location(5, WEST), new Location(2, WEST)  // G
   ).entrySet().stream()
-          .flatMap(e -> Stream.of(Pair.of(e.getKey(), e.getValue()), Pair.of(e.getValue().go, new Instruction(e.getKey(), e.getValue().translate))))
+          .flatMap(e -> Stream.of(Pair.of(e.getKey(), e.getValue()), Pair.of(e.getValue(), e.getKey())))
           .collect(Collectors.toMap(Pair::a, Pair::b));
 
   @Override
@@ -102,10 +101,10 @@ public class Day22 extends Day2022 {
     int cube = cubes.entrySet().stream().filter(e -> e.getValue().inRange(me.l)).mapToInt(Map.Entry::getKey).findFirst().getAsInt();
     var tele = todo.get(new Location(cube, me.d));
     Range oldCube = cubes.get(cube);
-    Range newCube = cubes.get(tele.go.c);
+    Range newCube = cubes.get(tele.c);
     long diff =  me.d.diagonal() ? me.l.x - oldCube.start.x : me.l.y - oldCube.start.y;
-    long newX = tele.go.d == WEST ? newCube.start.x : tele.go.d == EAST ? newCube.end.x : tele.translate ? newCube.end.x - diff : newCube.start.x + diff;
-    long newY = tele.go.d == NORTH ? newCube.start.y : tele.go.d == SOUTH ? newCube.end.y : tele.translate ? newCube.end.y - diff : newCube.start.y + diff;
-    return new Me(new Loc(newX, newY), tele.go.d.opposite());
+    long newX = tele.d == WEST ? newCube.start.x : tele.d == EAST ? newCube.end.x : tele.d == me.d ? newCube.end.x - diff : newCube.start.x + diff;
+    long newY = tele.d == NORTH ? newCube.start.y : tele.d == SOUTH ? newCube.end.y : tele.d == me.d ? newCube.end.y - diff : newCube.start.y + diff;
+    return new Me(new Loc(newX, newY), tele.d.opposite());
   }
 }
