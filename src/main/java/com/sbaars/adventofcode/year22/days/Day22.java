@@ -27,6 +27,7 @@ public class Day22 extends Day2022 {
   public record Me (Loc l, Direction d) {}
   public record Location(int c, Direction d) {}
   public record Instruction(Location go, boolean translate) {}
+
   Map<Integer, Range> cubes = Map.of(
           5, new Range(50, 0, 99, 49)/*5*/,
           6, new Range(100, 0, 149, 49)/*6*/,
