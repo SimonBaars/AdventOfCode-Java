@@ -113,13 +113,12 @@ public class Day22 extends Day2022 {
           } else if(!atPos.isPresent()) {
             Loc finalStart = start;
             int cube = cubes.entrySet().stream().filter(e -> e.getValue().inRange(finalStart)).mapToInt(Map.Entry::getKey).findFirst().getAsInt();
-            System.out.println(cube);
             var tele = teleport.get(new Location(cube, facing));
             Range oldCube = cubes.get(cube);
             Range newCube = cubes.get(tele.go.c);
             long diff =  facing.diagonal() ? start.x - oldCube.start.x : start.y - oldCube.start.y;
-            long newX = tele.go.d == WEST ? newCube.start.x : tele.go.d == EAST ? newCube.end.x : tele.translate ? newCube.start.x + diff : newCube.end.x - diff;
-            long newY = tele.go.d == NORTH ? newCube.start.y : tele.go.d == SOUTH ? newCube.end.y : tele.translate ? newCube.start.y + diff : newCube.end.y - diff;
+            long newX = tele.go.d == WEST ? newCube.start.x : tele.go.d == EAST ? newCube.end.x : tele.translate ? newCube.end.x - diff : newCube.start.x + diff;
+            long newY = tele.go.d == NORTH ? newCube.start.y : tele.go.d == SOUTH ? newCube.end.y : tele.translate ? newCube.end.y - diff : newCube.start.y + diff;
             newLoc = new Loc(newX, newY);
             if(g.get(newLoc).get() == '.'){
               start = newLoc;
