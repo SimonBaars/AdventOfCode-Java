@@ -18,13 +18,15 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 public class InfiniteGrid implements Grid {
-  final Map<Loc, Character> grid;
+  public final Map<Loc, Character> grid;
 
   public InfiniteGrid(char[][] g) {
     this();
     for (int i = 0; i < g.length; i++) {
-      for (int j = 0; j < g[0].length; j++) {
-        grid.put(new Loc(j, i), g[i][j]);
+      for (int j = 0; j < g[i].length; j++) {
+        if(g[i][j] != ' ') {
+          grid.put(new Loc(j, i), g[i][j]);
+        }
       }
     }
   }
