@@ -24,7 +24,7 @@ public class InfiniteGrid implements Grid {
     this();
     for (int i = 0; i < g.length; i++) {
       for (int j = 0; j < g[i].length; j++) {
-        if(g[i][j] != ' ') {
+        if(g[i][j] != ' ' && g[i][j] != '.') {
           grid.put(new Loc(j, i), g[i][j]);
         }
       }
