@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -113,5 +114,13 @@ public class InfiniteGrid implements Grid {
 
   public long width() {
     return maxX()+1-minX();
+  }
+
+  public boolean contains(Loc p) {
+    return grid.keySet().contains(p);
+  }
+
+  public Stream<Loc> stream() {
+    return grid.keySet().stream();
   }
 }
