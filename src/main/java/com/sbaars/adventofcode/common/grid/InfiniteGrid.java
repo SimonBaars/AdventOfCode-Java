@@ -4,12 +4,10 @@ import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.location.Loc;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -126,5 +124,9 @@ public class InfiniteGrid implements Grid {
 
   public Stream<Loc> stream() {
     return grid.keySet().stream();
+  }
+
+  public void removeIf(BiPredicate<Loc, Character> p) {
+    new HashSet<>(grid.entrySet()).stream().filter(e -> p.test(e.getKey(), e.getValue())).forEach(e -> grid.remove(e.getKey()));
   }
 }
