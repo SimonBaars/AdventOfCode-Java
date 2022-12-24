@@ -40,7 +40,7 @@ public class Day12 extends Day2022 {
       for(Point p : level) {
         long current = g.get(p);
         if(current == 'S') current = 'a';
-        for(Point p2 : g.streamDirs(p).toList()) {
+        for(Point p2 : g.streamFourDirs(p).toList()) {
           if((current == 'y' || current == 'z') && g.get(p2) == 'E') return steps;
           if(g.get(p2) <= current+1 && visited.add(p2)) {
             currentLevel.add(p2);

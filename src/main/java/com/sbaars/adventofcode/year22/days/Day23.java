@@ -32,7 +32,7 @@ public class Day23 extends Day2022 {
   }
 
   public long solution(boolean isPart2) {
-    Builder<InfiniteGrid> b = new Builder<>(new InfiniteGrid(dayGrid()), InfiniteGrid::new);
+    Builder<InfiniteGrid> b = new Builder<>(new InfiniteGrid(dayGrid(), '.'), InfiniteGrid::new);
     List<Direction> dirs = new ArrayList<>(List.of(NORTH, SOUTH, WEST, EAST));
     for(int i = 0; isPart2 || i<10; i++) {
       InfiniteGrid g = b.get();

@@ -74,6 +74,10 @@ public enum Direction {
     return Arrays.stream(eightDirections());
   }
 
+  public static Stream<Direction> five() {
+    return Stream.of(NORTH, EAST, SOUTH, WEST, CENTER);
+  }
+
   public Direction turnSteps(int steps) {
     Direction[] d = round();
     int index = IntStream.range(0, d.length).filter(i -> d[i] == this).findFirst().getAsInt();
