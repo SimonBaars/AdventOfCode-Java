@@ -22,10 +22,14 @@ public class InfiniteGrid implements Grid {
   public final Map<Loc, Character> grid;
 
   public InfiniteGrid(char[][] g) {
+    this(g, ' ');
+  }
+
+  public InfiniteGrid(char[][] g, char transparent) {
     this();
     for (int i = 0; i < g.length; i++) {
       for (int j = 0; j < g[i].length; j++) {
-        if(g[i][j] != ' ' && g[i][j] != '.') {
+        if(transparent != g[i][j]) {
           grid.put(new Loc(j, i), g[i][j]);
         }
       }
@@ -33,7 +37,7 @@ public class InfiniteGrid implements Grid {
   }
 
   public InfiniteGrid(Map<Loc, Character> grid) {
-    this.grid = grid;
+    this.grid = new HashMap<>(grid);
   }
 
   public InfiniteGrid() {

@@ -153,8 +153,8 @@ public class NumGrid implements Grid {
     set(p, get(p)+n);
   }
 
-  public Stream<Point> streamDirs(Point p) {
-    return Arrays.stream(Direction.fourDirections()).map(d -> d.move(p));
+  public Stream<Point> streamFourDirs(Point p) {
+    return Direction.four().map(d -> d.move(p));
   }
 
   public Point find(long l) {

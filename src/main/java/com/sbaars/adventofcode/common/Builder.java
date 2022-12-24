@@ -59,4 +59,8 @@ public class Builder<E> {
             newE = getFromClass();
         }
     }
+
+    public void setNew(E e) {
+        newE = e;
+    }
 }
