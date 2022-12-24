@@ -36,4 +36,9 @@ public class TopUniqueElements<E> extends PriorityQueue<E> {
     public Set<E> toSet() {
         return new HashSet<>(this);
     }
+
+    public void swap(Set<E> newSet) {
+        elements.clear();
+        addAll(newSet);
+    }
 }
