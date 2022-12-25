@@ -45,15 +45,17 @@ public class Day24 extends Day2022 {
             .toList();
     in.removeIf((l, c) -> dirs.containsKey(c));
     states.add(new Loc(1, 0));
-    Loc dest = new Loc(in.maxX()-1, in.maxY());
+    long sizex = in.maxX();
+    long sizey = in.maxY();
+    Loc dest = new Loc(sizex -1, sizey);
     boolean realEnd = false;
     for(long i = 1; true; i++) {
       InfiniteGrid g = new InfiniteGrid(in.grid);
       blizzards = blizzards.stream()
               .map(b -> new Blizzard(b.dir.move(b.l), b.dir))
               .map(b -> in.get(b.l).isPresent() ?
-                      new Blizzard(new Loc(b.dir == WEST ? in.maxX()-1 : b.dir == EAST ? 1 :
-                              b.l.x, b.dir == NORTH ? in.maxY()-1 : b.dir == SOUTH ? 1 : b.l.y), b.dir) : b)
+                      new Blizzard(new Loc(b.dir == WEST ? sizex -1 : b.dir == EAST ? 1 :
+                              b.l.x, b.dir == NORTH ? sizey -1 : b.dir == SOUTH ? 1 : b.l.y), b.dir) : b)
               .toList();
       blizzards.forEach(b -> g.set(b.l, 'X'));
       states = states.stream()
@@ -63,7 +65,7 @@ public class Day24 extends Day2022 {
         if(!part2 || realEnd) return i;
         states = Set.of(dest);
         if(dest.equals(new Loc(1, 0))) {
-          dest = new Loc(in.maxX()-1, in.maxY());
+          dest = new Loc(sizex -1, sizey);
           realEnd = true;
         } else {
           dest = new Loc(1, 0);
