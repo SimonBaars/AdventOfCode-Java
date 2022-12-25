@@ -11,13 +11,7 @@ public class Day1 extends Day2022 {
   }
 
   public static void main(String[] args) {
-    Day1 d = new Day1();
-    d.downloadIfNotDownloaded();
-    d.downloadExample();
-    d.printParts();
-//    System.in.read();
-//    d.submitPart1();
-//    d.submitPart2();
+    new Day1().printParts();
   }
 
   @Override

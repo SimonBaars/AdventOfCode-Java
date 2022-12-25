@@ -13,13 +13,7 @@ public class Day25 extends Day2022 {
   }
 
   public static void main(String[] args) throws IOException {
-    Day25 d = new Day25();
-    d.downloadIfNotDownloaded();
-    d.downloadExample();
-    d.printParts();
-//    System.in.read();
-//    d.submitPart1();
-//    d.submitPart2();
+    new Day25().printParts();
   }
 
   List<Character> digits = List.of('=', '-', '0', '1', '2');
