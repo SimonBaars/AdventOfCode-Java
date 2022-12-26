@@ -11,6 +11,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static com.sbaars.adventofcode.common.Tree.toTree;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
+
 public class Day6 extends Day2019 implements HasRecursion {
   ArrayListMultimap<String, String> orbits = ArrayListMultimap.create();
 
@@ -18,17 +21,15 @@ public class Day6 extends Day2019 implements HasRecursion {
     super(6);
   }
 
+  public record Input(String start, String end) {}
+
   public static void main(String[] args) {
     new Day6().printParts();
   }
 
   @Override
   public Object part1() {
-    String[] nums = dayStrings();
-    for (String num : nums) {
-      String[] parts = num.split("\\)");
-      orbits.put(parts[0], parts[1]);
-    }
+    String[] nums = dayStream().map(s -> readString(s, "%s)%s", Input.class)).collect(toTree(i -> i.start, i -> i.end));
     AtomicInteger o = new AtomicInteger();
     for (Entry<String, Collection<String>> entry : orbits.asMap().entrySet()) {
       countOrbitsInList(orbits, o, entry.getValue());
