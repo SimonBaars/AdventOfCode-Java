@@ -44,6 +44,11 @@ public class ListMap<K, V> extends HashMap<K, List<V>> {
 		l.addAll(value);
 		return super.put(key, l);
 	}
+
+	public ListMap<K, V> mergeWith(ListMap<K, V> map) {
+		map.forEach(this::addTo);
+		return this;
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override 
@@ -59,5 +64,9 @@ public class ListMap<K, V> extends HashMap<K, List<V>> {
 		if(!findAny.isPresent())
 			throw new IllegalAccessError("Value "+i+" does not exist in this map!");
 		return findAny.get();
+	}
+
+	public boolean hasValue(V v) {
+		return values().stream().anyMatch(e -> e.contains(v));
 	}
 }
