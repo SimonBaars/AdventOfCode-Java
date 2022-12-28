@@ -32,7 +32,7 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static java.lang.Math.toIntExact;
+import static java.lang.Math.*;
 
 public class Loc {
   public final long x;
@@ -113,7 +113,11 @@ public class Loc {
   }
 
   public long distance(Loc pt) {
-    return Math.abs(pt.x-x) + Math.abs(pt.y-y);
+    return abs(pt.x-x) + abs(pt.y-y);
+  }
+
+  public double distanceDouble(Loc pt) {
+    return hypot(x-pt.x, y-pt.y);
   }
 
   public Stream<Loc> eightDirs() {
@@ -130,5 +134,11 @@ public class Loc {
 
   public Stream<Loc> fourDirs() {
     return Arrays.stream(Direction.fourDirections()).map(d -> d.move(this));
+  }
+
+  public double rotation(Loc loc) {
+    double theta = Math.atan2(loc.y - this.y, loc.x - this.x) + Math.PI / 2.0;
+    double angle = Math.toDegrees(theta);
+    return angle < 0 ? angle + 360 : angle;
   }
 }
