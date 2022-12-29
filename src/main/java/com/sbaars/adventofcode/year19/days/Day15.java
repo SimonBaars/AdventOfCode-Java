@@ -72,8 +72,9 @@ public class Day15 extends Day2019 {
     List<Point> positions = new ArrayList<>();
     for (int y = 0; y < grid.length; y++) {
       for (int x = 0; x < grid[y].length; x++) {
-        if (grid[y][x] == tile)
+        if (grid[y][x] == tile) {
           positions.add(new Point(x, y));
+        }
       }
     }
     return positions;
