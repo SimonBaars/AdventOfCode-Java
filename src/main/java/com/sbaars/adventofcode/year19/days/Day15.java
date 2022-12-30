@@ -1,10 +1,11 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.common.Direction;
+import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
 import com.sbaars.adventofcode.year19.pathfinding.Grid2d;
-import java.awt.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,7 @@ public class Day15 extends Day2019 {
   private static final int PATH = 1;
   private static final int FINISH = 2;
   private static final int BOARD_SIZE = 41;
-  private static final Point START_POINT = new Point(BOARD_SIZE / 2 + 1, BOARD_SIZE / 2 + 1);
+  private static final Loc START_POINT = new Loc(BOARD_SIZE / 2 + 1, BOARD_SIZE / 2 + 1);
   int[][] grid = new int[BOARD_SIZE][BOARD_SIZE];
 
   public Day15() {
@@ -30,9 +31,9 @@ public class Day15 extends Day2019 {
   @Override
   public Object part1() {
     IntcodeComputer ic = new IntcodeComputer(15);
-    Point pos = START_POINT;
+    Loc pos = START_POINT;
     for (int[] row : grid) Arrays.fill(row, UNEXPLORED);
-    grid[pos.y][pos.x] = 1;
+    grid[pos.intY()][pos.intX()] = 1;
     while (true) {
       explore(pos, ic);
       pos = moveToUnexploredPlace(pos, ic);
@@ -43,12 +44,12 @@ public class Day15 extends Day2019 {
     }
   }
 
-  private Point moveToUnexploredPlace(Point pos, IntcodeComputer ic) {
-    List<Point> corridorSpaces = findPos(PATH);
-    for (Point p : corridorSpaces) {
+  private Loc moveToUnexploredPlace(Loc pos, IntcodeComputer ic) {
+    List<Loc> corridorSpaces = findPos(PATH);
+    for (Loc p : corridorSpaces) {
       if (hasAdjecent(p, UNEXPLORED)) {
         Grid2d map2d = new Grid2d(grid, false);
-        List<Point> route = map2d.findPath(pos, p);
+        List<Loc> route = map2d.findPath(pos, p);
         traverseRoute(ic, pos, route.subList(1, route.size()));
         return p;
       }
@@ -56,37 +57,37 @@ public class Day15 extends Day2019 {
     return null;
   }
 
-  private void traverseRoute(IntcodeComputer ic, Point pos, List<Point> route) {
-    for (Point p : route) {
+  private void traverseRoute(IntcodeComputer ic, Loc pos, List<Loc> route) {
+    for (Loc p : route) {
       if (ic.run(Direction.getByMove(pos, p).num) != 1L)
         throw new IllegalStateException("Illegal state at " + pos + " execute to " + p);
       pos = p;
     }
   }
 
-  private boolean hasAdjecent(Point pos, int tile) {
-    return grid[pos.y + 1][pos.x] == tile || grid[pos.y][pos.x + 1] == tile || grid[pos.y - 1][pos.x] == tile || grid[pos.y][pos.x - 1] == tile;
+  private boolean hasAdjecent(Loc pos, int tile) {
+    return grid[pos.intY() + 1][pos.intX()] == tile || grid[pos.intY()][pos.intX() + 1] == tile || grid[pos.intY() - 1][pos.intX()] == tile || grid[pos.intY()][pos.intX() - 1] == tile;
   }
 
-  private List<Point> findPos(int tile) {
-    List<Point> positions = new ArrayList<>();
+  private List<Loc> findPos(int tile) {
+    List<Loc> positions = new ArrayList<>();
     for (int y = 0; y < grid.length; y++) {
       for (int x = 0; x < grid[y].length; x++) {
         if (grid[y][x] == tile) {
-          positions.add(new Point(x, y));
+          positions.add(new Loc(x, y));
         }
       }
     }
     return positions;
   }
 
-  private void explore(Point pos, IntcodeComputer ic) {
+  private void explore(Loc pos, IntcodeComputer ic) {
     Direction dir = Direction.NORTH;
     for (int i = 0; i < 4; i++) {
-      Point move = dir.move(pos);
-      if (grid[move.y][move.x] == UNEXPLORED) {
-        grid[move.y][move.x] = Math.toIntExact(ic.run(dir.num));
-        if (grid[move.y][move.x] != WALL) {
+      Loc move = dir.move(pos);
+      if (grid[move.intY()][move.intX()] == UNEXPLORED) {
+        grid[move.intY()][move.intX()] = Math.toIntExact(ic.run(dir.num));
+        if (grid[move.intY()][move.intX()] != WALL) {
           ic.run(dir.opposite().num); // Move back
         }
       }
@@ -96,7 +97,7 @@ public class Day15 extends Day2019 {
 
   @Override
   public Object part2() {
-    Point oxygenLeak = findPos(FINISH).get(0);
+    Loc oxygenLeak = findPos(FINISH).get(0);
     return findPos(PATH).stream().mapToInt(e -> new Grid2d(grid, false).findPath(oxygenLeak, e).size() - 1).max().getAsInt();
   }
 }

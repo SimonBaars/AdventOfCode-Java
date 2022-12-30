@@ -1,11 +1,11 @@
 package com.sbaars.adventofcode.year19.pathfinding;
 
+import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year19.days.Day15;
-import java.awt.*;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Creates nodes and neighbours from a 2d grid. Each point in the map has an
@@ -26,8 +26,8 @@ public class Grid2d {
     this.allowDiagonal = allowDiagonal;
   }
 
-  public List<Point> findPath(Point start, Point end) {
-    return PathFinding.doAStar(new MapNode(start.x, start.y), new MapNode(end.x, end.y)).stream().map(MapNode::toPoint).collect(Collectors.toList());
+  public List<Loc> findPath(Loc start, Loc end) {
+    return PathFinding.doAStar(new MapNode(start.intX(), start.intY()), new MapNode(end.intX(), end.intY())).stream().map(MapNode::toLoc).toList();
   }
 
   /**
@@ -116,8 +116,8 @@ public class Grid2d {
       return y == other.y;
     }
 
-    public Point toPoint() {
-      return new Point(x, y);
+    public Loc toLoc() {
+      return new Loc(x, y);
     }
 
     private Grid2d getOuterType() {
