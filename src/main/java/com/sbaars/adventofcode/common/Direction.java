@@ -37,6 +37,14 @@ public enum Direction {
     else return CENTER;
   }
 
+  public static Direction getByMove(Loc from, Loc to) {
+    if (to.x > from.x) return EAST;
+    else if (to.x < from.x) return WEST;
+    else if (to.y > from.y) return SOUTH;
+    else if (to.y < from.y) return NORTH;
+    else return CENTER;
+  }
+
   public static Point turn(Point w, boolean b) {
     return b ? new Point(-w.y, w.x) : new Point(w.y, -w.x);
   }
