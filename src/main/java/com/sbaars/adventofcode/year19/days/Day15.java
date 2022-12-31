@@ -47,7 +47,7 @@ public class Day15 extends Day2019 {
   private Loc moveToUnexploredPlace(Loc pos, IntcodeComputer ic) {
     List<Loc> corridorSpaces = findPos(PATH);
     for (Loc p : corridorSpaces) {
-      if (hasAdjecent(p, UNEXPLORED)) {
+      if (hasAdjacent(p, UNEXPLORED)) {
         Grid2d map2d = new Grid2d(grid, false);
         List<Loc> route = map2d.findPath(pos, p);
         traverseRoute(ic, pos, route.subList(1, route.size()));
@@ -65,7 +65,7 @@ public class Day15 extends Day2019 {
     }
   }
 
-  private boolean hasAdjecent(Loc pos, int tile) {
+  private boolean hasAdjacent(Loc pos, int tile) {
     return grid[pos.intY() + 1][pos.intX()] == tile || grid[pos.intY()][pos.intX() + 1] == tile || grid[pos.intY() - 1][pos.intX()] == tile || grid[pos.intY()][pos.intX() - 1] == tile;
   }
 
