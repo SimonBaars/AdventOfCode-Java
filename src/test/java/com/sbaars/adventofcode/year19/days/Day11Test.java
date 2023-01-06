@@ -15,6 +15,13 @@
 
       @Test
       void testPart2() {
-          assertEquals("JELEFGHP", day.part2().toString());
+          assertEquals("""
+                  
+                    ██ ████ █    ████ ████  ██  █  █ ███\s
+                     █ █    █    █    █    █  █ █  █ █  █
+                     █ ███  █    ███  ███  █    ████ █  █
+                     █ █    █    █    █    █ ██ █  █ ███\s
+                  █  █ █    █    █    █    █  █ █  █ █  \s
+                   ██  ████ ████ ████ █     ███ █  █ █  \s""", day.part2().toString());
       }
   }
