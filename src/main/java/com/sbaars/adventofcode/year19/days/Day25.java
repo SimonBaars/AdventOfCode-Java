@@ -17,7 +17,7 @@ public class Day25 extends Day2019 {
   }
 
   private void play() {
-    IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers());
+    IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers(","));
     while (true) {
       long res;
       while ((res = ic.run()) != IntcodeComputer.STOP_CODE) System.out.print((char) res);
