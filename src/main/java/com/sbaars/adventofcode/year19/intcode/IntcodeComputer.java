@@ -100,36 +100,25 @@ public class IntcodeComputer extends Day2019 {
       return STOP_CODE;
     instructionCounter += nParams(instruction) + 1;
     switch (instruction) {
-      case 1:
-        program[Math.toIntExact(args[2])] = args[0] + args[1];
-        break;
-      case 2:
-        program[Math.toIntExact(args[2])] = args[0] * args[1];
-        break;
-      case 3:
-        program[Math.toIntExact(args[0])] = readInput();
-        break;
-      case 4:
+      case 1 -> program[Math.toIntExact(args[2])] = args[0] + args[1];
+      case 2 -> program[Math.toIntExact(args[2])] = args[0] * args[1];
+      case 3 -> program[Math.toIntExact(args[0])] = readInput();
+      case 4 -> {
         return args[0];
-      case 5:
+      }
+      case 5 -> {
         if (args[0] != 0) instructionCounter = Math.toIntExact(args[1]);
-        break;
-      case 6:
+      }
+      case 6 -> {
         if (args[0] == 0) instructionCounter = Math.toIntExact(args[1]);
-        break;
-      case 7:
-        program[Math.toIntExact(args[2])] = args[0] < args[1] ? 1 : 0;
-        break;
-      case 8:
-        program[Math.toIntExact(args[2])] = args[0] == args[1] ? 1 : 0;
-        break;
-      case 9:
-        relativeBase += Math.toIntExact(args[0]);
-        break;
-      case 99:
+      }
+      case 7 -> program[Math.toIntExact(args[2])] = args[0] < args[1] ? 1 : 0;
+      case 8 -> program[Math.toIntExact(args[2])] = args[0] == args[1] ? 1 : 0;
+      case 9 -> relativeBase += Math.toIntExact(args[0]);
+      case 99 -> {
         return STOP_CODE;
-      default:
-        throw new IllegalStateException("Something went wrong!");
+      }
+      default -> throw new IllegalStateException("Something went wrong!");
     }
     return CONTINUE_CODE;
   }
