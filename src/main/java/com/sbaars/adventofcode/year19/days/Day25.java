@@ -30,7 +30,7 @@ public class Day25 extends Day2019 {
 
   @Override
   public Object part1() {
-    IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers());
+    IntcodeComputer ic = new IntcodeComputer(RetentionPolicy.EXIT_ON_EMPTY_INPUT, dayNumbers(","));
     String[] inputs = new String[]{"west", "take semiconductor", "west", "take planetoid", "west", "take food ration", "west", "take fixed point", "east", "east", "south", "east", "east", "north", "east", "north"};
     String numbers = "";
     for (int i = 0; i <= inputs.length; i++) {
