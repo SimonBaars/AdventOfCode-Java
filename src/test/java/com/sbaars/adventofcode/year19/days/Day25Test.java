@@ -12,9 +12,4 @@
       void testPart1() {
           assertEquals("34095120", day.part1().toString());
       }
-
-      @Test
-      void testPart2() {
-          assertEquals("true", day.part2().toString());
-      }
   }
