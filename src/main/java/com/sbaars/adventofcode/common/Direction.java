@@ -204,7 +204,7 @@ public enum Direction {
 
   public boolean leftOf(Direction robotDir) {
     int n = this.ordinal() - 1;
-    if (n == -1) n = values().length - 1;
+    if (n == -1) n = fourDirections().length - 1;
     return robotDir.ordinal() == n;
   }
 
