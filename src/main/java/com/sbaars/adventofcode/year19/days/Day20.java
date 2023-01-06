@@ -81,24 +81,26 @@ public class Day20 extends Day2019 {
 
   private int findRoutes(boolean b) {
     final Queue<State> queue = new ArrayDeque<>();
-    final Set<Visited> visited = new HashSet<>();
-    queue.add(new State(new Visited(entry, 0), -1));
-    while (true) {
+    queue.add(new State(entry, 0, -1));
+    int min = Integer.MAX_VALUE;
+    while (!queue.isEmpty()) {
       State s = queue.poll();
-      if (!routes.containsKey(s.vis.pos)) determineRoutes(s.vis.pos);
-      for (Route route : routes.get(s.vis.pos)) {
-        int level = s.vis.level;
-        if (level == 0 && route.goal.equals(exit)) return route.distance + s.totalSteps;
+      if (!routes.containsKey(s.pos)) determineRoutes(s.pos);
+      for (Route route : routes.get(s.pos)) {
+        int level = s.level;
+        int distance = route.distance + s.totalSteps;
+        if (level == 0 && route.goal.equals(exit) && distance < min){
+          min = distance;
+        } else if(distance > min) {
+          break;
+        }
         else if (route.goal.equals(exit)) continue;
         if (b) level += route.goal.isOuter ? 1 : -1;
-        if (s.vis.level < 0) continue;
-        Visited vis = new Visited(route.goal, level);
-        if (!visited.contains(vis)) {
-          visited.add(vis);
-          queue.add(new State(vis, s.totalSteps + route.distance));
-        }
+        if (s.level < 0) continue;
+        queue.add(new State(route.goal, level, s.totalSteps + route.distance));
       }
     }
+    return min;
   }
 
   private void determineRoutes(Portal p) {
@@ -122,15 +124,9 @@ public class Day20 extends Day2019 {
     return findRoutes(true);
   }
 
-  record Portal(Point pos, boolean isOuter) {
-  }
+  record Portal(Point pos, boolean isOuter) {}
 
-  record Route(Portal goal, int distance) {
-  }
+  record Route(Portal goal, int distance) {}
 
-  record State(Visited vis, int totalSteps) {
-  }
-
-  record Visited(Portal pos, int level) {
-  }
+  record State(Portal pos, int level, int totalSteps) {}
 }
