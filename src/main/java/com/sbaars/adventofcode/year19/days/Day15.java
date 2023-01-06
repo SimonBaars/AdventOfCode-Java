@@ -20,8 +20,17 @@ public class Day15 extends Day2019 {
   private static final Loc START_POINT = new Loc(BOARD_SIZE / 2 + 1, BOARD_SIZE / 2 + 1);
   int[][] grid = new int[BOARD_SIZE][BOARD_SIZE];
 
+  private final IntcodeComputer ic = new IntcodeComputer(15);
+
   public Day15() {
     super(15);
+    for (int[] row : grid) Arrays.fill(row, UNEXPLORED);
+    grid[START_POINT.intY()][START_POINT.intX()] = 1;
+    Loc pos = START_POINT;
+    while(pos != null) {
+      explore(pos, ic);
+      pos = moveToUnexploredPlace(pos, ic);
+    }
   }
 
   public static void main(String[] args) {
@@ -30,18 +39,8 @@ public class Day15 extends Day2019 {
 
   @Override
   public Object part1() {
-    IntcodeComputer ic = new IntcodeComputer(15);
-    Loc pos = START_POINT;
-    for (int[] row : grid) Arrays.fill(row, UNEXPLORED);
-    grid[pos.intY()][pos.intX()] = 1;
-    while (true) {
-      explore(pos, ic);
-      pos = moveToUnexploredPlace(pos, ic);
-      if (pos == null) {
-        Grid2d map2d = new Grid2d(grid, false);
-        return map2d.findPath(START_POINT, findPos(FINISH).get(0)).size() - 1;
-      }
-    }
+    Grid2d map2d = new Grid2d(grid, false);
+    return map2d.findPath(START_POINT, findPos(FINISH).get(0)).size() - 1;
   }
 
   private Loc moveToUnexploredPlace(Loc pos, IntcodeComputer ic) {
