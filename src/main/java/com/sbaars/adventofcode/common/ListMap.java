@@ -49,6 +49,11 @@ public class ListMap<K, V> extends HashMap<K, List<V>> {
 		map.forEach(this::addTo);
 		return this;
 	}
+
+	public ListMap<K, V> removeFrom(K key, V value) {
+		get(key).remove(value);
+		return this;
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override 
