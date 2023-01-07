@@ -9,35 +9,52 @@ import static java.lang.Long.parseLong;
 import static java.lang.Long.toBinaryString;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.stream.IntStream.range;
 
 public class Day14 extends Day2020 {
-  public Day14() {
-    super(14);
-  }
-
   public static void main(String[] args) {
     new Day14().printParts();
+  }
+
+  public Day14() {
+    super(14);
   }
 
   @Override
   public Object part1() {
     Instruction[] input = getInput();
     Map<Long, Long> memory = new HashMap<>();
-    StringBuilder currentMask = new StringBuilder();
-    for (Instruction i : input) {
-      i.getMem().ifPresentOrElse(m -> memory.put(m.index, m.value | parseLong(currentMask.toString(), 2)), () -> currentMask.replace(0, currentMask.length(), i.value.replaceAll("X", "0")));
+    String currentMask = "";
+    for(Instruction i : input){
+      Optional<Mem> mem = i.getMem();
+      if(mem.isPresent()){
+        StringBuilder bin = binWithLength(mem.get().value, currentMask.length());
+        String finalCurrentMask = currentMask;
+        range(0, bin.length())
+                .filter(j -> finalCurrentMask.charAt(j) != 'X')
+                .forEach(j -> bin.setCharAt(j, finalCurrentMask.charAt(j)));
+        memory.put(mem.get().index, parseLong(bin.toString(), 2));
+      } else currentMask = i.value;
     }
     return memory.values().stream().mapToLong(e -> e).sum();
   }
+
+  public record Instruction(String mem, String value) {
+    public Optional<Mem> getMem(){
+      return mem.startsWith("mem") ? of(readString(mem+value, "mem[%n]%n", Mem.class)) : empty();
+    }
+  }
+
+  public record Mem(long index, long value) {}
 
   @Override
   public Object part2() {
     Instruction[] input = getInput();
     Map<Long, Long> memory = new HashMap<>();
     String currentMask = "";
-    for (Instruction i : input) {
+    for(Instruction i : input){
       Optional<Mem> mem = i.getMem();
-      if (mem.isPresent()) {
+      if(mem.isPresent()){
         StringBuilder bin = binWithLength(mem.get().index, currentMask.length());
         List<Integer> floaters = applyMask(currentMask, bin);
         fillMemory(memory, mem, bin, floaters);
@@ -54,8 +71,8 @@ public class Day14 extends Day2020 {
 
   private void fillMemory(Map<Long, Long> memory, Optional<Mem> mem, StringBuilder bin, List<Integer> floaters) {
     StringBuilder binary;
-    for (long j = 0; (binary = binWithLength(j, floaters.size())).length() == floaters.size(); j++) {
-      for (int k = 0; k < floaters.size(); k++) {
+    for(long j = 0; (binary = binWithLength(j, floaters.size())).length() == floaters.size(); j++){
+      for(int k = 0; k< floaters.size(); k++){
         bin.setCharAt(floaters.get(k), binary.charAt(k));
       }
       memory.put(parseLong(bin.toString(), 2), mem.get().value);
@@ -64,10 +81,10 @@ public class Day14 extends Day2020 {
 
   private List<Integer> applyMask(String currentMask, StringBuilder bin) {
     List<Integer> floaters = new ArrayList<>();
-    for (int j = 0; j < bin.length(); j++) {
+    for(int j = 0; j< bin.length(); j++){
       char c = currentMask.charAt(j);
-      if (c == 'X') floaters.add(j);
-      else if (c == '1') bin.setCharAt(j, c);
+      if(c=='X') floaters.add(j);
+      else if(c == '1') bin.setCharAt(j, c);
     }
     return floaters;
   }
@@ -78,14 +95,5 @@ public class Day14 extends Day2020 {
       bin.insert(0, '0');
     }
     return bin;
-  }
-
-  public record Instruction(String mem, String value) {
-    public Optional<Mem> getMem() {
-      return mem.startsWith("mem") ? of(readString(mem + value, "mem[%n]%n", Mem.class)) : empty();
-    }
-  }
-
-  public record Mem(long index, long value) {
   }
 }
