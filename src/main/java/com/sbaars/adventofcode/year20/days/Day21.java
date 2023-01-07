@@ -1,14 +1,14 @@
 package com.sbaars.adventofcode.year20.days;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.sbaars.adventofcode.common.ListMap;
 import com.sbaars.adventofcode.year20.Day2020;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.util.Map.Entry.comparingByKey;
 
 public class Day21 extends Day2020 {
@@ -20,27 +20,28 @@ public class Day21 extends Day2020 {
     new Day21().printParts(1);
   }
 
-  private static String[] getSplit(String s) {
-    return s.substring(0, s.length() - 1).split(" \\(contains ");
-  }
-
   @Override
   public Object part1() {
-    Rule[] input = Arrays.stream(day().split("\n")).map(Rule::new).toArray(Rule[]::new);
-    ListMap<String, String> allergens = getAllergens(input);
-    return Arrays.stream(input).flatMap(r -> Arrays.stream(r.ingredients)).filter(i -> !allergens.hasValue(i)).count();
+    List<Rule> rules = input();
+    ListMap<String, String> allergens = getAllergens(rules);
+    return rules.stream().map(Rule::ingredients).flatMap(List::stream).filter(i -> allergens.get(i).isEmpty()).count();
   }
 
-  private ListMap<String, String> getAllergens(Rule[] input) {
+  private List<Rule> input() {
+    return dayStream().map(s -> readString(s, "%ls (contains %ls)", Rule.class, " ", ", ")).toList();
+  }
+
+  private ListMap<String, String> getAllergens(List<Rule> input) {
     ListMap<String, String> allergens = new ListMap<>();
+
     Set<String> found = new HashSet<>();
     for (Rule r : input) {
       for (String allergen : r.allergens) {
         if (!found.contains(allergen)) {
-          allergens.addTo(allergen, asList(r.ingredients));
+          allergens.addTo(allergen, r.ingredients);
         } else if (allergens.containsKey(allergen)) {
           for (String s : new HashSet<>(allergens.get(allergen))) {
-            if (!asList(r.ingredients).contains(s)) {
+            if (!r.ingredients.contains(s)) {
               allergens.removeFrom(allergen, s);
             }
           }
@@ -53,14 +54,10 @@ public class Day21 extends Day2020 {
 
   @Override
   public Object part2() {
-    Rule[] input = Arrays.stream(day().split("\n")).map(Rule::new).toArray(Rule[]::new);
-    ListMap<String, String> allergens = getAllergens(input);
+    List<Rule> rules = input();
+    ListMap<String, String> allergens = getAllergens(rules);
     return allergens.entrySet().stream().sorted(comparingByKey()).map(e -> e.getValue().stream().findAny().get()).collect(Collectors.joining(","));
   }
 
-  public static record Rule(String[] ingredients, String[] allergens) {
-    public Rule(String s) {
-      this(getSplit(s)[0].split(" "), getSplit(s)[1].split(", "));
-    }
-  }
+  public record Rule(List<String> ingredients, List<String> allergens) {}
 }

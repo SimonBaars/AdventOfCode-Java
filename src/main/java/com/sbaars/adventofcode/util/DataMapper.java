@@ -3,6 +3,7 @@ package com.sbaars.adventofcode.util;
 import com.sbaars.adventofcode.common.Tuple;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,18 +18,29 @@ import static java.util.Optional.of;
 
 public interface DataMapper {
   static <T> T readString(String s, String pattern, Class<T> target, Class<?>...nested) {
-    return readString(s, pattern, ",", target, nested);
+    return readString(s, pattern, new String[]{","}, target, nested);
   }
 
   static <T> T readString(String s, String pattern, String listSeparator, Class<T> target, Class<?>...nested) {
+    return readString(s, pattern, new String[]{listSeparator}, target, nested);
+  }
+
+  static <T> T readString(String s, String pattern, Class<T> target, String separator, String...moreSeparators) {
+    List<String> separators = new ArrayList<>();
+    separators.add(separator);
+    separators.addAll(Arrays.asList(moreSeparators));
+    return readString(s, pattern, separators.toArray(String[]::new), target);
+  }
+
+  static <T> T readString(String s, String pattern, String[] listSeparator, Class<T> target, Class<?>...nested) {
     List<Object> mappedObjs = new ArrayList<>();
     int listIndex = 0;
     while (s.length() > 0) {
       if (pattern.length() > 1 && pattern.charAt(0) == '%') {
         char c = pattern.charAt(1);
-        var data = crunch(s, pattern, listSeparator, c == 'l' && pattern.charAt(2) == '(' ? nested[listIndex] : null);
+        var data = crunch(s, pattern, listSeparator[listIndex % listSeparator.length], c == 'l' && pattern.charAt(2) == '(' ? nested[listIndex % nested.length] : null);
         if (data.isPresent()) {
-          if(c == 'l' && pattern.charAt(2) == '(') listIndex++;
+          if(c == 'l') listIndex++;
           var d = data.get();
           mappedObjs.add(d.a());
           s = s.substring(d.b());
