@@ -212,7 +212,7 @@ public enum Direction {
     int num = degrees % 360;
     Direction dir = this;
     while (num > 0) {
-      dir = turn(right);
+      dir = dir.turn(right);
       num -= 90;
     }
     return dir;
