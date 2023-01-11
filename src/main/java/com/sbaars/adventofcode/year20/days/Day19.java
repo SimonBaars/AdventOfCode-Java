@@ -4,15 +4,16 @@ import static java.lang.Long.parseLong;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 
-import aima.core.nlp.parsing.CYK;
-import aima.core.nlp.parsing.grammars.ProbCNFGrammar;
-import aima.core.nlp.parsing.grammars.Rule;
 import com.sbaars.adventofcode.common.SetMap;
 import com.sbaars.adventofcode.year20.Day2020;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Day19 extends Day2020 {
 
@@ -48,26 +49,62 @@ public class Day19 extends Day2020 {
   private long getSolution(String inputFile) {
     SetMap<Long, String> sol = new SetMap<>();
     String[] input = inputFile.split("\n\n");
-    ProbCNFGrammar grammar = new ProbCNFGrammar();
-    Arrays.stream(input[0].split("\n"))
-            .map(e -> e.split(": "))
-            .flatMap(e -> e[1].contains("|") ? Stream.of(parseRule(e[0], e[1].split(" \\| ")[0]), parseRule(e[0], e[1].split(" \\| ")[1])) : Stream.of(parseRule(e[0], e[1])))
-            .forEach(grammar::addRule);
-    float[][][] sol2 = new CYK().parse(stream(input[1].split("\n")).toList(), grammar);
+    Map<Long, Rule> rules = Arrays.stream(input[0].split("\n"))
+        .map(e -> e.split(": "))
+        .collect(Collectors.toMap(e -> parseLong(e[0]), e -> new Rule(parseLong(e[0]), e[1])));
+    rules.values().forEach(e -> e.getPossibilities(rules, sol));
     return stream(input[1].split("\n")).filter(sol::hasValue).count();
-  }
-
-  public Rule parseRule(String s1, String s2) {
-    System.out.println("parseRule("+s1+", "+s2+")");
-    return new Rule(List.of(numToString(s1)), stream(s2.split(" ")).map(s -> s.contains("\"") ? s.replace("\"", "") : numToString(s)).toList(), 0.5F);
-  }
-
-  public String numToString(String num) {
-    return num.chars().mapToObj(c -> ""+((char)(c-'0'+65))).collect(Collectors.joining());
   }
 
   @Override
   public Object part2() {
     return getSolution(day().replace("8: 42", "8: 42 | 42 8").replace("11: 42 31", "11: 42 31 | 42 11 31"));
+  }
+
+  public record Rule(long id, Optional<String> letter, long[] rule1, long[] rule2) {
+    public Rule(long id, String rule) {
+      this(id, getLetter(rule), getRule(rule, false), getRule(rule, true));
+    }
+
+    public Set<String> getPossibilities(Map<Long, Rule> m, SetMap<Long, String> sol) {
+      System.out.println(sol.containsKey(id) ? sol.get(id).size() : 0);
+      if (sol.containsKey(id)) return sol.get(id);
+      if (letter.isEmpty()) {
+        Rule[] r = stream(rule1).mapToObj(m::get).toArray(Rule[]::new);
+        Rule[] orRule = stream(rule2).mapToObj(m::get).toArray(Rule[]::new);
+        Set<String> output = r[0].getPossibilities(m, sol);
+        if (sol.containsKey(id)) return sol.get(id);
+        for (int i = 1; i < r.length; i++) {
+          Set<String> output2 = r[i].getPossibilities(m, sol);
+          if (sol.containsKey(id)) return sol.get(id);
+          Set<String> newOne = new HashSet<>();
+          for (String o : output) {
+            for (String o2 : output2) {
+              newOne.add(o + o2);
+            }
+          }
+          output = newOne;
+        }
+        if (orRule.length > 0) {
+          Set<String> outputOr = orRule[0].getPossibilities(m, sol);
+          if (sol.containsKey(id)) return sol.get(id);
+          for (int i = 1; i < orRule.length; i++) {
+            Set<String> outputOr2 = orRule[i].getPossibilities(m, sol);
+            if (sol.containsKey(id)) return sol.get(id);
+            Set<String> newOne = new HashSet<>();
+            for (String o : outputOr) {
+              for (String o2 : outputOr2) {
+                newOne.add(o + o2);
+              }
+            }
+            outputOr = newOne;
+          }
+          output.addAll(outputOr);
+        }
+        sol.put(id, output);
+        return output;
+      }
+      return new HashSet<>(singletonList(letter.get()));
+    }
   }
 }
