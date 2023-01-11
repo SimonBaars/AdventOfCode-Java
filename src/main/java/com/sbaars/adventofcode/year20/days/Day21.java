@@ -1,6 +1,6 @@
 package com.sbaars.adventofcode.year20.days;
 
-import com.sbaars.adventofcode.common.ListMap;
+import com.sbaars.adventofcode.common.SetMap;
 import com.sbaars.adventofcode.year20.Day2020;
 
 import java.util.HashSet;
@@ -17,13 +17,13 @@ public class Day21 extends Day2020 {
   }
 
   public static void main(String[] args) {
-    new Day21().printParts(1);
+    new Day21().printParts();
   }
 
   @Override
   public Object part1() {
     List<Rule> rules = input();
-    ListMap<String, String> allergens = getAllergens(rules);
+    SetMap<String, String> allergens = getAllergens(rules);
     return rules.stream().map(Rule::ingredients).flatMap(List::stream).filter(i -> !allergens.hasValue(i)).count();
   }
 
@@ -31,8 +31,8 @@ public class Day21 extends Day2020 {
     return dayStream().map(s -> readString(s, "%ls (contains %ls)", Rule.class, " ", ", ")).toList();
   }
 
-  private ListMap<String, String> getAllergens(List<Rule> input) {
-    ListMap<String, String> allergens = new ListMap<>();
+  private SetMap<String, String> getAllergens(List<Rule> input) {
+    SetMap<String, String> allergens = new SetMap<>();
 
     Set<String> found = new HashSet<>();
     for (Rule r : input) {
@@ -52,10 +52,18 @@ public class Day21 extends Day2020 {
     return allergens;
   }
 
+  public SetMap<String, String> removeDuplicates(SetMap<String, String> allergens) {
+    while(allergens.values().stream().anyMatch(e -> e.size() > 1)) {
+      Set<String> singular = allergens.values().stream().filter(e -> e.size() == 1).flatMap(e -> e.stream().findFirst().stream()).collect(Collectors.toSet());
+      allergens.values().stream().filter(e -> e.size() > 1).forEach(a -> a.removeAll(singular));
+    }
+    return allergens;
+  }
+
   @Override
   public Object part2() {
     List<Rule> rules = input();
-    ListMap<String, String> allergens = getAllergens(rules);
+    SetMap<String, String> allergens = removeDuplicates(getAllergens(rules));
     return allergens.entrySet().stream().sorted(comparingByKey()).map(e -> e.getValue().stream().findAny().get()).collect(Collectors.joining(","));
   }
 
