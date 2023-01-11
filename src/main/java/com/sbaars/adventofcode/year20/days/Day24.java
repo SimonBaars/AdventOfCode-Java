@@ -1,5 +1,6 @@
 package com.sbaars.adventofcode.year20.days;
 
+import com.sbaars.adventofcode.common.Builder;
 import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.common.HexDirection;
 import com.sbaars.adventofcode.year20.Day2020;
@@ -11,7 +12,7 @@ import java.util.*;
 import static java.util.Arrays.stream;
 
 public class Day24 extends Day2020 implements HasRecursion {
-  Set<Point> visited = new HashSet<>();
+
 
   public Day24() {
     super(24);
@@ -23,6 +24,12 @@ public class Day24 extends Day2020 implements HasRecursion {
 
   @Override
   public Object part1() {
+    Set<Point> visited = getVisited();
+    return visited.size();
+  }
+
+  private Set<Point> getVisited() {
+    Set<Point> visited = new HashSet<>();
     var input = stream(dayStrings()).map(this::read).toList();
     for (List<HexDirection> dirs : input) {
       Point pos = new Point(0, 0);
@@ -33,7 +40,7 @@ public class Day24 extends Day2020 implements HasRecursion {
         visited.remove(pos);
       }
     }
-    return visited.size();
+    return visited;
   }
 
   public List<HexDirection> read(String dirs) {
@@ -53,12 +60,12 @@ public class Day24 extends Day2020 implements HasRecursion {
 
   @Override
   public Object part2() {
+    Builder<Set<Point>> visited = new Builder<>(getVisited(), HashSet::new);
     for (int i = 0; i < 100; i++) {
-      Set<Point> newPos = new HashSet<>();
-      visited.forEach(p -> addNeighbors(visited, newPos, new HashSet<>(), p, true));
-      visited = newPos;
+      visited.get().forEach(p -> addNeighbors(visited.get(), visited.getNew(), new HashSet<>(), p, true));
+      visited.refresh();
     }
-    return visited.size();
+    return visited.get().size();
   }
 
   public void addNeighbors(Set<Point> pos, Set<Point> newPos, Set<Point> checkedPos, Point p, boolean active) {
