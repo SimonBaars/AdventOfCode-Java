@@ -350,7 +350,7 @@ Part 1: 2243
 Part 2: 2027
 
 Day 12:
-Part 1: 1578
+Part 1: 820
 Part 2: 66614
 
 Day 13:
@@ -358,7 +358,7 @@ Part 1: 2935
 Part 2: 836024966345345
 
 Day 14:
-Part 1: 14732563016887
+Part 1: 14722016054794
 Part 2: 3618217244644
 
 Day 15:
@@ -387,7 +387,7 @@ Part 2: 1792
 
 Day 21:
 Part 1: 2786
-Part 2: lxjtns,knprxg,knprxg,clg,lxjtns,clg,cxfz,cxfz
+Part 2: prxmdlz,ncjv,knprxg,lxjtns,vzzz,clg,cxfz,qdfpq
 
 Day 22:
 Part 1: 33925
