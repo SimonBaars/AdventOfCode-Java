@@ -1,19 +1,14 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static java.lang.Long.parseLong;
-import static java.util.Arrays.stream;
-import static java.util.Collections.singletonList;
-
 import com.sbaars.adventofcode.common.SetMap;
 import com.sbaars.adventofcode.year20.Day2020;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import java.util.*;
+import java.util.regex.Pattern;
+
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptySet;
+import static java.util.Set.copyOf;
 
 public class Day19 extends Day2020 {
 
@@ -22,23 +17,7 @@ public class Day19 extends Day2020 {
   }
 
   public static void main(String[] args) {
-    new Day19().printParts(5);
-  }
-
-  private static Optional<String> getLetter(String rule) {
-    return rule.startsWith("\"") ? Optional.of(rule.charAt(1) + "") : Optional.empty();
-  }
-
-  private static long[] getRule(String rule, boolean num) {
-    if (rule.startsWith("\"")) {
-      return new long[]{};
-    }
-    String[] r = rule.split(" \\| ");
-    if (!num || r.length > 1) {
-      return Arrays.stream(r[num ? 1 : 0].split(" ")).mapToLong(Long::parseLong).toArray();
-    } else {
-      return new long[]{};
-    }
+    new Day19().printParts();
   }
 
   @Override
@@ -47,13 +26,9 @@ public class Day19 extends Day2020 {
   }
 
   private long getSolution(String inputFile) {
-    SetMap<Long, String> sol = new SetMap<>();
     String[] input = inputFile.split("\n\n");
-    Map<Long, Rule> rules = Arrays.stream(input[0].split("\n"))
-        .map(e -> e.split(": "))
-        .collect(Collectors.toMap(e -> parseLong(e[0]), e -> new Rule(parseLong(e[0]), e[1])));
-    rules.values().forEach(e -> e.getPossibilities(rules, sol));
-    return stream(input[1].split("\n")).filter(sol::hasValue).count();
+    CnfGrammar cnf = new CnfGrammar(new Grammar(input[0]));
+    return stream(input[1].split("\n")).filter(e -> new Cyk(cnf, e).inGrammar()).count();
   }
 
   @Override
@@ -61,50 +36,162 @@ public class Day19 extends Day2020 {
     return getSolution(day().replace("8: 42", "8: 42 | 42 8").replace("11: 42 31", "11: 42 31 | 42 11 31"));
   }
 
-  public record Rule(long id, Optional<String> letter, long[] rule1, long[] rule2) {
-    public Rule(long id, String rule) {
-      this(id, getLetter(rule), getRule(rule, false), getRule(rule, true));
-    }
+  // Cyk parser adapted from solution by akaritakai: https://github.com/akaritakai/AdventOfCode2020/blob/main/src/main/java/net/akaritakai/aoc2020/Puzzle19.java
+  private static class Cyk {
+    private final Set<String>[][] cyk;
+    private final int size;
 
-    public Set<String> getPossibilities(Map<Long, Rule> m, SetMap<Long, String> sol) {
-      System.out.println(sol.containsKey(id) ? sol.get(id).size() : 0);
-      if (sol.containsKey(id)) return sol.get(id);
-      if (letter.isEmpty()) {
-        Rule[] r = stream(rule1).mapToObj(m::get).toArray(Rule[]::new);
-        Rule[] orRule = stream(rule2).mapToObj(m::get).toArray(Rule[]::new);
-        Set<String> output = r[0].getPossibilities(m, sol);
-        if (sol.containsKey(id)) return sol.get(id);
-        for (int i = 1; i < r.length; i++) {
-          Set<String> output2 = r[i].getPossibilities(m, sol);
-          if (sol.containsKey(id)) return sol.get(id);
-          Set<String> newOne = new HashSet<>();
-          for (String o : output) {
-            for (String o2 : output2) {
-              newOne.add(o + o2);
-            }
-          }
-          output = newOne;
-        }
-        if (orRule.length > 0) {
-          Set<String> outputOr = orRule[0].getPossibilities(m, sol);
-          if (sol.containsKey(id)) return sol.get(id);
-          for (int i = 1; i < orRule.length; i++) {
-            Set<String> outputOr2 = orRule[i].getPossibilities(m, sol);
-            if (sol.containsKey(id)) return sol.get(id);
-            Set<String> newOne = new HashSet<>();
-            for (String o : outputOr) {
-              for (String o2 : outputOr2) {
-                newOne.add(o + o2);
+    public Cyk(CnfGrammar grammar, String inputString) {
+      var rules = grammar.reverseRules;
+      var input = tokenize(inputString);
+      size = input.size();
+      //noinspection unchecked
+      cyk = new Set[size][size];
+
+      for (var x = 0; x < size; x++) {
+        cyk(0, x).addAll(rules.get(input.subList(x, x + 1)));
+      }
+      for (var y = 1; y < size; y++) {
+        for (var x = 0; x < size - y; x++) {
+          for (var i = 0; i < y; i++) {
+            for (var n1 : cyk(i, x)) {
+              for (var n2 : cyk(y-i-1, x+i+1)) {
+                for (var rule : rules.getOrDefault(List.of(n1, n2), emptySet())) {
+                  cyk(y, x).add(rule);
+                }
               }
             }
-            outputOr = newOne;
           }
-          output.addAll(outputOr);
         }
-        sol.put(id, output);
-        return output;
       }
-      return new HashSet<>(singletonList(letter.get()));
     }
+
+    private Set<String> cyk(int y, int x) {
+      if (cyk[y][x] == null) {
+        cyk[y][x] = new HashSet<>();
+      }
+      return cyk[y][x];
+    }
+
+    private boolean inGrammar() {
+      return cyk[size - 1][0] != null && cyk[size - 1][0].contains(CnfGrammar.START_SYMBOL);
+    }
+  }
+
+
+  private static class CnfGrammar {
+    private static final String START_SYMBOL = "0";
+    private final Map<String, Set<List<String>>> rules = new HashMap<>();
+    private final Map<List<String>, Set<String>> reverseRules = new HashMap<>();
+
+    public CnfGrammar(Grammar grammar) {
+      rules.putAll(grammar.rules);
+      startStep();
+      // TERM step (eliminate rules with non-solitary terminals) not needed in our grammar
+      binStep();
+      // DEL step (eliminate empty string rules) not needed in our grammar
+      unitStep();
+      createReverseRules();
+    }
+
+    private void startStep() {
+      rules.computeIfAbsent(START_SYMBOL, s -> new HashSet<>()).add(Collections.singletonList(START_SYMBOL));
+    }
+
+    private void binStep() {
+      for (var rule : copyOf(rules.entrySet())) {
+        var lhs = rule.getKey();
+        var rhsValues = rule.getValue();
+        for (var rhs : copyOf(rhsValues)) {
+          if (rhs.size() > 2) {
+            rules.get(lhs).remove(rhs);
+            binStep(lhs, rhs);
+          }
+        }
+      }
+    }
+
+    private void binStep(String lhs, List<String> rhs) {
+      if (rhs.size() <= 2) {
+        rules.computeIfAbsent(lhs, s -> new HashSet<>()).add(rhs);
+      } else {
+        var nextRhs = rhs.subList(1, rhs.size());
+        var nextLhs = String.join(",", nextRhs);
+        binStep(lhs, List.of(rhs.get(0), nextLhs));
+        binStep(nextLhs, nextRhs);
+      }
+    }
+
+    private void unitStep() {
+      var numMutations = 0;
+      for (var rule : copyOf(rules.entrySet())) {
+        var lhs = rule.getKey();
+        var rhsValues = rule.getValue();
+        if (rhsValues.size() == 0) {
+          rules.remove(lhs);
+          numMutations++;
+        } else {
+          for (var rhs : copyOf(rhsValues)) {
+            if (rhs.size() == 0) {
+              rules.get(lhs).remove(rhs);
+              numMutations++;
+            } else if (rhs.size() == 1 && !isTerminal(rhs)) {
+              rules.get(lhs).remove(rhs);
+              rules.get(lhs).addAll(rules.get(rhs.get(0)));
+              numMutations++;
+            }
+          }
+        }
+      }
+      if (numMutations > 0) {
+        unitStep();
+      }
+    }
+
+    private void createReverseRules() {
+      rules.forEach((k, values) -> values.forEach(v -> reverseRules.computeIfAbsent(v, s -> new HashSet<>()).add(k)));
+    }
+
+    private boolean isTerminal(List<String> symbols) {
+      return symbols.stream().allMatch(symbol -> symbol.equals("a") || symbol.equals("b"));
+    }
+  }
+
+  private static class Grammar {
+    private final SetMap<String, List<String>> rules = new SetMap<>();
+
+    public Grammar(String inputString) {
+      for (var line : inputString.split("\n")) {
+        generateRule(line);
+      }
+    }
+
+    private void generateRule(String ruleString) {
+      if (ruleString.contains(": ")) {
+        var lhsString = ruleString.split(": ")[0];
+        var rhsString = ruleString.split(": ")[1];
+        if (rhsString.contains(" | ")) {
+          generateRule(lhsString + ": " + rhsString.replaceAll("^(.*?) \\| (.*)$", "$1"));
+          generateRule(lhsString + ": " + rhsString.replaceAll("^(.*?) \\| (.*)$", "$2"));
+        } else {
+          rules.computeIfAbsent(lhsString, s -> new HashSet<>()).add(tokenize(rhsString));
+        }
+      }
+    }
+  }
+
+  private static List<String> tokenize(String input) {
+    var tokens = new ArrayList<String>();
+    if (input.matches("^[ab]+$")) {
+      for (var c : input.toCharArray()) {
+        tokens.add(String.valueOf(c));
+      }
+    } else {
+      var matcher = Pattern.compile("(\\d+)|\"([ab])\"").matcher(input);
+      while (matcher.find()) {
+        tokens.add(Optional.ofNullable(matcher.group(1)).orElse(matcher.group(2)));
+      }
+    }
+    return tokens;
   }
 }
