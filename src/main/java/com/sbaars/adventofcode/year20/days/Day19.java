@@ -4,6 +4,7 @@ import static java.lang.Long.parseLong;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 
+import com.sbaars.adventofcode.common.SetMap;
 import com.sbaars.adventofcode.year20.Day2020;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,14 +16,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Day19 extends Day2020 {
-  Map<Long, Set<String>> sol = new HashMap<>();
 
   public Day19() {
     super(19);
   }
 
   public static void main(String[] args) {
-    new Day19().printParts();
+    new Day19().printParts(5);
   }
 
   private static Optional<String> getLetter(String rule) {
@@ -47,44 +47,18 @@ public class Day19 extends Day2020 {
   }
 
   private long getSolution(String inputFile) {
+    SetMap<Long, String> sol = new SetMap<>();
     String[] input = inputFile.split("\n\n");
     Map<Long, Rule> rules = Arrays.stream(input[0].split("\n"))
         .map(e -> e.split(": "))
         .collect(Collectors.toMap(e -> parseLong(e[0]), e -> new Rule(parseLong(e[0]), e[1])));
-
     rules.values().forEach(e -> e.getPossibilities(rules, sol));
-    return stream(input[1].split("\n"))
-        .filter(e -> sol.values().stream().anyMatch(r -> r.contains(e)))
-        .count();
+    return stream(input[1].split("\n")).filter(sol::hasValue).count();
   }
 
   @Override
   public Object part2() {
-    int maxDepth = 10;
-    String[] input = day().split("\n\n");
-    Set<String> all = sol.values().stream().flatMap(Collection::stream).collect(Collectors.toUnmodifiableSet());
-    Set<String> s42 = sol.get(42L);
-    Set<String> s31 = sol.get(31L);
-    Set<String> s11 = sol.get(11L);
-    for (int i = 2; i <= maxDepth; i++) {
-      Set<String> add = new HashSet<>(s42.size() * s31.size());
-      Set<String> add2 = new HashSet<>(s42.size() * s31.size() * s11.size());
-      for (String o : s42) {
-        for (String o1 : s42) {
-          add.add(o + o1);
-        }
-        for (String o2 : s31) {
-          for (String o3 : s11) {
-            add2.add(o + o3 + o2);
-          }
-        }
-      }
-      s42.addAll(add);
-      s11.addAll(add2);
-    }
-    return stream(input[1].split("\n"))
-        .filter(e -> sol.values().stream().anyMatch(r -> r.contains(e)))
-        .count();
+    return getSolution(day().replace("8: 42", "8: 42 | 42 8").replace("11: 42 31", "11: 42 31 | 42 11 31"));
   }
 
   public record Rule(long id, Optional<String> letter, long[] rule1, long[] rule2) {
@@ -92,7 +66,8 @@ public class Day19 extends Day2020 {
       this(id, getLetter(rule), getRule(rule, false), getRule(rule, true));
     }
 
-    public Set<String> getPossibilities(Map<Long, Rule> m, Map<Long, Set<String>> sol) {
+    public Set<String> getPossibilities(Map<Long, Rule> m, SetMap<Long, String> sol) {
+      System.out.println(sol.containsKey(id) ? sol.get(id).size() : 0);
       if (sol.containsKey(id)) return sol.get(id);
       if (letter.isEmpty()) {
         Rule[] r = stream(rule1).mapToObj(m::get).toArray(Rule[]::new);
