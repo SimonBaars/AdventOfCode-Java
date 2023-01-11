@@ -28,6 +28,115 @@
 - [Day 24](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year22/days/Day24.java)
 - [Day 25](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year22/days/Day25.java)
 
+### Console output
+```
+Day 1:
+Part 1: 67633
+Part 2: 199628
+
+Day 2:
+Part 1: 15523
+Part 2: 15702
+
+Day 3:
+Part 1: 7742
+Part 2: 2276
+
+Day 4:
+Part 1: 485
+Part 2: 857
+
+Day 5:
+Part 1: FRDSQRRCD
+Part 2: HRFTQVWNN
+
+Day 6:
+Part 1: 1707
+Part 2: 3697
+
+Day 7:
+Part 1: 1444896
+Part 2: 404395
+
+Day 8:
+Part 1: 1713
+Part 2: 268464
+
+Day 9:
+Part 1: 5735
+Part 2: 2478
+
+Day 10:
+Part 1: 14420
+Part 2: 
+██████░░░░░░████░░░░██░░░░░░░░██████░░░░██████░░░░████████░░░░████░░░░██░░░░██░░
+██░░░░██░░██░░░░██░░██░░░░░░░░██░░░░██░░██░░░░██░░░░░░░░██░░██░░░░██░░██░░░░██░░
+██░░░░██░░██░░░░░░░░██░░░░░░░░██░░░░██░░██████░░░░░░░░██░░░░██░░░░██░░██░░░░██░░
+██████░░░░██░░████░░██░░░░░░░░██████░░░░██░░░░██░░░░██░░░░░░████████░░██░░░░██░░
+██░░██░░░░██░░░░██░░██░░░░░░░░██░░██░░░░██░░░░██░░██░░░░░░░░██░░░░██░░██░░░░██░░
+██░░░░██░░░░██████░░████████░░██░░░░██░░██████░░░░████████░░██░░░░██░░░░████░░░░
+
+Day 11:
+Part 1: 108240
+Part 2: 25712998901
+
+Day 12:
+Part 1: 425
+Part 2: 418
+
+Day 13:
+Part 1: 6369
+Part 2: 25800
+
+Day 14:
+Part 1: 614
+Part 2: 26170
+
+Day 15:
+Part 1: 4961647
+Part 2: 12274327017867
+
+Day 16:
+Part 1: 1906
+Part 2: 2548
+
+Day 17:
+Part 1: 3141
+Part 2: 1561739130391
+
+Day 18:
+Part 1: 3576
+Part 2: 2066
+
+Day 19:
+Part 1: 1306
+Part 2: 37604
+
+Day 20:
+Part 1: 5498
+Part 2: 3390007892081
+
+Day 21:
+Part 1: 83056452926300
+Part 2: 3469704905529
+
+Day 22:
+Part 1: 58248
+Part 2: 179091
+
+Day 23:
+Part 1: 4195
+Part 2: 1069
+
+Day 24:
+Part 1: 266
+Part 2: 853
+
+Day 25:
+Part 1: 2=020-===0-1===2=020
+Part 2: The More The Merrier
+```
+
 ## 2021
 ### Days
 - [Day 1](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day1.java)
