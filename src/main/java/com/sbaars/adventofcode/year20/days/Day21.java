@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year20.days;
 
 import com.sbaars.adventofcode.common.ListMap;
+import com.sbaars.adventofcode.common.SetMap;
 import com.sbaars.adventofcode.year20.Day2020;
 
 import java.util.HashSet;
@@ -23,7 +24,7 @@ public class Day21 extends Day2020 {
   @Override
   public Object part1() {
     List<Rule> rules = input();
-    ListMap<String, String> allergens = getAllergens(rules);
+    SetMap<String, String> allergens = getAllergens(rules);
     return rules.stream().map(Rule::ingredients).flatMap(List::stream).filter(i -> allergens.get(i).isEmpty()).count();
   }
 
@@ -31,31 +32,18 @@ public class Day21 extends Day2020 {
     return dayStream().map(s -> readString(s, "%ls (contains %ls)", Rule.class, " ", ", ")).toList();
   }
 
-  private ListMap<String, String> getAllergens(List<Rule> input) {
-    ListMap<String, String> allergens = new ListMap<>();
-
-    Set<String> found = new HashSet<>();
-    for (Rule r : input) {
-      for (String allergen : r.allergens) {
-        if (!found.contains(allergen)) {
-          allergens.addTo(allergen, r.ingredients);
-        } else if (allergens.containsKey(allergen)) {
-          for (String s : new HashSet<>(allergens.get(allergen))) {
-            if (!r.ingredients.contains(s)) {
-              allergens.removeFrom(allergen, s);
-            }
-          }
-        }
-        found.add(allergen);
-      }
-    }
+  private SetMap<String, String> getAllergens(List<Rule> input) {
+    SetMap<String, String> allergens = new SetMap<>();
+    Set<String> allAllergens = input.stream().flatMap(r -> r.allergens.stream()).collect(Collectors.toSet());;
+    input.stream().flatMap(r -> r.ingredients.stream()).distinct().forEach(i -> allergens.addTo(i, allAllergens));
+    allergens.forEach((i, a) -> input.stream().filter(r -> r.ingredients.contains(i)).forEach(r -> a.retainAll(r.allergens)));
     return allergens;
   }
 
   @Override
   public Object part2() {
     List<Rule> rules = input();
-    ListMap<String, String> allergens = getAllergens(rules);
+    SetMap<String, String> allergens = getAllergens(rules);
     return allergens.entrySet().stream().sorted(comparingByKey()).map(e -> e.getValue().stream().findAny().get()).collect(Collectors.joining(","));
   }
 
