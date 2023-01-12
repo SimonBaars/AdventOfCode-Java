@@ -3,18 +3,14 @@ package com.sbaars.adventofcode.year18.days;
 import com.sbaars.adventofcode.common.map.ListCountMap;
 import com.sbaars.adventofcode.year18.Day2018;
 
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.sbaars.adventofcode.util.AOCUtils.findMax;
-import static com.sbaars.adventofcode.util.AOCUtils.findWhere;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day4 extends Day2018 {
