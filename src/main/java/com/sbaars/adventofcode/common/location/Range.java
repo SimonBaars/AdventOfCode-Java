@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.common.location;
 
 import com.sbaars.adventofcode.common.Pair;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -75,5 +76,23 @@ public class Range {
         s = (-s1_y * (x0 - x2) + s1_x * (y0 - y2)) / denom;
         t = ( s2_x * (y0 - y2) - s2_y * (x0 - x2)) / denom;
         return s >= 0 && s <= 1 && t >= 0 && t <= 1 ? of(new Loc(round(x0 + (t * s1_x)), round(y0 + (t * s1_y)))) : empty();
+    }
+
+    public boolean overlaps(Range r) {
+        return start.x < r.end.x && end.x > r.start.x && start.y < r.end.y && end.y > r.start.y;
+    }
+
+    public Range intersection(Range r) {
+        if(!overlaps(r))
+            return new Range(0,0,0,0);
+        long[] horiz = {start.x, end.x, r.start.x, r.end.x};
+        Arrays.sort(horiz);
+        long [] vert = {start.y, end.y, r.start.y, r.end.y};
+        Arrays.sort(vert);
+        return new Range(horiz[1], vert[1], horiz[2], vert[2]);
+    }
+
+    public long area() {
+        return (end.x - start.x) + (end.y - start.y);
     }
 }
