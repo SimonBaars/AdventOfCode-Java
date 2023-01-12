@@ -29,7 +29,7 @@ public class DownloadTests {
   }
 
   public static void main(String[] args) {
-    new DownloadTests().retrieveTests("3", "2018");
+    new DownloadTests().retrieveTests("4", "2018");
   }
 
   public void retrieveTests(String day, String year) {
@@ -37,27 +37,25 @@ public class DownloadTests {
     String y = year.substring(2);
     getFile(day, y).getParentFile().mkdirs();
     writeFile(getFile(day, y), """
-            package com.sbaars.adventofcode.year%s.days;
-                        
-            import static org.junit.jupiter.api.Assertions.assertEquals;
-                        
-            import org.junit.jupiter.api.Test;
-            import com.sbaars.adventofcode.year%s.days.Day%s;
-                        
-            class Day%sTest {
-                Day%s day = new Day%s();
-                
-                @Test
-                void testPart1() {
-                    assertEquals("%s", day.part1().toString());
-                }
-                
-                @Test
-                void testPart2() {
-                    assertEquals("%s", day.part2().toString());
-                }
-            }
-          """.formatted(y, y, day, day, day, day, !matches.isEmpty() ? matches.get(0) : "true", matches.size() > 1 ? matches.get(1) : "true"));
+          package com.sbaars.adventofcode.year%s.days;
+                      
+          import static org.junit.jupiter.api.Assertions.assertEquals;
+          import org.junit.jupiter.api.Test;
+                      
+          class Day%sTest {
+              Day%s day = new Day%s();
+              
+              @Test
+              void testPart1() {
+                  assertEquals("%s", day.part1().toString());
+              }
+              
+              @Test
+              void testPart2() {
+                  assertEquals("%s", day.part2().toString());
+              }
+          }
+          """.formatted(y, y, day, day, !matches.isEmpty() ? matches.get(0) : "true", matches.size() > 1 ? matches.get(1) : "true"));
   }
 
   private void runForYear(String year) {
