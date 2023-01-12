@@ -3,6 +3,7 @@ package com.sbaars.adventofcode.year18.days;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 import com.sbaars.adventofcode.common.location.Loc;
+import com.sbaars.adventofcode.common.location.Range;
 import com.sbaars.adventofcode.year18.Day2018;
 import java.util.HashSet;
 import java.util.List;
@@ -15,13 +16,11 @@ public class Day3 extends Day2018 {
 
   public static void main(String[] args) {
     new Day3().printParts();
-//    new Day3().submitPart1();
-//    new Day3().submitPart2();
   }
 
   @Override
   public Object part1() {
-    List<Claim> input = dayStream().map(e -> readString(e, "#%n @ %n,%n: %nx%n", Claim.class)).toList();
+    List<Claim> input = input();
     Set<Loc> all = new HashSet<>();
     Set<Loc> overlap = new HashSet<>();
     for(Claim c : input){
@@ -39,10 +38,17 @@ public class Day3 extends Day2018 {
 
   @Override
   public Object part2() {
-    List<Claim> input = dayStream().map(e -> readString(e, "#%n @ %n,%n: %nx%n", Claim.class)).toList();
-
-    return "";
+    List<Claim> input = input();
+    return input().stream().filter(e -> input.stream().filter(f -> e.id != f.id).noneMatch(f -> f.getRange().overlaps(e.getRange()))).findFirst().get().id;
   }
 
-  public record Claim(long id, long x, long y, long sizex, long sizey){}
+  private List<Claim> input() {
+    return dayStream().map(e -> readString(e, "#%n @ %n,%n: %nx%n", Claim.class)).toList();
+  }
+
+  public record Claim(long id, long x, long y, long sizex, long sizey){
+    public Range getRange() {
+      return new Range(x, y, x+sizex, y+sizey);
+    }
+  }
 }
