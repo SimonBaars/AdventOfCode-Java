@@ -1,6 +1,6 @@
 package com.sbaars.adventofcode.year20.days;
 
-import com.sbaars.adventofcode.common.SetMap;
+import com.sbaars.adventofcode.common.map.SetMap;
 import com.sbaars.adventofcode.year20.Day2020;
 
 import java.util.*;

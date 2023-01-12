@@ -1,6 +1,6 @@
 package com.sbaars.adventofcode.year21.days;
 
-import com.sbaars.adventofcode.year19.util.LongCountMap;
+import com.sbaars.adventofcode.common.map.LongCountMap;
 import com.sbaars.adventofcode.year21.Day2021;
 import java.util.Arrays;
 import java.util.stream.Collectors;
