@@ -7,6 +7,8 @@ import com.sbaars.adventofcode.common.Pair;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -21,6 +23,23 @@ public class AOCUtils {
         if(!b) {
             throw new IllegalStateException(message);
         }
+    }
+
+    public static<A> A findWhere(Collection<A> l, Predicate<A> condition) {
+        return l.stream().filter(condition).findAny().get();
+    }
+
+    public static<A> A findMax(Collection<A> l, ToIntFunction<A> condition) {
+        A res = null;
+        int max = Integer.MIN_VALUE;
+        for(A a : l) {
+            int val = condition.applyAsInt(a);
+            if(val > max) {
+                max = val;
+                res = a;
+            }
+        }
+        return res;
     }
 
     public static<A> Stream<Pair<A, A>> connectedPairs(List<A> l) {
