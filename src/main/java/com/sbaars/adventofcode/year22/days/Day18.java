@@ -2,7 +2,7 @@ package com.sbaars.adventofcode.year22.days;
 
 import com.sbaars.adventofcode.common.HexDirection;
 import com.sbaars.adventofcode.common.location.Loc3D;
-import com.sbaars.adventofcode.year19.util.LongCountMap;
+import com.sbaars.adventofcode.common.map.LongCountMap;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.*;
@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import static com.sbaars.adventofcode.util.DataMapper.readString;
-import static com.sbaars.adventofcode.year19.util.LongCountMap.toCountMap;
+import static com.sbaars.adventofcode.common.map.LongCountMap.toCountMap;
 
 public class Day18 extends Day2022 {
   public Day18() {

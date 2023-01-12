@@ -2,8 +2,8 @@ package com.sbaars.adventofcode.year20.days;
 
 import static java.util.Arrays.sort;
 
-import com.sbaars.adventofcode.year19.util.CountMap;
-import com.sbaars.adventofcode.year19.util.LongCountMap;
+import com.sbaars.adventofcode.common.map.CountMap;
+import com.sbaars.adventofcode.common.map.LongCountMap;
 import com.sbaars.adventofcode.year20.Day2020;
 import org.apache.commons.lang3.ArrayUtils;
 

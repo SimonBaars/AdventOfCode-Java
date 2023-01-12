@@ -2,7 +2,7 @@ package com.sbaars.adventofcode.year22.days;
 
 import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.TopUniqueElements;
-import com.sbaars.adventofcode.year19.util.LongCountMap;
+import com.sbaars.adventofcode.common.map.LongCountMap;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.Arrays;

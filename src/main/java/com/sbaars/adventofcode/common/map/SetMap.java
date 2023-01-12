@@ -1,4 +1,4 @@
-package com.sbaars.adventofcode.common;
+package com.sbaars.adventofcode.common.map;
 
 import java.util.*;
 

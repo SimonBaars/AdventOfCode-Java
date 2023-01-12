@@ -1,5 +1,7 @@
 package com.sbaars.adventofcode.common;
 
+import com.sbaars.adventofcode.common.map.ListMap;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.*;

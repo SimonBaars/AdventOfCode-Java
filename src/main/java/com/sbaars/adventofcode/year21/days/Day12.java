@@ -2,7 +2,7 @@ package com.sbaars.adventofcode.year21.days;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.sbaars.adventofcode.common.HasRecursion;
-import com.sbaars.adventofcode.year19.util.CountMap;
+import com.sbaars.adventofcode.common.map.CountMap;
 import com.sbaars.adventofcode.year21.Day2021;
 
 import java.util.HashSet;

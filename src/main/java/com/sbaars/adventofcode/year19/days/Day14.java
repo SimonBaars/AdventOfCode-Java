@@ -2,7 +2,7 @@ package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.year19.Day2019;
-import com.sbaars.adventofcode.year19.util.LongCountMap;
+import com.sbaars.adventofcode.common.map.LongCountMap;
 
 import java.util.Arrays;
 

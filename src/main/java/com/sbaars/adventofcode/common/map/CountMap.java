@@ -1,4 +1,4 @@
-package com.sbaars.adventofcode.year19.util;
+package com.sbaars.adventofcode.common.map;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +25,16 @@ public class CountMap<K> extends HashMap<K, Integer> {
     super(m);
   }
 
-  public Integer increment(K key) {
-    return super.put(key, super.containsKey(key) ? super.get(key) + 1 : 1);
+  public int increment(K key) {
+    int newVal = containsKey(key) ? super.get(key) + 1 : 1;
+    put(key, newVal);
+    return newVal;
   }
 
-  public Integer increment(K key, int amount) {
-    return super.put(key, super.containsKey(key) ? super.get(key) + amount : amount);
+  public int increment(K key, int amount) {
+    int newVal = containsKey(key) ? super.get(key) + amount : amount;
+    put(key, newVal);
+    return newVal;
   }
 
   @SuppressWarnings("unchecked")
@@ -54,5 +58,9 @@ public class CountMap<K> extends HashMap<K, Integer> {
     for (Entry<K, Integer> i : input.entrySet()) {
       increment(i.getKey(), i.getValue());
     }
+  }
+
+  public int sum() {
+    return values().stream().mapToInt(e -> e).sum();
   }
 }
