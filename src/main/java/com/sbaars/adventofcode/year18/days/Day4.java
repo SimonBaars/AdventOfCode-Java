@@ -35,6 +35,19 @@ public class Day4 extends Day2018 {
 
   @Override
   public Object part1() {
+    var lcm = getSleepMinutes();
+    var max = findMax(lcm.entrySet(), g -> g.getValue().sum());
+    return max.getKey() * findMax(max.getValue().entrySet(), Map.Entry::getValue).getKey();
+  }
+
+  @Override
+  public Object part2() {
+    var lcm = getSleepMinutes();
+    var max = findMax(lcm.entrySet(), g -> g.getValue().values().stream().mapToInt(e -> e).max().getAsInt());
+    return max.getKey() * findMax(max.getValue().entrySet(), Map.Entry::getValue).getKey();
+  }
+
+  private ListCountMap<Integer, Integer> getSleepMinutes() {
     List<Event> events = dayStream().sorted().map(s -> readString(s, "[%s] %s", Event.class)).toList();
     int currentGuard = 0;
     LocalDateTime asleep = events.get(0).getTimestamp();
@@ -52,12 +65,6 @@ public class Day4 extends Day2018 {
         }
       }
     }
-    var max = findMax(lcm.entrySet(), g -> g.getValue().sum());
-    return max.getKey() * findMax(max.getValue().entrySet(), Map.Entry::getValue).getKey();
-  }
-
-  @Override
-  public Object part2() {
-    return "";
+    return lcm;
   }
 }
