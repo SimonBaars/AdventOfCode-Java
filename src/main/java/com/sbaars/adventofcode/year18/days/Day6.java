@@ -29,8 +29,7 @@ public class Day6 extends Day2018 {
 
   @Override
   public Object part1() {
-    List<Loc> coords = dayStream().map(s -> readString(s, "%n, %n", Loc.class)).toList();
-    InfiniteGrid g = zip(coords.stream(), range(0, coords.size()).mapToObj(c -> (char)c)).collect(toInfiniteGrid());
+    InfiniteGrid g = getInput();
     long minX = g.minX(), minY = g.minY(), maxX = g.maxX(), maxY = g.maxY();
     InfiniteGrid areas = new InfiniteGrid(g);
     CountMap<Character> nChar = new CountMap<>();
@@ -57,11 +56,15 @@ public class Day6 extends Day2018 {
 
   @Override
   public Object part2() {
+    InfiniteGrid g = getInput();
+    return new Range(g.minX(), g.minY(), g.maxX(), g.maxY())
+            .stream()
+            .filter(l -> g.stream().mapToLong(l::distance).sum() < 10_000L)
+            .count();
+  }
+
+  private InfiniteGrid getInput() {
     List<Loc> coords = dayStream().map(s -> readString(s, "%n, %n", Loc.class)).toList();
-    InfiniteGrid g = zip(coords.stream(), range(0, coords.size()).mapToObj(c -> (char)c)).collect(toInfiniteGrid());
-    long minX = g.minX(), minY = g.minY(), maxX = g.maxX(), maxY = g.maxY();
-    CountMap<Character> nChar = new CountMap<>();
-    g.grid.values().forEach(nChar::increment);
-    return new Range(minX, minY, maxX, maxY).stream().filter(l -> g.stream().mapToLong(l::distance).sum() < 10_000L).count();
+    return zip(coords.stream(), range(0, coords.size()).mapToObj(c -> (char)c)).collect(toInfiniteGrid());
   }
 }
