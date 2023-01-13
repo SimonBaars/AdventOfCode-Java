@@ -21,7 +21,17 @@ public class Day5 extends Day2018 {
 
   @Override
   public Object part1() {
-    return fixedPoint(day().trim(), this::react).length();
+    return fullyReact(day().trim());
+  }
+
+  @Override
+  public Object part2() {
+    String input = day().trim();
+    return range('A', 'Z').map(c -> fullyReact(input.replace((char)c, ' ').replace((char)(c+DIFF), ' ').replace(" ", ""))).min().getAsInt();
+  }
+
+  public int fullyReact(String s) {
+    return fixedPoint(s, this::react).length();
   }
 
   public String react(String s) {
@@ -34,10 +44,5 @@ public class Day5 extends Day2018 {
       }
     }
     return b.toString();
-  }
-
-  @Override
-  public Object part2() {
-    return "";
   }
 }
