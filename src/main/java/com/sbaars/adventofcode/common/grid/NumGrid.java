@@ -10,7 +10,7 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public class NumGrid implements Grid {
-  public long[][] grid;
+  public final long[][] grid;
 
   public NumGrid(String stringToParse, String lineDelimiter, String itemDelimiter) {
     this.grid = numGrid(stringToParse, lineDelimiter, itemDelimiter);
@@ -48,8 +48,7 @@ public class NumGrid implements Grid {
         newGrid[i][sizeY()-j-1] = grid[i][j];
       }
     }
-    grid = newGrid;
-    return this;
+    return new NumGrid(newGrid);
   }
 
   public NumGrid mirrorY(){
@@ -59,8 +58,7 @@ public class NumGrid implements Grid {
         newGrid[sizeX()-i-1][j] = grid[i][j];
       }
     }
-    grid = newGrid;
-    return this;
+    return new NumGrid(newGrid);
   }
 
   public long sum() {
@@ -163,5 +161,15 @@ public class NumGrid implements Grid {
 
   public Stream<Point> findAll(long l) {
     return stream().filter(p -> get(p) == l);
+  }
+
+  public char[][] getGrid() {
+    char[][] g = new char[grid.length][grid[0].length];
+    for(int i = 0; i< grid.length; i++){
+      for(int j = 0; j< grid[i].length; j++){
+        g[i][j] = (char)grid[i][j];
+      }
+    }
+    return g;
   }
 }

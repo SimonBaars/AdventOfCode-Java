@@ -8,4 +8,6 @@ public interface Grid {
   }
 
   IntStream iterate();
+
+  char[][] getGrid();
 }

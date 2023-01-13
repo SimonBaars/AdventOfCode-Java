@@ -63,4 +63,8 @@ public class CountMap<K> extends HashMap<K, Integer> {
   public int sum() {
     return values().stream().mapToInt(e -> e).sum();
   }
+
+  public int max() {
+    return values().stream().mapToInt(e -> e).max().getAsInt();
+  }
 }
