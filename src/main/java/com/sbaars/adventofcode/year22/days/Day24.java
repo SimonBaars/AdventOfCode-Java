@@ -50,7 +50,7 @@ public class Day24 extends Day2022 {
     Loc dest = new Loc(sizex -1, sizey);
     boolean realEnd = false;
     for(long i = 1; true; i++) {
-      InfiniteGrid g = new InfiniteGrid(in.grid);
+      InfiniteGrid g = new InfiniteGrid(in);
       blizzards = blizzards.stream()
               .map(b -> new Blizzard(b.dir.move(b.l), b.dir))
               .map(b -> in.get(b.l).isPresent() ?

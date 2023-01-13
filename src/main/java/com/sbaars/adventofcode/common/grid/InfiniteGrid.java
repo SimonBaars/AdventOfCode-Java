@@ -46,6 +46,10 @@ public class InfiniteGrid implements Grid {
     this(new CharGrid(s).grid);
   }
 
+  public InfiniteGrid(InfiniteGrid g) {
+    this(g.grid);
+  }
+
   public IntStream iterate() {
     return grid.values().stream().mapToInt(e -> e);
   }
@@ -63,16 +67,20 @@ public class InfiniteGrid implements Grid {
   }
 
   public String toString() {
-    long minX = minX();
-    long minY = minY();
-    CharGrid g = new CharGrid(' ', new Loc(width(), height()));
-    grid.forEach((p, i) -> g.set(new Loc(p.x-minX, p.y-minY), i));
-    return g.toString();
+    return toCharGrid().toString();
   }
 
   public static Collector<Loc, Map<Loc, Character>, InfiniteGrid> toInfiniteGrid(char c) {
     final Supplier<Map<Loc, Character>> supplier = HashMap::new;
     final BiConsumer<Map<Loc, Character>, Loc> accumulator = (a, b) -> a.put(b, c);
+    final BinaryOperator<Map<Loc, Character>> combiner = (a, b) -> {a.putAll(b); return a;};
+    final Function<Map<Loc, Character>, InfiniteGrid> finisher = InfiniteGrid::new;
+    return Collector.of(supplier, accumulator, combiner, finisher);
+  }
+
+  public static Collector<Pair<Loc, Character>, Map<Loc, Character>, InfiniteGrid> toInfiniteGrid() {
+    final Supplier<Map<Loc, Character>> supplier = HashMap::new;
+    final BiConsumer<Map<Loc, Character>, Pair<Loc, Character>> accumulator = (a, b) -> a.put(b.a(), b.b());
     final BinaryOperator<Map<Loc, Character>> combiner = (a, b) -> {a.putAll(b); return a;};
     final Function<Map<Loc, Character>, InfiniteGrid> finisher = InfiniteGrid::new;
     return Collector.of(supplier, accumulator, combiner, finisher);
@@ -128,5 +136,17 @@ public class InfiniteGrid implements Grid {
 
   public void removeIf(BiPredicate<Loc, Character> p) {
     new HashSet<>(grid.entrySet()).stream().filter(e -> p.test(e.getKey(), e.getValue())).forEach(e -> grid.remove(e.getKey()));
+  }
+
+  public char[][] getGrid(){
+    return toCharGrid().getGrid();
+  }
+
+  private CharGrid toCharGrid() {
+    long minX = minX();
+    long minY = minY();
+    CharGrid g = new CharGrid(' ', new Loc(width(), height()));
+    grid.forEach((p, i) -> g.set(new Loc(p.x-minX, p.y-minY), i));
+    return g;
   }
 }

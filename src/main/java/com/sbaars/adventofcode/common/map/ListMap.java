@@ -1,6 +1,17 @@
 package com.sbaars.adventofcode.common.map;
 
+import com.sbaars.adventofcode.common.Pair;
+import com.sbaars.adventofcode.common.grid.InfiniteGrid;
+import com.sbaars.adventofcode.common.location.Loc;
+
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ListMap<K, V> extends HashMap<K, List<V>> {
 	public ListMap() {
@@ -71,7 +82,19 @@ public class ListMap<K, V> extends HashMap<K, List<V>> {
 		return findAny.get();
 	}
 
+	public Stream<V> valueStream() {
+		return values().stream().flatMap(List::stream);
+	}
+
 	public boolean hasValue(V v) {
 		return values().stream().anyMatch(e -> e.contains(v));
+	}
+
+	public static <T, K, U> Collector<T, ?, ListMap<K, U>> toListMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
+		final Supplier<ListMap<K, U>> supplier = ListMap::new;
+		final BiConsumer<ListMap<K, U>, T> accumulator = (a, b) -> a.addTo(keyMapper.apply(b), valueMapper.apply(b));
+		final BinaryOperator<ListMap<K, U>> combiner = ListMap::mergeWith;
+		final Function<ListMap<K, U>, ListMap<K, U>> finisher = Function.identity();
+		return Collector.of(supplier, accumulator, combiner, finisher);
 	}
 }

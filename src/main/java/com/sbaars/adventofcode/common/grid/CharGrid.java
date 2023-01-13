@@ -68,4 +68,8 @@ public class CharGrid implements Grid {
     if(get(p) == 0) throw new IllegalStateException("Trying to write to coordinate outside of grid: "+p+", "+i);
     grid[p.intY()][p.intX()] = i;
   }
+
+  public char[][] getGrid(){
+    return grid;
+  }
 }
