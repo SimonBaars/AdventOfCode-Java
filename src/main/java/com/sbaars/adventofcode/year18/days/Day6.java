@@ -9,11 +9,8 @@ import com.sbaars.adventofcode.year18.Day2018;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static com.google.common.collect.Maps.toMap;
 import static com.sbaars.adventofcode.common.grid.InfiniteGrid.toInfiniteGrid;
 import static com.sbaars.adventofcode.common.map.ListMap.toListMap;
 import static com.sbaars.adventofcode.util.AOCUtils.zip;
@@ -60,6 +57,11 @@ public class Day6 extends Day2018 {
 
   @Override
   public Object part2() {
-    return "";
+    List<Loc> coords = dayStream().map(s -> readString(s, "%n, %n", Loc.class)).toList();
+    InfiniteGrid g = zip(coords.stream(), range(0, coords.size()).mapToObj(c -> (char)c)).collect(toInfiniteGrid());
+    long minX = g.minX(), minY = g.minY(), maxX = g.maxX(), maxY = g.maxY();
+    CountMap<Character> nChar = new CountMap<>();
+    g.grid.values().forEach(nChar::increment);
+    return new Range(minX, minY, maxX, maxY).stream().filter(l -> g.stream().mapToLong(l::distance).sum() < 10_000L).count();
   }
 }
