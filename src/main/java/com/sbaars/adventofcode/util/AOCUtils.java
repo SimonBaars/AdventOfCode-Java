@@ -29,6 +29,13 @@ public class AOCUtils {
         return l.stream().filter(condition).findAny().get();
     }
 
+    public static<A> A fixedPoint(A value, Function<A, A> func) {
+        A a = func.apply(value);
+        A a2;
+        while(!(a2 = func.apply(a)).equals(a)) a = a2;
+        return a;
+    }
+
     public static<A> A findMax(Collection<A> l, ToIntFunction<A> condition) {
         A res = null;
         int max = Integer.MIN_VALUE;
@@ -62,14 +69,15 @@ public class AOCUtils {
         return list.get(list.size() - 1);
     }
 
-    public static<A, B, C> Stream<C> zip(Stream<? extends A> a,
-                                         Stream<? extends B> b,
-                                         BiFunction<? super A, ? super B, ? extends C> zipper) {
+    public static<A, B> Stream<Pair<A, B>> zip(Stream<? extends A> a, Stream<? extends B> b) {
+        return zip(a, b, Pair::new);
+    }
+
+    public static<A, B, C> Stream<C> zip(Stream<? extends A> a, Stream<? extends B> b, BiFunction<? super A, ? super B, ? extends C> zipper) {
         Objects.requireNonNull(zipper);
         Spliterator<? extends A> aSpliterator = Objects.requireNonNull(a).spliterator();
         Spliterator<? extends B> bSpliterator = Objects.requireNonNull(b).spliterator();
 
-        // Zipping loses DISTINCT and SORTED characteristics
         int characteristics = aSpliterator.characteristics() & bSpliterator.characteristics() &
                 ~(Spliterator.DISTINCT | Spliterator.SORTED);
 

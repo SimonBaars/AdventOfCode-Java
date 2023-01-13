@@ -17,7 +17,6 @@ public class Day3 extends Day2022 {
   @Override
   public Object part1() {
     return dayStream()
-            .map(String::trim)
             .map(e -> new String[]{e.substring(0, e.length()/2), e.substring(e.length()/2)})
             .mapToInt(e -> getPriorities(e[0]).filter(i -> getPriorities(e[1]).anyMatch(j -> j == i)).findFirst().getAsInt())
             .sum();
