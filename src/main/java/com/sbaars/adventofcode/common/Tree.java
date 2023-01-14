@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 public class Tree<T> {
     private final Node<T> rootNode;
 
+
     public Tree(T rootNodeData) {
         this.rootNode = new Node<>(rootNodeData, 0);
     }
@@ -67,14 +68,19 @@ public class Tree<T> {
         return (n1.depth-parents.get(0).depth) + (n2.depth-parents.get(0).depth);
     }
 
-    public class Node<T> {
-        public final T data;
-        public final List<Node<T>> children;
-        public final Node<T> parent;
+    public Node<T> getRoot() {
+        return rootNode;
+    }
+
+    public class Node<V> implements Comparable<Node<V>> {
+        public final V data;
+
+        public final List<Node<V>> children;
+        public final Node<V> parent;
         public final int depth;
         public final int nChildren;
 
-        public Node(T data, List<Node<T>> children, Node<T> parent, int depth) {
+        public Node(V data, List<Node<V>> children, Node<V> parent, int depth) {
             this.data = data;
             this.children = children;
             this.parent = parent;
@@ -82,7 +88,7 @@ public class Tree<T> {
             this.depth = depth;
         }
 
-        public Node(ListMap<T, T> map, Node<T> parent, T data, int depth) {
+        public Node(ListMap<V, V> map, Node<V> parent, V data, int depth) {
             this.data = data;
             this.children = map.get(data).stream().map(d -> new Node<>(map, this, d, depth + 1)).toList();
             this.parent = parent;
@@ -90,25 +96,25 @@ public class Tree<T> {
             this.depth = depth;
         }
 
-        public Node(ListMap<T, T> map, T data, int depth) {
+        public Node(ListMap<V, V> map, V data, int depth) {
             this(map, null, data, depth);
         }
 
-        public Node(T data, List<Node<T>> children, int depth) {
+        public Node(V data, List<Node<V>> children, int depth) {
             this(data, children, null, depth);
         }
 
-        public Node(T data, int depth) {
+        public Node(V data, int depth) {
             this(data, new ArrayList<>(), depth);
         }
 
-        public List<Node<T>> children() {
+        public List<Node<V>> children() {
             return children;
         }
 
-        public List<Node<T>> parents() {
-            List<Node<T>> parents = new ArrayList<>();
-            Node<T> n = this;
+        public List<Node<V>> parents() {
+            List<Node<V>> parents = new ArrayList<>();
+            Node<V> n = this;
             while(n.parent != null) {
                 parents.add(n.parent);
                 n = n.parent;
@@ -127,6 +133,30 @@ public class Tree<T> {
         @Override
         public int hashCode() {
             return data.hashCode();
+        }
+
+        public V data() {
+            return data;
+        }
+
+        public Node<V> parent() {
+            return parent;
+        }
+
+        public int depth() {
+            return depth;
+        }
+
+        public int nChildren() {
+            return nChildren;
+        }
+
+        @Override
+        public int compareTo(Node<V> t) {
+            if(data instanceof Comparable && t.data instanceof Comparable) {
+                return ((Comparable)data).compareTo(t.data);
+            }
+            return 0;
         }
     }
 }
