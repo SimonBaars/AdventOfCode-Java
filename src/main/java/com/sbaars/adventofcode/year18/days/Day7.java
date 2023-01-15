@@ -26,15 +26,11 @@ public class Day7 extends Day2018 {
   public Object part1() {
     var input = input();
     var done = new HashSet<Graph.Node<Character>>();
-    var current = new HashSet<>(Set.of(input.nodes.values().stream().filter(e -> e.parents().isEmpty()).findAny().get()));
     StringBuilder output = new StringBuilder();
-    while(!current.isEmpty()) {
-      System.out.println(current.stream().map(n -> n.data()+"").collect(Collectors.joining()));
-      var next = current.stream().sorted().findFirst().get();
+    while(done.size() != input.getNodes().size()) {
+      var next = input.stream().filter(n -> !done.contains(n) && done.containsAll(n.parents())).sorted().findFirst().get();
       done.add(next);
       output.append(next.data());
-      current.remove(next);
-      next.children().stream().filter(c -> done.containsAll(c.parents())).forEach(current::add);
     }
     return output.toString();
   }

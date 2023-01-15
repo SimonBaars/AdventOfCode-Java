@@ -3,6 +3,7 @@ package com.sbaars.adventofcode.common;
 import com.sbaars.adventofcode.common.map.ListMap;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.*;
@@ -11,11 +12,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public class Graph<T> {
-    public final Map<T, Node<T>> nodes;
-
+public record Graph<T> (Map<T, Node<T>> nodes) {
     public Graph(ListMap<T, T> map) {
-        this.nodes = Stream.concat(map.keySet().stream(), map.valueStream()).distinct().map(Node::new).collect(Collectors.toMap(Node::data, a -> a));
+        this(Stream.concat(map.keySet().stream(), map.valueStream()).distinct().map(Node::new).collect(Collectors.toMap(Node::data, a -> a)));
         map.forEach((a, b) -> nodes.get(a).children.addAll(b.stream().map(nodes::get).toList()));
         map.forEach((a, b) -> b.forEach(c -> nodes.get(c).parents.add(nodes.get(a))));
     }
@@ -26,6 +25,14 @@ public class Graph<T> {
         final BinaryOperator<ListMap<T, T>> combiner = ListMap::mergeWith;
         final Function<ListMap<T, T>, Graph<T>> finisher = Graph::new;
         return Collector.of(supplier, accumulator, combiner, finisher);
+    }
+
+    public Collection<Node<T>> getNodes() {
+        return nodes.values();
+    }
+
+    public Stream<Node<T>> stream() {
+        return getNodes().stream();
     }
 
     public record Node<V> (V data, List<Node<V>> children, List<Node<V>> parents) implements Comparable<Node<V>> {
