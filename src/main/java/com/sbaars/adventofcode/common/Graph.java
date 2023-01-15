@@ -64,5 +64,10 @@ public record Graph<T> (Map<T, Node<T>> nodes) {
             }
             return 0;
         }
+
+        @Override
+        public String toString() {
+            return data.toString();
+        }
     }
 }

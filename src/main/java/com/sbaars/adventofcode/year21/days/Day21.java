@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.sbaars.adventofcode.common.Pair.pair;
+
 public class Day21 extends Day2021 implements HasRecursion {
   public Day21() {
     super(21);
@@ -56,11 +58,11 @@ public class Day21 extends Day2021 implements HasRecursion {
   }
 
   private Pair<Long, Long> universes(Map<State, Pair<Long, Long>> m, State s) {
-    Pair<Long, Long> wins = Pair.of(0L, 0L);
+    Pair<Long, Long> wins = pair(0L, 0L);
     if(m.containsKey(s)) {
       return m.get(s);
     } else if(Math.max(s.score[0], s.score[1]) >= 21){
-      return Pair.of(s.move ? 0L : 1L, s.move ? 1L : 0L);
+      return pair(s.move ? 0L : 1L, s.move ? 1L : 0L);
     }
     for(int i = 1; i<=3; i++){
       for(int j = 1; j<=3; j++){
@@ -69,7 +71,7 @@ public class Day21 extends Day2021 implements HasRecursion {
           while(newTurn>10) newTurn-=10;
           int newScore = s.score[s.move ? 0 : 1] + newTurn;
           Pair<Long, Long> newWins = universes(m, new State(s.move ? newTurn : s.turn[0], s.move ? s.turn[1] : newTurn, s.move ? newScore : s.score[0], s.move ? s.score[1] : newScore, !s.move));
-          wins = Pair.of(wins.getLeft() + newWins.getLeft(), wins.getRight() + newWins.getRight());
+          wins = pair(wins.getLeft() + newWins.getLeft(), wins.getRight() + newWins.getRight());
         }
       }
     }

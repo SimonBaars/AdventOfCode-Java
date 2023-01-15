@@ -7,6 +7,8 @@ import com.sbaars.adventofcode.year21.Day2021;
 
 import java.util.*;
 
+import static com.sbaars.adventofcode.common.Pair.pair;
+
 public class Day19 extends Day2021 {
 
   public Day19() {
@@ -62,7 +64,7 @@ public class Day19 extends Day2021 {
     for (int i = 1; i < scanners.length; i++) {
       result.add(orientation[i], position[i]);
     }
-    return Pair.of(result, position);
+    return pair(result, position);
   }
 
   @Override
@@ -107,7 +109,7 @@ public class Day19 extends Day2021 {
     }
 
     public Optional<Pair<Scanner, Loc3D>> match(Scanner[] other) {
-      return Arrays.stream(other).map(e -> Pair.of(e, findMatch(e))).filter(e -> e.getRight().isPresent()).map(e -> Pair.of(e.getLeft(), e.getRight().get())).findFirst();
+      return Arrays.stream(other).map(e -> pair(e, findMatch(e))).filter(e -> e.getRight().isPresent()).map(e -> pair(e.getLeft(), e.getRight().get())).findFirst();
     }
 
     public void add(Scanner s, Loc3D p) {
