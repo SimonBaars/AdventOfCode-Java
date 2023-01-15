@@ -2,12 +2,9 @@ package com.sbaars.adventofcode.year18.days;
 
 import com.sbaars.adventofcode.common.Graph;
 import com.sbaars.adventofcode.common.Pair;
-import com.sbaars.adventofcode.common.Tree;
 import com.sbaars.adventofcode.year18.Day2018;
 
 import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.sbaars.adventofcode.common.Graph.toGraph;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
