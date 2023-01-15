@@ -12,6 +12,7 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static com.sbaars.adventofcode.common.Pair.pair;
 import static java.util.stream.IntStream.range;
 
 public class AOCUtils {
@@ -50,11 +51,11 @@ public class AOCUtils {
     }
 
     public static<A> Stream<Pair<A, A>> connectedPairs(List<A> l) {
-        return range(1, l.size()).mapToObj(i -> Pair.of(l.get(i-1), l.get(i)));
+        return range(1, l.size()).mapToObj(i -> pair(l.get(i-1), l.get(i)));
     }
 
     public static<A> Stream<Pair<A, A>> pairs(List<A> l) {
-        return range(1, l.size()/2).map(i -> i + ((i-1)*2)).mapToObj(i -> Pair.of(l.get(i-1), l.get(i)));
+        return range(1, l.size()/2).map(i -> i + ((i-1)*2)).mapToObj(i -> pair(l.get(i-1), l.get(i)));
     }
 
     public static<A> Stream<Pair<A, A>> allPairs(List<A> l) {

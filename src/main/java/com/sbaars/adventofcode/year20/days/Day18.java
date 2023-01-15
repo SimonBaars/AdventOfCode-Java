@@ -4,6 +4,7 @@ import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.year20.Day2020;
 
+import static com.sbaars.adventofcode.common.Pair.pair;
 import static java.util.Arrays.stream;
 
 public class Day18 extends Day2020 implements HasRecursion {
@@ -48,7 +49,7 @@ public class Day18 extends Day2020 implements HasRecursion {
       leftHand = Long.parseLong(s.substring(s.length() - 1, s.length()));
       i = s.length() - 1;
     }
-    return Pair.of(leftHand, i);
+    return pair(leftHand, i);
   }
 
   private long getSolution(int i, StringBuilder s, long leftHand, boolean part1) {

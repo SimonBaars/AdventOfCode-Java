@@ -48,7 +48,7 @@ public class Day22 extends Day2022 {
           new Location(4, NORTH), new Location(0, WEST),
           new Location(4, WEST), new Location(1, WEST)
   ).entrySet().stream() // This stream makes the map bidirectional
-          .flatMap(e -> Stream.of(Pair.of(e.getKey(), e.getValue()), Pair.of(e.getValue(), e.getKey())))
+          .flatMap(e -> Stream.of(Pair.pair(e.getKey(), e.getValue()), Pair.pair(e.getValue(), e.getKey())))
           .collect(Collectors.toMap(Pair::a, Pair::b));
 
   @Override
