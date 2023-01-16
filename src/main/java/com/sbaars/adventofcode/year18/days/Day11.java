@@ -51,7 +51,8 @@ public class Day11 extends Day2018 {
         }
       }
     }
-    return top.b().toString().replace(" ", "");
+    String res = top.b().toString().replace(" ", "");
+    return part2 ? res : res.substring(0, res.length() - 2);
   }
 
   public long get100Digit(long n) {
