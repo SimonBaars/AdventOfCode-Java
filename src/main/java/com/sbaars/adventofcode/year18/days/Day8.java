@@ -30,7 +30,14 @@ public class Day8 extends Day2018 {
 
   @Override
   public Object part2() {
-    return "";
+    return getValue(input().getRoot());
+  }
+
+  private int getValue(Node<List<Integer>> node) {
+    if(node.children().isEmpty()) {
+      return node.data.stream().mapToInt(e -> e).sum();
+    }
+    return node.data.stream().map(n -> n - 1).filter(i -> i < node.children().size()).map(node.children::get).mapToInt(this::getValue).sum();
   }
 
   public Tree<List<Integer>> input() {
