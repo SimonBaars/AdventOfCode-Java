@@ -7,18 +7,23 @@ import static java.lang.Math.abs;
 import static java.lang.Math.toIntExact;
 
 /**
- * A circular linked list of fixed length where all operations are O(1)
+ * A circular list of fixed length where all operations are O(1)
  */
 public class CircularList {
-  public final List<Node> values = new ArrayList<>();
+  public final SmartArray<Node> values;
   private Node current;
+
   public CircularList(long[] elements) {
+    this(elements, elements.length);
+  }
+  public CircularList(long[] elements, int maxSize) {
     Node prev = null;
     Node first = null;
-    for (long element : elements) {
-      Node n = new Node(element);
+    Node[] nodes = new Node[maxSize];
+    for (int i = 0; i<elements.length; i++) {
+      Node n = new Node(elements[i]);
       n.prev = prev;
-      values.add(n);
+      nodes[i] = n;
       if (prev != null) prev.next = n;
       else first = n;
       prev = n;
@@ -26,6 +31,7 @@ public class CircularList {
     prev.next = first;
     first.prev = prev;
     this.current = first;
+    values = new SmartArray<>(nodes);
   }
 
   public long current() {
@@ -74,6 +80,7 @@ public class CircularList {
     }
     afterThis.next.prev = insertThis;
     afterThis.next = insertThis;
+    values.move(values.indexOf(afterThis));
   }
 
   public int size() {
@@ -111,11 +118,23 @@ public class CircularList {
       this.value = value;
     }
 
-    public Node move(long value, int size) {
+    public Node move(long howMuch, int size) {
       Node n = this;
-      int movesNeeded = value < 0 && value>-size ? toIntExact(value) : Math.floorMod(value, value > 0 ? size-1 : size);
+      int movesNeeded = Math.floorMod(howMuch, size - 1);
       for(long i = 0; i<abs(movesNeeded); i++) {
         if(movesNeeded > 0) {
+          n = n.next;
+        } else {
+          n = n.prev;
+        }
+      }
+      return n;
+    }
+
+    public Node move(int howMuch) {
+      Node n = this;
+      for(long i = 0; i<abs(howMuch); i++) {
+        if(howMuch > 0) {
           n = n.next;
         } else {
           n = n.prev;
