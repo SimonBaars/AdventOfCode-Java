@@ -2,13 +2,10 @@ package com.sbaars.adventofcode.year18.days;
 
 import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
-import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.common.location.Range;
 import com.sbaars.adventofcode.year18.Day2018;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.sbaars.adventofcode.common.Pair.pair;
 import static com.sbaars.adventofcode.common.grid.InfiniteGrid.toInfiniteGrid;
@@ -28,6 +25,11 @@ public class Day10 extends Day2018 {
     return findAnswer().a();
   }
 
+  @Override
+  public Object part2() {
+    return findAnswer().b();
+  }
+
   private Pair<String, Integer> findAnswer() {
     List<Range> list = dayStream().map(s -> readString(s, "position=<%n, %n> velocity=<%n, %n>", Range.class)).toList();
 
@@ -39,10 +41,5 @@ public class Day10 extends Day2018 {
       } else return pair("\n" + smallest.b().toString(), i-1);
       list = list.stream().map(r -> new Range(r.start.move(r.end), r.end)).toList();
     }
-  }
-
-  @Override
-  public Object part2() {
-    return findAnswer().b();
   }
 }
