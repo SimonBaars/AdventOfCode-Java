@@ -29,21 +29,17 @@ public class Day9 extends Day2018 {
     Input input = readString(day().trim(), "%n players; last marble is worth %n points", Input.class);
     CircularList cl = new CircularList(new long[]{0});
     LongCountMap<Long> lcm = new LongCountMap<>();
-    long player = 0;
-    for(int i = 1, j = 1; i<=input.lastMarble * (part2 ? 100 : 1); i++) {
-      if(j == 23) {
+    for(int i = 1; i<=input.lastMarble * (part2 ? 100 : 1); i++) {
+      if(i % 23 == 0) {
+        long player = (i-1) % input.nPlayers;
         lcm.increment(player, i);
-        cl.setCurrent(cl.move(cl.currentNode(), -6));
+        cl.setCurrent(cl.currentNode().move(-6));
         lcm.increment(player, cl.remove(cl.currentNode().prev).value);
-        j = 0;
       } else {
         Node newNode = new Node(i);
         cl.insertAfter(newNode, cl.currentNode().next);
         cl.setCurrent(newNode);
       }
-      j++;
-      player++;
-      if(player >= input.nPlayers) player = 0;
     }
     return lcm.max();
   }
