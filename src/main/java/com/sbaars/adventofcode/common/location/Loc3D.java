@@ -124,11 +124,7 @@ public class Loc3D {
 
   @Override
   public String toString() {
-    return "Loc3D{" +
-        "x=" + x +
-        ", y=" + y +
-        ", z=" + z +
-        '}';
+    return x + ", " + y + ", " + z;
   }
 
   public boolean sameDistance(Loc3D m, Loc3D n) {
