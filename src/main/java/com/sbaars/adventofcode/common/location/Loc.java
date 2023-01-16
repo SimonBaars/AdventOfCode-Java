@@ -101,7 +101,7 @@ public class Loc {
 
   @Override
   public String toString() {
-    return getClass().getName() + "[x=" + x + ",y=" + y + "]";
+    return x + ", " + y ;
   }
 
   public int intX() {

@@ -5,10 +5,7 @@ import com.sbaars.adventofcode.common.EitherList;
 import com.sbaars.adventofcode.common.Pair;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
+import java.util.function.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -37,11 +34,11 @@ public class AOCUtils {
         return a;
     }
 
-    public static<A> A findMax(Collection<A> l, ToIntFunction<A> condition) {
+    public static<A> A findMax(Collection<A> l, ToLongFunction<A> condition) {
         A res = null;
-        int max = Integer.MIN_VALUE;
+        long max = Long.MIN_VALUE;
         for(A a : l) {
-            int val = condition.applyAsInt(a);
+            long val = condition.applyAsLong(a);
             if(val > max) {
                 max = val;
                 res = a;

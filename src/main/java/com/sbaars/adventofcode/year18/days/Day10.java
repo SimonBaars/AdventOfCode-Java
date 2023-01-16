@@ -32,7 +32,6 @@ public class Day10 extends Day2018 {
 
   private Pair<String, Integer> findAnswer() {
     List<Range> list = dayStream().map(s -> readString(s, "position=<%n, %n> velocity=<%n, %n>", Range.class)).toList();
-
     Pair<Long, InfiniteGrid> smallest = new Pair<>(Long.MAX_VALUE, null);
     for(int i = 0; true; i++) {
       InfiniteGrid g = list.stream().map(Range::getStart).collect(toInfiniteGrid('#'));
