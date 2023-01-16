@@ -149,4 +149,8 @@ public class InfiniteGrid implements Grid {
     grid.forEach((p, i) -> g.set(new Loc(p.x-minX, p.y-minY), i));
     return g;
   }
+
+  public long area() {
+    return (maxY() - minY()) + (maxX() - minX());
+  }
 }

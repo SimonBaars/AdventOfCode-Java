@@ -8,6 +8,7 @@ import com.sbaars.adventofcode.year18.Day2018;
 import java.util.Arrays;
 
 import static com.sbaars.adventofcode.util.DataMapper.readString;
+import static java.lang.Math.toIntExact;
 
 public class Day9 extends Day2018 {
   public Day9() {
@@ -27,9 +28,10 @@ public class Day9 extends Day2018 {
 
   private long calcOutput(boolean part2) {
     Input input = readString(day().trim(), "%n players; last marble is worth %n points", Input.class);
-    CircularList cl = new CircularList(new long[]{0});
+    int nMarbles = toIntExact(input.lastMarble) * (part2 ? 100 : 1);
+    CircularList cl = new CircularList(new long[]{0}, nMarbles);
     LongCountMap<Long> lcm = new LongCountMap<>();
-    for(int i = 1; i<=input.lastMarble * (part2 ? 100 : 1); i++) {
+    for(int i = 1; i<=nMarbles; i++) {
       if(i % 23 == 0) {
         long player = (i-1) % input.nPlayers;
         lcm.increment(player, i);
