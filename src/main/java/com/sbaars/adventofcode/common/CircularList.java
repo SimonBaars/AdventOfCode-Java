@@ -10,20 +10,20 @@ import static java.lang.Math.toIntExact;
  * A circular list of fixed length where all operations are O(1)
  */
 public class CircularList {
-  public final SmartArray<Node> values;
+  public final List<Node> values;
   private Node current;
 
   public CircularList(long[] elements) {
     this(elements, elements.length);
   }
   public CircularList(long[] elements, int maxSize) {
+    this.values = new ArrayList<>(maxSize);
     Node prev = null;
     Node first = null;
-    Node[] nodes = new Node[maxSize];
-    for (int i = 0; i<elements.length; i++) {
-      Node n = new Node(elements[i]);
+    for (long element : elements) {
+      Node n = new Node(element);
       n.prev = prev;
-      nodes[i] = n;
+      values.add(n);
       if (prev != null) prev.next = n;
       else first = n;
       prev = n;
@@ -31,7 +31,6 @@ public class CircularList {
     prev.next = first;
     first.prev = prev;
     this.current = first;
-    values = new SmartArray<>(nodes);
   }
 
   public long current() {
@@ -80,7 +79,6 @@ public class CircularList {
     }
     afterThis.next.prev = insertThis;
     afterThis.next = insertThis;
-    values.move(values.indexOf(afterThis));
   }
 
   public int size() {

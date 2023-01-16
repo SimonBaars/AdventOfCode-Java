@@ -79,15 +79,15 @@ public interface DataMapper {
   }
 
   private static Tuple<Long, Integer, Integer> crunchNumber(String s, String pattern) {
-    return crunchString(s, pattern).map((a, b, c) -> of(parseLong(a), b, c));
+    return crunchString(s, pattern).map((a, b, c) -> of(parseLong(a.trim()), b, c));
   }
 
   private static Tuple<Integer, Integer, Integer> crunchInteger(String s, String pattern) {
-    return crunchString(s, pattern).map((a, b, c) -> of(parseInt(a), b, c));
+    return crunchString(s, pattern).map((a, b, c) -> of(parseInt(a.trim()), b, c));
   }
 
   private static Tuple<Double, Integer, Integer> crunchDouble(String s, String pattern) {
-    return crunchString(s, pattern).map((a, b, c) -> of(parseDouble(a), b, c));
+    return crunchString(s, pattern).map((a, b, c) -> of(parseDouble(a.trim()), b, c));
   }
 
   private static<T> Tuple<List<?>, Integer, Integer> crunchList(String s, String pattern, String listSeparator, Class<T> target) {
