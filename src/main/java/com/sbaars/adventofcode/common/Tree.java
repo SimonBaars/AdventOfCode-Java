@@ -1,9 +1,11 @@
 package com.sbaars.adventofcode.common;
 
 import com.sbaars.adventofcode.common.map.ListMap;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
@@ -15,6 +17,10 @@ public class Tree<T> {
 
     public Tree(T rootNodeData) {
         this.rootNode = new Node<>(rootNodeData, 0);
+    }
+
+    public Tree(Node<T> rootNode) {
+        this.rootNode = rootNode;
     }
 
     public Tree(ListMap<T, T> map) {
@@ -72,7 +78,7 @@ public class Tree<T> {
         return rootNode;
     }
 
-    public class Node<V> implements Comparable<Node<V>> {
+    public static class Node<V> implements Comparable<Node<V>> {
         public final V data;
 
         public final List<Node<V>> children;
@@ -88,12 +94,28 @@ public class Tree<T> {
             this.depth = depth;
         }
 
+        public Node(V data, Node<V> parent, int nChildren) {
+            this.data = data;
+            this.children = new ArrayList<>();
+            this.parent = parent;
+            this.nChildren = nChildren;
+            this.depth = parents().size();
+        }
+
         public Node(ListMap<V, V> map, Node<V> parent, V data, int depth) {
             this.data = data;
             this.children = map.get(data).stream().map(d -> new Node<>(map, this, d, depth + 1)).toList();
             this.parent = parent;
             this.nChildren = children.stream().mapToInt(e -> e.nChildren + 1).sum();
             this.depth = depth;
+        }
+
+        public Node(Node<V> parent, V data) {
+            this.data = data;
+            this.children = new ArrayList<>();
+            this.parent = parent;
+            this.nChildren = 0;
+            this.depth = parents().size();;
         }
 
         public Node(ListMap<V, V> map, V data, int depth) {
