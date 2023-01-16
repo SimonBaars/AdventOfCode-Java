@@ -80,4 +80,8 @@ public class LongCountMap<K> extends HashMap<K, Long> {
     final Function<LongCountMap<T>, LongCountMap<T>> finisher = LongCountMap::new;
     return Collector.of(supplier, accumulator, combiner, finisher);
   }
+
+    public long max() {
+      return values().stream().mapToLong(e -> e).max().getAsLong();
+    }
 }

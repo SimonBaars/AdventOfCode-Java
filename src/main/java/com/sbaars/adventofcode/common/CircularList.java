@@ -3,20 +3,22 @@ package com.sbaars.adventofcode.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.toIntExact;
+
 /**
  * A circular linked list of fixed length where all operations are O(1)
  */
 public class CircularList {
-  public final List<Node> valueMap = new ArrayList<>();
+  public final List<Node> values = new ArrayList<>();
   private Node current;
   public CircularList(long[] elements) {
     Node prev = null;
     Node first = null;
     for (long element : elements) {
-      Node n = new Node();
-      n.value = element;
+      Node n = new Node(element);
       n.prev = prev;
-      valueMap.add(n);
+      values.add(n);
       if (prev != null) prev.next = n;
       else first = n;
       prev = n;
@@ -58,18 +60,24 @@ public class CircularList {
     return current;
   }
 
-  public void insertAfter(Node s1, Node s2) {
-    if(s1 == s2 || s1.prev == s2) return;
-    s1.prev.next = s1.next;
-    s1.next.prev = s1.prev;
-    s2.next.prev = s1;
-    s1.next = s2.next;
-    s2.next = s1;
-    s1.prev = s2;
+  public void insertAfter(Node insertThis, Node afterThis) {
+    if(insertThis == afterThis || insertThis.prev == afterThis) return;
+    if(insertThis.next == null || insertThis.prev == null) { // insert new
+      insertThis.prev = afterThis;
+      insertThis.next = afterThis.next;
+      values.add(insertThis);
+    } else { // move existing
+      insertThis.prev.next = insertThis.next;
+      insertThis.next.prev = insertThis.prev;
+      insertThis.next = afterThis.next;
+      insertThis.prev = afterThis;
+    }
+    afterThis.next.prev = insertThis;
+    afterThis.next = insertThis;
   }
 
   public int size() {
-    return valueMap.size();
+    return values.size();
   }
 
   public long[] toArray() {
@@ -77,22 +85,41 @@ public class CircularList {
   }
 
   public void setCurrent(int value) {
-    current = valueMap.get(value);
+    current = values.get(value);
   }
   public void setCurrent(Node n) {
     current = n;
   }
 
-  public class Node {
-    public long value;
+  public Node move(Node n, long howMuch) {
+    return n.move(howMuch, size());
+  }
+
+  public Node remove(Node node) {
+    values.remove(node);
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+    return node;
+  }
+
+  public static class Node {
+    public final long value;
     public Node prev;
     public Node next;
 
+    public Node(long value) {
+      this.value = value;
+    }
+
     public Node move(long value, int size) {
       Node n = this;
-      int movesNeeded = Math.floorMod(value, size-1);
-      for(long i = 0; i<movesNeeded; i++) {
-        n = n.next;
+      int movesNeeded = value < 0 && value>-size ? toIntExact(value) : Math.floorMod(value, value > 0 ? size-1 : size);
+      for(long i = 0; i<abs(movesNeeded); i++) {
+        if(movesNeeded > 0) {
+          n = n.next;
+        } else {
+          n = n.prev;
+        }
       }
       return n;
     }
