@@ -14,11 +14,18 @@ public class Day5 extends Day2015 {
 
   @Override
   public Object part1() {
-    return "";
+    return dayStream()
+            .filter(s -> s.replaceAll("a|e|i|o|u", "").length() <= s.length()-3)
+            .filter(s -> s.replaceAll("([a-z])\\1+", "").length() < s.length())
+            .filter(s -> s.replaceAll("ab|cd|pq|xy", "").length() == s.length())
+            .count();
   }
 
   @Override
   public Object part2() {
-    return "";
+    return dayStream()
+            .filter(s -> s.replaceAll("([a-z][a-z])(.*)\\1+", "").length() < s.length())
+            .filter(s -> s.replaceAll("([a-z]).\\1", "").length() < s.length())
+            .count();
   }
 }
