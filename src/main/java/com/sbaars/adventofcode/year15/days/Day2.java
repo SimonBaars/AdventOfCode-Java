@@ -50,8 +50,6 @@ public class Day2 extends Day2015 {
     Day d = new Day2();
     d.downloadIfNotDownloaded();
     d.printParts();
-//    d.submitPart1();
-//    d.submitPart2();
   }
 
   @Override
