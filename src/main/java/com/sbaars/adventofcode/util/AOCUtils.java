@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.util;
 
 import com.sbaars.adventofcode.common.Either;
 import com.sbaars.adventofcode.common.EitherList;
+import com.sbaars.adventofcode.common.MutablePair;
 import com.sbaars.adventofcode.common.Pair;
 
 import java.util.*;
@@ -166,5 +167,10 @@ public class AOCUtils {
             s = s.substring(i);
         }
         return either;
+    }
+
+    public static<A, B> A findReduce(Stream<A> chars, B acc, BiFunction<A, B, B> func, Predicate<B> pred) {
+        MutablePair<A, B> pair = new MutablePair<>(null, acc);
+        return chars.peek(p -> pair.set(p, func.apply(p, pair.b()))).filter(p -> pred.test(pair.b())).findFirst().get();
     }
 }

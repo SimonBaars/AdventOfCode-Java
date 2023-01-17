@@ -73,4 +73,8 @@ public class MutablePair<A, B> implements Comparable<MutablePair<A, B>> {
                 "b=" + b + ']';
     }
 
+    public void set(A a, B b) {
+        setA(a);
+        setB(b);
+    }
 }
