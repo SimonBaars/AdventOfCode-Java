@@ -1,6 +1,13 @@
 package com.sbaars.adventofcode.year15.days;
 
+import com.sbaars.adventofcode.common.Direction;
+import com.sbaars.adventofcode.common.location.MutableLoc;
 import com.sbaars.adventofcode.year15.Day2015;
+
+import static com.sbaars.adventofcode.common.Direction.*;
+import static com.sbaars.adventofcode.util.AOCUtils.zip;
+import static java.lang.Integer.MAX_VALUE;
+import static java.util.stream.IntStream.range;
 
 public class Day3 extends Day2015 {
   public Day3() {
@@ -13,11 +20,32 @@ public class Day3 extends Day2015 {
 
   @Override
   public Object part1() {
-    return "";
+    MutableLoc loc = new MutableLoc();
+    return day()
+            .chars()
+            .mapToObj(c -> charToDir((char)c))
+            .map(d -> loc.set(d.move(loc.get())))
+            .distinct()
+            .count();
   }
 
   @Override
   public Object part2() {
-    return "";
+    MutableLoc santa = new MutableLoc();
+    MutableLoc robo = new MutableLoc();
+    return zip(range(0, MAX_VALUE).boxed(), day().chars().mapToObj(c -> charToDir((char)c)))
+            .map(d -> d.a() % 2 == 0 ? santa.set(d.b().move(santa.get())) : robo.set(d.b().move(robo.get())))
+            .distinct()
+            .count();
+  }
+
+  public Direction charToDir(char c) {
+    return switch (c) {
+      case '^' -> NORTH;
+      case '>' -> EAST;
+      case 'v' -> SOUTH;
+      case '<' -> WEST;
+      default -> throw new IllegalStateException("Unknown char: " + c);
+    };
   }
 }
