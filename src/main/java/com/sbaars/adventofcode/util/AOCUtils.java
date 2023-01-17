@@ -24,8 +24,8 @@ public class AOCUtils {
         }
     }
 
-    public static<A> A findWhere(Collection<A> l, Predicate<A> condition) {
-        return l.stream().filter(condition).findAny().get();
+    public static<A> A findWhere(Stream<A> l, Predicate<A> condition) {
+        return l.filter(condition).findAny().get();
     }
 
     public static<A> A fixedPoint(A value, Function<A, A> func) {

@@ -29,7 +29,7 @@ public class DownloadTests {
   }
 
   public static void main(String[] args) {
-    new DownloadTests().retrieveTests("3", "2015");
+    new DownloadTests().retrieveTests("4", "2015");
   }
 
   public void retrieveTests(String day, String year) {
