@@ -127,7 +127,7 @@ public class InfiniteGrid implements Grid {
   }
 
   public boolean contains(Loc p) {
-    return grid.keySet().contains(p);
+    return grid.containsKey(p);
   }
 
   public Stream<Loc> stream() {
