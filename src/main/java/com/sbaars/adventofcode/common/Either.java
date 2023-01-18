@@ -5,14 +5,9 @@ import java.util.Optional;
 
 import static com.sbaars.adventofcode.util.AOCUtils.verify;
 
-public class Either<A, B> {
-    private final Optional<A> a;
-    private final Optional<B> b;
-
+public record Either<A, B> (Optional<A> a, Optional<B> b) {
     public Either(A a, B b){
-        verify(a == null || b == null);
-        this.a = Optional.ofNullable(a);
-        this.b = Optional.ofNullable(b);
+        this(Optional.ofNullable(a), Optional.ofNullable(b));
     }
 
     public A getA() {
@@ -48,6 +43,4 @@ public class Either<A, B> {
         result = 31 * result + (b != null ? b.hashCode() : 0);
         return result;
     }
-
-
 }
