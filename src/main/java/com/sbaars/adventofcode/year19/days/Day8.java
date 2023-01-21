@@ -1,8 +1,9 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.common.ProcessesImages;
-import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.common.map.CountMap;
+import com.sbaars.adventofcode.year19.Day2019;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;

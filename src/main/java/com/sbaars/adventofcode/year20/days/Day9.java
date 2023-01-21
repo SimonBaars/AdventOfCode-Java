@@ -1,11 +1,12 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static java.util.Arrays.copyOfRange;
-import static java.util.Arrays.stream;
-
 import com.sbaars.adventofcode.year20.Day2020;
+
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.util.Arrays.copyOfRange;
+import static java.util.Arrays.stream;
 
 public class Day9 extends Day2020 {
   public Day9() {

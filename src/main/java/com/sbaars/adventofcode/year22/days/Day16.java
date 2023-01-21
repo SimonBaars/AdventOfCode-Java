@@ -5,8 +5,8 @@ import com.sbaars.adventofcode.year22.Day2022;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static com.sbaars.adventofcode.util.AOCUtils.allPairs;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.util.List.of;
 
 public class Day16 extends Day2022 {

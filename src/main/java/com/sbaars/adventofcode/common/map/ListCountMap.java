@@ -1,6 +1,8 @@
 package com.sbaars.adventofcode.common.map;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class ListCountMap<K, V> extends HashMap<K, CountMap<V>> {
 	public ListCountMap() {

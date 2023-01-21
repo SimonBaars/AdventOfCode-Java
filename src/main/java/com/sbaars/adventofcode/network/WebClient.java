@@ -1,14 +1,10 @@
 package com.sbaars.adventofcode.network;
 
-import static com.sbaars.adventofcode.common.Day.getResourceAsString;
-
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.HttpCookie;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.time.Duration;
+
+import static com.sbaars.adventofcode.common.Day.getResourceAsString;
 
 public class WebClient {
   public static HttpClient getClient() {

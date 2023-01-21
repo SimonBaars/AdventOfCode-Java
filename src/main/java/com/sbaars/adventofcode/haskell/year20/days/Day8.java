@@ -1,9 +1,9 @@
 package com.sbaars.adventofcode.haskell.year20.days;
 
-import static java.util.Arrays.stream;
-
 import com.sbaars.adventofcode.haskell.year20.HaskellDay2020;
 import com.sbaars.adventofcode.year20.gamepad.Gamepad;
+
+import static java.util.Arrays.stream;
 
 public class Day8 extends HaskellDay2020 {
   public Day8() {

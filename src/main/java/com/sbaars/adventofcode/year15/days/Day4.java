@@ -1,10 +1,10 @@
 package com.sbaars.adventofcode.year15.days;
 
+import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.year15.Day2015;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import com.sbaars.adventofcode.common.Pair;
 
 import static com.sbaars.adventofcode.common.Pair.pair;
 import static java.lang.Integer.MAX_VALUE;

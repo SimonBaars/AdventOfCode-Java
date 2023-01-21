@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year20.days;
 
 import com.sbaars.adventofcode.year20.Day2020;
 import com.sbaars.adventofcode.year20.gamepad.Gamepad;
+
 import java.util.HashSet;
 import java.util.Set;
 

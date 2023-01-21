@@ -1,24 +1,17 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static com.sbaars.adventofcode.common.Direction.CENTER;
-import static com.sbaars.adventofcode.common.Direction.EAST;
-import static com.sbaars.adventofcode.common.Direction.SOUTHEAST;
-import static com.sbaars.adventofcode.common.Direction.NORTH;
-import static com.sbaars.adventofcode.common.Direction.NORTHEAST;
-import static com.sbaars.adventofcode.common.Direction.SOUTH;
-import static com.sbaars.adventofcode.common.Direction.SOUTHWEST;
-import static com.sbaars.adventofcode.common.Direction.WEST;
-import static com.sbaars.adventofcode.common.Direction.NORTHWEST;
-
-import com.sbaars.adventofcode.common.location.IntLoc;
 import com.sbaars.adventofcode.common.grid.CharGrid;
 import com.sbaars.adventofcode.common.grid.Coordinates;
 import com.sbaars.adventofcode.common.grid.NumGrid;
+import com.sbaars.adventofcode.common.location.IntLoc;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.awt.*;
 import java.math.BigInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.sbaars.adventofcode.common.Direction.*;
 
 public class Day20 extends Day2021 {
   public Day20() {

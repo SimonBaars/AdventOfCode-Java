@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
+
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;

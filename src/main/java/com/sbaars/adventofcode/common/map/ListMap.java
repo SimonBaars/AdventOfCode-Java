@@ -1,16 +1,11 @@
 package com.sbaars.adventofcode.common.map;
 
-import com.sbaars.adventofcode.common.Pair;
-import com.sbaars.adventofcode.common.grid.InfiniteGrid;
-import com.sbaars.adventofcode.common.location.Loc;
-
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ListMap<K, V> extends HashMap<K, List<V>> {

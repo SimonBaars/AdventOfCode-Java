@@ -3,15 +3,11 @@ package com.sbaars.adventofcode.year19.days;
 import com.sbaars.adventofcode.common.map.ListMap;
 import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.pathfinding.CharGrid2d;
+
 import java.awt.*;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 public class Day20 extends Day2019 {
   private final Map<String, Portal[]> portals = new HashMap<>();

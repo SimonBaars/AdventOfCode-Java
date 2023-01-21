@@ -1,10 +1,10 @@
 package com.sbaars.adventofcode.haskell.year20.days;
 
-import static java.util.Arrays.stream;
-
 import com.sbaars.adventofcode.haskell.year20.HaskellDay2020;
 import com.sbaars.adventofcode.year20.days.Day7.Item;
 import com.sbaars.adventofcode.year20.days.Day7.Trade;
+
+import static java.util.Arrays.stream;
 
 public class Day7 extends HaskellDay2020 {
   public Day7() {

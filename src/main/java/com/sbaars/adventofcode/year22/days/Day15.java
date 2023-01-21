@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.sbaars.adventofcode.common.Direction.fourDirections;
-import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static com.sbaars.adventofcode.common.grid.InfiniteGrid.toInfiniteGrid;
 import static com.sbaars.adventofcode.util.AOCUtils.allPairs;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.util.Arrays.stream;
 
 public class Day15 extends Day2022 {

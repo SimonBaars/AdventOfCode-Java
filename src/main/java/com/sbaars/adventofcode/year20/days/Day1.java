@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year20.days;
 
 import com.sbaars.adventofcode.year20.Day2020;
+
 import java.util.Arrays;
 
 public class Day1 extends Day2020 {

@@ -1,11 +1,11 @@
 package com.sbaars.adventofcode.year20.days;
 
+import com.sbaars.adventofcode.year20.Day2020;
+
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.range;
-
-import com.sbaars.adventofcode.year20.Day2020;
 
 public class Day13 extends Day2020 {
   public Day13() {

@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year21.days;
 
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

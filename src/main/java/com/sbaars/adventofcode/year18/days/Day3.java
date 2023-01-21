@@ -1,13 +1,14 @@
 package com.sbaars.adventofcode.year18.days;
 
-import static com.sbaars.adventofcode.util.DataMapper.readString;
-
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.common.location.Range;
 import com.sbaars.adventofcode.year18.Day2018;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day3 extends Day2018 {
   public Day3() {

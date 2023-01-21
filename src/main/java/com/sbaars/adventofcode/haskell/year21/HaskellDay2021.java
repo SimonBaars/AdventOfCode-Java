@@ -1,11 +1,12 @@
 package com.sbaars.adventofcode.haskell.year21;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
-
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.util.List;
 import java.util.stream.Collector;
+
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 
 public abstract class HaskellDay2021 extends Day2021 {
   protected HaskellDay2021(int day) {

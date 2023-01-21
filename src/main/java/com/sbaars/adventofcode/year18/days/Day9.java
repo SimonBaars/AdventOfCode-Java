@@ -5,8 +5,6 @@ import com.sbaars.adventofcode.common.CircularList.Node;
 import com.sbaars.adventofcode.common.map.LongCountMap;
 import com.sbaars.adventofcode.year18.Day2018;
 
-import java.util.Arrays;
-
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.lang.Math.toIntExact;
 

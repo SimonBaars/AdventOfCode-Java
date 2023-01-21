@@ -1,13 +1,14 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static com.sbaars.adventofcode.util.DataMapper.readString;
-import static java.lang.Long.MIN_VALUE;
-import static java.lang.Math.toIntExact;
-
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.awt.*;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+
+import static com.sbaars.adventofcode.util.DataMapper.readString;
+import static java.lang.Long.MIN_VALUE;
+import static java.lang.Math.toIntExact;
 
 public class Day17 extends Day2021 {
   public Day17() {

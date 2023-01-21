@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year21.days;
 
 import com.sbaars.adventofcode.common.grid.NumGrid;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

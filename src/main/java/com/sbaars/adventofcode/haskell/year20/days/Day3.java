@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.haskell.year20.days;
 
 import com.sbaars.adventofcode.haskell.year20.HaskellDay2020;
+
 import java.util.Arrays;
 
 public class Day3 extends HaskellDay2020 {

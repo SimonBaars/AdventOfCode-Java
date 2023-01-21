@@ -1,13 +1,14 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static com.sbaars.adventofcode.util.DataMapper.readString;
-import static java.lang.Math.toIntExact;
-
 import com.sbaars.adventofcode.common.grid.Coordinates;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.sbaars.adventofcode.util.DataMapper.readString;
+import static java.lang.Math.toIntExact;
 
 public class Day13 extends Day2021 {
   private final Coordinates dots;

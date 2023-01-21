@@ -1,10 +1,8 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static com.sbaars.adventofcode.util.DataMapper.readString;
-import static java.math.BigInteger.ZERO;
-
 import com.sbaars.adventofcode.common.location.Loc3D;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,6 +10,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.sbaars.adventofcode.util.DataMapper.readString;
+import static java.math.BigInteger.ZERO;
 
 public class Day22 extends Day2021 {
   public Day22() {

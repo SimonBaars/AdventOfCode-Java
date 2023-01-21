@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.toIntExact;
 
 /**
  * A circular list of fixed length where all operations are O(1)

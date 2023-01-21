@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year19.intcode;
 
 import com.sbaars.adventofcode.year19.Day2019;
+
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
