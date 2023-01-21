@@ -3,13 +3,10 @@ package com.sbaars.adventofcode.year19.days;
 import com.sbaars.adventofcode.common.grid.CharGrid;
 import com.sbaars.adventofcode.common.grid.Grid;
 import com.sbaars.adventofcode.year19.Day2019;
+
 import java.awt.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;

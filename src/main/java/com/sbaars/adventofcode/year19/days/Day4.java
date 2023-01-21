@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.year19.Day2019;
+
 import java.util.stream.IntStream;
 
 public class Day4 extends Day2019 {

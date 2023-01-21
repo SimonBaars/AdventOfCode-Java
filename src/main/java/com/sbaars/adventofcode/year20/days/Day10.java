@@ -1,11 +1,11 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static java.util.Arrays.sort;
-
 import com.sbaars.adventofcode.common.map.CountMap;
 import com.sbaars.adventofcode.common.map.LongCountMap;
 import com.sbaars.adventofcode.year20.Day2020;
 import org.apache.commons.lang3.ArrayUtils;
+
+import static java.util.Arrays.sort;
 
 public class Day10 extends Day2020 {
   public Day10() {

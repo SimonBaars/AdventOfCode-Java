@@ -1,17 +1,11 @@
 package com.sbaars.adventofcode.year21.days;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import com.sbaars.adventofcode.year21.Day2021;
 import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.sbaars.adventofcode.util.AOCUtils.verify;
 

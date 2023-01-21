@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.template;
 
 import com.sbaars.adventofcode.common.Day;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 

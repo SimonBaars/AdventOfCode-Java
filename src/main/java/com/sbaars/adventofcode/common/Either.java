@@ -3,8 +3,6 @@ package com.sbaars.adventofcode.common;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.sbaars.adventofcode.util.AOCUtils.verify;
-
 public record Either<A, B> (Optional<A> a, Optional<B> b) {
     public Either(A a, B b){
         this(Optional.ofNullable(a), Optional.ofNullable(b));

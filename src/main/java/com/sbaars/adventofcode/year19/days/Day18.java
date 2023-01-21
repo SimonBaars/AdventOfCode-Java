@@ -2,13 +2,10 @@ package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.pathfinding.CharGrid2d;
+
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Day18 extends Day2019 {

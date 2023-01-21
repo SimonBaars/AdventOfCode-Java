@@ -1,10 +1,11 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static java.util.stream.IntStream.range;
-
 import com.sbaars.adventofcode.year20.Day2020;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.stream.IntStream.range;
 
 public class Day15 extends Day2020 {
   public Day15() {

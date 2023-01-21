@@ -1,18 +1,12 @@
 package com.sbaars.adventofcode.year20.days;
 
+import com.sbaars.adventofcode.year20.Day2020;
+
+import java.util.*;
+import java.util.stream.LongStream;
+
 import static java.lang.Math.toIntExact;
 import static java.util.stream.Collectors.toCollection;
-
-import com.sbaars.adventofcode.year20.Day2020;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.LongStream;
 
 public class Day22 extends Day2020 {
   public Day22() {

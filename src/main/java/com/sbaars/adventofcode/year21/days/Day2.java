@@ -1,12 +1,13 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static com.sbaars.adventofcode.util.DataMapper.readString;
-
 import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.awt.*;
 import java.util.List;
+
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day2 extends Day2021 {
   public Day2() {

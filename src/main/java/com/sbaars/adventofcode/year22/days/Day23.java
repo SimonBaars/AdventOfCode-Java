@@ -7,7 +7,9 @@ import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year22.Day2022;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.sbaars.adventofcode.common.Direction.*;

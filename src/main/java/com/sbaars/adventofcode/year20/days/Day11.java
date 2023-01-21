@@ -1,10 +1,11 @@
 package com.sbaars.adventofcode.year20.days;
 
-import static java.util.Arrays.stream;
-
 import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.year20.Day2020;
+
 import java.awt.*;
+
+import static java.util.Arrays.stream;
 
 public class Day11 extends Day2020 {
   public Day11() {

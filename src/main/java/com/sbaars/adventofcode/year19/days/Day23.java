@@ -3,6 +3,7 @@ package com.sbaars.adventofcode.year19.days;
 import com.sbaars.adventofcode.year19.Day2019;
 import com.sbaars.adventofcode.year19.intcode.IntcodeComputer;
 import com.sbaars.adventofcode.year19.intcode.RetentionPolicy;
+
 import java.util.stream.IntStream;
 
 public class Day23 extends Day2019 {

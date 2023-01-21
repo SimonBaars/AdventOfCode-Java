@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year21.days;
 
 import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;

@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year21.days;
 
 import com.sbaars.adventofcode.common.grid.NumGrid;
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.util.Comparator;
 import java.util.PriorityQueue;
 

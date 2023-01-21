@@ -1,10 +1,11 @@
 package com.sbaars.adventofcode.year20.days;
 
+import com.sbaars.adventofcode.year20.Day2020;
+
+import java.util.function.Predicate;
+
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.lang.Math.toIntExact;
-
-import com.sbaars.adventofcode.year20.Day2020;
-import java.util.function.Predicate;
 
 public class Day2 extends Day2020 {
   public Day2() {

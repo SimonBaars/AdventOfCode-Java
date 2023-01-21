@@ -6,10 +6,10 @@ import com.sbaars.adventofcode.year20.Day2020;
 import java.awt.*;
 import java.util.List;
 
-import static com.sbaars.adventofcode.common.Direction.*;
+import static com.sbaars.adventofcode.common.Direction.EAST;
+import static com.sbaars.adventofcode.common.Direction.turnDegrees;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.lang.Math.abs;
-import static java.util.stream.Collectors.toList;
 
 public class Day12 extends Day2020 {
   public Day12() {

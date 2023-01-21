@@ -1,8 +1,5 @@
 package com.sbaars.adventofcode.common.grid;
 
-import static com.sbaars.adventofcode.common.Day.DEFAULT_DELIMITER;
-import static java.lang.Math.abs;
-
 import java.awt.*;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -10,6 +7,9 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.sbaars.adventofcode.common.Day.DEFAULT_DELIMITER;
+import static java.lang.Math.abs;
 
 public class Coordinates {
   public final Set<Point> coords;

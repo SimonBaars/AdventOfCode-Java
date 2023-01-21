@@ -1,12 +1,13 @@
 package com.sbaars.adventofcode.year21.days;
 
-import static java.lang.Integer.parseInt;
-
 import com.sbaars.adventofcode.year21.Day2021;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static java.lang.Integer.parseInt;
 
 public class Day18 extends Day2021 {
   public Day18() {

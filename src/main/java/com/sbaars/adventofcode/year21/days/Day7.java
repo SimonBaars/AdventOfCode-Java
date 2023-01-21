@@ -1,10 +1,11 @@
 package com.sbaars.adventofcode.year21.days;
 
+import com.sbaars.adventofcode.year21.Day2021;
+
+import java.util.stream.LongStream;
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-
-import com.sbaars.adventofcode.year21.Day2021;
-import java.util.stream.LongStream;
 
 public class Day7 extends Day2021 {
 

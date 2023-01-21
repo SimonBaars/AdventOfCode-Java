@@ -1,9 +1,7 @@
 package com.sbaars.adventofcode.common;
 
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 /**

@@ -9,8 +9,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static com.sbaars.adventofcode.common.map.LongCountMap.toCountMap;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day18 extends Day2022 {
   public Day18() {
