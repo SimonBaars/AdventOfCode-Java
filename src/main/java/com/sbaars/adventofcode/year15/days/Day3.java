@@ -5,9 +5,7 @@ import com.sbaars.adventofcode.common.location.MutableLoc;
 import com.sbaars.adventofcode.year15.Day2015;
 
 import static com.sbaars.adventofcode.common.Direction.*;
-import static com.sbaars.adventofcode.util.AOCUtils.zip;
-import static java.lang.Integer.MAX_VALUE;
-import static java.util.stream.IntStream.range;
+import static com.sbaars.adventofcode.util.AOCUtils.zipWithIndex;
 
 public class Day3 extends Day2015 {
   public Day3() {
@@ -33,8 +31,8 @@ public class Day3 extends Day2015 {
   public Object part2() {
     MutableLoc santa = new MutableLoc();
     MutableLoc robo = new MutableLoc();
-    return zip(range(0, MAX_VALUE).boxed(), day().chars().mapToObj(c -> charToDir((char)c)))
-            .map(d -> d.a() % 2 == 0 ? santa.set(d.b().move(santa.get())) : robo.set(d.b().move(robo.get())))
+    return zipWithIndex(day().chars().mapToObj(c -> charToDir((char)c)))
+            .map(d -> d.i() % 2 == 0 ? santa.set(d.e().move(santa.get())) : robo.set(d.e().move(robo.get())))
             .distinct()
             .count();
   }
