@@ -41,6 +41,7 @@ public class DoubleLoc {
     this.x = x;
     this.y = y;
   }
+
   public double getX() {
     return x;
   }

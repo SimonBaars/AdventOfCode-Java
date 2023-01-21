@@ -20,21 +20,21 @@ public class Day3 extends Day2015 {
   public Object part1() {
     MutableLoc loc = new MutableLoc();
     return day()
-            .chars()
-            .mapToObj(c -> charToDir((char)c))
-            .map(d -> loc.set(d.move(loc.get())))
-            .distinct()
-            .count();
+        .chars()
+        .mapToObj(c -> charToDir((char) c))
+        .map(d -> loc.set(d.move(loc.get())))
+        .distinct()
+        .count();
   }
 
   @Override
   public Object part2() {
     MutableLoc santa = new MutableLoc();
     MutableLoc robo = new MutableLoc();
-    return zipWithIndex(day().chars().mapToObj(c -> charToDir((char)c)))
-            .map(d -> d.i() % 2 == 0 ? santa.set(d.e().move(santa.get())) : robo.set(d.e().move(robo.get())))
-            .distinct()
-            .count();
+    return zipWithIndex(day().chars().mapToObj(c -> charToDir((char) c)))
+        .map(d -> d.i() % 2 == 0 ? santa.set(d.e().move(santa.get())) : robo.set(d.e().move(robo.get())))
+        .distinct()
+        .count();
   }
 
   public Direction charToDir(char c) {

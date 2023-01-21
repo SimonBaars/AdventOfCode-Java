@@ -41,18 +41,18 @@ public class SmartArray<T> {
   }
 
   public void remove(int index) {
-     move(index, --size);
+    move(index, --size);
   }
 
   public void add(T element) {
-    if(size >= elements.length) throw new IllegalStateException("This array is full!");
+    if (size >= elements.length) throw new IllegalStateException("This array is full!");
     elements[size] = element;
     elementIndex.put(element, size);
     size++;
   }
 
   public boolean removeElement(T element) {
-    if(elementIndex.containsKey(element)) {
+    if (elementIndex.containsKey(element)) {
       remove(indexOf(element));
       elementIndex.remove(element);
       return true;
@@ -60,14 +60,14 @@ public class SmartArray<T> {
     return false;
   }
 
-  public boolean contains(T element){
+  public boolean contains(T element) {
     return elementIndex.containsKey(element);
   }
 
   @SuppressWarnings("unchecked")
   public T[] toArray() {
-    if(size == elements.length) return elements;
-    T[] arr = (T[])new Object[size];
+    if (size == elements.length) return elements;
+    T[] arr = (T[]) new Object[size];
     System.arraycopy(elements, 0, arr, 0, size);
     return arr;
   }

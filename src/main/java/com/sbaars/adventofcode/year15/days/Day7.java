@@ -22,7 +22,7 @@ public class Day7 extends Day2015 {
     new Day7().printParts();
   }
 
-  public record Op (String op, String variable) {
+  public record Op(String op, String variable) {
     private String[] expression() {
       return op.split(" ");
     }
@@ -41,14 +41,17 @@ public class Day7 extends Day2015 {
 
   private int solution(Optional<Integer> start) {
     var ops = dayStream()
-            .map(s -> s.endsWith(" -> b") && start.isPresent() ? start.get() + " -> b" : s)
-            .map(s -> readString(s, "%s -> %s", Op.class))
-            .toList();
+        .map(s -> s.endsWith(" -> b") && start.isPresent() ? start.get() + " -> b" : s)
+        .map(s -> readString(s, "%s -> %s", Op.class))
+        .toList();
     return fixedPoint(
-            (Map<String, Integer>)new HashMap<String, Integer>(),
-            prev -> ops.stream()
-                    .filter(op -> !prev.containsKey(op.variable))
-                    .reduce(prev, this::computeOutput, (a, b) -> {a.putAll(b); return a;})
+        (Map<String, Integer>) new HashMap<String, Integer>(),
+        prev -> ops.stream()
+            .filter(op -> !prev.containsKey(op.variable))
+            .reduce(prev, this::computeOutput, (a, b) -> {
+              a.putAll(b);
+              return a;
+            })
     ).get("a");
   }
 
@@ -73,7 +76,7 @@ public class Day7 extends Day2015 {
     var variable1 = getVariable(solved, expr[0]);
     var variable2 = getVariable(solved, expr[2]);
     var operator = expr[1];
-    if(variable1.isPresent() && variable2.isPresent()) {
+    if (variable1.isPresent() && variable2.isPresent()) {
       int v1 = variable1.get();
       int v2 = variable2.get();
       solved.put(op.variable, compute(v1, operator, v2));
@@ -94,7 +97,7 @@ public class Day7 extends Day2015 {
     try {
       return of(parseInt(name));
     } catch (NumberFormatException e) {
-      if(!sol.containsKey(name)) {
+      if (!sol.containsKey(name)) {
         return empty();
       }
       return of(sol.get(name));

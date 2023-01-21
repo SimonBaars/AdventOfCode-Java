@@ -47,12 +47,14 @@ public class Day12 extends Day2020 {
     for (Flight f : input) {
       switch (f.dir) {
         case 'L', 'R' -> waypoint = turnDegrees(waypoint, f.distance, f.dir == 'R');
-        case 'F' -> location = new Point(location.x + (waypoint.x * f.distance), location.y + (waypoint.y * f.distance));
+        case 'F' ->
+            location = new Point(location.x + (waypoint.x * f.distance), location.y + (waypoint.y * f.distance));
         default -> waypoint = Direction.getByDir(f.dir).move(waypoint, f.distance);
       }
     }
     return abs(location.x) + abs(location.y);
   }
 
-  public record Flight(char dir, int distance) {}
+  public record Flight(char dir, int distance) {
+  }
 }

@@ -22,7 +22,7 @@ public class Day25 extends Day2022 {
   public Object part1() {
     long res = dayStream().mapToLong(this::decimal).sum();
     StringBuilder out = new StringBuilder();
-    while(res > 0) {
+    while (res > 0) {
       int n = toIntExact((res + 2) % 5);
       res = (res + 2) / 5;
       out.insert(0, digits.get(n));
@@ -32,11 +32,11 @@ public class Day25 extends Day2022 {
 
   private long decimal(String s) {
     long num = 0;
-    for(int i = 0; i< s.length(); i++) {
-      char c = s.charAt(s.length()-1-i);
+    for (int i = 0; i < s.length(); i++) {
+      char c = s.charAt(s.length() - 1 - i);
       long n = digits.indexOf(c) - 2L;
-      long rad = (long)Math.pow(5,i);
-      num+=n*rad;
+      long rad = (long) Math.pow(5, i);
+      num += n * rad;
     }
     return num;
   }

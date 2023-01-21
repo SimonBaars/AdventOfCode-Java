@@ -45,11 +45,11 @@ public class IntArray {
   }
 
   public void remove(int index) {
-     move(index, --size);
+    move(index, --size);
   }
 
   public boolean removeElement(int element) {
-    if(elementIndex.containsKey(element)) {
+    if (elementIndex.containsKey(element)) {
       remove(indexOf(element));
       elementIndex.remove(element);
       return true;
@@ -57,12 +57,12 @@ public class IntArray {
     return false;
   }
 
-  public boolean contains(int element){
+  public boolean contains(int element) {
     return elementIndex.containsKey(element);
   }
 
   public int[] toArray() {
-    if(size == elements.length) return elements;
+    if (size == elements.length) return elements;
     int[] arr = new int[size];
     System.arraycopy(elements, 0, arr, 0, size);
     return arr;

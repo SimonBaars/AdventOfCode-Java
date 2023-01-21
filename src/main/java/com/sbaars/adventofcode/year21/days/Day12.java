@@ -35,14 +35,14 @@ public class Day12 extends Day2021 implements HasRecursion {
   }
 
   private long findPos(String s, ListMap<String, String> in, Set<String> visited) {
-    if(s.equals("end")) return 1;
+    if (s.equals("end")) return 1;
     long n = 0;
     List<String> reachable = in.get(s);
-    for(String l : reachable){
-      if(!visited.contains(l)) {
+    for (String l : reachable) {
+      if (!visited.contains(l)) {
         Set<String> newSet = new HashSet<>(visited);
-        if(!l.toUpperCase().equals(l)) newSet.add(l);
-        n+=findPos(l, in, newSet);
+        if (!l.toUpperCase().equals(l)) newSet.add(l);
+        n += findPos(l, in, newSet);
       }
     }
     return n;
@@ -54,16 +54,16 @@ public class Day12 extends Day2021 implements HasRecursion {
   }
 
   private long findPos2(String s, ListMap<String, String> in, Map<String, Integer> visited) {
-    if(s.equals("end")) {
+    if (s.equals("end")) {
       return 1;
     }
     long n = 0;
     List<String> reachable = in.get(s);
-    for(String l : reachable){
-      if((!visited.containsKey(l) || visited.get(l) < 2) && visited.values().stream().filter(e -> e==2).count() <= 2) {
+    for (String l : reachable) {
+      if ((!visited.containsKey(l) || visited.get(l) < 2) && visited.values().stream().filter(e -> e == 2).count() <= 2) {
         CountMap<String> newSet = new CountMap<>(visited);
-        if(!l.toUpperCase().equals(l)) newSet.increment(l);
-        n+=findPos2(l, in, newSet);
+        if (!l.toUpperCase().equals(l)) newSet.increment(l);
+        n += findPos2(l, in, newSet);
       }
     }
     return n;

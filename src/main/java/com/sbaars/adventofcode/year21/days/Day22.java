@@ -27,12 +27,12 @@ public class Day22 extends Day2021 {
   public Object part1() {
     var in = dayStream().map(e -> readString(e, "%s x=%n..%n,y=%n..%n,z=%n..%n", Cube.class)).toList();
     Set<Loc3D> locs = new HashSet<>();
-    for(Cube c : in){
-      for(long i = Math.max(c.xStart, -50); i<=Math.min(c.xEnd, 50); i++){
-        for(long j = Math.max(c.yStart, -50); j<=Math.min(c.yEnd, 50); j++){
-          for(long k = Math.max(c.zStart, -50); k<=Math.min(c.zEnd, 50); k++){
+    for (Cube c : in) {
+      for (long i = Math.max(c.xStart, -50); i <= Math.min(c.xEnd, 50); i++) {
+        for (long j = Math.max(c.yStart, -50); j <= Math.min(c.yEnd, 50); j++) {
+          for (long k = Math.max(c.zStart, -50); k <= Math.min(c.zEnd, 50); k++) {
             Loc3D l = new Loc3D(i, j, k);
-            if(c.status.equals("on")){
+            if (c.status.equals("on")) {
               locs.add(l);
             } else {
               locs.remove(l);
@@ -48,8 +48,8 @@ public class Day22 extends Day2021 {
   public Object part2() {
     var in = dayStream().map(e -> readString(e, "%s x=%n..%n,y=%n..%n,z=%n..%n", Cube.class)).toList();
     List<Cube> cubes = new ArrayList<>();
-    for(Cube cur : in) {
-      Cube cu = new Cube(cur.status, cur.xStart, cur.xEnd+1, cur.yStart, cur.yEnd+1, cur.zStart, cur.zEnd+1);
+    for (Cube cur : in) {
+      Cube cu = new Cube(cur.status, cur.xStart, cur.xEnd + 1, cur.yStart, cur.yEnd + 1, cur.zStart, cur.zEnd + 1);
       cubes = cubes.stream().flatMap(c -> c.getSubCubes(cu)).collect(Collectors.toCollection(ArrayList::new));
       if (cu.status.equals("on")) {
         cubes.add(cu);
@@ -62,7 +62,7 @@ public class Day22 extends Day2021 {
     return BigInteger.valueOf(c.xEnd - c.xStart).multiply(BigInteger.valueOf(c.yEnd - c.yStart)).multiply(BigInteger.valueOf(c.zEnd - c.zStart));
   }
 
-  public record Cube (String status, long xStart, long xEnd, long yStart, long yEnd, long zStart, long zEnd) {
+  public record Cube(String status, long xStart, long xEnd, long yStart, long yEnd, long zStart, long zEnd) {
     private Stream<Cube> getSubCubes(Cube c2) {
       if (c2.contains(this)) {
         return Stream.of();
@@ -82,10 +82,10 @@ public class Day22 extends Day2021 {
       zIntersect.add(zEnd);
 
       var res = new ArrayList<Cube>();
-      for (int i = 0; i<xIntersect.size()-1; i++) {
-        for (int j = 0; j<yIntersect.size()-1; j++) {
-          for (int k = 0; k<zIntersect.size()-1; k++) {
-            res.add(new Cube(status, xIntersect.get(i), xIntersect.get(i+1), yIntersect.get(j), yIntersect.get(j+1), zIntersect.get(k), zIntersect.get(k+1)));
+      for (int i = 0; i < xIntersect.size() - 1; i++) {
+        for (int j = 0; j < yIntersect.size() - 1; j++) {
+          for (int k = 0; k < zIntersect.size() - 1; k++) {
+            res.add(new Cube(status, xIntersect.get(i), xIntersect.get(i + 1), yIntersect.get(j), yIntersect.get(j + 1), zIntersect.get(k), zIntersect.get(k + 1)));
           }
         }
       }

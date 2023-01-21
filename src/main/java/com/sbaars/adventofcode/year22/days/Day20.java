@@ -24,7 +24,7 @@ public class Day20 extends Day2022 {
 
   public long solve(long multiplier, int times) {
     CircularList in = new CircularList(dayNumberStream().map(l -> l * multiplier).toArray());
-    for(int j = 0; j<times; j++) {
+    for (int j = 0; j < times; j++) {
       for (int i = 0; i < in.values.size(); i++) {
         var toMove = in.values.get(i);
         var moveTo = in.move(toMove, toMove.value);
@@ -33,6 +33,6 @@ public class Day20 extends Day2022 {
     }
     in.setCurrent(in.values.stream().filter(n -> n.value == 0).findAny().get());
     long[] nums = in.next(3000);
-    return nums[1000-1] + nums[2000-1] + nums[3000-1];
+    return nums[1000 - 1] + nums[2000 - 1] + nums[3000 - 1];
   }
 }

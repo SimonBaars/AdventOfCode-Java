@@ -85,12 +85,11 @@ public class Day20 extends Day2019 {
       for (Route route : routes.get(s.pos)) {
         int level = s.level;
         int distance = route.distance + s.totalSteps;
-        if (level == 0 && route.goal.equals(exit) && distance < min){
+        if (level == 0 && route.goal.equals(exit) && distance < min) {
           min = distance;
-        } else if(distance > min) {
+        } else if (distance > min) {
           break;
-        }
-        else if (route.goal.equals(exit)) continue;
+        } else if (route.goal.equals(exit)) continue;
         if (b) level += route.goal.isOuter ? 1 : -1;
         if (s.level < 0) continue;
         queue.add(new State(route.goal, level, s.totalSteps + route.distance));
@@ -120,9 +119,12 @@ public class Day20 extends Day2019 {
     return findRoutes(true);
   }
 
-  record Portal(Point pos, boolean isOuter) {}
+  record Portal(Point pos, boolean isOuter) {
+  }
 
-  record Route(Portal goal, int distance) {}
+  record Route(Portal goal, int distance) {
+  }
 
-  record State(Portal pos, int level, int totalSteps) {}
+  record State(Portal pos, int level, int totalSteps) {
+  }
 }

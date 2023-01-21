@@ -22,8 +22,11 @@ public class Day7 extends Day2022 implements HasRecursion {
     new Day7().printParts();
   }
 
-  public record Node(Map<String, Node> children, long size){}
-  public record File(long size, String name){}
+  public record Node(Map<String, Node> children, long size) {
+  }
+
+  public record File(long size, String name) {
+  }
 
   @Override
   public Object part1() {
@@ -32,7 +35,7 @@ public class Day7 extends Day2022 implements HasRecursion {
 
   public Node findChildren(String[] commands, AtomicInteger index) {
     Map<String, Node> children = new HashMap<>();
-    for(; index.get()<commands.length; index.incrementAndGet()) {
+    for (; index.get() < commands.length; index.incrementAndGet()) {
       String c = commands[index.get()];
       if (c.charAt(0) == '$') {
         String command = c.substring(2);
@@ -43,7 +46,7 @@ public class Day7 extends Day2022 implements HasRecursion {
           children.put(folder, findChildren(commands, index));
         }
       } else {
-        if(c.startsWith("dir")) {
+        if (c.startsWith("dir")) {
           String dirName = c.substring(4);
           children.put(dirName, new Node(new HashMap<>(), 0));
         } else {
@@ -57,9 +60,9 @@ public class Day7 extends Day2022 implements HasRecursion {
 
   public long sumSize(Node n) {
     long total = 0;
-    for(Node node : n.children.values()) {
-      if(node.size<=100000 && !node.children.isEmpty()) {
-        total+=node.size;
+    for (Node node : n.children.values()) {
+      if (node.size <= 100000 && !node.children.isEmpty()) {
+        total += node.size;
       }
       total += sumSize(node);
     }
@@ -68,8 +71,8 @@ public class Day7 extends Day2022 implements HasRecursion {
 
   public List<Long> sumSize(Node n, long sizeRoot) {
     List<Long> total = new ArrayList<>();
-    for(Node node : n.children.values()) {
-      if(node.size>=sizeRoot-(70000000-30000000) && !node.children.isEmpty()) {
+    for (Node node : n.children.values()) {
+      if (node.size >= sizeRoot - (70000000 - 30000000) && !node.children.isEmpty()) {
         total.add(node.size);
       }
       total.addAll(sumSize(node, sizeRoot));

@@ -9,6 +9,7 @@ import java.util.HashSet;
 public class Day12 extends Day2019 {
   int[][] moons = {{-5, 6, -11}, {-8, -4, -2}, {1, 16, 4}, {11, 11, -4}};
   int[][] velocity = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+
   public Day12() {
     super(12);
   }

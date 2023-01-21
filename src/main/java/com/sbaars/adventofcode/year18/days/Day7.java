@@ -28,7 +28,7 @@ public class Day7 extends Day2018 {
     var input = input();
     var done = new HashSet<Node<Character>>();
     StringBuilder output = new StringBuilder();
-    while(done.size() != input.getNodes().size()) {
+    while (done.size() != input.getNodes().size()) {
       var next = input.stream().filter(n -> !done.contains(n) && done.containsAll(n.parents())).sorted().findFirst().get();
       done.add(next);
       output.append(next.data());
@@ -42,9 +42,9 @@ public class Day7 extends Day2018 {
     var done = new HashSet<Node<Character>>();
     var queue = new PriorityQueue<MutablePair<Integer, Node<Character>>>(5);
     int total = 0;
-    while(done.size() != input.getNodes().size()) {
+    while (done.size() != input.getNodes().size()) {
       var next = input.stream().filter(n -> !done.contains(n) && queue.stream().noneMatch(p -> p.b().equals(n)) && done.containsAll(n.parents())).sorted().findFirst();
-      if(next.isEmpty() || queue.size() == 5) {
+      if (next.isEmpty() || queue.size() == 5) {
         var mins = queue.poll();
         total += mins.a();
         queue.forEach(p -> p.setA(p.a() - mins.a()));

@@ -26,10 +26,10 @@ public class Day10 extends Day2019 {
 
   private static Pair<Loc, Long> getBase(Set<Loc> asteroids) {
     return asteroids.stream()
-            .map(a -> new Pair<>(a, asteroids.stream().filter(e -> !e.equals(a)).map(e -> e.rotation(a)).distinct().count()))
-            .sorted(Comparator.comparingDouble(Pair::b))
-            .reduce((a, b) -> b)
-            .get();
+        .map(a -> new Pair<>(a, asteroids.stream().filter(e -> !e.equals(a)).map(e -> e.rotation(a)).distinct().count()))
+        .sorted(Comparator.comparingDouble(Pair::b))
+        .reduce((a, b) -> b)
+        .get();
   }
 
   @Override
@@ -39,7 +39,7 @@ public class Day10 extends Day2019 {
     AtomicDouble rotation = new AtomicDouble(-1);
     for (int destroyed = 1; true; destroyed++) {
       rotation.set(asteroids.stream().mapToDouble(base::rotation).filter(e -> e > rotation.get()).min().orElseGet(() -> asteroids.stream().mapToDouble(base::rotation).min().getAsDouble()));
-      if(destroyed == 200) {
+      if (destroyed == 200) {
         Loc l = asteroids.stream().filter(e -> base.rotation(e) == rotation.get()).reduce((a1, a2) -> a1.distanceDouble(base) < a2.distanceDouble(base) ? a1 : a2).get();
         return (l.x * 100) + l.y;
       }

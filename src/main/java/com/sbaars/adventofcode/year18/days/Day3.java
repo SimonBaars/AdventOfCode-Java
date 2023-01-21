@@ -24,11 +24,11 @@ public class Day3 extends Day2018 {
     List<Claim> input = input();
     Set<Loc> all = new HashSet<>();
     Set<Loc> overlap = new HashSet<>();
-    for(Claim c : input){
-      for(int i = 0; i<c.sizex; i++){
-        for(int j = 0; j<c.sizey; j++){
+    for (Claim c : input) {
+      for (int i = 0; i < c.sizex; i++) {
+        for (int j = 0; j < c.sizey; j++) {
           Loc loc = new Loc(c.x + i, c.y + j);
-          if(!all.add(loc)){
+          if (!all.add(loc)) {
             overlap.add(loc);
           }
         }
@@ -47,9 +47,9 @@ public class Day3 extends Day2018 {
     return dayStream().map(e -> readString(e, "#%n @ %n,%n: %nx%n", Claim.class)).toList();
   }
 
-  public record Claim(long id, long x, long y, long sizex, long sizey){
+  public record Claim(long id, long x, long y, long sizex, long sizey) {
     public Range getRange() {
-      return new Range(x, y, x+sizex, y+sizey);
+      return new Range(x, y, x + sizex, y + sizey);
     }
   }
 }

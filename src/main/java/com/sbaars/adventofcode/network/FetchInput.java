@@ -49,11 +49,11 @@ public class FetchInput {
   }
 
   // Turn Windows line separators into *nix ones
-  private String clean(String file){
+  private String clean(String file) {
     return file
         .replace("\r\n", "\n")
         .replace("&gt;", ">")
-            .replace("&lt;", "<");
+        .replace("&lt;", "<");
   }
 
   private void runForYear(String year) {

@@ -17,7 +17,8 @@ public class Day9 extends Day2018 {
     new Day9().printParts();
   }
 
-  public record Input(long nPlayers, long lastMarble) {}
+  public record Input(long nPlayers, long lastMarble) {
+  }
 
   @Override
   public Object part1() {
@@ -29,9 +30,9 @@ public class Day9 extends Day2018 {
     int nMarbles = toIntExact(input.lastMarble) * (part2 ? 100 : 1);
     CircularList cl = new CircularList(new long[]{0}, nMarbles);
     LongCountMap<Long> lcm = new LongCountMap<>();
-    for(int i = 1; i<=nMarbles; i++) {
-      if(i % 23 == 0) {
-        long player = (i-1) % input.nPlayers;
+    for (int i = 1; i <= nMarbles; i++) {
+      if (i % 23 == 0) {
+        long player = (i - 1) % input.nPlayers;
         lcm.increment(player, i);
         cl.setCurrent(cl.currentNode().move(-6));
         lcm.increment(player, cl.remove(cl.currentNode().prev).value);

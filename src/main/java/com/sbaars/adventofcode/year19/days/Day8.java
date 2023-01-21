@@ -12,6 +12,7 @@ public class Day8 extends Day2019 implements ProcessesImages {
   private static final int DIM_X = 6;
   private static final int DIM_Y = 25;
   private static final int SIZE = DIM_X * DIM_Y;
+
   public Day8() {
     super(8);
   }

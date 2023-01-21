@@ -22,17 +22,18 @@ public class Day1 extends Day2016 {
     d.submitPart2();
   }
 
-  record Move (boolean right, int dist) {}
+  record Move(boolean right, int dist) {
+  }
 
   @Override
   public Object part1() {
     List<Move> moves = dayStream(", ")
-            .map(String::trim)
-            .map(s -> new Move(s.charAt(0) == 'R', Integer.parseInt(s.substring(1))))
-            .toList();
+        .map(String::trim)
+        .map(s -> new Move(s.charAt(0) == 'R', Integer.parseInt(s.substring(1))))
+        .toList();
     Point p = new Point(0, 0);
     Direction dir = Direction.NORTH;
-    for(Move m : moves) {
+    for (Move m : moves) {
       dir = dir.turn(m.right);
       p = dir.moveFix(p, m.dist);
     }
@@ -42,18 +43,18 @@ public class Day1 extends Day2016 {
   @Override
   public Object part2() {
     List<Move> moves = dayStream(", ")
-            .map(String::trim)
-            .map(s -> new Move(s.charAt(0) == 'R', Integer.parseInt(s.substring(1))))
-            .toList();
+        .map(String::trim)
+        .map(s -> new Move(s.charAt(0) == 'R', Integer.parseInt(s.substring(1))))
+        .toList();
     Point p = new Point(0, 0);
     Direction dir = Direction.NORTH;
     Set<Point> visited = new HashSet<>();
     visited.add(p);
-    for(Move m : moves) {
+    for (Move m : moves) {
       dir = dir.turn(m.right);
-      for(int i = 0; i<m.dist; i++){
+      for (int i = 0; i < m.dist; i++) {
         p = dir.moveFix(p, 1);
-        if(!visited.add(p)){
+        if (!visited.add(p)) {
           return Math.abs(p.x) + Math.abs(p.y);
         }
       }

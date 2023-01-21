@@ -32,20 +32,20 @@ public class Day20 extends Day2021 {
     char[] replace = in[0].toCharArray();
     CharGrid inputImage = new CharGrid(in[1]);
     Coordinates inputCoords = new Coordinates(IntLoc.range(inputImage.grid.length, inputImage.grid[0].length)
-        .filter(e -> inputImage.grid[e.y][e.x]=='#')
+        .filter(e -> inputImage.grid[e.y][e.x] == '#')
         .map(IntLoc::getPoint)
         .collect(Collectors.toSet()));
     Coordinates outputImage = new Coordinates();
-    for(int it = 0; it<times; it++){
+    for (int it = 0; it < times; it++) {
       int iteration = it;
       NumGrid n = inputCoords.toGrid();
-      for(int i = -times; i<=n.sizeX()+times; i++){
-        for(int j = -times; j<=n.sizeY()+times; j++){
+      for (int i = -times; i <= n.sizeX() + times; i++) {
+        for (int j = -times; j <= n.sizeY() + times; j++) {
           Point thisPoint = new Point(i, j);
           String bin = Stream.of(NORTHWEST, NORTH, NORTHEAST, WEST, CENTER, EAST, SOUTHWEST, SOUTH, SOUTHEAST)
-              .map(dir -> Long.toString(n.at(dir.move(thisPoint), iteration%2==1 && replace[0] == '#' ? 1 : 0)))
+              .map(dir -> Long.toString(n.at(dir.move(thisPoint), iteration % 2 == 1 && replace[0] == '#' ? 1 : 0)))
               .collect(Collectors.joining());
-          if(replace[binToDec(bin)] == '#'){
+          if (replace[binToDec(bin)] == '#') {
             outputImage.add(thisPoint);
           }
         }

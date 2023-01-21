@@ -36,7 +36,7 @@ public class Day6 extends Day2015 {
   public Object part1() {
     InfiniteGrid g = new InfiniteGrid();
     inputStream().forEach(action -> action.getRange().stream().forEach(l -> {
-      if((action.isToggle() && g.contains(l)) || (!action.isToggle() && !action.isOn())){
+      if ((action.isToggle() && g.contains(l)) || (!action.isToggle() && !action.isOn())) {
         g.grid.remove(l);
       } else {
         g.set(l, '#');
@@ -51,14 +51,14 @@ public class Day6 extends Day2015 {
     inputStream().forEach(action -> {
       action.getRange().stream().forEach(l -> {
         int add = action.isToggle() ? 2 : action.isOn() ? 1 : -1;
-        if(g.contains(l)) {
+        if (g.contains(l)) {
           g.set(l, (char) Math.max(g.grid.get(l) + add, 0));
-        } else if(action.isOn() || action.isToggle()){
-          g.set(l, (char)add);
+        } else if (action.isOn() || action.isToggle()) {
+          g.set(l, (char) add);
         }
       });
     });
-    return g.grid.values().stream().mapToInt(c -> (int)c).sum();
+    return g.grid.values().stream().mapToInt(c -> (int) c).sum();
   }
 
   private Stream<Input> inputStream() {

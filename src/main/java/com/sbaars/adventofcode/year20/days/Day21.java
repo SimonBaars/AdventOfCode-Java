@@ -53,7 +53,7 @@ public class Day21 extends Day2020 {
   }
 
   public SetMap<String, String> removeDuplicates(SetMap<String, String> allergens) {
-    while(allergens.values().stream().anyMatch(e -> e.size() > 1)) {
+    while (allergens.values().stream().anyMatch(e -> e.size() > 1)) {
       Set<String> singular = allergens.values().stream().filter(e -> e.size() == 1).flatMap(e -> e.stream().findFirst().stream()).collect(Collectors.toSet());
       allergens.values().stream().filter(e -> e.size() > 1).forEach(a -> a.removeAll(singular));
     }
@@ -67,5 +67,6 @@ public class Day21 extends Day2020 {
     return allergens.entrySet().stream().sorted(comparingByKey()).map(e -> e.getValue().stream().findAny().get()).collect(Collectors.joining(","));
   }
 
-  public record Rule(List<String> ingredients, List<String> allergens) {}
+  public record Rule(List<String> ingredients, List<String> allergens) {
+  }
 }

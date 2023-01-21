@@ -22,10 +22,10 @@ public class Day1 extends Day2022 {
   @Override
   public Object part2() {
     long[] nums = input().sorted().toArray();
-    return nums[nums.length-1] + nums[nums.length-2] + nums[nums.length-3];
+    return nums[nums.length - 1] + nums[nums.length - 2] + nums[nums.length - 3];
   }
 
-  private LongStream input () {
+  private LongStream input() {
     return dayStream("\n\n").mapToLong(s -> Arrays.stream(s.split("\n")).mapToLong(Long::parseLong).sum());
   }
 }

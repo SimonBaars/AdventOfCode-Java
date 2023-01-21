@@ -29,9 +29,9 @@ public class Day15 extends Day2022 {
     List<Range> posList = input();
     InfiniteGrid g = posList.stream().flatMap(Range::flatten).collect(toInfiniteGrid('X'));
     return IntStream.range(-1000000, 5000000) // These values were found by trial-and-error
-            .mapToObj(i -> new Loc(i, 2000000))
-            .filter(l -> posList.stream().anyMatch(p -> p.inDiamond(l) && g.get(l).isEmpty()))
-            .count();
+        .mapToObj(i -> new Loc(i, 2000000))
+        .filter(l -> posList.stream().anyMatch(p -> p.inDiamond(l) && g.get(l).isEmpty()))
+        .count();
   }
 
   @Override
@@ -39,27 +39,27 @@ public class Day15 extends Day2022 {
     List<Range> posList = input();
     Range target = new Range(new Loc(0, 0), new Loc(4000000, 4000000));
     List<Range> lines = posList.stream()
-            .flatMap(p -> stream(fourDirections()).map(d -> new Range(d.move(p.start, p.distance()), d.turn().move(p.start, p.distance()))))
-            .toList();
+        .flatMap(p -> stream(fourDirections()).map(d -> new Range(d.move(p.start, p.distance()), d.turn().move(p.start, p.distance()))))
+        .toList();
     return allPairs(lines).flatMap(p -> p.a().intersectsWith(p.b()).stream())
-            .filter(target::inRange)
-            .flatMap(Loc::fourDirs)
-            .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
-            .mapToLong(l -> l.x * 4000000 + l.y)
-            .findAny()
-            .getAsLong();
+        .filter(target::inRange)
+        .flatMap(Loc::fourDirs)
+        .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
+        .mapToLong(l -> l.x * 4000000 + l.y)
+        .findAny()
+        .getAsLong();
   }
 
   public Object part3() {
     List<Range> posList = input();
     Range target = new Range(new Loc(0, 0), new Loc(4000000, 4000000));
     return input().stream()
-            .flatMap(p -> stream(fourDirections()).flatMap(d -> d.move(p.start, p.distance() + 1).walk(d.turnSteps(3), p.distance() + 1)))
-            .filter(target::inRange)
-            .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
-            .mapToLong(l -> l.x * 4000000 + l.y)
-            .findAny()
-            .getAsLong();
+        .flatMap(p -> stream(fourDirections()).flatMap(d -> d.move(p.start, p.distance() + 1).walk(d.turnSteps(3), p.distance() + 1)))
+        .filter(target::inRange)
+        .filter(l -> posList.stream().noneMatch(p -> p.inDiamond(l)))
+        .mapToLong(l -> l.x * 4000000 + l.y)
+        .findAny()
+        .getAsLong();
   }
 
   private List<Range> input() {

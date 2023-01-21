@@ -22,31 +22,32 @@ public class Day5 extends Day2022 {
     new Day5().printParts();
   }
 
-  public record Move(long which, long from, long to) {}
+  public record Move(long which, long from, long to) {
+  }
 
   @Override
   public Object part1() {
     List<Deque<Integer>> stacks = input();
     List<Move> moves = getMoves();
-    for(Move m : moves) {
-      for(int i = 0; i<m.which; i++) {
-        int top = stacks.get(toIntExact(m.from-1)).pop();
-        stacks.get(toIntExact(m.to-1)).push(top);
+    for (Move m : moves) {
+      for (int i = 0; i < m.which; i++) {
+        int top = stacks.get(toIntExact(m.from - 1)).pop();
+        stacks.get(toIntExact(m.to - 1)).push(top);
       }
     }
-    return stacks.stream().map(Deque::peek).map(e -> Character.toString((char)(int)e)).collect(Collectors.joining());
+    return stacks.stream().map(Deque::peek).map(e -> Character.toString((char) (int) e)).collect(Collectors.joining());
   }
 
   @Override
   public Object part2() {
     List<Deque<Integer>> stacks = input();
     List<Move> moves = getMoves();
-    for(Move m : moves) {
+    for (Move m : moves) {
       List<Integer> toBeMoved = new ArrayList<>();
-      for(int i = 0; i<m.which; i++) toBeMoved.add(0, stacks.get(toIntExact(m.from-1)).pop());
-      toBeMoved.forEach(i -> stacks.get(toIntExact(m.to-1)).push(i));
+      for (int i = 0; i < m.which; i++) toBeMoved.add(0, stacks.get(toIntExact(m.from - 1)).pop());
+      toBeMoved.forEach(i -> stacks.get(toIntExact(m.to - 1)).push(i));
     }
-    return stacks.stream().map(Deque::peek).map(e -> Character.toString((char)(int)e)).collect(Collectors.joining());
+    return stacks.stream().map(Deque::peek).map(e -> Character.toString((char) (int) e)).collect(Collectors.joining());
   }
 
   private List<Move> getMoves() {
@@ -55,7 +56,7 @@ public class Day5 extends Day2022 {
 
   private static List<Deque<Integer>> input() {
     List<Deque<Integer>> stacks = new ArrayList<>();
-    for(int i = 1; i<=9; i++){
+    for (int i = 1; i <= 9; i++) {
       Deque<Integer> s = new ArrayDeque<>();
       switch (i) {
         case 1 -> "NSDCVQT".chars().forEach(s::push);

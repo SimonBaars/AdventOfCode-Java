@@ -22,12 +22,12 @@ public class Day2 extends Day2018 {
   public Object part1() {
     int two = 0, three = 0;
     String[] input = dayStrings();
-    for(String i : input){
-      List<Integer> counts = i.chars().mapToObj(c -> (i+"_").split(Character.toString(c)).length - 1).toList();
-      if(counts.contains(2)) {
+    for (String i : input) {
+      List<Integer> counts = i.chars().mapToObj(c -> (i + "_").split(Character.toString(c)).length - 1).toList();
+      if (counts.contains(2)) {
         two++;
       }
-      if(counts.contains(3)) {
+      if (counts.contains(3)) {
         three++;
       }
     }
@@ -44,7 +44,7 @@ public class Day2 extends Day2018 {
     int differences = 0;
     int diffIndex = -1;
     for (int i = 0; i < str.a().length(); i++) {
-      if(str.a().charAt(i) != str.b().charAt(i)) {
+      if (str.a().charAt(i) != str.b().charAt(i)) {
         diffIndex = i;
         if (++differences > 1) {
           return empty();

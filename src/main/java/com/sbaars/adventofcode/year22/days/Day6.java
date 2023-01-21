@@ -22,7 +22,7 @@ public class Day6 extends Day2022 {
 
   private int calculateAnswer(int size) {
     String s = day();
-    return IntStream.range(0, s.length()).filter(i -> s.substring(i, i+size).chars().distinct().count() == size).findFirst().getAsInt() + size;
+    return IntStream.range(0, s.length()).filter(i -> s.substring(i, i + size).chars().distinct().count() == size).findFirst().getAsInt() + size;
   }
 
   @Override

@@ -27,7 +27,7 @@ public class Day15 extends Day2019 {
     for (int[] row : grid) Arrays.fill(row, UNEXPLORED);
     grid[START_POINT.intY()][START_POINT.intX()] = 1;
     Loc pos = START_POINT;
-    while(pos != null) {
+    while (pos != null) {
       explore(pos, ic);
       pos = moveToUnexploredPlace(pos, ic);
     }

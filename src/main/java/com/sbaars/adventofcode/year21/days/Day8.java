@@ -72,26 +72,26 @@ public class Day8 extends Day2021 {
     };
   }
 
-  private String getBottomLeft(String[] line, boolean mirror){
+  private String getBottomLeft(String[] line, boolean mirror) {
     List<String> l = asList(line);
     IntArray possible = new IntArray("abcdefg".chars());
-    l.stream().filter(e -> e.length() >=2 && e.length() <=4)
+    l.stream().filter(e -> e.length() >= 2 && e.length() <= 4)
         .forEach(e -> (mirror ? difference(e) : e).chars().forEach(possible::removeElement));
-    if(possible.size()>1){
+    if (possible.size() > 1) {
       return Character.toString(getPotentialUniques(line).stream().filter(possible::contains).findAny().get());
     }
     return Character.toString(possible.get(0));
   }
 
-  public Set<Integer> getPotentialUniques(String[] line){
-    return Stream.of(line).filter(e -> e.length() == 6).map(this::difference).map(e -> (int)e.toCharArray()[0]).collect(Collectors.toSet());
+  public Set<Integer> getPotentialUniques(String[] line) {
+    return Stream.of(line).filter(e -> e.length() == 6).map(this::difference).map(e -> (int) e.toCharArray()[0]).collect(Collectors.toSet());
   }
 
   private String difference(String a) {
     return StringUtils.removeAll("abcdefg", a);
   }
 
-  private boolean getMiddle(String[] line, String a){
+  private boolean getMiddle(String[] line, String a) {
     return Stream.of(line).filter(e -> e.length() == 2 || e.length() == 3).allMatch(e -> charSubset(e, a));
   }
 }

@@ -23,8 +23,8 @@ public class Day3 extends Day2021 implements HasRecursion {
     StringBuilder most = new StringBuilder();
     StringBuilder least = new StringBuilder();
 
-    for(int i = 0; i<in[0].length(); i++){
-      if(moreZeros(in, i)){
+    for (int i = 0; i < in[0].length(); i++) {
+      if (moreZeros(in, i)) {
         most.append("0");
         least.append("1");
       } else {
@@ -37,14 +37,14 @@ public class Day3 extends Day2021 implements HasRecursion {
 
   private boolean moreZeros(String[] in, int i) {
     int ones = 0, zeros = 0;
-    for(String s : in){
-      if(s.charAt(i) == '1'){
+    for (String s : in) {
+      if (s.charAt(i) == '1') {
         ones++;
       } else {
         zeros++;
       }
     }
-    return ones<zeros;
+    return ones < zeros;
   }
 
   @Override
@@ -55,8 +55,8 @@ public class Day3 extends Day2021 implements HasRecursion {
 
   private List<String> findVal(List<String> in, boolean high, int pos) {
     List<String> res = new ArrayList<>(in);
-    res.removeIf(e -> e.charAt(pos) == (!moreZeros(in.toArray(String[]::new), pos)^high ? '1' : '0'));
-    if(res.size() == 1) return res;
-    return findVal(res, high, pos+1);
+    res.removeIf(e -> e.charAt(pos) == (!moreZeros(in.toArray(String[]::new), pos) ^ high ? '1' : '0'));
+    if (res.size() == 1) return res;
+    return findVal(res, high, pos + 1);
   }
 }

@@ -45,11 +45,11 @@ public class LongArray {
   }
 
   public void remove(int index) {
-     move(index, --size);
+    move(index, --size);
   }
 
   public boolean removeElement(long element) {
-    if(elementIndex.containsKey(element)) {
+    if (elementIndex.containsKey(element)) {
       remove(indexOf(element));
       elementIndex.remove(element);
       return true;
@@ -57,12 +57,12 @@ public class LongArray {
     return false;
   }
 
-  public boolean contains(long element){
+  public boolean contains(long element) {
     return elementIndex.containsKey(element);
   }
 
   public long[] toArray() {
-    if(size == elements.length) return elements;
+    if (size == elements.length) return elements;
     long[] arr = new long[size];
     System.arraycopy(elements, 0, arr, 0, size);
     return arr;

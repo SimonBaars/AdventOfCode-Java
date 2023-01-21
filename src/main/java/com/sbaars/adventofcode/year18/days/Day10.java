@@ -33,11 +33,11 @@ public class Day10 extends Day2018 {
   private Pair<String, Integer> findAnswer() {
     List<Range> list = dayStream().map(s -> readString(s, "position=<%n, %n> velocity=<%n, %n>", Range.class)).toList();
     Pair<Long, InfiniteGrid> smallest = new Pair<>(Long.MAX_VALUE, null);
-    for(int i = 0; true; i++) {
+    for (int i = 0; true; i++) {
       InfiniteGrid g = list.stream().map(Range::getStart).collect(toInfiniteGrid('#'));
-      if(g.area() < smallest.a()) {
+      if (g.area() < smallest.a()) {
         smallest = new Pair<>(g.area(), g);
-      } else return pair("\n" + smallest.b().toString(), i-1);
+      } else return pair("\n" + smallest.b().toString(), i - 1);
       list = list.stream().map(r -> new Range(r.start.move(r.end), r.end)).toList();
     }
   }

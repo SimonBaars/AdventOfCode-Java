@@ -25,14 +25,14 @@ public class Day14 extends Day2020 {
     Instruction[] input = getInput();
     Map<Long, Long> memory = new HashMap<>();
     String currentMask = "";
-    for(Instruction i : input){
+    for (Instruction i : input) {
       Optional<Mem> mem = i.getMem();
-      if(mem.isPresent()){
+      if (mem.isPresent()) {
         StringBuilder bin = binWithLength(mem.get().value, currentMask.length());
         String finalCurrentMask = currentMask;
         range(0, bin.length())
-                .filter(j -> finalCurrentMask.charAt(j) != 'X')
-                .forEach(j -> bin.setCharAt(j, finalCurrentMask.charAt(j)));
+            .filter(j -> finalCurrentMask.charAt(j) != 'X')
+            .forEach(j -> bin.setCharAt(j, finalCurrentMask.charAt(j)));
         memory.put(mem.get().index, parseLong(bin.toString(), 2));
       } else currentMask = i.value;
     }
@@ -40,21 +40,22 @@ public class Day14 extends Day2020 {
   }
 
   public record Instruction(String mem, String value) {
-    public Optional<Mem> getMem(){
-      return mem.startsWith("mem") ? of(readString(mem+value, "mem[%n]%n", Mem.class)) : empty();
+    public Optional<Mem> getMem() {
+      return mem.startsWith("mem") ? of(readString(mem + value, "mem[%n]%n", Mem.class)) : empty();
     }
   }
 
-  public record Mem(long index, long value) {}
+  public record Mem(long index, long value) {
+  }
 
   @Override
   public Object part2() {
     Instruction[] input = getInput();
     Map<Long, Long> memory = new HashMap<>();
     String currentMask = "";
-    for(Instruction i : input){
+    for (Instruction i : input) {
       Optional<Mem> mem = i.getMem();
-      if(mem.isPresent()){
+      if (mem.isPresent()) {
         StringBuilder bin = binWithLength(mem.get().index, currentMask.length());
         List<Integer> floaters = applyMask(currentMask, bin);
         fillMemory(memory, mem, bin, floaters);
@@ -71,8 +72,8 @@ public class Day14 extends Day2020 {
 
   private void fillMemory(Map<Long, Long> memory, Optional<Mem> mem, StringBuilder bin, List<Integer> floaters) {
     StringBuilder binary;
-    for(long j = 0; (binary = binWithLength(j, floaters.size())).length() == floaters.size(); j++){
-      for(int k = 0; k< floaters.size(); k++){
+    for (long j = 0; (binary = binWithLength(j, floaters.size())).length() == floaters.size(); j++) {
+      for (int k = 0; k < floaters.size(); k++) {
         bin.setCharAt(floaters.get(k), binary.charAt(k));
       }
       memory.put(parseLong(bin.toString(), 2), mem.get().value);
@@ -81,10 +82,10 @@ public class Day14 extends Day2020 {
 
   private List<Integer> applyMask(String currentMask, StringBuilder bin) {
     List<Integer> floaters = new ArrayList<>();
-    for(int j = 0; j< bin.length(); j++){
+    for (int j = 0; j < bin.length(); j++) {
       char c = currentMask.charAt(j);
-      if(c=='X') floaters.add(j);
-      else if(c == '1') bin.setCharAt(j, c);
+      if (c == 'X') floaters.add(j);
+      else if (c == '1') bin.setCharAt(j, c);
     }
     return floaters;
   }

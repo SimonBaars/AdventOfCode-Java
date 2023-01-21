@@ -12,10 +12,10 @@ public class Day2 extends Day2015 {
     super(2);
   }
 
-  public record Dimension (long l, long w, long h) {
+  public record Dimension(long l, long w, long h) {
     private long[] smallestSides() {
-      if(l>=w && l>=h) return new long[]{w, h};
-      if(w>=l && w>=h) return new long[]{l, h};
+      if (l >= w && l >= h) return new long[]{w, h};
+      if (w >= l && w >= h) return new long[]{l, h};
       return new long[]{l, w};
     }
 
@@ -25,7 +25,7 @@ public class Day2 extends Day2015 {
     }
 
     private long area() {
-      return 2*l*w + 2*w*h + 2*h*l;
+      return 2 * l * w + 2 * w * h + 2 * h * l;
     }
 
     private long wrappingPaper() {
@@ -34,11 +34,11 @@ public class Day2 extends Day2015 {
 
     private long sideDistance() {
       long[] s = smallestSides();
-      return s[0]*2 + s[1]*2;
+      return s[0] * 2 + s[1] * 2;
     }
 
     private long volume() {
-      return l*w*h;
+      return l * w * h;
     }
 
     private long ribbon() {
@@ -64,9 +64,9 @@ public class Day2 extends Day2015 {
 
   private long getResult(ToLongFunction<Dimension> func) {
     return dayStream()
-            .map(String::trim)
-            .map(s -> readString(s, "%nx%nx%n", Dimension.class))
-            .mapToLong(func)
-            .sum();
+        .map(String::trim)
+        .map(s -> readString(s, "%nx%nx%n", Dimension.class))
+        .mapToLong(func)
+        .sum();
   }
 }

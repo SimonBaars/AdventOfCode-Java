@@ -25,12 +25,12 @@ public class Day4 extends Day2021 {
     String[] split = in.split("\n\n");
     long[] nums = Arrays.stream(split[0].split(",")).mapToLong(Long::parseLong).toArray();
     List<NumGrid> cards = IntStream.range(1, split.length).mapToObj(i -> split[i]).map(NumGrid::new).toList();
-    for(long num : nums){
-        for(NumGrid card : cards){
-          if(markCard(card, num) && checkCard(card)){
-            return result(card, num);
-          }
+    for (long num : nums) {
+      for (NumGrid card : cards) {
+        if (markCard(card, num) && checkCard(card)) {
+          return result(card, num);
         }
+      }
     }
     return "";
   }
@@ -39,20 +39,21 @@ public class Day4 extends Day2021 {
     return card.sumExcept(-1) * num;
   }
 
-  private boolean markCard(NumGrid card, long num){
+  private boolean markCard(NumGrid card, long num) {
     return card.replace(num, -1);
   }
 
-  private boolean checkCard(NumGrid grid){
+  private boolean checkCard(NumGrid grid) {
     long[][] card = grid.grid;
-    for(long[] nums : card){
-      if(Arrays.stream(nums).allMatch(n -> n==-1)){
+    for (long[] nums : card) {
+      if (Arrays.stream(nums).allMatch(n -> n == -1)) {
         return true;
       }
     }
-    out: for(int i = 0; i<card[0].length; i++){
-      for(int j = 0; j<card[i].length; j++){
-        if(card[j][i] != -1){
+    out:
+    for (int i = 0; i < card[0].length; i++) {
+      for (int j = 0; j < card[i].length; j++) {
+        if (card[j][i] != -1) {
           continue out;
         }
       }
@@ -67,11 +68,11 @@ public class Day4 extends Day2021 {
     String[] split = in.split("\n\n");
     long[] nums = Arrays.stream(split[0].split(",")).mapToLong(Long::parseLong).toArray();
     List<NumGrid> cards = IntStream.range(1, split.length).mapToObj(i -> new NumGrid(split[i])).collect(Collectors.toCollection(ArrayList::new));
-    for(long num : nums){
-      for(int i = 0; i<cards.size(); i++){
+    for (long num : nums) {
+      for (int i = 0; i < cards.size(); i++) {
         NumGrid card = cards.get(i);
-        if(markCard(card, num) && checkCard(card)){
-          if(cards.size() == 1){
+        if (markCard(card, num) && checkCard(card)) {
+          if (cards.size() == 1) {
             return result(card, num);
           } else {
             cards.remove(i);

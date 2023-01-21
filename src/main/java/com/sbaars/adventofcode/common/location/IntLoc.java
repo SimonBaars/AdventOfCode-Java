@@ -71,7 +71,7 @@ public class IntLoc {
     return new Point(Math.toIntExact(x), Math.toIntExact(y));
   }
 
-  public static Stream<IntLoc> range(int i, int j){
+  public static Stream<IntLoc> range(int i, int j) {
     return IntStream.range(0, i).boxed().flatMap(x -> IntStream.range(0, j).mapToObj(y -> new IntLoc(x, y)));
   }
 

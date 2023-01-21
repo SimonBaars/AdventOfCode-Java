@@ -16,7 +16,8 @@ public class Day11 extends Day2022 {
     new Day11().printParts();
   }
 
-  public record Monkey(int n, List<Long> items, char op, String add, long divisible, int ifTrue, int ifFalse) {}
+  public record Monkey(int n, List<Long> items, char op, String add, long divisible, int ifTrue, int ifFalse) {
+  }
 
   @Override
   public Object part1() {
@@ -25,17 +26,17 @@ public class Day11 extends Day2022 {
 
   private long solution(int cycles, boolean decreasingWorry) {
     List<Monkey> monkeys = dayStream("\n\n").map(String::trim).map(s -> readString(s, """
-            Monkey %i:
-              Starting items: %ln
-              Operation: new = old %c %s
-              Test: divisible by %n
-                If true: throw to monkey %i
-                If false: throw to monkey %i""", Monkey.class)).toList();
+        Monkey %i:
+          Starting items: %ln
+          Operation: new = old %c %s
+          Test: divisible by %n
+            If true: throw to monkey %i
+            If false: throw to monkey %i""", Monkey.class)).toList();
     LongCountMap<Integer> times = new LongCountMap<>();
-    long gcd = monkeys.stream().mapToLong(e -> e.divisible).reduce((a,b) -> a*b).getAsLong();
-    for(int i = 0; i<cycles; i++) {
-      for(Monkey m : monkeys) {
-        while(!m.items.isEmpty()) {
+    long gcd = monkeys.stream().mapToLong(e -> e.divisible).reduce((a, b) -> a * b).getAsLong();
+    for (int i = 0; i < cycles; i++) {
+      for (Monkey m : monkeys) {
+        while (!m.items.isEmpty()) {
           long item = m.items.remove(0);
           long worryLevel = applyOperator(item, m.op, m.add) / (decreasingWorry ? 3 : 1);
           boolean test = worryLevel % m.divisible == 0;
@@ -45,7 +46,7 @@ public class Day11 extends Day2022 {
       }
     }
     long[] sorted = times.values().stream().mapToLong(e -> e).sorted().toArray();
-    return sorted[sorted.length-1] * sorted[sorted.length-2];
+    return sorted[sorted.length - 1] * sorted[sorted.length - 2];
   }
 
   private long applyOperator(long item, char op, String add) {

@@ -19,20 +19,25 @@ public class Day16 extends Day2022 {
     new Day16().printParts();
   }
 
-  public record Valve(String name, long flow, List<String> others) {}
-  public record State(Map<String, Long> open, Valve valve, long totalFlow) {}
-  public record State2(Map<String, Long> open, Valve me, Valve elephant, long totalFlow) {}
+  public record Valve(String name, long flow, List<String> others) {
+  }
+
+  public record State(Map<String, Long> open, Valve valve, long totalFlow) {
+  }
+
+  public record State2(Map<String, Long> open, Valve me, Valve elephant, long totalFlow) {
+  }
 
   @Override
   public Object part1() {
     Map<String, Valve> valves = input();
     Set<State> states = new HashSet<>();
     states.add(new State(new HashMap<>(), valves.get("AA"), 0));
-    for(int minutes = 0; minutes<30; minutes++) {
+    for (int minutes = 0; minutes < 30; minutes++) {
       Set<State> newStates = new HashSet<>();
-      for(State s : states) {
+      for (State s : states) {
         long flow = s.open.values().stream().mapToLong(e -> e).sum() + s.totalFlow;
-        if(s.valve.flow > 0 && !s.open.containsKey(s.valve.name)) {
+        if (s.valve.flow > 0 && !s.open.containsKey(s.valve.name)) {
           Map<String, Long> newOpen = new HashMap<>(s.open);
           newOpen.put(s.valve.name, s.valve.flow);
           newStates.add(new State(newOpen, s.valve, flow));
@@ -55,36 +60,36 @@ public class Day16 extends Day2022 {
     Set<State2> states = new HashSet<>();
     states.add(new State2(new HashMap<>(), valves.get("AA"), valves.get("AA"), 0));
     Map<Integer, Long> kpis = Map.of(5, 25L, 10, 50L, 15, 100L, 20, 140L, 25, 160L);
-    for(int minutes = 0; minutes<26; minutes++) {
+    for (int minutes = 0; minutes < 26; minutes++) {
       Set<State2> newStates = new HashSet<>();
-      for(State2 s : states) {
+      for (State2 s : states) {
         long flow = s.open.values().stream().mapToLong(e -> e).sum() + s.totalFlow;
-        if(s.open.size() == openable.size()) { // All valves are open, time to chill
+        if (s.open.size() == openable.size()) { // All valves are open, time to chill
           newStates.add(new State2(s.open, valves.get("AA"), valves.get("AA"), flow));
         }
         int nStates = newStates.size();
         newStates.addAll(openValve(s.me, s.elephant, false, valves, s, flow));
         newStates.addAll(openValve(s.elephant, s.me, false, valves, s, flow));
         newStates.addAll(openValve(s.me, s.elephant, true, valves, s, flow));
-        if(newStates.size() == nStates) { // If there are no valves to be opened, we walk
+        if (newStates.size() == nStates) { // If there are no valves to be opened, we walk
           allPairs(s.me.others, s.elephant.others)
-                  .forEach(p -> newStates.add(new State2(s.open, valves.get(p.a()), valves.get(p.b()), flow)));
+              .forEach(p -> newStates.add(new State2(s.open, valves.get(p.a()), valves.get(p.b()), flow)));
         }
       }
       states = newStates;
-      if(kpis.containsKey(minutes)){
+      if (kpis.containsKey(minutes)) {
         long kpi = kpis.get(minutes);
-        states = states.stream().filter(e -> e.open.values().stream().mapToLong(f -> f).sum()>=kpi).collect(Collectors.toSet());
+        states = states.stream().filter(e -> e.open.values().stream().mapToLong(f -> f).sum() >= kpi).collect(Collectors.toSet());
       }
     }
     return states.stream().mapToLong(State2::totalFlow).max().getAsLong();
   }
 
   private List<State2> openValve(Valve v1, Valve v2, boolean both, Map<String, Valve> valves, State2 s, long flow) {
-    if(v1.flow > 0 && !s.open.containsKey(v1.name) && (!both || (v2.flow > 0 && !s.open.containsKey(v2.name)))) {
+    if (v1.flow > 0 && !s.open.containsKey(v1.name) && (!both || (v2.flow > 0 && !s.open.containsKey(v2.name)))) {
       Map<String, Long> newOpen = new HashMap<>(s.open);
       newOpen.put(v1.name, v1.flow);
-      if(both) {
+      if (both) {
         newOpen.put(v2.name, v2.flow);
         return of(new State2(newOpen, v1, v2, flow));
       }

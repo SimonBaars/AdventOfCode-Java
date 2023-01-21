@@ -18,20 +18,20 @@ public class Day15 extends Day2021 {
   @Override
   public Object part1() {
     var in = new NumGrid(day(), "\n", "");
-    return shortestPath(in, in.sizeX()-1, in.sizeY()-1, 1);
+    return shortestPath(in, in.sizeX() - 1, in.sizeY() - 1, 1);
   }
 
-  record Cell (int x, int y, long distance) {}
+  record Cell(int x, int y, long distance) {
+  }
 
-  static long shortestPath(NumGrid g, int row, int col, int resize)
-  {
+  static long shortestPath(NumGrid g, int row, int col, int resize) {
     long[][] grid = g.grid;
-    long[][] dist = new long[g.sizeX()*resize][g.sizeY()*resize];
-    int[] dx = { 1, 0, -1, 0 };
-    int[] dy = { 0, 1, 0, -1 };
+    long[][] dist = new long[g.sizeX() * resize][g.sizeY() * resize];
+    int[] dx = {1, 0, -1, 0};
+    int[] dy = {0, 1, 0, -1};
 
-    for(int i = 0; i < dist.length; i++) {
-      for(int j = 0; j < dist[0].length; j++) {
+    for (int i = 0; i < dist.length; i++) {
+      for (int j = 0; j < dist[0].length; j++) {
         dist[i][j] = Integer.MAX_VALUE;
       }
     }
@@ -42,13 +42,13 @@ public class Day15 extends Day2021 {
     pq.add(new Cell(0, 0, dist[0][0]));
     while (!pq.isEmpty()) {
       Cell curr = pq.poll();
-      for(int i = 0; i < dx.length; i++) {
+      for (int i = 0; i < dx.length; i++) {
         int rows = curr.x + dx[i];
         int cols = curr.y + dy[i];
 
         if (isInsideGrid(rows, cols, dist.length, dist[0].length)) {
-          long gridNum = grid[rows % grid.length][cols % grid.length] + (rows/grid.length) + (cols/grid[0].length);
-          if(gridNum >= 10) gridNum -= 9;
+          long gridNum = grid[rows % grid.length][cols % grid.length] + (rows / grid.length) + (cols / grid[0].length);
+          if (gridNum >= 10) gridNum -= 9;
 
           if (dist[rows][cols] > dist[curr.x][curr.y] + gridNum) {
             if (dist[rows][cols] != Integer.MAX_VALUE) {
@@ -63,7 +63,7 @@ public class Day15 extends Day2021 {
         }
       }
     }
-    return dist[dist.length-1][dist[0].length-1];
+    return dist[dist.length - 1][dist[0].length - 1];
   }
 
   static boolean isInsideGrid(int i, int j, int sizex, int sizey) {
@@ -73,6 +73,6 @@ public class Day15 extends Day2021 {
   @Override
   public Object part2() {
     var in = new NumGrid(day(), "\n", "");
-    return shortestPath(in, (in.sizeX()*5)-1, (in.sizeY()*5)-1, 5);
+    return shortestPath(in, (in.sizeX() * 5) - 1, (in.sizeY() * 5) - 1, 5);
   }
 }

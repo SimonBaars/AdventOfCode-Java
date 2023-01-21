@@ -52,8 +52,8 @@ public class Loc3D {
     this.z = l[2];
   }
 
-  public List<Long> toList(){
-    return List.of(x,y,z);
+  public List<Long> toList() {
+    return List.of(x, y, z);
   }
 
   public double getX() {
@@ -88,7 +88,7 @@ public class Loc3D {
       case 3 -> new Loc3D(-y, -z, x);
       case 4 -> new Loc3D(-x, -z, -y);
       case 5 -> new Loc3D(y, -z, -x);
-      default -> throw new IllegalStateException("Invalid flip value: "+flip);
+      default -> throw new IllegalStateException("Invalid flip value: " + flip);
     };
   }
 
@@ -98,7 +98,7 @@ public class Loc3D {
       case 1 -> new Loc3D(-y, x, z);
       case 2 -> new Loc3D(-x, -y, z);
       case 3 -> new Loc3D(y, -x, z);
-      default -> throw new IllegalStateException("Invalid rotation value: "+rot);
+      default -> throw new IllegalStateException("Invalid rotation value: " + rot);
     };
   }
 

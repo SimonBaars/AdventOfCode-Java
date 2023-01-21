@@ -30,19 +30,20 @@ public class Day13 extends Day2021 {
     return dots.stream().map(e -> fold(folds.get(0), e)).distinct().count();
   }
 
-  public record Fold (String axis, long n){}
+  public record Fold(String axis, long n) {
+  }
 
   @Override
   public Object part2() {
     var d = dots;
-    for(Fold f : folds) {
+    for (Fold f : folds) {
       d = d.transform(e -> fold(f, e));
     }
-    return "\n"+d.toGrid().toString().replace(",", "").replace("0", " ");
+    return "\n" + d.toGrid().toString().replace(",", "").replace("0", " ");
   }
 
   private Point fold(Fold f, Point e) {
-    if(f.axis.equals("y")){
+    if (f.axis.equals("y")) {
       return e.y > f.n ? new Point(e.x, toIntExact(f.n - (e.y - f.n))) : e;
     }
     return e.x > f.n ? new Point(toIntExact(f.n - (e.x - f.n)), e.y) : e;

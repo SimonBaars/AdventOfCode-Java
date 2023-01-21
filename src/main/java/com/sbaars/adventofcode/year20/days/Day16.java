@@ -14,6 +14,7 @@ public class Day16 extends Day2020 {
   private final Rule[] rules;
   private final long[] myTicket;
   private final List<List<Long>> tickets;
+
   public Day16() {
     super(16);
     String[] input = day().split("\n\n");

@@ -16,12 +16,12 @@ public class Day1 extends Day2021 {
   @Override
   public Object part1() {
     long[] input = dayNumbers();
-    return IntStream.range(1, input.length).filter(i -> input[i-1] < input[i]).count();
+    return IntStream.range(1, input.length).filter(i -> input[i - 1] < input[i]).count();
   }
 
   @Override
   public Object part2() {
     long[] input = dayNumbers();
-    return IntStream.range(3, input.length).filter(i -> input[i-3] + input[i-2] + input[i-1] < input[i] + input[i-2] + input[i-1]).count();
+    return IntStream.range(3, input.length).filter(i -> input[i - 3] + input[i - 2] + input[i - 1] < input[i] + input[i - 2] + input[i - 1]).count();
   }
 }
