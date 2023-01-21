@@ -3,7 +3,6 @@
   import static org.junit.jupiter.api.Assertions.assertEquals;
 
   import org.junit.jupiter.api.Test;
-  import com.sbaars.adventofcode.year22.days.Day19;
 
   class Day19Test {
       Day19 day = new Day19();

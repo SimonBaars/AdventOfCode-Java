@@ -2,9 +2,7 @@ package com.sbaars.adventofcode.year15.days;
 
 import com.sbaars.adventofcode.year15.Day2015;
 
-import static com.sbaars.adventofcode.util.AOCUtils.findReduce;
-import static com.sbaars.adventofcode.util.AOCUtils.zip;
-import static java.util.stream.IntStream.range;
+import static com.sbaars.adventofcode.util.AOCUtils.*;
 
 public class Day1 extends Day2015 {
   public Day1() {
@@ -25,10 +23,10 @@ public class Day1 extends Day2015 {
   public Object part2() {
     String in = day().trim();
     return findReduce(
-            zip(range(1, in.length()).boxed(), in.chars().boxed()),
+            zipWithIndex(in.chars().boxed()),
             0,
-            (c, acc) -> acc + (c.b() == '(' ? 1 : -1),
+            (c, acc) -> acc + (c.e() == '(' ? 1 : -1),
             acc -> acc < 0
-    ).a();
+    ).i() + 1;
   }
 }

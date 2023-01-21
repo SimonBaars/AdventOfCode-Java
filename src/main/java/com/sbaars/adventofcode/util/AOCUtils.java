@@ -1,9 +1,6 @@
 package com.sbaars.adventofcode.util;
 
-import com.sbaars.adventofcode.common.Either;
-import com.sbaars.adventofcode.common.EitherList;
-import com.sbaars.adventofcode.common.MutablePair;
-import com.sbaars.adventofcode.common.Pair;
+import com.sbaars.adventofcode.common.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -11,6 +8,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static com.sbaars.adventofcode.common.Pair.pair;
+import static java.lang.Integer.MAX_VALUE;
 import static java.util.stream.IntStream.range;
 
 public class AOCUtils {
@@ -70,6 +68,10 @@ public class AOCUtils {
 
     public static<A, B> Stream<Pair<A, B>> zip(Stream<? extends A> a, Stream<? extends B> b) {
         return zip(a, b, Pair::new);
+    }
+
+    public static<A> Stream<IndexedElement<A>> zipWithIndex(Stream<? extends A> a) {
+        return zip(range(0, MAX_VALUE).boxed(), a, IndexedElement::new);
     }
 
     public static<A, B, C> Stream<C> zip(Stream<? extends A> a, Stream<? extends B> b, BiFunction<? super A, ? super B, ? extends C> zipper) {
