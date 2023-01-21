@@ -33,24 +33,24 @@ public class Day10 extends Day2022 {
   }
 
   private long signalStrength(long cycle, long x) {
-    return (cycle+20) % 40 == 0 ? cycle*x : 0;
+    return (cycle + 20) % 40 == 0 ? cycle * x : 0;
   }
 
   private String getPixel(long cycle, long x) {
-    long i = (cycle -1) % 40;
-    return (i == 0 ? "\n" : "") + (List.of(x -1, x, x +1).contains(i) ? "██" : "░░");
+    long i = (cycle - 1) % 40;
+    return (i == 0 ? "\n" : "") + (List.of(x - 1, x, x + 1).contains(i) ? "██" : "░░");
   }
 
-  private<T> Stream<T> performOp(String[] input, BiFunction<Long, Long, T> func) {
+  private <T> Stream<T> performOp(String[] input, BiFunction<Long, Long, T> func) {
     long cycle = 1;
     long x = 1;
     List<T> res = new ArrayList<>();
-    for(String op : input) {
+    for (String op : input) {
       res.add(func.apply(cycle, x));
-      if(op.startsWith("addx")) {
+      if (op.startsWith("addx")) {
         cycle++;
         res.add(func.apply(cycle, x));
-        x+=Long.parseLong(op.substring(5));
+        x += Long.parseLong(op.substring(5));
       }
       cycle++;
     }
@@ -61,8 +61,8 @@ public class Day10 extends Day2022 {
   public Object part3() {
     String message = " Joost";
     String[] input = genInput(message);
-    FetchInput.writeFile(new File("src/main/resources/2022-day10-part3/"+message+".txt"), String.join("\n", input));
-    return "Part 3: "+performOp(input, this::getPixel).collect(Collectors.joining());
+    FetchInput.writeFile(new File("src/main/resources/2022-day10-part3/" + message + ".txt"), String.join("\n", input));
+    return "Part 3: " + performOp(input, this::getPixel).collect(Collectors.joining());
   }
 
   public String[] genInput(String message) {
@@ -75,19 +75,19 @@ public class Day10 extends Day2022 {
   private static List<String> generateInstructions(int width, int height, boolean[] desiredPixels) {
     List<String> output = new ArrayList<>();
     int x = 0;
-    for(int cycle = 0; cycle<(width * height)-2; cycle+=2) {
+    for (int cycle = 0; cycle < (width * height) - 2; cycle += 2) {
       int desiredX;
-      if(desiredPixels[cycle+2] && desiredPixels[cycle+3]){
-        desiredX = cycle+1;
-      } else if(!desiredPixels[cycle+2] && desiredPixels[cycle+3]) {
-        desiredX = cycle+3;
-      } else if(desiredPixels[cycle+2] && !desiredPixels[cycle+3]) {
+      if (desiredPixels[cycle + 2] && desiredPixels[cycle + 3]) {
+        desiredX = cycle + 1;
+      } else if (!desiredPixels[cycle + 2] && desiredPixels[cycle + 3]) {
+        desiredX = cycle + 3;
+      } else if (desiredPixels[cycle + 2] && !desiredPixels[cycle + 3]) {
         desiredX = cycle;
       } else {
-        desiredX = cycle+4;
+        desiredX = cycle + 4;
       }
-      desiredX = desiredX - (((cycle+2) / width)* width);
-      output.add("addx "+(desiredX-x));
+      desiredX = desiredX - (((cycle + 2) / width) * width);
+      output.add("addx " + (desiredX - x));
       x = desiredX;
     }
     output.add("noop");
@@ -101,10 +101,10 @@ public class Day10 extends Day2022 {
     Graphics graphics = bufferedImage.getGraphics();
     Graphics2D graphics2D = (Graphics2D) graphics;
     graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    graphics2D.drawString(message, 0, height-2);
+    graphics2D.drawString(message, 0, height - 2);
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        desiredPixels[(y* width)+x] = bufferedImage.getRGB(x, y) > -7777216;
+        desiredPixels[(y * width) + x] = bufferedImage.getRGB(x, y) > -7777216;
       }
     }
     return desiredPixels;

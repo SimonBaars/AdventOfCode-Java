@@ -73,7 +73,7 @@ public class LongCountMap<K> extends HashMap<K, Long> {
     return lcm;
   }
 
-  public static<T> Collector<T, LongCountMap<T>, LongCountMap<T>> toCountMap() {
+  public static <T> Collector<T, LongCountMap<T>, LongCountMap<T>> toCountMap() {
     final Supplier<LongCountMap<T>> supplier = LongCountMap::new;
     final BiConsumer<LongCountMap<T>, T> accumulator = LongCountMap::increment;
     final BinaryOperator<LongCountMap<T>> combiner = LongCountMap::incrementAll;
@@ -81,7 +81,7 @@ public class LongCountMap<K> extends HashMap<K, Long> {
     return Collector.of(supplier, accumulator, combiner, finisher);
   }
 
-    public long max() {
-      return values().stream().mapToLong(e -> e).max().getAsLong();
-    }
+  public long max() {
+    return values().stream().mapToLong(e -> e).max().getAsLong();
+  }
 }

@@ -19,7 +19,8 @@ public class Day17 extends Day2022 {
     new Day17().printParts();
   }
 
-  public record State(long height, long fallenRocks, boolean cycleReset) {}
+  public record State(long height, long fallenRocks, boolean cycleReset) {
+  }
 
   @Override
   public Object part1() {
@@ -43,33 +44,33 @@ public class Day17 extends Day2022 {
 
   private State simulateShapeMoves(long iterations, Predicate<State> exitCondition) {
     InfiniteGrid[] shapes = new InfiniteGrid[]{
-            new InfiniteGrid(new char[][]{"####".toCharArray()}),
-            new InfiniteGrid(new HashMap<>(Map.of(new Loc(1, 0), '#', new Loc(0, 1), '#', new Loc(1, 1), '#', new Loc(2, 1), '#', new Loc(1, 2), '#'))),
-            new InfiniteGrid(new HashMap<>(Map.of(new Loc(2, 0), '#', new Loc(0, 2), '#', new Loc(1, 2), '#', new Loc(2, 2), '#', new Loc(2, 1), '#'))),
-            new InfiniteGrid(new char[][]{{'#'}, {'#'}, {'#'}, {'#'}}),
-            new InfiniteGrid(new char[][]{{'#', '#'}, {'#', '#'}})
+        new InfiniteGrid(new char[][]{"####".toCharArray()}),
+        new InfiniteGrid(new HashMap<>(Map.of(new Loc(1, 0), '#', new Loc(0, 1), '#', new Loc(1, 1), '#', new Loc(2, 1), '#', new Loc(1, 2), '#'))),
+        new InfiniteGrid(new HashMap<>(Map.of(new Loc(2, 0), '#', new Loc(0, 2), '#', new Loc(1, 2), '#', new Loc(2, 2), '#', new Loc(2, 1), '#'))),
+        new InfiniteGrid(new char[][]{{'#'}, {'#'}, {'#'}, {'#'}}),
+        new InfiniteGrid(new char[][]{{'#', '#'}, {'#', '#'}})
     };
     InfiniteGrid g = new InfiniteGrid(new char[][]{"+-------+".toCharArray()});
     addWall(g, 4);
     char[] chars = day().trim().toCharArray();
     long highest = 0, fallenRocks = 0;
     InfiniteGrid s = shapes[0].move(3, highest - 4);
-    for(int i = 0, shapeIndex = 0; fallenRocks<iterations; i++) {
-      if(i>=chars.length) i = 0;
+    for (int i = 0, shapeIndex = 0; fallenRocks < iterations; i++) {
+      if (i >= chars.length) i = 0;
 
-      State state = new State(Math.abs(highest), fallenRocks, i==0);
-      if(exitCondition.test(state)) {
+      State state = new State(Math.abs(highest), fallenRocks, i == 0);
+      if (exitCondition.test(state)) {
         return state;
       }
 
       char c = chars[i];
       InfiniteGrid moved = s.move(c == '>' ? 1 : -1, 0);
-      if(g.canPlace(moved)) {
+      if (g.canPlace(moved)) {
         s = moved;
       }
 
       moved = s.move(0, 1);
-      if(g.canPlace(moved)) {
+      if (g.canPlace(moved)) {
         s = moved;
       } else {
         g.place(s);
@@ -85,10 +86,10 @@ public class Day17 extends Day2022 {
   }
 
   private void addWall(InfiniteGrid g, int n) {
-    long lowestY = g.minY()-1;
-    for(int i = 0; i<n; i++){
-      g.set(new Loc(0, lowestY-i), '|');
-      g.set(new Loc(8, lowestY-i), '|');
+    long lowestY = g.minY() - 1;
+    for (int i = 0; i < n; i++) {
+      g.set(new Loc(0, lowestY - i), '|');
+      g.set(new Loc(8, lowestY - i), '|');
     }
   }
 }

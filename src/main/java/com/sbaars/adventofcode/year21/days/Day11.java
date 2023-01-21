@@ -21,8 +21,8 @@ public class Day11 extends Day2021 implements HasRecursion {
   public Object part1() {
     var in = new NumGrid(day(), "\n", "");
     long flashes = 0;
-    for(int i = 0; i<100; i++){
-      flashes+=in.stream().mapToLong(e -> flash(in, e)).sum();
+    for (int i = 0; i < 100; i++) {
+      flashes += in.stream().mapToLong(e -> flash(in, e)).sum();
       in.stream().filter(p -> in.get(p) > 9).forEach(p -> in.set(p, 0));
     }
     return flashes;
@@ -36,10 +36,10 @@ public class Day11 extends Day2021 implements HasRecursion {
   @Override
   public Object part2() {
     var in = new NumGrid(day(), "\n", "");
-    for(int step = 1; true; step++){
+    for (int step = 1; true; step++) {
       in.stream().forEach(e -> flash(in, e));
       in.stream().filter(p -> in.get(p) > 9).forEach(p -> in.set(p, 0));
-      if(in.stream().mapToLong(in::get).allMatch(e -> e == 0L)){
+      if (in.stream().mapToLong(in::get).allMatch(e -> e == 0L)) {
         return step;
       }
     }

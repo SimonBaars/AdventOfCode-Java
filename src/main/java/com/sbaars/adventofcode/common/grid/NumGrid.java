@@ -27,35 +27,35 @@ public class NumGrid implements Grid {
   private long[][] numGrid(String str, String lineDelimiter, String itemDelimiter) {
     String[] lines = str.split(lineDelimiter);
     long[][] res = new long[lines.length][];
-    for(int i = 0; i<lines.length; i++){
+    for (int i = 0; i < lines.length; i++) {
       res[i] = Arrays.stream(lines[i].split(itemDelimiter)).map(String::trim).filter(e -> !e.isEmpty()).mapToLong(Long::parseLong).toArray();
     }
     return res;
   }
 
-  public long count(long...n) {
+  public long count(long... n) {
     return iterateLong().filter(e -> LongStream.of(n).anyMatch(i -> i == e)).count();
   }
 
-  public long countExcept(long...n) {
+  public long countExcept(long... n) {
     return Math.toIntExact(iterateLong().filter(e -> LongStream.of(n).noneMatch(i -> i == e)).count());
   }
 
-  public NumGrid mirrorX(){
+  public NumGrid mirrorX() {
     long[][] newGrid = new long[sizeX()][sizeY()];
-    for(int i = 0; i<sizeX(); i++) {
-      for(int j = 0; j<sizeY(); j++) {
-        newGrid[i][sizeY()-j-1] = grid[i][j];
+    for (int i = 0; i < sizeX(); i++) {
+      for (int j = 0; j < sizeY(); j++) {
+        newGrid[i][sizeY() - j - 1] = grid[i][j];
       }
     }
     return new NumGrid(newGrid);
   }
 
-  public NumGrid mirrorY(){
+  public NumGrid mirrorY() {
     long[][] newGrid = new long[sizeX()][sizeY()];
-    for(int i = 0; i<sizeX(); i++) {
-      for(int j = 0; j<sizeY(); j++) {
-        newGrid[sizeX()-i-1][j] = grid[i][j];
+    for (int i = 0; i < sizeX(); i++) {
+      for (int j = 0; j < sizeY(); j++) {
+        newGrid[sizeX() - i - 1][j] = grid[i][j];
       }
     }
     return new NumGrid(newGrid);
@@ -65,19 +65,19 @@ public class NumGrid implements Grid {
     return iterateLong().sum();
   }
 
-  public long sum(long...n) {
+  public long sum(long... n) {
     return iterateLong().filter(e -> LongStream.of(n).anyMatch(i -> i == e)).sum();
   }
 
-  public long sumExcept(long...n) {
+  public long sumExcept(long... n) {
     return iterateLong().filter(e -> LongStream.of(n).noneMatch(i -> i == e)).sum();
   }
 
-  public boolean replace(long orig, long replacement){
+  public boolean replace(long orig, long replacement) {
     boolean changed = false;
-    for(int i = 0; i< grid.length; i++){
-      for(int j = 0; j< grid[i].length; j++){
-        if(grid[i][j] == orig){
+    for (int i = 0; i < grid.length; i++) {
+      for (int j = 0; j < grid[i].length; j++) {
+        if (grid[i][j] == orig) {
           grid[i][j] = replacement;
           changed = true;
         }
@@ -99,9 +99,10 @@ public class NumGrid implements Grid {
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     StringBuilder res = new StringBuilder();
-    for(long[] nums : grid) res.append(LongStream.of(nums).mapToObj(Long::toString).collect(Collectors.joining(","))).append("\n");
+    for (long[] nums : grid)
+      res.append(LongStream.of(nums).mapToObj(Long::toString).collect(Collectors.joining(","))).append("\n");
     return res.toString();
   }
 
@@ -130,16 +131,17 @@ public class NumGrid implements Grid {
     return or;
   }
 
-  public int sizeX(){
+  public int sizeX() {
     return grid.length;
   }
 
-  public int sizeY(){
+  public int sizeY() {
     return grid[0].length;
   }
 
   public void set(Point p, long i) {
-    if(get(p) == -1) throw new IllegalStateException("Trying to write to coordinate outside of grid: "+p+", "+i);
+    if (get(p) == -1)
+      throw new IllegalStateException("Trying to write to coordinate outside of grid: " + p + ", " + i);
     grid[p.x][p.y] = i;
   }
 
@@ -148,7 +150,7 @@ public class NumGrid implements Grid {
   }
 
   public void increment(Point p, int n) {
-    set(p, get(p)+n);
+    set(p, get(p) + n);
   }
 
   public Stream<Point> streamFourDirs(Point p) {
@@ -165,9 +167,9 @@ public class NumGrid implements Grid {
 
   public char[][] getGrid() {
     char[][] g = new char[grid.length][grid[0].length];
-    for(int i = 0; i< grid.length; i++){
-      for(int j = 0; j< grid[i].length; j++){
-        g[i][j] = (char)grid[i][j];
+    for (int i = 0; i < grid.length; i++) {
+      for (int j = 0; j < grid[i].length; j++) {
+        g[i][j] = (char) grid[i][j];
       }
     }
     return g;

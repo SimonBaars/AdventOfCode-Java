@@ -28,7 +28,7 @@ public class Day9 extends Day2021 implements HasRecursion {
     var grid = in.grid;
     return in.stream()
         .filter(p -> isLowPoint(grid, p))
-        .mapToLong(p -> 1+grid[p.x][p.y])
+        .mapToLong(p -> 1 + grid[p.x][p.y])
         .sum();
   }
 
@@ -41,7 +41,7 @@ public class Day9 extends Day2021 implements HasRecursion {
         .map(p -> findBasins(new HashSet<>(), in, p, -1))
         .sorted(reverseOrder())
         .limit(3)
-        .reduce((a,b) -> a*b)
+        .reduce((a, b) -> a * b)
         .get();
   }
 
@@ -51,8 +51,8 @@ public class Day9 extends Day2021 implements HasRecursion {
 
   private int findBasins(Set<Point> illegal, NumGrid in, Point loc, int height) {
     int amount = 0;
-    if(in.get(loc) != -1 && !illegal.contains(loc) && in.get(loc) > height && in.get(loc) < 9){
-      amount+=stream(fourDirections()).map(d -> d.move(loc)).filter(e -> in.get(loc) != -1).mapToInt(p -> findBasins(illegal, in, p, toIntExact(in.get(loc)))).sum() + 1;
+    if (in.get(loc) != -1 && !illegal.contains(loc) && in.get(loc) > height && in.get(loc) < 9) {
+      amount += stream(fourDirections()).map(d -> d.move(loc)).filter(e -> in.get(loc) != -1).mapToInt(p -> findBasins(illegal, in, p, toIntExact(in.get(loc)))).sum() + 1;
       illegal.add(loc);
     }
     return amount;

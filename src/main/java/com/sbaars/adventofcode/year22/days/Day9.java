@@ -21,7 +21,8 @@ public class Day9 extends Day2022 {
     new Day9().printParts();
   }
 
-  public record Move(char dir, long n){}
+  public record Move(char dir, long n) {
+  }
 
   @Override
   public Object part1() {
@@ -40,14 +41,14 @@ public class Day9 extends Day2022 {
     HashSet<Point> visited = new HashSet<>();
     visited.add(head);
 
-    for(Move m : moves) {
+    for (Move m : moves) {
       Direction dir = Direction.getByDirCode(m.dir);
-      for(int i = 0; i<m.n; i++) {
+      for (int i = 0; i < m.n; i++) {
         head = dir.move(head);
-        for(int j = 0; j<tail.size(); j++) {
+        for (int j = 0; j < tail.size(); j++) {
           Point t = j == 0 ? head : tail.get(j - 1);
           tail.set(j, moveRope(t, tail.get(j)));
-          if(j == tail.size()-1) visited.add(tail.get(j));
+          if (j == tail.size() - 1) visited.add(tail.get(j));
         }
       }
     }

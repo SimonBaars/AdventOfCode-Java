@@ -79,7 +79,7 @@ public class Loc {
     return new Point(intX(), intY());
   }
 
-  public static Stream<Loc> range(int i, int j){
+  public static Stream<Loc> range(int i, int j) {
     return IntStream.range(0, i).boxed().flatMap(x -> IntStream.range(0, j).mapToObj(y -> new Loc(x, y)));
   }
 
@@ -101,7 +101,7 @@ public class Loc {
 
   @Override
   public String toString() {
-    return x + ", " + y ;
+    return x + ", " + y;
   }
 
   public int intX() {
@@ -113,11 +113,11 @@ public class Loc {
   }
 
   public long distance(Loc pt) {
-    return abs(pt.x-x) + abs(pt.y-y);
+    return abs(pt.x - x) + abs(pt.y - y);
   }
 
   public double distanceDouble(Loc pt) {
-    return hypot(x-pt.x, y-pt.y);
+    return hypot(x - pt.x, y - pt.y);
   }
 
   public Stream<Loc> eightDirs() {
@@ -125,7 +125,7 @@ public class Loc {
   }
 
   public Stream<Loc> expand(long howMuch) {
-    return new Range(new Loc(x-(howMuch/2), y-(howMuch/2)), new Loc(x+(howMuch/2), y+(howMuch/2))).stream();
+    return new Range(new Loc(x - (howMuch / 2), y - (howMuch / 2)), new Loc(x + (howMuch / 2), y + (howMuch / 2))).stream();
   }
 
   public Stream<Loc> walk(Direction dir, long howFar) {

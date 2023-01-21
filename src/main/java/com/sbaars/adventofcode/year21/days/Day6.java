@@ -26,13 +26,13 @@ public class Day6 extends Day2021 {
   private long countFishes(int iterations) {
     var cm = LongCountMap.ofFrequencies(dayNumberStream(","));
     var nc = new LongCountMap<Long>();
-    for(int j = 0; j<iterations; j++) {
-      for(var e : cm.entrySet()) {
-        if(e.getKey() == 0){
+    for (int j = 0; j < iterations; j++) {
+      for (var e : cm.entrySet()) {
+        if (e.getKey() == 0) {
           nc.increment(8L, e.getValue());
           nc.increment(6L, e.getValue());
         } else {
-          nc.increment(e.getKey()-1, e.getValue());
+          nc.increment(e.getKey() - 1, e.getValue());
         }
       }
       cm = nc;

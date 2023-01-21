@@ -24,21 +24,22 @@ public class Day13 extends Day2022 {
     new Day13().printParts();
   }
 
-  public record Node (Either<List<Node>, Integer> value) {}
+  public record Node(Either<List<Node>, Integer> value) {
+  }
 
   @Override
   public Object part1() {
     var in = Arrays.stream(day().split("\n\n")).map(StringUtils::lines).toArray(String[][]::new);
-    return range(0, in.length).filter(i -> compare(node(in[i][0]), node(in[i][1])).orElse(false)).map(i -> i+1).sum();
+    return range(0, in.length).filter(i -> compare(node(in[i][0]), node(in[i][1])).orElse(false)).map(i -> i + 1).sum();
   }
 
   @Override
   public Object part2() {
-    var in = streamLines(day()+"\n[[2]]\n[[6]]")
-            .filter(s -> !s.isEmpty())
-            .map(this::node)
-            .sorted((a, b) -> compare(a, b).map(c -> c ? -1 : 1).orElse(0))
-            .toList();
+    var in = streamLines(day() + "\n[[2]]\n[[6]]")
+        .filter(s -> !s.isEmpty())
+        .map(this::node)
+        .sorted((a, b) -> compare(a, b).map(c -> c ? -1 : 1).orElse(0))
+        .toList();
     return (in.indexOf(node(node(node(2)))) + 1) * (in.indexOf(node(node(node(6)))) + 1);
   }
 
@@ -52,31 +53,31 @@ public class Day13 extends Day2022 {
   }
 
   private Node node(String s, int[] levels) {
-    if(s.charAt(0) >= '0' && s.charAt(0) <= '9') return node(parseInt(s));
-    if(s.equals("[]")) return node(List.of());
+    if (s.charAt(0) >= '0' && s.charAt(0) <= '9') return node(parseInt(s));
+    if (s.equals("[]")) return node(List.of());
     int[] commas = range(0, levels.length)
-            .filter(i -> i == 0 || i == levels.length - 1 || levels[i] == levels[0] && s.charAt(i) == ',')
-            .toArray();
+        .filter(i -> i == 0 || i == levels.length - 1 || levels[i] == levels[0] && s.charAt(i) == ',')
+        .toArray();
     return node(range(1, commas.length)
-            .mapToObj(i -> node(s.substring(commas[i-1]+1, commas[i]))).toList());
+        .mapToObj(i -> node(s.substring(commas[i - 1] + 1, commas[i]))).toList());
   }
 
   private Optional<Boolean> compare(Node a, Node b) {
-    if(a.value.isB() && b.value.isB()) {
+    if (a.value.isB() && b.value.isB()) {
       int na = a.value.getB();
       int nb = b.value.getB();
-      if(na < nb) return of(true);
-      else if(na > nb) return of(false);
+      if (na < nb) return of(true);
+      else if (na > nb) return of(false);
       else return empty();
-    } else if(a.value.isA() && b.value.isA()) {
+    } else if (a.value.isA() && b.value.isA()) {
       List<Node> na = a.value.getA();
       List<Node> nb = b.value.getA();
-      if(na.isEmpty() && !nb.isEmpty()) return of(true);
-      else if(!na.isEmpty() && nb.isEmpty()) return of(false);
-      else if(na.isEmpty() && nb.isEmpty()) return empty();
-      else return compare(na.get(0), nb.get(0)).or(() -> compare(node(na.subList(1, na.size())), node(nb.subList(1, nb.size()))));
-    }
-    else if(a.value.isA()) return compare(a, node(b));
+      if (na.isEmpty() && !nb.isEmpty()) return of(true);
+      else if (!na.isEmpty() && nb.isEmpty()) return of(false);
+      else if (na.isEmpty() && nb.isEmpty()) return empty();
+      else
+        return compare(na.get(0), nb.get(0)).or(() -> compare(node(na.subList(1, na.size())), node(nb.subList(1, nb.size()))));
+    } else if (a.value.isA()) return compare(a, node(b));
     else return compare(node(a), b);
   }
 

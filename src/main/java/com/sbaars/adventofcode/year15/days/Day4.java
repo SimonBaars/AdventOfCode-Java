@@ -33,11 +33,11 @@ public class Day4 extends Day2015 {
   private int solution(String prefix) {
     String in = day().trim();
     return range(0, MAX_VALUE)
-            .mapToObj(i -> pair(i, md5(in + i)))
-            .filter(s -> s.b().startsWith(prefix))
-            .map(Pair::a)
-            .findFirst()
-            .get();
+        .mapToObj(i -> pair(i, md5(in + i)))
+        .filter(s -> s.b().startsWith(prefix))
+        .map(Pair::a)
+        .findFirst()
+        .get();
   }
 
   public String md5(String md5) {
@@ -51,6 +51,6 @@ public class Day4 extends Day2015 {
       return sb.toString();
     } catch (NoSuchAlgorithmException ignored) {
     }
-    throw new IllegalStateException("Unable to hash "+md5);
+    throw new IllegalStateException("Unable to hash " + md5);
   }
 }

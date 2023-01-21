@@ -26,7 +26,7 @@ public class Day7 extends Day2021 {
     return dayNumberStream(",");
   }
 
-  private long sol(long guess){
+  private long sol(long guess) {
     return getSteps(guess).sum();
   }
 
@@ -34,8 +34,8 @@ public class Day7 extends Day2021 {
     return input().map(n -> max(guess, n) - min(guess, n));
   }
 
-  private long sol2(long guess){
-    return getSteps(guess).map(n -> n*(n+1)/2).sum();
+  private long sol2(long guess) {
+    return getSteps(guess).map(n -> n * (n + 1) / 2).sum();
   }
 
   @Override

@@ -48,14 +48,14 @@ public class Day4 extends Day2018 {
     int currentGuard = 0;
     LocalDateTime asleep = events.get(0).getTimestamp();
     ListCountMap<Integer, Integer> lcm = new ListCountMap<>();
-    for(Event event : events) {
-      if(event.event.startsWith("Guard")) {
+    for (Event event : events) {
+      if (event.event.startsWith("Guard")) {
         currentGuard = readString(event.event, "Guard #%i begins shift", AtomicInteger.class).get();
       } else if (event.event.equals("falls asleep")) {
         asleep = event.getTimestamp();
       } else {
         LocalDateTime d = event.getTimestamp();
-        while(asleep.isBefore(d)) {
+        while (asleep.isBefore(d)) {
           lcm.increment(currentGuard, asleep.getMinute());
           asleep = asleep.plus(Duration.ofMinutes(1));
         }

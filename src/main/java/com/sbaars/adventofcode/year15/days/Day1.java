@@ -24,10 +24,10 @@ public class Day1 extends Day2015 {
   public Object part2() {
     String in = day().trim();
     return findReduce(
-            zipWithIndex(in.chars().boxed()),
-            0,
-            (c, acc) -> acc + (c.e() == '(' ? 1 : -1),
-            acc -> acc < 0
+        zipWithIndex(in.chars().boxed()),
+        0,
+        (c, acc) -> acc + (c.e() == '(' ? 1 : -1),
+        acc -> acc < 0
     ).i() + 1;
   }
 }

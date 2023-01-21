@@ -36,21 +36,21 @@ public class Day23 extends Day2022 {
   public long solution(boolean isPart2) {
     Builder<InfiniteGrid> b = new Builder<>(new InfiniteGrid(dayGrid(), '.'), InfiniteGrid::new);
     List<Direction> dirs = new ArrayList<>(List.of(NORTH, SOUTH, WEST, EAST));
-    for(int i = 0; isPart2 || i<10; i++) {
+    for (int i = 0; isPart2 || i < 10; i++) {
       InfiniteGrid g = b.get();
       Map<Loc, Loc> dest = g.stream()
-              .filter(e -> Direction.eight().anyMatch(d -> g.contains(d.move(e))))
-              .flatMap(e -> dirs.stream().filter(d -> !g.contains(d.move(e)) && !g.contains(d.turn().move(d.move(e)))  && !g.contains(d.turn(false).move(d.move(e)))).map(d -> new Pair<>(e, d.move(e))).limit(1))
-              .collect(Collectors.toMap(Pair::a, Pair::b));
+          .filter(e -> Direction.eight().anyMatch(d -> g.contains(d.move(e))))
+          .flatMap(e -> dirs.stream().filter(d -> !g.contains(d.move(e)) && !g.contains(d.turn().move(d.move(e))) && !g.contains(d.turn(false).move(d.move(e)))).map(d -> new Pair<>(e, d.move(e))).limit(1))
+          .collect(Collectors.toMap(Pair::a, Pair::b));
       dest.entrySet().stream()
-              .map(e -> dest.values().stream().filter(l -> l.equals(e.getValue())).limit(2).count() == 1 ? e.getValue() : e.getKey())
-              .forEach(e -> b.getNew().set(e, '#'));
+          .map(e -> dest.values().stream().filter(l -> l.equals(e.getValue())).limit(2).count() == 1 ? e.getValue() : e.getKey())
+          .forEach(e -> b.getNew().set(e, '#'));
       g.grid.keySet().stream()
-              .filter(e -> !dest.containsKey(e))
-              .forEach(e -> b.getNew().set(e, '#'));
+          .filter(e -> !dest.containsKey(e))
+          .forEach(e -> b.getNew().set(e, '#'));
       dirs.add(dirs.remove(0));
-      if(b.getNew().grid.keySet().equals(g.grid.keySet())){
-        return i+1;
+      if (b.getNew().grid.keySet().equals(g.grid.keySet())) {
+        return i + 1;
       }
       b.refresh();
     }

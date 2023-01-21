@@ -15,6 +15,7 @@ public class CircularList {
   public CircularList(long[] elements) {
     this(elements, elements.length);
   }
+
   public CircularList(long[] elements, int maxSize) {
     this.values = new ArrayList<>(maxSize);
     Node prev = null;
@@ -65,8 +66,8 @@ public class CircularList {
   }
 
   public void insertAfter(Node insertThis, Node afterThis) {
-    if(insertThis == afterThis || insertThis.prev == afterThis) return;
-    if(insertThis.next == null || insertThis.prev == null) { // insert new
+    if (insertThis == afterThis || insertThis.prev == afterThis) return;
+    if (insertThis.next == null || insertThis.prev == null) { // insert new
       insertThis.prev = afterThis;
       insertThis.next = afterThis.next;
       values.add(insertThis);
@@ -91,6 +92,7 @@ public class CircularList {
   public void setCurrent(int value) {
     current = values.get(value);
   }
+
   public void setCurrent(Node n) {
     current = n;
   }
@@ -118,8 +120,8 @@ public class CircularList {
     public Node move(long howMuch, int size) {
       Node n = this;
       int movesNeeded = Math.floorMod(howMuch, size - 1);
-      for(long i = 0; i<abs(movesNeeded); i++) {
-        if(movesNeeded > 0) {
+      for (long i = 0; i < abs(movesNeeded); i++) {
+        if (movesNeeded > 0) {
           n = n.next;
         } else {
           n = n.prev;
@@ -130,8 +132,8 @@ public class CircularList {
 
     public Node move(int howMuch) {
       Node n = this;
-      for(long i = 0; i<abs(howMuch); i++) {
-        if(howMuch > 0) {
+      for (long i = 0; i < abs(howMuch); i++) {
+        if (howMuch > 0) {
           n = n.next;
         } else {
           n = n.prev;

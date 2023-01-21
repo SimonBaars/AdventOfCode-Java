@@ -18,8 +18,8 @@ public class Day1 extends Day2017 {
   public Object part1() {
     long[] x = dayDigits();
     long sum = 0;
-    for(int i = 0; i<x.length; i++) {
-      if(x[i] == x[(i+1)%x.length]) sum+=x[i];
+    for (int i = 0; i < x.length; i++) {
+      if (x[i] == x[(i + 1) % x.length]) sum += x[i];
     }
     return sum;
   }
@@ -28,8 +28,8 @@ public class Day1 extends Day2017 {
   public Object part2() {
     long[] x = dayDigits();
     long sum = 0;
-    for(int i = 0; i<x.length; i++) {
-      if(x[i] == x[(i+x.length/2)%x.length]) sum+=x[i];
+    for (int i = 0; i < x.length; i++) {
+      if (x[i] == x[(i + x.length / 2) % x.length]) sum += x[i];
     }
     return sum;
   }

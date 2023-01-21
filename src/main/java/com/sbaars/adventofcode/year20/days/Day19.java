@@ -55,7 +55,7 @@ public class Day19 extends Day2020 {
         for (var x = 0; x < size - y; x++) {
           for (var i = 0; i < y; i++) {
             for (var n1 : cyk(i, x)) {
-              for (var n2 : cyk(y-i-1, x+i+1)) {
+              for (var n2 : cyk(y - i - 1, x + i + 1)) {
                 for (var rule : rules.getOrDefault(List.of(n1, n2), emptySet())) {
                   cyk(y, x).add(rule);
                 }

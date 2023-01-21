@@ -1,7 +1,9 @@
 # adventOfCode(Language.JAVA)
 
 ## 2022
+
 ### Days
+
 - [Day 1](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year22/days/Day1.java)
 - [Day 2](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year22/days/Day2.java)
 - [Day 3](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year22/days/Day3.java)
@@ -29,6 +31,7 @@
 - [Day 25](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year22/days/Day25.java)
 
 ### Console output
+
 ```
 Day 1:
 Part 1: 67633
@@ -138,7 +141,9 @@ Part 2: The More The Merrier
 ```
 
 ## 2021
+
 ### Days
+
 - [Day 1](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day1.java)
 - [Day 2](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day2.java)
 - [Day 3](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day3.java)
@@ -166,6 +171,7 @@ Part 2: The More The Merrier
 - [Day 25](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year21/days/Day25.java)
 
 ### Console output
+
 ```
 Day 1:
 Part 1: 1184
@@ -276,7 +282,9 @@ Part 2: Merry Christmas
 ```
 
 ## 2020
+
 ### Days
+
 - [Day 1](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day1.java)
 - [Day 2](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day2.java)
 - [Day 3](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day3.java)
@@ -304,6 +312,7 @@ Part 2: Merry Christmas
 - [Day 25](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year20/days/Day25.java)
 
 ### Console output
+
 ```
 Day 1:
 Part 1: 270144
@@ -407,7 +416,9 @@ Part 2: That's all folks
 ```
 
 ## 2019
+
 ### Days
+
 - [Day 1](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year19/days/Day1.java)
 - [Day 2](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year19/days/Day2.java)
 - [Day 3](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year19/days/Day3.java)
@@ -435,7 +446,10 @@ Part 2: That's all folks
 - [Day 25](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year19/days/Day25.java)
 
 ### Console output
-Output of running [Main.java](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode2019/Main.java):
+
+Output of
+running [Main.java](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode2019/Main.java):
+
 ```
 Day 1:
 Part 1: 3514064
@@ -551,9 +565,11 @@ Part 2: MERRY CHRISTMAS!!
 ```
 
 ## 2018
+
 I never did the 2018 advent of code puzzles when the event was ongoing. I'm just doing them whenever I feel like it :)
 
 ### Days
+
 - [Day 1](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day1.java)
 - [Day 2](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day2.java)
 - [Day 3](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day3.java)
@@ -581,6 +597,7 @@ I never did the 2018 advent of code puzzles when the event was ongoing. I'm just
 - [Day 25](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year18/days/Day25.java)
 
 ### Console output
+
 ```
 Day 1:
 Part 1: 433

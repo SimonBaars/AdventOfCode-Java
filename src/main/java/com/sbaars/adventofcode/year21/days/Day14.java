@@ -25,16 +25,16 @@ public class Day14 extends Day2021 {
     var init = in[0];
     var strs = Arrays.stream(in[1].split("\n")).map(e -> e.split(" -> ")).collect(Collectors.toMap(e -> e[0], e -> e[1]));
     var pairs = new LongCountMap<String>();
-    for(int i = 0; i<init.length()-1; i++) {
-      pairs.increment(init.substring(i, i+2));
+    for (int i = 0; i < init.length() - 1; i++) {
+      pairs.increment(init.substring(i, i + 2));
     }
     LongCountMap<Character> chCounts = new LongCountMap<>();
-    init.chars().forEach(e -> chCounts.increment((char)e));
-    for(int step = 1; step <= steps; step++){
+    init.chars().forEach(e -> chCounts.increment((char) e));
+    for (int step = 1; step <= steps; step++) {
       var newPairs = new LongCountMap<String>();
-      for(String pair : pairs.keySet()){
+      for (String pair : pairs.keySet()) {
         long increment = pairs.get(pair);
-        if(strs.containsKey(pair)) {
+        if (strs.containsKey(pair)) {
           String key = strs.get(pair);
           String n1 = pair.substring(0, 1) + key;
           String n2 = key + pair.substring(1, 2);

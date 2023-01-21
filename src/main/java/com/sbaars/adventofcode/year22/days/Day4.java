@@ -17,12 +17,12 @@ public class Day4 extends Day2022 {
     new Day4().printParts();
   }
 
-  public record Assignment(long aStart, long aEnd, long bStart, long bEnd){
-    public boolean contained(){
-      return (aStart>=bStart && aEnd<=bEnd) || (bStart>=aStart && bEnd<=aEnd);
+  public record Assignment(long aStart, long aEnd, long bStart, long bEnd) {
+    public boolean contained() {
+      return (aStart >= bStart && aEnd <= bEnd) || (bStart >= aStart && bEnd <= aEnd);
     }
 
-    public boolean overlap(){
+    public boolean overlap() {
       return aStart <= bEnd && aEnd >= bStart;
     }
   }

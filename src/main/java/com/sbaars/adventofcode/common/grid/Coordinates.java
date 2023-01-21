@@ -22,7 +22,7 @@ public class Coordinates {
     this.coords = c.collect(Collectors.toSet());
   }
 
-  public Coordinates(String s){
+  public Coordinates(String s) {
     this(s, DEFAULT_DELIMITER, ",");
   }
 
@@ -34,24 +34,24 @@ public class Coordinates {
     coords = new HashSet<>();
   }
 
-  public Point add(Point a){
+  public Point add(Point a) {
     coords.add(a);
     return a;
   }
 
-  public Coordinates transform(UnaryOperator<Point> f){
+  public Coordinates transform(UnaryOperator<Point> f) {
     return new Coordinates(stream().map(f));
   }
 
-  public Stream<Point> stream(){
+  public Stream<Point> stream() {
     return coords.stream();
   }
 
-  public NumGrid toGrid(){
-    NumGrid g = new NumGrid(new long[sizeY()+1][sizeX()+1]);
+  public NumGrid toGrid() {
+    NumGrid g = new NumGrid(new long[sizeY() + 1][sizeX() + 1]);
     int minX = stream().mapToInt(e -> e.x).min().getAsInt();
     int minY = stream().mapToInt(e -> e.y).min().getAsInt();
-    coords.stream().map(e -> new Point(e.y-minY, e.x-minX)).forEach(e -> g.set(e, 1L));
+    coords.stream().map(e -> new Point(e.y - minY, e.x - minX)).forEach(e -> g.set(e, 1L));
     return g;
   }
 
@@ -63,12 +63,12 @@ public class Coordinates {
     return stream().mapToInt(e -> e.y).max().getAsInt() + abs(stream().mapToInt(e -> e.y).min().getAsInt());
   }
 
-  public Coordinates mirrorX(){
+  public Coordinates mirrorX() {
     int sizeX = sizeX();
     return new Coordinates(coords.stream().map(p -> new Point(sizeX - p.x, p.y)));
   }
 
-  public Coordinates mirrorY(){
+  public Coordinates mirrorY() {
     int sizeY = sizeY();
     return new Coordinates(coords.stream().map(p -> new Point(p.x, sizeY - p.y)));
   }

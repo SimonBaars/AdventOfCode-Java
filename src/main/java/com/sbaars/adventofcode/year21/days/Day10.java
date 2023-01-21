@@ -25,7 +25,7 @@ public class Day10 extends Day2021 {
   @Override
   public Object part2() {
     List<Long> scores = getScore(true);
-    return scores.stream().sorted().skip(scores.size()/2).findFirst().get();
+    return scores.stream().sorted().skip(scores.size() / 2).findFirst().get();
   }
 
   private List<Long> getScore(boolean part) {
@@ -34,14 +34,15 @@ public class Day10 extends Day2021 {
     var in = dayStrings();
     List<Long> scores = new ArrayList<>();
     long score1 = 0;
-    out: for(String line : in){
+    out:
+    for (String line : in) {
       Stack<Character> s = new Stack<>();
-      for(Character c : line.toCharArray()){
-        if(m.containsKey(c)){
-          if(!s.isEmpty()){
+      for (Character c : line.toCharArray()) {
+        if (m.containsKey(c)) {
+          if (!s.isEmpty()) {
             Character stackC = s.pop();
-            if(!m.get(c).equals(stackC)){
-              if(!part) score1+=p.get(c);
+            if (!m.get(c).equals(stackC)) {
+              if (!part) score1 += p.get(c);
               continue out;
             }
           }
@@ -49,15 +50,15 @@ public class Day10 extends Day2021 {
           s.push(c);
         }
       }
-      if(!part) continue;
+      if (!part) continue;
       long score = 0;
-      while(!s.isEmpty()){
+      while (!s.isEmpty()) {
         Character c = s.pop();
         score = (score * 5) + p.get(c);
       }
       scores.add(score);
     }
-    if(!part) return List.of(score1);
+    if (!part) return List.of(score1);
     return scores;
   }
 }

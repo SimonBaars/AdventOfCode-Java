@@ -18,11 +18,16 @@ public class Day2 extends Day2022 {
     new Day2().printParts();
   }
 
-  enum Shape {ROCK, PAPER, SCISSOR};
-  enum Outcome {DRAW, WIN, LOSS};
+  enum Shape {ROCK, PAPER, SCISSOR}
+
+  ;
+
+  enum Outcome {DRAW, WIN, LOSS}
+
+  ;
 
   public record Game(String a, String b) {
-    private Shape getShape(String s){
+    private Shape getShape(String s) {
       return switch (s) {
         case "A", "X" -> ROCK;
         case "B", "Y" -> PAPER;
@@ -41,8 +46,8 @@ public class Day2 extends Day2022 {
 
     private long getScore(Shape sb) {
       Shape sa = getShape(a);
-      long baseScore = sb.ordinal()+1;
-      return switch(calculateOutcome(sa, sb)) {
+      long baseScore = sb.ordinal() + 1;
+      return switch (calculateOutcome(sa, sb)) {
         case LOSS -> baseScore;
         case WIN -> baseScore + 6;
         case DRAW -> baseScore + 3;
@@ -50,16 +55,16 @@ public class Day2 extends Day2022 {
     }
 
     private Outcome calculateOutcome(Shape sa, Shape sb) {
-      if(sa == sb) {
+      if (sa == sb) {
         return DRAW;
-      } else if(sa.ordinal() == ((sb.ordinal() + 1) % Shape.values().length)) {
+      } else if (sa.ordinal() == ((sb.ordinal() + 1) % Shape.values().length)) {
         return LOSS;
       }
       return WIN;
     }
 
     private long getScore2() {
-      return getScore(choose(getShape(a), b.equals("X")? LOSS :b.equals("Y")?Outcome.DRAW: WIN));
+      return getScore(choose(getShape(a), b.equals("X") ? LOSS : b.equals("Y") ? Outcome.DRAW : WIN));
     }
   }
 

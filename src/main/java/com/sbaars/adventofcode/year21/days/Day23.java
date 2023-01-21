@@ -18,27 +18,27 @@ public class Day23 extends Day2021 {
     new Day23().doChecks();
     new Day23().printParts();
   }
-  
-  public void doChecks(){
-    Queue<State> l = getQueue(new State(new int[][]{{0,0},{1,1},{2,2},{3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
+
+  public void doChecks() {
+    Queue<State> l = getQueue(new State(new int[][]{{0, 0}, {1, 1}, {2, 2}, {3, 3}}, new int[]{-1, -1, -1, -1, -1, -1, -1}));
     verify(l.peek().win());
     simulateMoves(l, new HashSet<>());
     verify(l.isEmpty());
-    l = getQueue(new State(new int[][]{{0,0},{1,1},{2,2},{-1,3}}, new int[]{-1,-1,-1,-1,-1,-1,3}));
+    l = getQueue(new State(new int[][]{{0, 0}, {1, 1}, {2, 2}, {-1, 3}}, new int[]{-1, -1, -1, -1, -1, -1, 3}));
     simulateMoves(l, new HashSet<>());
     verify(l.size() == 1);
     verify(l.poll().win());
-    l = getQueue(new State(new int[][]{{0,0},{2,1},{1,2},{3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
-    verify(getMinimum(l, new HashSet<>()) == (100L*4)+(10L*6));
-    l = getQueue(new State(new int[][]{{0,0},{2,2},{1,1},{3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
-    verify(getMinimum(l, new HashSet<>()) == (100L*10)+(10L*14));
-    l = getQueue(new State(new int[][]{{0,0,0,0},{2,2,2,2},{1,1,1,1},{3,3,3,3}}, new int[]{-1,-1,-1,-1,-1,-1,-1}));
+    l = getQueue(new State(new int[][]{{0, 0}, {2, 1}, {1, 2}, {3, 3}}, new int[]{-1, -1, -1, -1, -1, -1, -1}));
+    verify(getMinimum(l, new HashSet<>()) == (100L * 4) + (10L * 6));
+    l = getQueue(new State(new int[][]{{0, 0}, {2, 2}, {1, 1}, {3, 3}}, new int[]{-1, -1, -1, -1, -1, -1, -1}));
+    verify(getMinimum(l, new HashSet<>()) == (100L * 10) + (10L * 14));
+    l = getQueue(new State(new int[][]{{0, 0, 0, 0}, {2, 2, 2, 2}, {1, 1, 1, 1}, {3, 3, 3, 3}}, new int[]{-1, -1, -1, -1, -1, -1, -1}));
     verify(getMinimum(l, new HashSet<>()) == 3240L);
   }
 
   @Override
   public Object part1() {
-    if(example == 1) {
+    if (example == 1) {
       return constructField(new int[][]{{1, 0}, {2, 3}, {1, 2}, {3, 0}});
     }
     return constructField(new int[][]{{2, 1}, {3, 0}, {0, 3}, {1, 2}});
@@ -59,9 +59,9 @@ public class Day23 extends Day2021 {
   }
 
   private long getMinimum(Queue<State> states, Set<State> stateSet) {
-    while(true){
+    while (true) {
       Optional<Long> sim = simulateMoves(states, stateSet);
-      if(sim.isPresent()) {
+      if (sim.isPresent()) {
         return sim.get();
       }
     }
@@ -69,40 +69,41 @@ public class Day23 extends Day2021 {
 
   private Optional<Long> simulateMoves(Queue<State> states, Set<State> stateSet) {
     State s = states.poll();
-    if(stateSet.contains(s)) return Optional.empty();
+    if (stateSet.contains(s)) return Optional.empty();
     stateSet.add(s);
-    if(s.win()){
+    if (s.win()) {
       return Optional.of(s.energySpent);
     }
     int[] occupied = s.occupiedRooms();
-    for(int r : occupied){
+    for (int r : occupied) {
       int[] freeWait = s.freeWaiting(r);
-      for(int w : freeWait){
+      for (int w : freeWait) {
         states.add(s.moveIntoWaiting(r, w));
       }
     }
     occupied = s.occupiedWaiting();
-    for(int w : occupied){
+    for (int w : occupied) {
       int r = s.freeRoom(w);
-      if(r!=-1){
+      if (r != -1) {
         states.add(s.moveFromWaiting(w, r));
       }
     }
     return Optional.empty();
   }
 
-  public record State(int[][] rooms, int[] waiting, long energySpent, long moves){
-    public State(int[][] rooms, int[] waiting){
+  public record State(int[][] rooms, int[] waiting, long energySpent, long moves) {
+    public State(int[][] rooms, int[] waiting) {
       this(rooms, waiting, 0L, 0L);
     }
 
-    public State copy(long newEnergy){
-      int[][] room = Arrays.stream(rooms).map(int[]::clone).toArray(int[][]::new);;
+    public State copy(long newEnergy) {
+      int[][] room = Arrays.stream(rooms).map(int[]::clone).toArray(int[][]::new);
+      ;
       int[] wait = Arrays.copyOf(waiting, waiting.length);
       return new State(room, wait, energySpent + newEnergy, moves + 1);
     }
 
-    public State moveIntoWaiting(int r, int w){
+    public State moveIntoWaiting(int r, int w) {
       int toMove = ArrayUtils.lastIndexOf(rooms[r], -1) + 1;
       State s = copy(energy(rooms[r][toMove]) * (energyMultiplier(r, w) + toMove));
       s.waiting[w] = s.rooms[r][toMove];
@@ -110,80 +111,80 @@ public class Day23 extends Day2021 {
       return s;
     }
 
-    public long energy(int x){
-      return switch(x) {
+    public long energy(int x) {
+      return switch (x) {
         case 0 -> 1L;
         case 1 -> 10L;
         case 2 -> 100L;
         case 3 -> 1000L;
-        default -> throw new IllegalStateException("Invalid "+x);
+        default -> throw new IllegalStateException("Invalid " + x);
       };
     }
 
     public long energyMultiplier(int r, int w) {
-      if(r == 0 && w == 0) {
+      if (r == 0 && w == 0) {
         return 3;
-      } else if(r == 0 && w == 1) {
+      } else if (r == 0 && w == 1) {
         return 2;
-      } else if(r == 0 && w == 2) {
+      } else if (r == 0 && w == 2) {
         return 2;
-      } else if(r == 0 && w == 3) {
+      } else if (r == 0 && w == 3) {
         return 4;
-      } else if(r == 0 && w == 4) {
+      } else if (r == 0 && w == 4) {
         return 6;
-      } else if(r == 0 && w == 5) {
+      } else if (r == 0 && w == 5) {
         return 8;
-      } else if(r == 0 && w == 6) {
+      } else if (r == 0 && w == 6) {
         return 9;
-      } else if(r == 1 && w == 0) {
+      } else if (r == 1 && w == 0) {
         return 5;
-      } else if(r == 1 && w == 1) {
+      } else if (r == 1 && w == 1) {
         return 4;
-      } else if(r == 1 && w == 2) {
+      } else if (r == 1 && w == 2) {
         return 2;
-      } else if(r == 1 && w == 3) {
+      } else if (r == 1 && w == 3) {
         return 2;
-      } else if(r == 1 && w == 4) {
+      } else if (r == 1 && w == 4) {
         return 4;
-      } else if(r == 1 && w == 5) {
+      } else if (r == 1 && w == 5) {
         return 6;
-      } else if(r == 1 && w == 6) {
+      } else if (r == 1 && w == 6) {
         return 7;
-      } else if(r == 2 && w == 0) {
+      } else if (r == 2 && w == 0) {
         return 7;
-      } else if(r == 2 && w == 1) {
+      } else if (r == 2 && w == 1) {
         return 6;
-      } else if(r == 2 && w == 2) {
+      } else if (r == 2 && w == 2) {
         return 4;
-      } else if(r == 2 && w == 3) {
+      } else if (r == 2 && w == 3) {
         return 2;
-      } else if(r == 2 && w == 4) {
+      } else if (r == 2 && w == 4) {
         return 2;
-      } else if(r == 2 && w == 5) {
+      } else if (r == 2 && w == 5) {
         return 4;
-      } else if(r == 2 && w == 6) {
+      } else if (r == 2 && w == 6) {
         return 5;
-      } else if(r == 3 && w == 0) {
+      } else if (r == 3 && w == 0) {
         return 9;
-      } else if(r == 3 && w == 1) {
+      } else if (r == 3 && w == 1) {
         return 8;
-      } else if(r == 3 && w == 2) {
+      } else if (r == 3 && w == 2) {
         return 6;
-      } else if(r == 3 && w == 3) {
+      } else if (r == 3 && w == 3) {
         return 4;
-      } else if(r == 3 && w == 4) {
+      } else if (r == 3 && w == 4) {
         return 2;
-      } else if(r == 3 && w == 5) {
+      } else if (r == 3 && w == 5) {
         return 2;
-      } else if(r == 3 && w == 6) {
+      } else if (r == 3 && w == 6) {
         return 3;
       }
-      throw new IllegalStateException("Invalid move "+r+", "+w);
+      throw new IllegalStateException("Invalid move " + r + ", " + w);
     }
 
-    public State moveFromWaiting(int w, int r){
+    public State moveFromWaiting(int w, int r) {
       int toMove = ArrayUtils.lastIndexOf(rooms[r], -1);
-      if(toMove == -1){
+      if (toMove == -1) {
         toMove = 0;
       }
       State s = copy(energy(waiting[w]) * (energyMultiplier(r, w) + toMove));
@@ -192,25 +193,25 @@ public class Day23 extends Day2021 {
       return s;
     }
 
-    public int[] occupiedRooms(){
-        return IntStream.range(0, rooms.length).filter(e -> !IntStream.of(rooms[e]).allMatch(r->r ==e || r == -1)).toArray();
+    public int[] occupiedRooms() {
+      return IntStream.range(0, rooms.length).filter(e -> !IntStream.of(rooms[e]).allMatch(r -> r == e || r == -1)).toArray();
     }
 
-    public int[] occupiedWaiting(){
+    public int[] occupiedWaiting() {
       return IntStream.range(0, waiting.length).filter(e -> waiting[e] != -1).toArray();
     }
 
-    public int freeRoom(int forWaiting){
+    public int freeRoom(int forWaiting) {
       int room = waiting[forWaiting];
-      if(rooms[room][rooms[room].length-1] != -1 && rooms[room][rooms[room].length-1] != room) return -1;
+      if (rooms[room][rooms[room].length - 1] != -1 && rooms[room][rooms[room].length - 1] != room) return -1;
       int r = room + 1;
-      for(int i = forWaiting+1; i<=r; i++){
-        if(waiting[i] != -1){
+      for (int i = forWaiting + 1; i <= r; i++) {
+        if (waiting[i] != -1) {
           return -1;
         }
       }
-      for(int i = forWaiting-1; i>r; i--){
-        if(waiting[i] != -1){
+      for (int i = forWaiting - 1; i > r; i--) {
+        if (waiting[i] != -1) {
           return -1;
         }
       }
@@ -218,28 +219,28 @@ public class Day23 extends Day2021 {
     }
 
     // Indexes of free waiting spots
-    public int[] freeWaiting(int forRoom){
+    public int[] freeWaiting(int forRoom) {
       var seeminglyFree = IntStream.range(0, waiting.length).filter(e -> waiting[e] == -1).boxed().collect(Collectors.toCollection(HashSet::new));
-      int r = forRoom+1;
-      for(int i = r; i>=0; i--){
-        if(!seeminglyFree.contains(i)){
+      int r = forRoom + 1;
+      for (int i = r; i >= 0; i--) {
+        if (!seeminglyFree.contains(i)) {
           int i2 = i;
-          seeminglyFree.removeIf(x -> x<i2);
+          seeminglyFree.removeIf(x -> x < i2);
           break;
         }
       }
-      for(int i = r+1; i<waiting.length; i++){
-        if(!seeminglyFree.contains(i)){
+      for (int i = r + 1; i < waiting.length; i++) {
+        if (!seeminglyFree.contains(i)) {
           int i2 = i;
-          seeminglyFree.removeIf(x -> x>i2);
+          seeminglyFree.removeIf(x -> x > i2);
           break;
         }
       }
       return seeminglyFree.stream().mapToInt(e -> e).toArray();
     }
 
-    public boolean win(){
-      return IntStream.range(0, rooms.length).allMatch(e -> IntStream.of(rooms[e]).allMatch(f -> f==e));
+    public boolean win() {
+      return IntStream.range(0, rooms.length).allMatch(e -> IntStream.of(rooms[e]).allMatch(f -> f == e));
     }
 
     @Override
@@ -258,7 +259,7 @@ public class Day23 extends Day2021 {
 
   @Override
   public Object part2() {
-    if(example == 1) {
+    if (example == 1) {
       return constructField(new int[][]{{1, 3, 3, 0}, {2, 2, 1, 3}, {1, 1, 0, 2}, {3, 0, 2, 0}});
     }
     return constructField(new int[][]{{2, 3, 3, 1}, {3, 2, 1, 0}, {0, 1, 0, 3}, {1, 0, 2, 2}});

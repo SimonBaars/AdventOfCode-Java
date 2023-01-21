@@ -34,15 +34,15 @@ public class Day12 extends Day2022 {
     visited.add(start);
 
     long steps = 1;
-    while(!currentLevel.isEmpty()){
+    while (!currentLevel.isEmpty()) {
       Set<Point> level = new HashSet<>(currentLevel);
       currentLevel.clear();
-      for(Point p : level) {
+      for (Point p : level) {
         long current = g.get(p);
-        if(current == 'S') current = 'a';
-        for(Point p2 : g.streamFourDirs(p).toList()) {
-          if((current == 'y' || current == 'z') && g.get(p2) == 'E') return steps;
-          if(g.get(p2) <= current+1 && visited.add(p2)) {
+        if (current == 'S') current = 'a';
+        for (Point p2 : g.streamFourDirs(p).toList()) {
+          if ((current == 'y' || current == 'z') && g.get(p2) == 'E') return steps;
+          if (g.get(p2) <= current + 1 && visited.add(p2)) {
             currentLevel.add(p2);
           }
         }

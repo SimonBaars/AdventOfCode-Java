@@ -9,6 +9,7 @@ import java.util.Map;
 public class CircularLinkedList {
   public final Map<Integer, Node> valueMap = new HashMap<>();
   private Node current;
+
   public CircularLinkedList(int[] elements) {
     Node prev = null;
     Node first = null;
@@ -60,7 +61,7 @@ public class CircularLinkedList {
   }
 
   public void insertAfter(Node s1, Node s2) {
-    if(s1 == s2) return;
+    if (s1 == s2) return;
     s1.prev.next = s1.next;
     s1.next.prev = s1.prev;
     s2.next.next.prev = s1;
@@ -80,6 +81,7 @@ public class CircularLinkedList {
   public void setCurrent(int value) {
     current = valueMap.get(value);
   }
+
   public void setCurrent(Node n) {
     current = n;
   }

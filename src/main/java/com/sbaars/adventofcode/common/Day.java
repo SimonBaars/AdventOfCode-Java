@@ -40,7 +40,7 @@ public abstract class Day {
   }
 
   public static File getResource(String path) {
-    return new File("src/main/resources/"+path);
+    return new File("src/main/resources/" + path);
   }
 
   private String getDayPath() {
@@ -54,10 +54,10 @@ public abstract class Day {
 
   public void printParts() {
     solutionPart1 = part1();
-    if(solutionPart1 instanceof Optional) solutionPart1 = ((Optional<?>)solutionPart1).get();
+    if (solutionPart1 instanceof Optional) solutionPart1 = ((Optional<?>) solutionPart1).get();
     System.out.println("Part 1: " + solutionPart1);
     solutionPart2 = part2();
-    if(solutionPart2 instanceof Optional) solutionPart2 = ((Optional<?>)solutionPart2).get();
+    if (solutionPart2 instanceof Optional) solutionPart2 = ((Optional<?>) solutionPart2).get();
     System.out.println("Part 2: " + solutionPart2);
   }
 
@@ -68,15 +68,15 @@ public abstract class Day {
   }
 
   public void submitPart1() {
-    if(solutionPart1 == null) solutionPart1 = part1();
-    if(example == 0 && solutionPart1 != null) {
+    if (solutionPart1 == null) solutionPart1 = part1();
+    if (example == 0 && solutionPart1 != null) {
       new Submit().submit(solutionPart1, year, day, 1);
     }
   }
 
   public void submitPart2() {
-    if(solutionPart2 == null) solutionPart2 = part1();
-    if(example == 0 && solutionPart2 != null) {
+    if (solutionPart2 == null) solutionPart2 = part1();
+    if (example == 0 && solutionPart2 != null) {
       new Submit().submit(solutionPart2, year, day, 2);
     }
   }
@@ -148,18 +148,18 @@ public abstract class Day {
   public void downloadIfNotDownloaded() {
     int oldExample = example;
     example = 0;
-    if(!getResource(getDayPath()).exists()) {
+    if (!getResource(getDayPath()).exists()) {
       new FetchInput().retrieveInput(Integer.toString(day), Integer.toString(year));
     }
     example = oldExample;
   }
 
-    public void downloadExample() {
-      int oldExample = example;
-      example = 1;
-      if(!getResource(getDayPath()).exists()) {
-        new FetchInput().retrieveExamples(Integer.toString(day), Integer.toString(year));
-      }
-      example = oldExample;
+  public void downloadExample() {
+    int oldExample = example;
+    example = 1;
+    if (!getResource(getDayPath()).exists()) {
+      new FetchInput().retrieveExamples(Integer.toString(day), Integer.toString(year));
     }
+    example = oldExample;
+  }
 }

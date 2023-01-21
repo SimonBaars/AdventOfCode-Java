@@ -35,7 +35,7 @@ public class Day2 extends Day2021 {
     List<Move> input = dayStream().map(e -> readString(e, "%s %n", Move.class)).toList();
     Point p = new Point(0, 0);
     long aim = 0;
-    for(Move m : input) {
+    for (Move m : input) {
       Direction d = m.direction();
       switch (d) {
         case NORTH -> aim -= m.n;
@@ -50,8 +50,8 @@ public class Day2 extends Day2021 {
     return p.x * p.y;
   }
 
-  public record Move (String dir, long n) {
-    public Direction direction(){
+  public record Move(String dir, long n) {
+    public Direction direction() {
       return switch (dir) {
         case "forward" -> Direction.EAST;
         case "up" -> Direction.NORTH;

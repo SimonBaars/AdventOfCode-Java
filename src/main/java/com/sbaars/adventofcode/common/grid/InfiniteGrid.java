@@ -27,7 +27,7 @@ public class InfiniteGrid implements Grid {
     this();
     for (int i = 0; i < g.length; i++) {
       for (int j = 0; j < g[i].length; j++) {
-        if(transparent != g[i][j]) {
+        if (transparent != g[i][j]) {
           grid.put(new Loc(j, i), g[i][j]);
         }
       }
@@ -59,7 +59,7 @@ public class InfiniteGrid implements Grid {
   }
 
   public char getChar(Loc p) {
-    return get(p).orElse((char)0);
+    return get(p).orElse((char) 0);
   }
 
   public void set(Loc p, char c) {
@@ -73,7 +73,10 @@ public class InfiniteGrid implements Grid {
   public static Collector<Loc, Map<Loc, Character>, InfiniteGrid> toInfiniteGrid(char c) {
     final Supplier<Map<Loc, Character>> supplier = HashMap::new;
     final BiConsumer<Map<Loc, Character>, Loc> accumulator = (a, b) -> a.put(b, c);
-    final BinaryOperator<Map<Loc, Character>> combiner = (a, b) -> {a.putAll(b); return a;};
+    final BinaryOperator<Map<Loc, Character>> combiner = (a, b) -> {
+      a.putAll(b);
+      return a;
+    };
     final Function<Map<Loc, Character>, InfiniteGrid> finisher = InfiniteGrid::new;
     return Collector.of(supplier, accumulator, combiner, finisher);
   }
@@ -81,7 +84,10 @@ public class InfiniteGrid implements Grid {
   public static Collector<Pair<Loc, Character>, Map<Loc, Character>, InfiniteGrid> toInfiniteGrid() {
     final Supplier<Map<Loc, Character>> supplier = HashMap::new;
     final BiConsumer<Map<Loc, Character>, Pair<Loc, Character>> accumulator = (a, b) -> a.put(b.a(), b.b());
-    final BinaryOperator<Map<Loc, Character>> combiner = (a, b) -> {a.putAll(b); return a;};
+    final BinaryOperator<Map<Loc, Character>> combiner = (a, b) -> {
+      a.putAll(b);
+      return a;
+    };
     final Function<Map<Loc, Character>, InfiniteGrid> finisher = InfiniteGrid::new;
     return Collector.of(supplier, accumulator, combiner, finisher);
   }
@@ -119,11 +125,11 @@ public class InfiniteGrid implements Grid {
   }
 
   public long height() {
-    return maxY()+1-minY();
+    return maxY() + 1 - minY();
   }
 
   public long width() {
-    return maxX()+1-minX();
+    return maxX() + 1 - minX();
   }
 
   public boolean contains(Loc p) {
@@ -138,7 +144,7 @@ public class InfiniteGrid implements Grid {
     new HashSet<>(grid.entrySet()).stream().filter(e -> p.test(e.getKey(), e.getValue())).forEach(e -> grid.remove(e.getKey()));
   }
 
-  public char[][] getGrid(){
+  public char[][] getGrid() {
     return toCharGrid().getGrid();
   }
 
@@ -146,7 +152,7 @@ public class InfiniteGrid implements Grid {
     long minX = minX();
     long minY = minY();
     CharGrid g = new CharGrid(' ', new Loc(width(), height()));
-    grid.forEach((p, i) -> g.set(new Loc(p.x-minX, p.y-minY), i));
+    grid.forEach((p, i) -> g.set(new Loc(p.x - minX, p.y - minY), i));
     return g;
   }
 

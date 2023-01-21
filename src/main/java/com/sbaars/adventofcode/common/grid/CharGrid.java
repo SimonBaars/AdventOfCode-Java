@@ -18,8 +18,8 @@ public class CharGrid implements Grid {
 
   public CharGrid(char c, Loc size) {
     this.grid = new char[size.intY()][size.intX()];
-    for(int y = 0; y<size.y; y++) {
-      for(int x = 0; x<size.x; x++) {
+    for (int y = 0; y < size.y; y++) {
+      for (int x = 0; x < size.x; x++) {
         grid[y][x] = c;
       }
     }
@@ -51,9 +51,9 @@ public class CharGrid implements Grid {
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     StringBuilder res = new StringBuilder();
-    for(char[] nums : grid) res.append(new String(nums)).append("\n");
+    for (char[] nums : grid) res.append(new String(nums)).append("\n");
     return res.toString();
   }
 
@@ -65,11 +65,12 @@ public class CharGrid implements Grid {
   }
 
   public void set(Loc p, char i) {
-    if(get(p) == 0) throw new IllegalStateException("Trying to write to coordinate outside of grid: "+p+", "+i);
+    if (get(p) == 0)
+      throw new IllegalStateException("Trying to write to coordinate outside of grid: " + p + ", " + i);
     grid[p.intY()][p.intX()] = i;
   }
 
-  public char[][] getGrid(){
+  public char[][] getGrid() {
     return grid;
   }
 }
