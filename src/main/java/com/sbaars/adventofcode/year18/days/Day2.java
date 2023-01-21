@@ -1,13 +1,13 @@
 package com.sbaars.adventofcode.year18.days;
 
-import static java.util.Optional.empty;
-
-import com.google.common.collect.Sets;
+import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.year18.Day2018;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import static com.sbaars.adventofcode.util.AOCUtils.allPairs;
+import static java.util.Optional.empty;
 
 public class Day2 extends Day2018 {
   public Day2() {
@@ -15,7 +15,7 @@ public class Day2 extends Day2018 {
   }
 
   public static void main(String[] args) {
-    new Day2().submitPart2();
+    new Day2().printParts();
   }
 
   @Override
@@ -36,24 +36,21 @@ public class Day2 extends Day2018 {
 
   @Override
   public Object part2() {
-    var com = Sets.combinations(dayStream().collect(Collectors.toSet()), 2);
-    return com.stream().map(this::compareStrings).filter(Optional::isPresent).map(Optional::get).findFirst().get();
+    return allPairs(dayStream().toList()).map(this::compareStrings).filter(Optional::isPresent).map(Optional::get).findFirst().get();
   }
 
-  private Optional<String> compareStrings(Set<String> str) {
-    var it = str.iterator();
-    String str1 = it.next(), str2 = it.next();
-    if (str1.length() != str2.length() || str1.equals(str2)) return empty();
+  private Optional<String> compareStrings(Pair<String, String> str) {
+    if (str.a().length() != str.b().length() || str.a().equals(str.b())) return empty();
     int differences = 0;
     int diffIndex = -1;
-    for (int i = 0; i < str1.length(); i++) {
-      if(str1.charAt(i) != str2.charAt(i)) {
+    for (int i = 0; i < str.a().length(); i++) {
+      if(str.a().charAt(i) != str.b().charAt(i)) {
         diffIndex = i;
         if (++differences > 1) {
           return empty();
         }
       }
     }
-    return Optional.of(new StringBuilder(str1).deleteCharAt(diffIndex).toString());
+    return Optional.of(new StringBuilder(str.a()).deleteCharAt(diffIndex).toString());
   }
 }

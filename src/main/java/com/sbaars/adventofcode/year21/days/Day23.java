@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.google.common.base.MoreObjects;
 import com.sbaars.adventofcode.year21.Day2021;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -247,15 +246,6 @@ public class Day23 extends Day2021 {
 
     public boolean win(){
       return IntStream.range(0, rooms.length).allMatch(e -> IntStream.of(rooms[e]).allMatch(f -> f==e));
-    }
-
-    @Override
-    public String toString() {
-      return MoreObjects.toStringHelper(this)
-          .add("rooms", rooms)
-          .add("waiting", waiting)
-          .add("energySpent", energySpent)
-          .toString();
     }
 
     @Override

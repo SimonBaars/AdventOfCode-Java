@@ -1,6 +1,6 @@
 package com.sbaars.adventofcode.year19.days;
 
-import com.google.common.util.concurrent.AtomicDouble;
+import com.sbaars.adventofcode.common.AtomicDouble;
 import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;

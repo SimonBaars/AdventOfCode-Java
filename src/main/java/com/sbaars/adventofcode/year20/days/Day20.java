@@ -1,9 +1,7 @@
 package com.sbaars.adventofcode.year20.days;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Streams;
 import com.sbaars.adventofcode.common.Direction;
+import com.sbaars.adventofcode.common.map.ListMap;
 import com.sbaars.adventofcode.year20.Day2020;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -14,6 +12,7 @@ import java.util.*;
 import static com.sbaars.adventofcode.common.Direction.*;
 import static java.lang.Long.parseLong;
 import static java.util.Arrays.stream;
+import static java.util.stream.Stream.concat;
 
 public class Day20 extends Day2020 {
   public Day20() {
@@ -27,13 +26,12 @@ public class Day20 extends Day2020 {
   @Override
   public Object part1() {
     Grid[] input = stream(day().split("\n\n")).map(Grid::new).toArray(Grid[]::new);
-    Multimap<String, Metadata> map = ArrayListMultimap.create();
+    ListMap<String, Metadata> map = new ListMap<>();
     stream(input).forEach(e -> e.getSides(map));
-    Map<String, Collection<Metadata>> map2 = map.asMap();
     List<Long> answer = new ArrayList<>();
     for (Grid g : input) {
-      List<String> possibleSides = Streams.concat(g.findSides(false).values().stream(), g.findSides(true).values().stream()).toList();
-      if (possibleSides.stream().filter(e -> map2.get(e).size() > 1).count() == 4L) {
+      List<String> possibleSides = concat(g.findSides(false).values().stream(), g.findSides(true).values().stream()).toList();
+      if (possibleSides.stream().filter(e -> map.get(e).size() > 1).count() == 4L) {
         answer.add(g.id);
       }
     }
@@ -59,13 +57,13 @@ public class Day20 extends Day2020 {
       this(parseLong(s.substring(5, 9)), stream(s.substring(11).split("\n")).map(String::toCharArray).toArray(char[][]::new));
     }
 
-    public Multimap<String, Metadata> getSides(Multimap<String, Metadata> map) {
+    public ListMap<String, Metadata> getSides(ListMap<String, Metadata> map) {
       findSides(map, false);
       findSides(map, true);
       return map;
     }
 
-    private void findSides(Multimap<String, Metadata> map, boolean flipped) {
+    private void findSides(ListMap<String, Metadata> map, boolean flipped) {
       Point p = new Point(flipped ? grid.length - 1 : 0, flipped ? 0 : grid.length - 1);
       Direction[] d = Direction.fourDirections();
       if (flipped) ArrayUtils.reverse(d);
@@ -76,7 +74,7 @@ public class Day20 extends Day2020 {
           if (i != grid.length - 1)
             p = dir.move(p);
         }
-        map.put(res.toString(), new Metadata(id, dir.turn(false), flipped));
+        map.addTo(res.toString(), new Metadata(id, dir.turn(false), flipped));
       }
     }
 

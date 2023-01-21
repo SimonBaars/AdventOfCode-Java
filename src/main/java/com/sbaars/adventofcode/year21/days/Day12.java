@@ -1,8 +1,8 @@
 package com.sbaars.adventofcode.year21.days;
 
-import com.google.common.collect.ImmutableListMultimap;
 import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.common.map.CountMap;
+import com.sbaars.adventofcode.common.map.ListMap;
 import com.sbaars.adventofcode.year21.Day2021;
 
 import java.util.HashSet;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
+import static com.sbaars.adventofcode.common.map.ListMap.toListMap;
 
 public class Day12 extends Day2021 implements HasRecursion {
 
@@ -30,11 +30,11 @@ public class Day12 extends Day2021 implements HasRecursion {
     return findPos(START, getInput(), Set.of(START));
   }
 
-  private ImmutableListMultimap<String, String> getInput() {
-    return dayStream().map(e -> e.split("-")).flatMap(e -> Stream.of(new String[]{e[0], e[1]}, new String[]{e[1], e[0]})).collect(toImmutableListMultimap(e -> e[0], e -> e[1]));
+  private ListMap<String, String> getInput() {
+    return dayStream().map(e -> e.split("-")).flatMap(e -> Stream.of(new String[]{e[0], e[1]}, new String[]{e[1], e[0]})).collect(toListMap(e -> e[0], e -> e[1]));
   }
 
-  private long findPos(String s, ImmutableListMultimap<String, String> in, Set<String> visited) {
+  private long findPos(String s, ListMap<String, String> in, Set<String> visited) {
     if(s.equals("end")) return 1;
     long n = 0;
     List<String> reachable = in.get(s);
@@ -53,7 +53,7 @@ public class Day12 extends Day2021 implements HasRecursion {
     return findPos2(START, getInput(), Map.of(START, 2));
   }
 
-  private long findPos2(String s, ImmutableListMultimap<String, String> in, Map<String, Integer> visited) {
+  private long findPos2(String s, ListMap<String, String> in, Map<String, Integer> visited) {
     if(s.equals("end")) {
       return 1;
     }
