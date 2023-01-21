@@ -1,7 +1,5 @@
 package com.sbaars.adventofcode.common.map;
 
-import org.checkerframework.checker.units.qual.C;
-
 import java.util.*;
 
 public class ListCountMap<K, V> extends HashMap<K, CountMap<V>> {

@@ -1,11 +1,12 @@
 package com.sbaars.adventofcode.year19.days;
 
-import com.google.common.base.Objects;
 import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.year19.Day2019;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Day3 extends Day2019 {
@@ -106,12 +107,12 @@ public class Day3 extends Day2019 {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       Step step = (Step) o;
-      return Objects.equal(point, step.point);
+      return point.equals(step.point);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(point);
+      return Objects.hash(point);
     }
   }
 }

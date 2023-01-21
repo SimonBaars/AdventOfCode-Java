@@ -1,9 +1,8 @@
   package com.sbaars.adventofcode.year21.days;
 
-  import static org.junit.jupiter.api.Assertions.assertEquals;
-
   import org.junit.jupiter.api.Test;
-  import com.sbaars.adventofcode.year21.days.Day21;
+
+  import static org.junit.jupiter.api.Assertions.assertEquals;
 
   class Day21Test {
       Day21 day = new Day21();

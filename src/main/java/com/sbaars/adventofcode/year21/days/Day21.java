@@ -1,6 +1,5 @@
 package com.sbaars.adventofcode.year21.days;
 
-import com.google.common.base.Objects;
 import com.sbaars.adventofcode.common.HasRecursion;
 import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.year21.Day2021;
@@ -8,6 +7,7 @@ import com.sbaars.adventofcode.year21.Day2021;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.sbaars.adventofcode.common.Pair.pair;
 
@@ -94,7 +94,10 @@ public class Day21 extends Day2021 implements HasRecursion {
 
     @Override
     public int hashCode() {
-      return Objects.hashCode(turn[0], turn[1], score[0], score[1], move);
+      int result = Objects.hash(move);
+      result = 31 * result + Arrays.hashCode(turn);
+      result = 31 * result + Arrays.hashCode(score);
+      return result;
     }
   }
 }

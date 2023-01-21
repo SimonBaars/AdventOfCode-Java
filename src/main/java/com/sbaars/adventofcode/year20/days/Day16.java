@@ -1,20 +1,14 @@
 package com.sbaars.adventofcode.year20.days;
 
+import com.sbaars.adventofcode.common.map.ListMap;
+import com.sbaars.adventofcode.year20.Day2020;
+
+import java.util.*;
+
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ArrayUtils.subarray;
-
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
-import com.sbaars.adventofcode.year20.Day2020;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 public class Day16 extends Day2020 {
   private final Rule[] rules;
@@ -42,32 +36,31 @@ public class Day16 extends Day2020 {
   public Object part2() {
     List<List<Long>> valid = tickets.stream().filter(t -> t.stream().allMatch(n -> stream(rules).anyMatch(r -> r.check(n)))).collect(toList());
 
-    Multimap<Integer, Rule> ruleIndex = MultimapBuilder.hashKeys().arrayListValues().build();
+    ListMap<Integer, Rule> ruleIndex = new ListMap<>();
     for (Rule r : rules) {
       for (int j = 0; j < valid.get(0).size(); j++) {
         int finalJ = j;
         if (valid.stream().allMatch(t -> r.check(t.get(finalJ)))) {
-          ruleIndex.put(j, r);
+          ruleIndex.addTo(j, r);
         }
       }
     }
 
-    Optional<Map.Entry<Integer, Collection<Rule>>> rs;
+    Optional<Map.Entry<Integer, List<Rule>>> rs;
     Set<Integer> indices = new HashSet<>();
-    while ((rs = ruleIndex.asMap().entrySet().stream().filter(e -> e.getValue().size() == 1 && !indices.contains(e.getKey())).findAny()).isPresent()) {
-      Map.Entry<Integer, Collection<Rule>> r = rs.get();
+    while ((rs = ruleIndex.entrySet().stream().filter(e -> e.getValue().size() == 1 && !indices.contains(e.getKey())).findAny()).isPresent()) {
+      Map.Entry<Integer, List<Rule>> r = rs.get();
       int index = r.getKey();
-      Rule rule = ((List<Rule>) r.getValue()).get(0);
       for (int i = 0; i < rules.length; i++) {
-        Map.Entry<Integer, Collection<Rule>> t = new ArrayList<>(ruleIndex.asMap().entrySet()).get(i);
+        Map.Entry<Integer, List<Rule>> t = new ArrayList<>(ruleIndex.entrySet()).get(i);
         if (t.getKey() != index) {
-          t.getValue().remove(rule);
+          t.getValue().remove(r.getValue().get(0));
         }
       }
       indices.add(index);
     }
 
-    return ruleIndex.asMap().entrySet().stream().filter(e -> e.getValue().stream().anyMatch(Rule::isDeparture)).mapToLong(e -> myTicket[e.getKey()]).reduce((a, b) -> a * b).getAsLong();
+    return ruleIndex.entrySet().stream().filter(e -> e.getValue().stream().anyMatch(Rule::isDeparture)).mapToLong(e -> myTicket[e.getKey()]).reduce((a, b) -> a * b).getAsLong();
   }
 
   public record Rule(String name, long lower1, long upper1, long lower2, long upper2) {
