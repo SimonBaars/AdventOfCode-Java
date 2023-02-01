@@ -38,7 +38,12 @@ public interface DataMapper {
     while (s.length() > 0) {
       if (pattern.length() > 1 && pattern.charAt(0) == '%') {
         char c = pattern.charAt(1);
-        var data = crunch(s, pattern, listSeparator[listIndex % listSeparator.length], c == 'l' && pattern.charAt(2) == '(' ? nested[listIndex % nested.length] : null);
+        Class<?> mapList = null;
+        if(c == 'l' && pattern.charAt(2) == '(') {
+          verify(nested.length > 0, "Please specify the class that will contain the objects of the list.");
+          mapList = nested[listIndex % nested.length];
+        }
+        var data = crunch(s, pattern, listSeparator[listIndex % listSeparator.length], mapList);
         if (data.isPresent()) {
           if (c == 'l') listIndex++;
           var d = data.get();

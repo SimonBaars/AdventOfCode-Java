@@ -63,7 +63,7 @@ public class LongCountMap<K> extends HashMap<K, Long> {
     return this;
   }
 
-  public long sumValues() {
+  public long sum() {
     return values().stream().mapToLong(e -> e).sum();
   }
 

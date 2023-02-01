@@ -1,7 +1,15 @@
 package com.sbaars.adventofcode.common;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.sbaars.adventofcode.common.map.LongCountMap;
+
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -37,7 +45,7 @@ public class SmartArray<T> {
   }
 
   public int indexOf(T element) {
-    return elementIndex.get(element);
+    return elementIndex.getOrDefault(element, -1);
   }
 
   public void remove(int index) {
@@ -74,5 +82,18 @@ public class SmartArray<T> {
 
   public Stream<T> stream() {
     return Stream.of(toArray());
+  }
+
+  @Override
+  public String toString() {
+    return Arrays.toString(toArray());
+  }
+
+  public static <T> Collector<T, List<T>, SmartArray<T>> toSmartArray() {
+    final Supplier<List<T>> supplier = ArrayList::new;
+    final BiConsumer<List<T>, T> accumulator = List::add;
+    final BinaryOperator<List<T>> combiner = (a, b) -> {a.addAll(b); return a;};
+    final Function<List<T>, SmartArray<T>> finisher = l -> new SmartArray<>(l.toArray((T[])new Object[0]));
+    return Collector.of(supplier, accumulator, combiner, finisher);
   }
 }

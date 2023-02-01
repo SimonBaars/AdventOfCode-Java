@@ -53,7 +53,7 @@ public class Day19 extends Day2022 {
           .peek(s -> s.perTurn.increment("ore"))
           .toList();
       for (int i = 0; i < minutes; i++) {
-        TopUniqueElements<State> newStates = new TopUniqueElements<>(capacity, comparing(state -> state.inventory.sumValues()));
+        TopUniqueElements<State> newStates = new TopUniqueElements<>(capacity, comparing(state -> state.inventory.sum()));
         for (State s : states) {
           LongCountMap<String> perTurn = new LongCountMap<>(s.perTurn);
           boolean buildGeode = s.inventory.get("ore") >= b.geodeOre && s.inventory.get("obsidian") >= b.geodeObsidian;
