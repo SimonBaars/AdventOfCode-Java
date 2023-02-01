@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static com.sbaars.adventofcode.common.Pair.pair;
-import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Long.MAX_VALUE;
 import static java.util.stream.IntStream.range;
 
 public class AOCUtils {
@@ -30,9 +30,15 @@ public class AOCUtils {
   }
 
   public static <A> A fixedPoint(A value, Function<A, A> func) {
+    return fixedPoint(value, func, MAX_VALUE);
+  }
+
+  public static <A> A fixedPoint(A value, Function<A, A> func, long limit) {
     A a = func.apply(value);
     A a2;
-    while (!(a2 = func.apply(a)).equals(a)) a = a2;
+    for(long i = 0; !(a2 = func.apply(a)).equals(a) && i<limit-1; i++) {
+      a = a2;
+    }
     return a;
   }
 
@@ -74,7 +80,7 @@ public class AOCUtils {
   }
 
   public static <A> Stream<IndexedElement<A>> zipWithIndex(Stream<? extends A> a) {
-    return zip(range(0, MAX_VALUE).boxed(), a, IndexedElement::new);
+    return zip(range(0, Integer.MAX_VALUE).boxed(), a, IndexedElement::new);
   }
 
   public static <A, B, C> Stream<C> zip(Stream<? extends A> a, Stream<? extends B> b, BiFunction<? super A, ? super B, ? extends C> zipper) {

@@ -38,6 +38,6 @@ public class Day6 extends Day2021 {
       cm = nc;
       nc = new LongCountMap<>();
     }
-    return cm.sumValues();
+    return cm.sum();
   }
 }
