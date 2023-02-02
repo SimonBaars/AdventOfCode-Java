@@ -3,13 +3,11 @@ package com.sbaars.adventofcode.util;
 import com.sbaars.adventofcode.common.*;
 
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.ToLongFunction;
+import java.util.function.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static com.sbaars.adventofcode.common.MutableElement.mutable;
 import static com.sbaars.adventofcode.common.Pair.pair;
 import static java.lang.Long.MAX_VALUE;
 import static java.util.stream.IntStream.range;
@@ -29,11 +27,11 @@ public class AOCUtils {
     return l.filter(condition).findAny().get();
   }
 
-  public static <A> A fixedPoint(A value, Function<A, A> func) {
+  public static <A> A fixedPoint(A value, UnaryOperator<A> func) {
     return fixedPoint(value, func, MAX_VALUE);
   }
 
-  public static <A> A fixedPoint(A value, Function<A, A> func, long limit) {
+  public static <A> A fixedPoint(A value, UnaryOperator<A> func, long limit) {
     A a = func.apply(value);
     A a2;
     for(long i = 0; !(a2 = func.apply(a)).equals(a) && i<limit-1; i++) {
@@ -53,6 +51,15 @@ public class AOCUtils {
       }
     }
     return res;
+  }
+
+  public static <A> Stream<Pair<A, A>> connectedPairs(Stream<A> l) {
+    MutableElement<A> m = mutable();
+    return l.map(e -> {
+      var p = new Pair<>(m.get(), e);
+      m.set(e);
+      return p;
+    }).filter(p -> p.a() != null);
   }
 
   public static <A> Stream<Pair<A, A>> connectedPairs(List<A> l) {
