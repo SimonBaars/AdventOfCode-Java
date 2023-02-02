@@ -36,7 +36,7 @@ public class Day5 extends Day2018 {
 
   public String react(String s) {
     StringBuilder b = new StringBuilder(s);
-    int[] removeIndices = zip(range(0, s.length()).boxed(), connectedPairs(s.chars().boxed().toList()), (i, p) -> new Pair<>(i, abs(p.a() - p.b()) - DIFF == 0)).filter(Pair::b).mapToInt(Pair::a).toArray();
+    int[] removeIndices = zip(range(0, s.length()).boxed(), connectedPairs(s.chars().boxed()), (i, p) -> new Pair<>(i, abs(p.a() - p.b()) - DIFF == 0)).filter(Pair::b).mapToInt(Pair::a).toArray();
     for (int i = removeIndices.length - 1; i >= 0; i--) {
       int index = removeIndices[i];
       if (i == 0 || removeIndices[i - 1] != index - 1) {
