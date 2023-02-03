@@ -29,12 +29,14 @@ import com.sbaars.adventofcode.common.Direction;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.function.ToLongFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.lang.Math.*;
 
-public class Loc {
+public class Loc implements Comparable<Loc> {
   public final long x;
   public final long y;
 
@@ -140,5 +142,11 @@ public class Loc {
     double theta = Math.atan2(loc.y - this.y, loc.x - this.x) + Math.PI / 2.0;
     double angle = Math.toDegrees(theta);
     return angle < 0 ? angle + 360 : angle;
+  }
+
+  @Override
+  public int compareTo(Loc o) {
+    ToLongFunction<Loc> tlf = a -> a.x * Integer.MAX_VALUE + a.y;
+    return Comparator.comparingLong(tlf).compare(this, o);
   }
 }
