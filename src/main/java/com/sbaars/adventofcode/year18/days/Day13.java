@@ -71,7 +71,7 @@ public class Day13 extends Day2018 {
   public Object part2() {
     var tracks = new InfiniteGrid(dayGrid());
 //    var carts = new InfiniteGrid(tracks);
-    var carts = new Builder<InfiniteGrid>(new InfiniteGrid(tracks), InfiniteGrid.class);
+    var carts = new Builder<>(new InfiniteGrid(tracks), InfiniteGrid::new);
     var cartMap = new CountMap<Loc>();
     tracks.replace('>', '-');
     tracks.replace('<', '-');
@@ -79,15 +79,25 @@ public class Day13 extends Day2018 {
     tracks.replace('^', '|');
     carts.get().removeIf((l, c) -> List.of('|', '-', '+', '/', '\\').contains(c));
     carts.get().grid.forEach((l, c) -> cartMap.put(l, 0));
-    while(true) {
-      for (Map.Entry<Loc, Character> e : new HashSet<>(carts.grid.entrySet())) {
-        if(carts.get(e.getKey()).isEmpty()) continue;
+    for(int i = 0; ; i++) {
+      if(i % 10 == 0) {
+        System.out.println("Step "+i+"   carts "+cartMap.size());
+      }
+      for (Map.Entry<Loc, Character> e : carts.get().grid.entrySet()) {
+        if(i == 423) {
+          System.out.println("hi");
+        }
         Direction d = caretToDirection(e.getValue());
         Loc destination = d.move(e.getKey());
         char atDestination = tracks.get(destination).orElse(' ');
-        if(carts.get(destination).isPresent()) {
-          carts.grid.remove(e.getKey());
-          carts.grid.remove(destination);
+        if(carts.getNew().get(destination).isPresent() || carts.get().get(destination).isPresent()) {
+          System.out.println(i+", "+destination);
+          carts.get().get(destination).ifPresent(c -> {
+            Loc l = caretToDirection(c).move(destination);
+            carts.getNew().grid.remove(l);
+            cartMap.remove(l);
+          });
+          carts.getNew().grid.remove(destination);
           cartMap.remove(e.getKey());
           cartMap.remove(destination);
           continue;
@@ -105,19 +115,23 @@ public class Day13 extends Day2018 {
         } else if (atDestination == '/') {
           d = d.turn(d == NORTH || d == SOUTH);
         }
-        carts.grid.remove(e.getKey());
-        int state = cartMap.remove(e.getKey());
-        carts.set(destination, d.getCaret());
-        cartMap.put(destination, state);
+        if(cartMap.containsKey(e.getKey())) {
+          int state = cartMap.remove(e.getKey());
+          cartMap.put(destination, state);
+        }
+        carts.getNew().set(destination, d.getCaret());
       }
 
       if(cartMap.size() == 1) {
-        var all = new InfiniteGrid(tracks);
-        all.grid.putAll(carts.grid);
-        System.out.println(all);
-        System.out.println("-----------");
-        return carts.stream().findFirst().get().toString().replace(" ", "");
+//        var all = new InfiniteGrid(tracks);
+//        all.grid.putAll(carts.getNew().grid);
+//        System.out.println(all);
+//        System.out.println("-----------");
+        return carts.getNew().stream().findFirst().get().toString().replace(" ", "");
       }
+      if(i>15000) return 0;
+
+      carts.refresh();
 //      var all = new InfiniteGrid(tracks);
 //      all.grid.putAll(carts.grid);
 //      System.out.println(all);
