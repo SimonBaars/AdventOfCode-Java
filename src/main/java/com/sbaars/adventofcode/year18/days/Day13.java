@@ -7,10 +7,7 @@ import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.common.map.CountMap;
 import com.sbaars.adventofcode.year18.Day2018;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.sbaars.adventofcode.common.Direction.*;
 
@@ -70,22 +67,22 @@ public class Day13 extends Day2018 {
   @Override
   public Object part2() {
     var tracks = new InfiniteGrid(dayGrid());
-//    var carts = new InfiniteGrid(tracks);
-    var carts = new Builder<InfiniteGrid>(new InfiniteGrid(tracks), InfiniteGrid.class);
+    var carts = new InfiniteGrid(tracks);
     var cartMap = new CountMap<Loc>();
     tracks.replace('>', '-');
     tracks.replace('<', '-');
     tracks.replace('v', '|');
     tracks.replace('^', '|');
-    carts.get().removeIf((l, c) -> List.of('|', '-', '+', '/', '\\').contains(c));
-    carts.get().grid.forEach((l, c) -> cartMap.put(l, 0));
-    while(true) {
-      for (Map.Entry<Loc, Character> e : new HashSet<>(carts.grid.entrySet())) {
+    carts.removeIf((l, c) -> List.of('|', '-', '+', '/', '\\').contains(c));
+    carts.grid.forEach((l, c) -> cartMap.put(l, 0));
+    for(int i = 0;; i++) {
+      for (Map.Entry<Loc, Character> e : carts.grid.entrySet().stream().sorted(Comparator.comparingLong(a -> a.getKey().x * carts.maxY() + a.getKey().y)).toList()) {
         if(carts.get(e.getKey()).isEmpty()) continue;
         Direction d = caretToDirection(e.getValue());
         Loc destination = d.move(e.getKey());
         char atDestination = tracks.get(destination).orElse(' ');
         if(carts.get(destination).isPresent()) {
+          System.out.println(i+", "+destination);
           carts.grid.remove(e.getKey());
           carts.grid.remove(destination);
           cartMap.remove(e.getKey());
