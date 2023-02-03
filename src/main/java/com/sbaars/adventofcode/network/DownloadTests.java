@@ -29,7 +29,7 @@ public class DownloadTests {
   }
 
   public static void main(String[] args) {
-    new DownloadTests().retrieveTests("7", "2015");
+    new DownloadTests().retrieveTests("13", "2018");
   }
 
   public void retrieveTests(String day, String year) {
@@ -70,7 +70,7 @@ public class DownloadTests {
 
   public static void writeFile(File file, String content) {
     try {
-      Files.write(file.toPath(), content.getBytes(StandardCharsets.UTF_8));
+      Files.writeString(file.toPath(), content);
     } catch (IOException e) {
       throw new IllegalStateException(e);
     }
