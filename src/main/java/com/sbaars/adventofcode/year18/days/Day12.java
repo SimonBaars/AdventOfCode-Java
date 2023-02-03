@@ -34,13 +34,6 @@ public class Day12 extends Day2018 {
 
   @Override
   public Object part2() {
-//    connectedPairs(growth().map(a -> a.stream().mapToLong(e -> e).sum())).map(p -> p.b() - p.a()).limit(1000).forEach(System.out::println);
-//    growth().limit(100).map(a -> a.stream().mapToLong(e -> e).sum()).forEach(System.out::println);
-//    return 0;
-//    return growth().limit(50000000001L).reduce((a, b) -> b).get().stream().mapToInt(e -> e).sum();
-//    System.out.println(Arrays.toString(growth().limit(10000).toArray()));
-//    for(long i = 0; i<50000000000L; i++);
-//    return 0;
     return solve(growth(), sum(), 50000000000L);
   }
 
