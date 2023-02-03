@@ -22,57 +22,22 @@ public class Day13 extends Day2018 {
 
   @Override
   public Object part1() {
-    var tracks = new InfiniteGrid(dayGrid());
-    var carts = new InfiniteGrid(tracks);
-    var cartMap = new CountMap<Loc>();
-    tracks.replace('>', '-');
-    tracks.replace('<', '-');
-    tracks.replace('v', '|');
-    tracks.replace('^', '|');
-    carts.removeIf((l, c) -> List.of('|', '-', '+', '/', '\\').contains(c));
-    carts.grid.forEach((l, c) -> cartMap.put(l, 0));
-    while(true) {
-      for (Map.Entry<Loc, Character> e : new HashSet<>(carts.grid.entrySet())) {
-        Direction d = caretToDirection(e.getValue());
-        Loc destination = d.move(e.getKey());
-        char atDestination = tracks.get(destination).orElse(' ');
-        if(carts.get(destination).isPresent()) {
-          return destination.toString().replace(" ", "");
-        } else if (atDestination == '+') {
-          int turn = switch (cartMap.get(e.getKey()) % 3) {
-            case 0 -> 270;
-            case 1 -> 0;
-            case 2 -> 90;
-            default -> throw new IllegalStateException("Invalid state: " + cartMap.get(e.getKey()));
-          };
-          d = d.turnDegrees(turn);
-          cartMap.increment(e.getKey());
-        } else if (atDestination == '\\') {
-          d = d.turn(d == EAST || d == WEST);
-        } else if (atDestination == '/') {
-          d = d.turn(d == NORTH || d == SOUTH);
-        }
-        carts.grid.remove(e.getKey());
-        int state = cartMap.remove(e.getKey());
-        carts.set(destination, d.getCaret());
-        cartMap.put(destination, state);
-      }
-//      var all = new InfiniteGrid(tracks);
-//      all.grid.putAll(carts.grid);
-//      System.out.println(all);
-//      System.out.println("-----------");
-    }
+    return solution(true);
   }
 
   @Override
   public Object part2() {
+    return solution(false);
+  }
+
+  private String solution(boolean part1) {
+    return findLoc(part1).toString().replace(" ", "");
+  }
+
+  private Loc findLoc(boolean part1) {
     var tracks = new InfiniteGrid(dayGrid());
     var carts = new InfiniteGrid(tracks);
     var cartMap = new CountMap<Loc>();
-    tracks.replace('>', '-');
-    tracks.replace('<', '-');
-    tracks.replace('v', '|');
-    tracks.replace('^', '|');
     carts.removeIf((l, c) -> List.of('|', '-', '+', '/', '\\').contains(c));
     carts.grid.forEach((l, c) -> cartMap.put(l, 0));
     for(int i = 0;; i++) {
@@ -82,7 +47,7 @@ public class Day13 extends Day2018 {
         Loc destination = d.move(e.getKey());
         char atDestination = tracks.get(destination).orElse(' ');
         if(carts.get(destination).isPresent()) {
-          System.out.println(i+", "+destination);
+          if(part1) return destination;
           carts.grid.remove(e.getKey());
           carts.grid.remove(destination);
           cartMap.remove(e.getKey());
@@ -109,16 +74,8 @@ public class Day13 extends Day2018 {
       }
 
       if(cartMap.size() == 1) {
-        var all = new InfiniteGrid(tracks);
-        all.grid.putAll(carts.grid);
-        System.out.println(all);
-        System.out.println("-----------");
-        return carts.stream().findFirst().get().toString().replace(" ", "");
+        return carts.stream().findFirst().get();
       }
-//      var all = new InfiniteGrid(tracks);
-//      all.grid.putAll(carts.grid);
-//      System.out.println(all);
-//      System.out.println("-----------");
     }
   }
 }
