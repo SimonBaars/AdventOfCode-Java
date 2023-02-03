@@ -1,13 +1,12 @@
 package com.sbaars.adventofcode.year18.days;
 
-import com.sbaars.adventofcode.common.Builder;
 import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.common.map.CountMap;
 import com.sbaars.adventofcode.year18.Day2018;
 
-import java.util.*;
+import java.util.List;
 
 import static com.sbaars.adventofcode.common.Direction.*;
 
@@ -38,7 +37,6 @@ public class Day13 extends Day2018 {
     var tracks = new InfiniteGrid(dayGrid());
     var carts = new InfiniteGrid(tracks);
     var cartMap = new CountMap<Loc>();
-    long maxY = carts.maxY();
     carts.removeIf((l, c) -> List.of('|', '-', '+', '/', '\\').contains(c));
     carts.grid.forEach((l, c) -> cartMap.put(l, 0));
     while(cartMap.size() > 1) {
