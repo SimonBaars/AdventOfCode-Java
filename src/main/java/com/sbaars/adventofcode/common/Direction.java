@@ -218,6 +218,26 @@ public enum Direction {
     return dir;
   }
 
+  public static Direction caretToDirection(char c) {
+    return switch(c) {
+      case '^' -> NORTH;
+      case '>' -> EAST;
+      case 'v' -> SOUTH;
+      case '<' -> WEST;
+      default -> throw new IllegalStateException(c + " is not a caret!");
+    };
+  }
+
+  public char getCaret() {
+    return switch(this) {
+      case NORTH -> '^';
+      case EAST -> '>';
+      case SOUTH -> 'v';
+      case WEST -> '<';
+      default -> throw new IllegalStateException(this + " is not a caret!");
+    };
+  }
+
   public Direction turnDegrees(int degrees) {
     return turnDegrees(abs(degrees), degrees > 0);
   }
