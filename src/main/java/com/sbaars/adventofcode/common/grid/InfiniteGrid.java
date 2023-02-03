@@ -159,4 +159,8 @@ public class InfiniteGrid implements Grid {
   public long area() {
     return (maxY() - minY()) + (maxX() - minX());
   }
+
+  public void replace(char find, char replaceWith) {
+    grid.entrySet().stream().filter(e -> e.getValue() == find).forEach(e -> grid.put(e.getKey(), replaceWith));
+  }
 }
