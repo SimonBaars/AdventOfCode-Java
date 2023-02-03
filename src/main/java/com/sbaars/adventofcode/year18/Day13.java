@@ -21,14 +21,7 @@ public class Day13 extends Day2018 {
 	public Object part1() {
 		//*  Toggle comment - switch start of this line between /* and //* to toggle which section of code is active.
 		String[] input = dayStrings();
-		/*/
-		String[] input =(	"/->-\\        \r\n" + 
-							"|   |  /----\\\r\n" + 
-							"| /-+--+-\\  |\r\n" + 
-							"| | |  | v  |\r\n" + 
-							"\\-+-/  \\-+--/\r\n" + 
-							"  \\------/   \r\n").split("\r\n");
-		//*/
+
 		
 		char[][] tracks = new char[input.length][input[0].length()];
 		
@@ -76,6 +69,7 @@ public class Day13 extends Day2018 {
 							}else {
 								//remove hit cart, and fix track (if this hit cart hasn't moved yet)
 								carts.remove(c.p);
+								System.out.println(count+", "+c.p);
 								tracks[hit.p.y][hit.p.x] = hit.track;
 							}
 						}else {
