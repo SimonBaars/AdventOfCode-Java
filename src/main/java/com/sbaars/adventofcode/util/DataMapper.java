@@ -61,6 +61,7 @@ public interface DataMapper {
         throw new IllegalStateException("Illegal crunch, pattern = " + pattern + " and s = " + s);
       }
     }
+    if(pattern.startsWith("%l")) mappedObjs.add(new ArrayList<>());
     try {
       verify(target.getConstructors().length > 0, "Class " + target + " has no constructor!");
       verify(stream(target.getConstructors()).anyMatch(c -> c.getParameterCount() == mappedObjs.size()), "Class " + target + " has no constructor of size " + mappedObjs.size() + "!");
@@ -112,8 +113,9 @@ public interface DataMapper {
 
   private static Tuple<String, Integer, Integer> crunchString(String s, String pattern) {
     if (pattern.length() <= 2) return of(s, s.length(), 2);
-    int next = pattern.indexOf('%', 2);
-    String substring = pattern.substring(pattern.charAt(1) == 'l' ? 3 : 2, next == -1 ? pattern.length() : next);
+    boolean isComplexPattern = pattern.charAt(1) == 'l' && pattern.charAt(2) == '(';
+    int next = pattern.indexOf('%', isComplexPattern ? pattern.indexOf(')') : 2);
+    String substring = pattern.substring(isComplexPattern ? pattern.indexOf(')') + 1 : pattern.charAt(1) == 'l' ? 3 : 2, next == -1 ? pattern.length() : next);
     int end = substring.isEmpty() ? s.length() : s.indexOf(substring);
     verify(end != -1, "Malformatted pattern (" + pattern + ") for string (" + s + ")");
     return Tuple.of(s.substring(0, end), end, 2);
