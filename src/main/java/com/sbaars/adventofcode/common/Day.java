@@ -85,6 +85,10 @@ public abstract class Day {
     return getResourceAsString(getDayPath());
   }
 
+  protected long dayNumber() {
+    return Long.parseLong(day().trim());
+  }
+
   protected String[] dayStrings() {
     return dayStrings(DEFAULT_DELIMITER);
   }
