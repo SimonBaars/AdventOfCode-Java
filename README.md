@@ -1,5 +1,12 @@
 # adventOfCode(Language.JAVA)
 
+## 2023
+
+Hi! Thanks for checking out this repo! This year, I will miss the first ten days (I'll try to do them retrospectively)!
+After that, I'll do them during the official competitive hours as normal :)
+
+Let's go!
+
 ## 2022
 
 ### Days
