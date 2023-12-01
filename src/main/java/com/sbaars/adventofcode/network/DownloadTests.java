@@ -16,7 +16,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -29,7 +28,7 @@ public class DownloadTests {
   }
 
   public static void main(String[] args) {
-    new DownloadTests().retrieveTests("13", "2018");
+    new DownloadTests().retrieveTests("1", "2023");
   }
 
   public void retrieveTests(String day, String year) {
