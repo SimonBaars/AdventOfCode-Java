@@ -19,7 +19,6 @@ public class Day1 extends Day2023 {
 
   @Override
   public Object part1() {
-    System.out.println(day());
     return dayStream().map(s -> firstDigit(s).getRight() + lastDigit(s).getRight()).mapToInt(Integer::parseInt).sum();
   }
 
@@ -51,9 +50,8 @@ public class Day1 extends Day2023 {
     var firstDigit = firstDigit(s);
     if (firstDigit.getLeft() < pair.getRight()) {
       return firstDigit.getRight();
-    } else {
-      return nums.get(pair.getLeft()) + "";
     }
+    return nums.get(pair.getLeft()) + "";
   }
 
   private String lastStringDigit(String s) {
@@ -61,8 +59,7 @@ public class Day1 extends Day2023 {
     var lastDigit = lastDigit(s);
     if (lastDigit.getLeft() > pair.getRight()) {
       return lastDigit.getRight();
-    } else {
-      return nums.get(pair.getLeft()) + "";
     }
+    return nums.get(pair.getLeft()) + "";
   }
 }
