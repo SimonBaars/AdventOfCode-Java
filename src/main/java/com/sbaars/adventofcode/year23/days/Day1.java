@@ -5,6 +5,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Day1 extends Day2023 {
   private static final Map<String, Integer> nums = Map.of("one", 1, "two", 2, "three", 3, "four", 4, "five", 5, "six", 6, "seven", 7, "eight", 8, "nine", 9);
@@ -23,21 +25,15 @@ public class Day1 extends Day2023 {
   }
 
   private Pair<Integer, String> firstDigit(String s) {
-    for (int i = 0; i < s.length(); i++) {
-      if (Character.isDigit(s.charAt(i))) {
-        return Pair.of(i, s.charAt(i) + "");
-      }
-    }
-    throw new IllegalStateException();
+    return pairStream(s).findFirst().get();
   }
 
   private Pair<Integer, String> lastDigit(String s) {
-    for (int i = s.length() - 1; i >= 0; i--) {
-      if (Character.isDigit(s.charAt(i))) {
-        return Pair.of(i, s.charAt(i) + "");
-      }
-    }
-    throw new IllegalStateException();
+    return pairStream(s).reduce((x, y) -> y).get();
+  }
+
+  private static Stream<Pair<Integer, String>> pairStream(String s) {
+    return IntStream.range(0, s.length()).mapToObj(i -> Pair.of(i, s.charAt(i) + "")).filter(x -> Character.isDigit(x.getRight().charAt(0)));
   }
 
   @Override
@@ -46,7 +42,7 @@ public class Day1 extends Day2023 {
   }
 
   private String firstStringDigit(String s) {
-    var pair = nums.keySet().stream().map(x -> Pair.of(x, s.indexOf(x))).filter(x -> x.getRight() != -1).sorted(Comparator.comparingInt(Pair::getRight)).findFirst().orElse(Pair.of("", Integer.MAX_VALUE));
+    var pair = nums.keySet().stream().map(x -> Pair.of(x, s.indexOf(x))).filter(x -> x.getRight() != -1).min(Comparator.comparingInt(Pair::getRight)).orElse(Pair.of("", Integer.MAX_VALUE));
     var firstDigit = firstDigit(s);
     if (firstDigit.getLeft() < pair.getRight()) {
       return firstDigit.getRight();
@@ -55,7 +51,7 @@ public class Day1 extends Day2023 {
   }
 
   private String lastStringDigit(String s) {
-    var pair = nums.keySet().stream().map(x -> Pair.of(x, s.lastIndexOf(x))).filter(x -> x.getRight() != -1).sorted((x, y) -> y.getRight() - x.getRight()).findFirst().orElse(Pair.of("", Integer.MIN_VALUE));
+    var pair = nums.keySet().stream().map(x -> Pair.of(x, s.lastIndexOf(x))).filter(x -> x.getRight() != -1).min((x, y) -> y.getRight() - x.getRight()).orElse(Pair.of("", Integer.MIN_VALUE));
     var lastDigit = lastDigit(s);
     if (lastDigit.getLeft() > pair.getRight()) {
       return lastDigit.getRight();
