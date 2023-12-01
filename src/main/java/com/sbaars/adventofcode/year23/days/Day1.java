@@ -42,7 +42,7 @@ public class Day1 extends Day2023 {
 
   @Override
   public Object part2() {
-    return dayStream().peek(System.out::println).map(s -> firstStringDigit(s) + lastStringDigit(s)).peek(System.out::println).mapToInt(Integer::parseInt).sum();
+    return dayStream().map(s -> firstStringDigit(s) + lastStringDigit(s)).mapToInt(Integer::parseInt).sum();
   }
 
   private String firstStringDigit(String s) {
