@@ -23,10 +23,7 @@ public class Day2 extends Day2023 {
 
   @Override
   public Object part1() {
-    var in = dayStream().map(s -> readString(s, "Game %i: %l(%s)", "; ", MapGame.class, MapCube.class))
-            .map(c -> new Game(c.num, c.cubes.stream().map(s -> readString(s.s, "%l(%i %s)", ", ", Cube.class, Draw.class)).toList()))
-            .toList();
-    return in.stream()
+    return input().stream()
             .filter(g -> g.cubes.stream().noneMatch(c -> c.draws.stream().anyMatch(this::invalid)))
             .mapToInt(Game::num)
             .sum();
@@ -47,17 +44,24 @@ public class Day2 extends Day2023 {
 
   @Override
   public Object part2() {
-    var in = dayStream().map(s -> readString(s, "Game %i: %l(%s)", "; ", MapGame.class, MapCube.class))
-            .map(c -> new Game(c.num, c.cubes.stream().map(s -> readString(s.s, "%l(%i %s)", ", ", Cube.class, Draw.class)).toList()))
-            .toList();
-    return in.stream()
+    return input().stream()
             .mapToLong(g -> findMaxProduct(g.cubes.stream().flatMap(c -> c.draws.stream()).toList()))
             .sum();
   }
 
+  private List<Game> input() {
+    return dayStream().map(s -> readString(s, "Game %i: %l(%s)", "; ", MapGame.class, MapCube.class))
+            .map(c -> new Game(c.num, c.cubes.stream().map(s -> readString(s.s, "%l(%i %s)", ", ", Cube.class, Draw.class)).toList()))
+            .toList();
+  }
+
   private long findMaxProduct(List<Draw> ds) {
-    return ds.stream().filter(d -> d.color.equals("red")).mapToLong(d -> d.amount).max().orElse(0) *
-            ds.stream().filter(d -> d.color.equals("green")).mapToLong(d -> d.amount).max().orElse(0) *
-            ds.stream().filter(d -> d.color.equals("blue")).mapToLong(d -> d.amount).max().orElse(0);
+    return getProduct(ds, "red") *
+            getProduct(ds, "green") *
+            getProduct(ds, "blue");
+  }
+
+  private static long getProduct(List<Draw> ds, String color) {
+    return ds.stream().filter(d -> d.color.equals(color)).mapToLong(d -> d.amount).max().orElse(0);
   }
 }
