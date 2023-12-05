@@ -2,6 +2,8 @@ package com.sbaars.adventofcode.network;
 
 import java.net.*;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 
 import static com.sbaars.adventofcode.common.Day.getResourceAsString;
