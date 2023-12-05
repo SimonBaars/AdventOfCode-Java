@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 11 - Advent of Code 2018</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2018/about">[About]</a></li><li><a href="/2018/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2018/settings">[Settings]</a></li><li><a href="/2018/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2018/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">28*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">int y=</span><a href="/2018">2018</a><span class="title-event-wrap">;</span></h1><nav><ul><li><a href="/2018">[Calendar]</a></li><li><a href="/2018/support">[AoC++]</a></li><li><a href="/2018/sponsors">[Sponsors]</a></li><li><a href="/2018/leaderboard">[Leaderboard]</a></li><li><a href="/2018/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2018/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://smartystreets.com/aoc" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">SmartyStreets</a> - Global address validation made by developers, for developers</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 11: Chronal Charge ---</h2><p>You watch the Elves and their sleigh fade into the distance as they head toward the North Pole.</p>
+<p>Actually, you're the one fading. The <span title="wheeeeeeeeeeeeeeeeee">falling sensation</span> returns.</p>
+<p>The low fuel warning light is illuminated on your wrist-mounted device. Tapping it once causes it to project a hologram of the situation: a <em>300x300</em> grid of fuel cells and their current power levels, some negative. You're not sure what negative power means in the context of time travel, but it can't be good.</p>
+<p>Each fuel cell has a coordinate ranging <em>from 1 to 300</em> in both the X (horizontal) and Y (vertical) direction.  In <code>X,Y</code> notation, the top-left cell is <code>1,1</code>, and the top-right cell is <code>300,1</code>.</p>
+<p>The interface lets you select <em>any 3x3 square</em> of fuel cells. To increase your chances of getting to your destination, you decide to choose the 3x3 square with the <em>largest total power</em>.</p>
+<p>The power level in a given fuel cell can be found through the following process:</p>
+<ul>
+<li>Find the fuel cell's <em>rack ID</em>, which is its <em>X coordinate plus 10</em>.</li>
+<li>Begin with a power level of the <em>rack ID</em> times the <em>Y coordinate</em>.</li>
+<li>Increase the power level by the value of the <em>grid serial number</em> (your puzzle input).</li>
+<li>Set the power level to itself multiplied by the <em>rack ID</em>.</li>
+<li>Keep only the <em>hundreds digit</em> of the power level (so <code>12<em>3</em>45</code> becomes <code>3</code>; numbers with no hundreds digit become <code>0</code>).</li>
+<li><em>Subtract 5</em> from the power level.</li>
+</ul>
+<p>For example, to find the power level of the fuel cell at <code>3,5</code> in a grid with serial number <code>8</code>:</p>
+<ul>
+<li>The rack ID is <code>3 + 10 = <em>13</em></code>.</li>
+<li>The power level starts at <code>13 * 5 = <em>65</em></code>.</li>
+<li>Adding the serial number produces <code>65 + 8 = <em>73</em></code>.</li>
+<li>Multiplying by the rack ID produces <code>73 * 13 = <em>949</em></code>.</li>
+<li>The hundreds digit of <code><em>9</em>49</code> is <code><em>9</em></code>.</li>
+<li>Subtracting 5 produces <code>9 - 5 = <em>4</em></code>.</li>
+</ul>
+<p>So, the power level of this fuel cell is <code><em>4</em></code>.</p>
+<p>Here are some more example power levels:</p>
+<ul>
+<li>Fuel cell at &nbsp;<code>122,79</code>, grid serial number <code>57</code>: power level <code>-5</code>.</li>
+<li>Fuel cell at <code>217,196</code>, grid serial number <code>39</code>: power level &nbsp;<code>0</code>.</li>
+<li>Fuel cell at <code>101,153</code>, grid serial number <code>71</code>: power level &nbsp;<code>4</code>.</li>
+</ul>
+<p>Your goal is to find the 3x3 square which has the largest total power. The square must be entirely within the 300x300 grid. Identify this square using the <code>X,Y</code> coordinate of its <em>top-left fuel cell</em>. For example:</p>
+<p>For grid serial number <code>18</code>, the largest total 3x3 square has a top-left corner of <code><em>33,45</em></code> (with a total power of <code>29</code>); these fuel cells appear in the middle of this 5x5 region:</p>
+<pre><code>-2  -4   4   4   4
+-4  <em> 4   4   4  </em>-5
+ 4  <em> 3   3   4  </em>-4
+ 1  <em> 1   2   4  </em>-3
+-1   0   2  -5  -2
+</code></pre>
+<p>For grid serial number <code>42</code>, the largest 3x3 square's top-left is <code><em>21,61</em></code> (with a total power of <code>30</code>); they are in the middle of this region:</p>
+<pre><code>-3   4   2   2   2
+-4  <em> 4   3   3  </em> 4
+-5  <em> 3   3   4  </em>-4
+ 4  <em> 3   3   4  </em>-3
+ 3   3   3  -5  -1
+</code></pre>
+<p><em>What is the <code>X,Y</code> coordinate of the top-left fuel cell of the 3x3 square with the largest total power?</em></p>
+</article>
+<p>Your puzzle answer was <code>235,16</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You discover a dial on the side of the device; it seems to let you select a square of <em>any size</em>, not just 3x3. Sizes from 1x1 to 300x300 are supported.</p>
+<p>Realizing this, you now must find the <em>square of any size with the largest total power</em>. Identify this square by including its size as a third parameter after the top-left coordinate: a 9x9 square with a top-left corner of <code>3,5</code> is identified as <code>3,5,9</code>.</p>
+<p>For example:</p>
+<ul>
+<li>For grid serial number <code>18</code>, the largest total square (with a total power of <code>113</code>) is 16x16 and has a top-left corner of <code>90,269</code>, so its identifier is <code><em>90,269,16</em></code>.</li>
+<li>For grid serial number <code>42</code>, the largest total square (with a total power of <code>119</code>) is 12x12 and has a top-left corner of <code>232,251</code>, so its identifier is <code><em>232,251,12</em></code>.</li>
+</ul>
+<p><em>What is the <code>X,Y,size</code> identifier of the square with the largest total power?</em></p>
+</article>
+<p>Your puzzle answer was <code>236,227,14</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, you should <a href="/2018">return to your Advent calendar</a> and try another puzzle.</p>
+<p>Your puzzle input was <code class="puzzle-input">8141</code>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Chronal+Charge%22+%2D+Day+11+%2D+Advent+of+Code+2018&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F11&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Chronal+Charge%22+%2D+Day+11+%2D+Advent+of+Code+2018+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F11';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

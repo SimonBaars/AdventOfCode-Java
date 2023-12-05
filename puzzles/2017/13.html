@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 13 - Advent of Code 2017</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2017/about">[About]</a></li><li><a href="/2017/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2017/settings">[Settings]</a></li><li><a href="/2017/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2017/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">2*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap"></span><a href="/2017">2017</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2017">[Calendar]</a></li><li><a href="/2017/support">[AoC++]</a></li><li><a href="/2017/sponsors">[Sponsors]</a></li><li><a href="/2017/leaderboard">[Leaderboard]</a></li><li><a href="/2017/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2017/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://aoc.infi.nl/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Infi</a> - Onze puzzel is onmogelijk te kraken. Behalve voor echte nerds.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 13: Packet Scanners ---</h2><p>You need to cross a vast <em>firewall</em>. The firewall consists of several layers, each with a <em>security scanner</em> that moves back and forth across the layer. To succeed, you must not be detected by a scanner.</p>
+<p>By studying the firewall briefly, you are able to record (in your puzzle input) the <em>depth</em> of each layer and the <em>range</em> of the scanning area for the scanner within it, written as <code>depth: range</code>. Each layer has a thickness of exactly <code>1</code>. A layer at depth <code>0</code> begins immediately inside the firewall; a layer at depth <code>1</code> would start immediately after that.</p>
+<p>For example, suppose you've recorded the following:</p>
+<pre><code>0: 3
+1: 2
+4: 4
+6: 4
+</code></pre>
+<p>This means that there is a layer immediately inside the firewall (with range <code>3</code>), a second layer immediately after that (with range <code>2</code>), a third layer which begins at depth <code>4</code> (with range <code>4</code>), and a fourth layer which begins at depth 6 (also with range <code>4</code>). Visually, it might look like this:</p>
+<pre><code> 0   1   2   3   4   5   6
+[ ] [ ] ... ... [ ] ... [ ]
+[ ] [ ]         [ ]     [ ]
+[ ]             [ ]     [ ]
+                [ ]     [ ]
+</code></pre>
+<p>Within each layer, a security scanner moves back and forth within its range. Each security scanner starts at the top and moves down until it reaches the bottom, then moves up until it reaches the top, and repeats. A security scanner takes <em>one picosecond</em> to move one step.  Drawing scanners as <code>S</code>, the first few picoseconds look like this:</p>
+<pre><code>
+Picosecond 0:
+ 0   1   2   3   4   5   6
+[S] [S] ... ... [S] ... [S]
+[ ] [ ]         [ ]     [ ]
+[ ]             [ ]     [ ]
+                [ ]     [ ]
+
+Picosecond 1:
+ 0   1   2   3   4   5   6
+[ ] [ ] ... ... [ ] ... [ ]
+[S] [S]         [S]     [S]
+[ ]             [ ]     [ ]
+                [ ]     [ ]
+
+Picosecond 2:
+ 0   1   2   3   4   5   6
+[ ] [S] ... ... [ ] ... [ ]
+[ ] [ ]         [ ]     [ ]
+[S]             [S]     [S]
+                [ ]     [ ]
+
+Picosecond 3:
+ 0   1   2   3   4   5   6
+[ ] [ ] ... ... [ ] ... [ ]
+[S] [S]         [ ]     [ ]
+[ ]             [ ]     [ ]
+                [S]     [S]
+</code></pre>
+<p>Your plan is to hitch a ride on a packet about to move through the firewall.  The packet will travel along the top of each layer, and it moves at <em>one layer per picosecond</em>. Each picosecond, the packet moves one layer forward (its first move takes it into layer 0), and then the scanners move one step. If there is a scanner at the top of the layer <em>as your packet enters it</em>, you are <em>caught</em>. (If a scanner moves into the top of its layer while you are there, you are <em>not</em> caught: it doesn't have time to notice you before you leave.) If you were to do this in the configuration above, marking your current position with parentheses, your passage through the firewall would look like this:</p>
+<pre><code>Initial state:
+ 0   1   2   3   4   5   6
+[S] [S] ... ... [S] ... [S]
+[ ] [ ]         [ ]     [ ]
+[ ]             [ ]     [ ]
+                [ ]     [ ]
+
+Picosecond 0:
+ 0   1   2   3   4   5   6
+(S) [S] ... ... [S] ... [S]
+[ ] [ ]         [ ]     [ ]
+[ ]             [ ]     [ ]
+                [ ]     [ ]
+
+ 0   1   2   3   4   5   6
+( ) [ ] ... ... [ ] ... [ ]
+[S] [S]         [S]     [S]
+[ ]             [ ]     [ ]
+                [ ]     [ ]
+
+
+Picosecond 1:
+ 0   1   2   3   4   5   6
+[ ] ( ) ... ... [ ] ... [ ]
+[S] [S]         [S]     [S]
+[ ]             [ ]     [ ]
+                [ ]     [ ]
+
+ 0   1   2   3   4   5   6
+[ ] (S) ... ... [ ] ... [ ]
+[ ] [ ]         [ ]     [ ]
+[S]             [S]     [S]
+                [ ]     [ ]
+
+
+Picosecond 2:
+ 0   1   2   3   4   5   6
+[ ] [S] (.) ... [ ] ... [ ]
+[ ] [ ]         [ ]     [ ]
+[S]             [S]     [S]
+                [ ]     [ ]
+
+ 0   1   2   3   4   5   6
+[ ] [ ] (.) ... [ ] ... [ ]
+[S] [S]         [ ]     [ ]
+[ ]             [ ]     [ ]
+                [S]     [S]
+
+
+Picosecond 3:
+ 0   1   2   3   4   5   6
+[ ] [ ] ... (.) [ ] ... [ ]
+[S] [S]         [ ]     [ ]
+[ ]             [ ]     [ ]
+                [S]     [S]
+
+ 0   1   2   3   4   5   6
+[S] [S] ... (.) [ ] ... [ ]
+[ ] [ ]         [ ]     [ ]
+[ ]             [S]     [S]
+                [ ]     [ ]
+
+
+Picosecond 4:
+ 0   1   2   3   4   5   6
+[S] [S] ... ... ( ) ... [ ]
+[ ] [ ]         [ ]     [ ]
+[ ]             [S]     [S]
+                [ ]     [ ]
+
+ 0   1   2   3   4   5   6
+[ ] [ ] ... ... ( ) ... [ ]
+[S] [S]         [S]     [S]
+[ ]             [ ]     [ ]
+                [ ]     [ ]
+
+
+Picosecond 5:
+ 0   1   2   3   4   5   6
+[ ] [ ] ... ... [ ] (.) [ ]
+[S] [S]         [S]     [S]
+[ ]             [ ]     [ ]
+                [ ]     [ ]
+
+ 0   1   2   3   4   5   6
+[ ] [S] ... ... [S] (.) [S]
+[ ] [ ]         [ ]     [ ]
+[S]             [ ]     [ ]
+                [ ]     [ ]
+
+
+Picosecond 6:
+ 0   1   2   3   4   5   6
+[ ] [S] ... ... [S] ... (S)
+[ ] [ ]         [ ]     [ ]
+[S]             [ ]     [ ]
+                [ ]     [ ]
+
+ 0   1   2   3   4   5   6
+[ ] [ ] ... ... [ ] ... ( )
+[S] [S]         [S]     [S]
+[ ]             [ ]     [ ]
+                [ ]     [ ]
+</code></pre>
+<p>In this situation, you are <em>caught</em> in layers <code>0</code> and <code>6</code>, because your packet entered the layer when its scanner was at the top when you entered it. You are <em>not</em> caught in layer <code>1</code>, since the scanner moved into the top of the layer once you were already there.</p>
+<p>The <em>severity</em> of getting caught on a layer is equal to its <em>depth</em> multiplied by its <em>range</em>. (Ignore layers in which you do not get caught.) The severity of the whole trip is the sum of these values.  In the example above, the trip severity is <code>0*3 + 6*4 = <em>24</em></code>.</p>
+<p>Given the details of the firewall you've recorded, if you leave immediately, <em>what is the severity of your whole trip</em>?</p>
+</article>
+<p>To begin, <a href="13/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="13/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Packet+Scanners%22+%2D+Day+13+%2D+Advent+of+Code+2017&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2017%2Fday%2F13&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Packet+Scanners%22+%2D+Day+13+%2D+Advent+of+Code+2017+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2017%2Fday%2F13';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

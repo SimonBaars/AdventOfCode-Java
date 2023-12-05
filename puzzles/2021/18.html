@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 18 - Advent of Code 2021</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2021/about">[About]</a></li><li><a href="/2021/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2021/settings">[Settings]</a></li><li><a href="/2021/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2021/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">/*</span><a href="/2021">2021</a><span class="title-event-wrap">*/</span></h1><nav><ul><li><a href="/2021">[Calendar]</a></li><li><a href="/2021/support">[AoC++]</a></li><li><a href="/2021/sponsors">[Sponsors]</a></li><li><a href="/2021/leaderboard">[Leaderboard]</a></li><li><a href="/2021/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2021/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://whimsical.com?ref=aoc21" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Whimsical</a> - Where great ideas take shape.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 18: Snailfish ---</h2><p>You descend into the ocean trench and encounter some <a href="https://en.wikipedia.org/wiki/Snailfish" target="_blank">snailfish</a>. They say they saw the sleigh keys! They'll even tell you which direction the keys went if you help one of the smaller snailfish with his <em><span title="Snailfish math is snailfish math!">math</span> homework</em>.</p>
+<p>Snailfish numbers aren't like regular numbers. Instead, every snailfish number is a <em>pair</em> - an ordered list of two elements. Each element of the pair can be either a regular number or another pair.</p>
+<p>Pairs are written as <code>[x,y]</code>, where <code>x</code> and <code>y</code> are the elements within the pair. Here are some example snailfish numbers, one snailfish number per line:</p>
+<pre><code>[1,2]
+[[1,2],3]
+[9,[8,7]]
+[[1,9],[8,5]]
+[[[[1,2],[3,4]],[[5,6],[7,8]]],9]
+[[[9,[3,8]],[[0,9],6]],[[[3,7],[4,9]],3]]
+[[[[1,3],[5,3]],[[1,3],[8,7]]],[[[4,9],[6,9]],[[8,2],[7,3]]]]
+</code></pre>
+<p>This snailfish homework is about <em>addition</em>. To add two snailfish numbers, form a pair from the left and right parameters of the addition operator. For example, <code>[1,2]</code> + <code>[[3,4],5]</code> becomes <code>[[1,2],[[3,4],5]]</code>.</p>
+<p>There's only one problem: <em>snailfish numbers must always be reduced</em>, and the process of adding two snailfish numbers can result in snailfish numbers that need to be reduced.</p>
+<p>To <em>reduce a snailfish number</em>, you must repeatedly do the first action in this list that applies to the snailfish number:</p>
+<ul>
+<li>If any pair is <em>nested inside four pairs</em>, the leftmost such pair <em>explodes</em>.</li>
+<li>If any regular number is <em>10 or greater</em>, the leftmost such regular number <em>splits</em>.</li>
+</ul>
+<p>Once no action in the above list applies, the snailfish number is reduced.</p>
+<p>During reduction, at most one action applies, after which the process returns to the top of the list of actions. For example, if <em>split</em> produces a pair that meets the <em>explode</em> criteria, that pair <em>explodes</em> before other <em>splits</em> occur.</p>
+<p>To <em>explode</em> a pair, the pair's left value is added to the first regular number to the left of the exploding pair (if any), and the pair's right value is added to the first regular number to the right of the exploding pair (if any). Exploding pairs will always consist of two regular numbers. Then, the entire exploding pair is replaced with the regular number <code>0</code>.</p>
+<p>Here are some examples of a single explode action:</p>
+<ul>
+<li><code>[[[[<em>[9,8]</em>,1],2],3],4]</code> becomes <code>[[[[<em>0</em>,<em>9</em>],2],3],4]</code> (the <code>9</code> has no regular number to its left, so it is not added to any regular number).</li>
+<li><code>[7,[6,[5,[4,<em>[3,2]</em>]]]]</code> becomes <code>[7,[6,[5,[<em>7</em>,<em>0</em>]]]]</code> (the <code>2</code> has no regular number to its right, and so it is not added to any regular number).</li>
+<li><code>[[6,[5,[4,<em>[3,2]</em>]]],1]</code> becomes <code>[[6,[5,[<em>7</em>,<em>0</em>]]],<em>3</em>]</code>.</li>
+<li><code>[[3,[2,[1,<em>[7,3]</em>]]],[6,[5,[4,[3,2]]]]]</code> becomes <code>[[3,[2,[<em>8</em>,<em>0</em>]]],[<em>9</em>,[5,[4,[3,2]]]]]</code> (the pair <code>[3,2]</code> is unaffected because the pair <code>[7,3]</code> is further to the left; <code>[3,2]</code> would explode on the next action).</li>
+<li><code>[[3,[2,[8,0]]],[9,[5,[4,<em>[3,2]</em>]]]]</code> becomes <code>[[3,[2,[8,0]]],[9,[5,[<em>7</em>,<em>0</em>]]]]</code>.</li>
+</ul>
+<p>To <em>split</em> a regular number, replace it with a pair; the left element of the pair should be the regular number divided by two and rounded <em>down</em>, while the right element of the pair should be the regular number divided by two and rounded <em>up</em>. For example, <code>10</code> becomes <code>[5,5]</code>, <code>11</code> becomes <code>[5,6]</code>, <code>12</code> becomes <code>[6,6]</code>, and so on.</p>
+<p>Here is the process of finding the reduced result of <code>[[[[4,3],4],4],[7,[[8,4],9]]]</code> + <code>[1,1]</code>:</p>
+<pre><code>after addition: [[[[<em>[4,3]</em>,4],4],[7,[[8,4],9]]],[1,1]]
+after explode:  [[[[0,7],4],[7,[<em>[8,4]</em>,9]]],[1,1]]
+after explode:  [[[[0,7],4],[<em>15</em>,[0,13]]],[1,1]]
+after split:    [[[[0,7],4],[[7,8],[0,<em>13</em>]]],[1,1]]
+after split:    [[[[0,7],4],[[7,8],[0,<em>[6,7]</em>]]],[1,1]]
+after explode:  [[[[0,7],4],[[7,8],[6,0]]],[8,1]]
+</code></pre>
+<p>Once no reduce actions apply, the snailfish number that remains is the actual result of the addition operation: <code>[[[[0,7],4],[[7,8],[6,0]]],[8,1]]</code>.</p>
+<p>The homework assignment involves adding up a <em>list of snailfish numbers</em> (your puzzle input). The snailfish numbers are each listed on a separate line. Add the first snailfish number and the second, then add that result and the third, then add that result and the fourth, and so on until all numbers in the list have been used once.</p>
+<p>For example, the final sum of this list is <code>[[[[1,1],[2,2]],[3,3]],[4,4]]</code>:</p>
+<pre><code>[1,1]
+[2,2]
+[3,3]
+[4,4]
+</code></pre>
+<p>The final sum of this list is <code>[[[[3,0],[5,3]],[4,4]],[5,5]]</code>:</p>
+<pre><code>[1,1]
+[2,2]
+[3,3]
+[4,4]
+[5,5]
+</code></pre>
+<p>The final sum of this list is <code>[[[[5,0],[7,4]],[5,5]],[6,6]]</code>:</p>
+<pre><code>[1,1]
+[2,2]
+[3,3]
+[4,4]
+[5,5]
+[6,6]
+</code></pre>
+<p>Here's a slightly larger example:</p>
+<pre><code>[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]
+[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]
+[[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]
+[[[[2,4],7],[6,[0,5]]],[[[6,8],[2,8]],[[2,1],[4,5]]]]
+[7,[5,[[3,8],[1,4]]]]
+[[2,[2,2]],[8,[8,1]]]
+[2,9]
+[1,[[[9,3],9],[[9,0],[0,7]]]]
+[[[5,[7,4]],7],1]
+[[[[4,2],2],6],[8,7]]
+</code></pre>
+<p>The final sum <code>[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]</code> is found after adding up the above snailfish numbers:</p>
+<pre><code>  [[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]
++ [7,[[[3,7],[4,3]],[[6,3],[8,8]]]]
+= [[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]
+
+  [[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]
++ [[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]
+= [[[[6,7],[6,7]],[[7,7],[0,7]]],[[[8,7],[7,7]],[[8,8],[8,0]]]]
+
+  [[[[6,7],[6,7]],[[7,7],[0,7]]],[[[8,7],[7,7]],[[8,8],[8,0]]]]
++ [[[[2,4],7],[6,[0,5]]],[[[6,8],[2,8]],[[2,1],[4,5]]]]
+= [[[[7,0],[7,7]],[[7,7],[7,8]]],[[[7,7],[8,8]],[[7,7],[8,7]]]]
+
+  [[[[7,0],[7,7]],[[7,7],[7,8]]],[[[7,7],[8,8]],[[7,7],[8,7]]]]
++ [7,[5,[[3,8],[1,4]]]]
+= [[[[7,7],[7,8]],[[9,5],[8,7]]],[[[6,8],[0,8]],[[9,9],[9,0]]]]
+
+  [[[[7,7],[7,8]],[[9,5],[8,7]]],[[[6,8],[0,8]],[[9,9],[9,0]]]]
++ [[2,[2,2]],[8,[8,1]]]
+= [[[[6,6],[6,6]],[[6,0],[6,7]]],[[[7,7],[8,9]],[8,[8,1]]]]
+
+  [[[[6,6],[6,6]],[[6,0],[6,7]]],[[[7,7],[8,9]],[8,[8,1]]]]
++ [2,9]
+= [[[[6,6],[7,7]],[[0,7],[7,7]]],[[[5,5],[5,6]],9]]
+
+  [[[[6,6],[7,7]],[[0,7],[7,7]]],[[[5,5],[5,6]],9]]
++ [1,[[[9,3],9],[[9,0],[0,7]]]]
+= [[[[7,8],[6,7]],[[6,8],[0,8]]],[[[7,7],[5,0]],[[5,5],[5,6]]]]
+
+  [[[[7,8],[6,7]],[[6,8],[0,8]]],[[[7,7],[5,0]],[[5,5],[5,6]]]]
++ [[[5,[7,4]],7],1]
+= [[[[7,7],[7,7]],[[8,7],[8,7]]],[[[7,0],[7,7]],9]]
+
+  [[[[7,7],[7,7]],[[8,7],[8,7]]],[[[7,0],[7,7]],9]]
++ [[[[4,2],2],6],[8,7]]
+= [[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]
+</code></pre>
+<p>To check whether it's the right answer, the snailfish teacher only checks the <em>magnitude</em> of the final sum. The magnitude of a pair is 3 times the magnitude of its left element plus 2 times the magnitude of its right element. The magnitude of a regular number is just that number.</p>
+<p>For example, the magnitude of <code>[9,1]</code> is <code>3*9 + 2*1 = <em>29</em></code>; the magnitude of <code>[1,9]</code> is <code>3*1 + 2*9 = <em>21</em></code>. Magnitude calculations are recursive: the magnitude of <code>[[9,1],[1,9]]</code> is <code>3*29 + 2*21 = <em>129</em></code>.</p>
+<p>Here are a few more magnitude examples:</p>
+<ul>
+<li><code>[[1,2],[[3,4],5]]</code> becomes <code><em>143</em></code>.</li>
+<li><code>[[[[0,7],4],[[7,8],[6,0]]],[8,1]]</code> becomes <code><em>1384</em></code>.</li>
+<li><code>[[[[1,1],[2,2]],[3,3]],[4,4]]</code> becomes <code><em>445</em></code>.</li>
+<li><code>[[[[3,0],[5,3]],[4,4]],[5,5]]</code> becomes <code><em>791</em></code>.</li>
+<li><code>[[[[5,0],[7,4]],[5,5]],[6,6]]</code> becomes <code><em>1137</em></code>.</li>
+<li><code>[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]</code> becomes <code><em>3488</em></code>.</li>
+</ul>
+<p>So, given this example homework assignment:</p>
+<pre><code>[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
+[[[5,[2,8]],4],[5,[[9,9],0]]]
+[6,[[[6,2],[5,6]],[[7,6],[4,7]]]]
+[[[6,[0,7]],[0,9]],[4,[9,[9,0]]]]
+[[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]]
+[[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]]
+[[[[5,4],[7,7]],8],[[8,3],8]]
+[[9,3],[[9,9],[6,[4,9]]]]
+[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
+[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]
+</code></pre>
+<p>The final sum is:</p>
+<pre><code>[[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8],[9,9]]]]</code></pre>
+<p>The magnitude of this final sum is <code><em>4140</em></code>.</p>
+<p>Add up all of the snailfish numbers from the homework assignment in the order they appear. <em>What is the magnitude of the final sum?</em></p>
+</article>
+<p>Your puzzle answer was <code>4207</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You notice a second question on the back of the homework assignment:</p>
+<p>What is the largest magnitude you can get from adding only two of the snailfish numbers?</p>
+<p>Note that snailfish addition is not <a href="https://en.wikipedia.org/wiki/Commutative_property" target="_blank">commutative</a> - that is, <code>x + y</code> and <code>y + x</code> can produce different results.</p>
+<p>Again considering the last example homework assignment above:</p>
+<pre><code>[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
+[[[5,[2,8]],4],[5,[[9,9],0]]]
+[6,[[[6,2],[5,6]],[[7,6],[4,7]]]]
+[[[6,[0,7]],[0,9]],[4,[9,[9,0]]]]
+[[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]]
+[[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]]
+[[[[5,4],[7,7]],8],[[8,3],8]]
+[[9,3],[[9,9],[6,[4,9]]]]
+[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
+[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]
+</code></pre>
+<p>The largest magnitude of the sum of any two snailfish numbers in this list is <code><em>3993</em></code>. This is the magnitude of <code>[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]</code> + <code>[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]</code>, which reduces to <code>[[[[7,8],[6,6]],[[6,0],[7,7]]],[[[7,8],[8,8]],[[7,9],[0,6]]]]</code>.</p>
+<p><em>What is the largest magnitude of any sum of two different snailfish numbers from the homework assignment?</em></p>
+</article>
+<p>Your puzzle answer was <code>4635</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2021">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="18/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Snailfish%22+%2D+Day+18+%2D+Advent+of+Code+2021&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2021%2Fday%2F18&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Snailfish%22+%2D+Day+18+%2D+Advent+of+Code+2021+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2021%2Fday%2F18';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

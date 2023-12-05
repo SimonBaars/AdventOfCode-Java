@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 1 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;<span class="title-event-wrap">{&apos;year&apos;:</span><a href="/2019">2019</a><span class="title-event-wrap">}</span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://www.twilio.com/quest" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">TwilioQuest</a> - Play Advent of Code and earn rad loot in TwilioQuest, a developer RPG for Mac, Windows, and Linux. Learn JavaScript, Python, git, APIs for SMS, VoIP, or WhatsApp, and much more.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 1: The Tyranny of the Rocket Equation ---</h2><p>Santa has become stranded at the edge of the Solar System while delivering presents to other planets! To accurately calculate his position in space, safely align his warp drive, and return to Earth in time to save Christmas, he needs you to bring him <span title="If only you had time to grab an astrolabe.">measurements</span> from <em class="star">fifty stars</em>.</p>
+<p>Collect stars by solving puzzles.  Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first.  Each puzzle grants <em class="star">one star</em>. Good luck!</p>
+<p>The Elves quickly load you into a spacecraft and prepare to launch.</p>
+<p>At the first Go / No Go poll, every Elf is Go until the Fuel Counter-Upper.  They haven't determined the amount of fuel required yet.</p>
+<p>Fuel required to launch a given <em>module</em> is based on its <em>mass</em>.  Specifically, to find the fuel required for a module, take its mass, divide by three, round down, and subtract 2.</p>
+<p>For example:</p>
+<ul>
+<li>For a mass of <code>12</code>, divide by 3 and round down to get <code>4</code>, then subtract 2 to get <code>2</code>.</li>
+<li>For a mass of <code>14</code>, dividing by 3 and rounding down still yields <code>4</code>, so the fuel required is also <code>2</code>.</li>
+<li>For a mass of <code>1969</code>, the fuel required is <code>654</code>.</li>
+<li>For a mass of <code>100756</code>, the fuel required is <code>33583</code>.</li>
+</ul>
+<p>The Fuel Counter-Upper needs to know the total fuel requirement.  To find it, individually calculate the fuel needed for the mass of each module (your puzzle input), then add together all the fuel values.</p>
+<p><em>What is the sum of the fuel requirements</em> for all of the modules on your spacecraft?</p>
+</article>
+<p>Your puzzle answer was <code>3514064</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>During the second Go / No Go poll, the Elf in charge of the Rocket Equation Double-Checker stops the launch sequence.  Apparently, you forgot to include additional fuel for the fuel you just added.</p>
+<p>Fuel itself requires fuel just like a module - take its mass, divide by three, round down, and subtract 2.  However, that fuel <em>also</em> requires fuel, and <em>that</em> fuel requires fuel, and so on.  Any mass that would require <em>negative fuel</em> should instead be treated as if it requires <em>zero fuel</em>; the remaining mass, if any, is instead handled by <em>wishing really hard</em>, which has no mass and is outside the scope of this calculation.</p>
+<p>So, for each module mass, calculate its fuel and add it to the total.  Then, treat the fuel amount you just calculated as the input mass and repeat the process, continuing until a fuel requirement is zero or negative. For example:</p>
+<ul>
+<li>A module of mass <code>14</code> requires <code>2</code> fuel.  This fuel requires no further fuel (2 divided by 3 and rounded down is <code>0</code>, which would call for a negative fuel), so the total fuel required is still just <code>2</code>.</li>
+<li>At first, a module of mass <code>1969</code> requires <code>654</code> fuel.  Then, this fuel requires <code>216</code> more fuel (<code>654 / 3 - 2</code>).  <code>216</code> then requires <code>70</code> more fuel, which requires <code>21</code> fuel, which requires <code>5</code> fuel, which requires no further fuel.  So, the total fuel required for a module of mass <code>1969</code> is <code>654 + 216 + 70 + 21 + 5 = 966</code>.</li>
+<li>The fuel required by a module of mass <code>100756</code> and its fuel is: <code>33583 + 11192 + 3728 + 1240 + 411 + 135 + 43 + 12 + 2 = 50346</code>.</li>
+</ul>
+<p><em>What is the sum of the fuel requirements</em> for all of the modules on your spacecraft when also taking into account the mass of the added fuel? (Calculate the fuel requirements for each module separately, then add them all up at the end.)</p>
+</article>
+<p>Your puzzle answer was <code>5268207</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="1/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22The+Tyranny+of+the+Rocket+Equation%22+%2D+Day+1+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F1&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22The+Tyranny+of+the+Rocket+Equation%22+%2D+Day+1+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F1';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

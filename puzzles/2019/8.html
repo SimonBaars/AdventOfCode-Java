@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 8 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">$year=</span><a href="/2019">2019</a><span class="title-event-wrap">;</span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://www.twilio.com/quest" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">TwilioQuest</a> - Play Advent of Code and earn rad loot in TwilioQuest, a developer RPG for Mac, Windows, and Linux. Learn JavaScript, Python, git, APIs for SMS, VoIP, or WhatsApp, and much more.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 8: Space Image Format ---</h2><p><span title="I'm not sorry.">The Elves' spirits are lifted when they realize you have an opportunity to reboot one of their Mars rovers, and so they are curious if you would spend a brief sojourn on Mars.</span> You land your ship near the rover.</p>
+<p>When you reach the rover, you discover that it's already in the process of rebooting! It's just waiting for someone to enter a <a href="https://en.wikipedia.org/wiki/BIOS">BIOS</a> password. The Elf responsible for the rover takes a picture of the password (your puzzle input) and sends it to you via the Digital Sending Network.</p>
+<p>Unfortunately, images sent via the Digital Sending Network aren't encoded with any normal encoding; instead, they're encoded in a special Space Image Format.  None of the Elves seem to remember why this is the case. They send you the instructions to decode it.</p>
+<p>Images are sent as a series of digits that each represent the color of a single pixel.  The digits fill each row of the image left-to-right, then move downward to the next row, filling rows top-to-bottom until every pixel of the image is filled.</p>
+<p>Each image actually consists of a series of identically-sized <em>layers</em> that are filled in this way. So, the first digit corresponds to the top-left pixel of the first layer, the second digit corresponds to the pixel to the right of that on the same layer, and so on until the last digit, which corresponds to the bottom-right pixel of the last layer.</p>
+<p>For example, given an image <code>3</code> pixels wide and <code>2</code> pixels tall, the image data <code>123456789012</code> corresponds to the following image layers:</p>
+<pre><code>Layer 1: 123
+         456
+
+Layer 2: 789
+         012
+</code></pre>
+<p>The image you received is <em><code>25</code> pixels wide and <code>6</code> pixels tall</em>.</p>
+<p>To make sure the image wasn't corrupted during transmission, the Elves would like you to find the layer that contains the <em>fewest <code>0</code> digits</em>.  On that layer, what is <em>the number of <code>1</code> digits multiplied by the number of <code>2</code> digits?</em></p>
+</article>
+<p>Your puzzle answer was <code>1360</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now you're ready to decode the image. The image is rendered by stacking the layers and aligning the pixels with the same positions in each layer. The digits indicate the color of the corresponding pixel: <code>0</code> is black, <code>1</code> is white, and <code>2</code> is transparent.</p>
+<p>The layers are rendered with the first layer in front and the last layer in back. So, if a given position has a transparent pixel in the first and second layers, a black pixel in the third layer, and a white pixel in the fourth layer, the final image would have a <em>black</em> pixel at that position.</p>
+<p>For example, given an image <code>2</code> pixels wide and <code>2</code> pixels tall, the image data <code>0222112222120000</code> corresponds to the following image layers:</p>
+<pre><code>Layer 1: <em>0</em>2
+         22
+
+Layer 2: 1<em>1</em>
+         22
+
+Layer 3: 22
+         <em>1</em>2
+
+Layer 4: 00
+         0<em>0</em>
+</code></pre>
+<p>Then, the full image can be found by determining the top visible pixel in each position:</p>
+<ul>
+<li>The top-left pixel is <em>black</em> because the top layer is <code>0</code>.</li>
+<li>The top-right pixel is <em>white</em> because the top layer is <code>2</code> (transparent), but the second layer is <code>1</code>.</li>
+<li>The bottom-left pixel is <em>white</em> because the top two layers are <code>2</code>, but the third layer is <code>1</code>.</li>
+<li>The bottom-right pixel is <em>black</em> because the only visible pixel in that position is <code>0</code> (from layer 4).</li>
+</ul>
+<p>So, the final image looks like this:</p>
+<pre><code>01
+10
+</code></pre>
+<p><em>What message is produced after decoding your image?</em></p>
+</article>
+<p>Your puzzle answer was <code>FPUAR</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="8/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Space+Image+Format%22+%2D+Day+8+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F8&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Space+Image+Format%22+%2D+Day+8+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F8';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

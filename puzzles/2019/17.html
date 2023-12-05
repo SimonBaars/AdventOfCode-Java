@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 17 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap"></span><a href="/2019">2019</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://smartystreets.com/aoc" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">SmartyStreets</a> - Ridiculously -- Fast -------- Address ------ Verification --</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 17: Set and Forget ---</h2><p>An early warning system detects an incoming <a href="https://en.wikipedia.org/wiki/Solar_flare">solar flare</a> and automatically activates the ship's electromagnetic shield. Unfortunately, this has cut off the Wi-Fi for many small robots that, unaware of the impending danger, are now trapped on exterior scaffolding on the unsafe side of the shield. To rescue them, you'll have to act quickly!</p>
+<p>The only tools at your disposal are some wired cameras and a small vacuum robot currently asleep at its charging station. The video quality is poor, but the vacuum robot has a needlessly bright LED that makes it easy to spot no matter where it is.</p>
+<p>An <a href="9">Intcode</a> program, the <em>Aft Scaffolding Control and Information Interface</em> (ASCII, your puzzle input), provides access to the cameras and the vacuum robot.  Currently, because the vacuum robot is asleep, you can only access the cameras.</p>
+<p>Running the ASCII program on your Intcode computer will provide the current view of the scaffolds.  This is output, <span title="PURELY COINCIDENTALLY">purely coincidentally</span>, as <a href="https://simple.wikipedia.org/wiki/ASCII">ASCII code</a>: <code>35</code> means <code>#</code>, <code>46</code> means <code>.</code>, <code>10</code> starts a <a href="https://en.wikipedia.org/wiki/Newline#In_programming_languages">new line</a> of output below the current one, and so on. (Within a line, characters are drawn left-to-right.)</p>
+<p>In the camera output, <code>#</code> represents a scaffold and <code>.</code> represents open space. The vacuum robot is visible as <code>^</code>, <code>v</code>, <code>&lt;</code>, or <code>&gt;</code> depending on whether it is facing up, down, left, or right respectively. When drawn like this, the vacuum robot is <em>always on a scaffold</em>; if the vacuum robot ever walks off of a scaffold and begins <em>tumbling through space uncontrollably</em>, it will instead be visible as <code>X</code>.</p>
+<p>In general, the scaffold forms a path, but it sometimes loops back onto itself.  For example, suppose you can see the following view from the cameras:</p>
+<pre><code>..#..........
+..#..........
+#######...###
+#.#...#...#.#
+#############
+..#...#...#..
+..#####...^..
+</code></pre>
+<p>Here, the vacuum robot, <code>^</code> is facing up and sitting at one end of the scaffold near the bottom-right of the image. The scaffold continues up, loops across itself several times, and ends at the top-left of the image.</p>
+<p>The first step is to calibrate the cameras by getting the <em>alignment parameters</em> of some well-defined points.  Locate all <em>scaffold intersections</em>; for each, its alignment parameter is the distance between its left edge and the left edge of the view multiplied by the distance between its top edge and the top edge of the view.  Here, the intersections from the above image are marked <code>O</code>:</p>
+<pre><code>..#..........
+..#..........
+##O####...###
+#.#...#...#.#
+##O###O###O##
+..#...#...#..
+..#####...^..
+</code></pre>
+<p>For these intersections:</p>
+<ul>
+<li>The top-left intersection is <code>2</code> units from the left of the image and <code>2</code> units from the top of the image, so its alignment parameter is <code>2 * 2 = <em>4</em></code>.</li>
+<li>The bottom-left intersection is <code>2</code> units from the left and <code>4</code> units from the top, so its alignment parameter is <code>2 * 4 = <em>8</em></code>.</li>
+<li>The bottom-middle intersection is <code>6</code> from the left and <code>4</code> from the top, so its alignment parameter is <code><em>24</em></code>.</li>
+<li>The bottom-right intersection's alignment parameter is <code><em>40</em></code>.</li>
+</ul>
+<p>To calibrate the cameras, you need the <em>sum of the alignment parameters</em>.  In the above example, this is <code><em>76</em></code>.</p>
+<p>Run your ASCII program. <em>What is the sum of the alignment parameters</em> for the scaffold intersections?</p>
+</article>
+<p>Your puzzle answer was <code>7404</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now for the tricky part: notifying all the other robots about the solar flare.  The vacuum robot can do this automatically if it gets into range of a robot. However, you can't see the other robots on the camera, so you need to be thorough instead: you need to make the vacuum robot <em>visit every part of the scaffold at least once</em>.</p>
+<p>The vacuum robot normally wanders randomly, but there isn't time for that today.  Instead, you can <em>override its movement logic</em> with new rules.</p>
+<p>Force the vacuum robot to wake up by changing the value in your ASCII program at address <code>0</code> from <code>1</code> to <code><em>2</em></code>. When you do this, you will be automatically prompted for the new movement rules that the vacuum robot should use. The ASCII program will use input instructions to receive them, but they need to be provided as ASCII code; end each line of logic with a single newline, ASCII code <code>10</code>.</p>
+<p>First, you will be prompted for the <em>main movement routine</em>.  The main routine may only call the <em>movement functions</em>: <code>A</code>, <code>B</code>, or <code>C</code>. Supply the movement functions to use as ASCII text, separating them with commas (<code>,</code>, ASCII code <code>44</code>), and ending the list with a newline (ASCII code <code>10</code>). For example, to call <code>A</code> twice, then alternate between <code>B</code> and <code>C</code> three times, provide the string <code>A,A,B,C,B,C,B,C</code> and then a newline.</p>
+<p>Then, you will be prompted for each <em>movement function</em>. Movement functions may use <code>L</code> to <em>turn left</em>, <code>R</code> to <em>turn right</em>, or a number to <em>move forward</em> that many units.  Movement functions may not call other movement functions.  Again, separate the actions with commas and end the list with a newline.  For example, to move forward <code>10</code> units, turn left, move forward <code>8</code> units, turn right, and finally move forward <code>6</code> units, provide the string <code>10,L,8,R,6</code> and then a newline.</p>
+<p>Finally, you will be asked whether you want to see a <em>continuous video feed</em>; provide either <code>y</code> or <code>n</code> and a newline.  Enabling the continuous video feed can help you see what's going on, but it also requires a significant amount of processing power, and may even cause your Intcode computer to overheat.</p>
+<p>Due to the limited amount of memory in the vacuum robot, the ASCII definitions of the main routine and the movement functions may each contain <em>at most 20 characters</em>, not counting the newline.</p>
+<p>For example, consider the following camera feed:</p>
+<pre><code>#######...#####
+#.....#...#...#
+#.....#...#...#
+......#...#...#
+......#...###.#
+......#.....#.#
+^########...#.#
+......#.#...#.#
+......#########
+........#...#..
+....#########..
+....#...#......
+....#...#......
+....#...#......
+....#####......
+</code></pre>
+<p>In order for the vacuum robot to <em>visit every part of the scaffold at least once</em>, one path it could take is:</p>
+<pre><code>R,8,R,8,R,4,R,4,R,8,L,6,L,2,R,4,R,4,R,8,R,8,R,8,L,6,L,2</code></pre>
+<p>Without the memory limit, you could just supply this whole string to function <code>A</code> and have the main routine call <code>A</code> once.  However, you'll need to split it into smaller parts.</p>
+<p>One approach is:</p>
+<ul>
+<li><em>Main routine: <code>A,B,C,B,A,C</code></em><br/>(ASCII input: <code>65</code>, <code>44</code>, <code>66</code>, <code>44</code>, <code>67</code>, <code>44</code>, <code>66</code>, <code>44</code>, <code>65</code>, <code>44</code>, <code>67</code>, <code>10</code>)</li>
+<li><em>Function <code>A</code>:&nbsp;&nbsp;&nbsp;<code>R,8,R,8</code></em><br/>(ASCII input: <code>82</code>, <code>44</code>, <code>56</code>, <code>44</code>, <code>82</code>, <code>44</code>, <code>56</code>, <code>10</code>)</li>
+<li><em>Function <code>B</code>:&nbsp;&nbsp;&nbsp;<code>R,4,R,4,R,8</code></em><br/>(ASCII input: <code>82</code>, <code>44</code>, <code>52</code>, <code>44</code>, <code>82</code>, <code>44</code>, <code>52</code>, <code>44</code>, <code>82</code>, <code>44</code>, <code>56</code>, <code>10</code>)</li>
+<li><em>Function <code>C</code>:&nbsp;&nbsp;&nbsp;<code>L,6,L,2</code></em><br/>(ASCII input: <code>76</code>, <code>44</code>, <code>54</code>, <code>44</code>, <code>76</code>, <code>44</code>, <code>50</code>, <code>10</code>)</li>
+</ul>
+<p>Visually, this would break the desired path into the following parts:</p>
+<pre><code>A,        B,            C,        B,            A,        C
+R,8,R,8,  R,4,R,4,R,8,  L,6,L,2,  R,4,R,4,R,8,  R,8,R,8,  L,6,L,2
+
+CCCCCCA...BBBBB
+C.....A...B...B
+C.....A...B...B
+......A...B...B
+......A...CCC.B
+......A.....C.B
+^AAAAAAAA...C.B
+......A.A...C.B
+......AAAAAA#AB
+........A...C..
+....BBBB#BBBB..
+....B...A......
+....B...A......
+....B...A......
+....BBBBA......
+</code></pre>
+<p>Of course, the scaffolding outside your ship is much more complex.</p>
+<p>As the vacuum robot finds other robots and notifies them of the impending solar flare, it also can't help but leave them squeaky clean, collecting any space dust it finds. Once it finishes the programmed set of movements, assuming it hasn't drifted off into space, the cleaning robot will return to its docking station and report the amount of space dust it collected as a large, non-ASCII value in a single output instruction.</p>
+<p>After visiting every part of the scaffold at least once, <em>how much dust does the vacuum robot report it has collected?</em></p>
+</article>
+<p>Your puzzle answer was <code>929045</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="17/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Set+and+Forget%22+%2D+Day+17+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F17&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Set+and+Forget%22+%2D+Day+17+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F17';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

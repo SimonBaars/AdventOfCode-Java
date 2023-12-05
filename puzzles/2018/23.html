@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 23 - Advent of Code 2018</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2018/about">[About]</a></li><li><a href="/2018/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2018/settings">[Settings]</a></li><li><a href="/2018/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2018/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">28*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">0xffff&amp;</span><a href="/2018">2018</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2018">[Calendar]</a></li><li><a href="/2018/support">[AoC++]</a></li><li><a href="/2018/sponsors">[Sponsors]</a></li><li><a href="/2018/leaderboard">[Leaderboard]</a></li><li><a href="/2018/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2018/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://rainway.io/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Rainway</a> - Play all your favorite PC games anytime, anywhere, across a variety of different devices.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 23: Experimental Emergency Teleportation ---</h2><p>Using your torch to search the darkness of the rocky cavern, you finally locate the man's friend: a small <em>reindeer</em>.</p>
+<p>You're not sure how it got so far in this cave.  It looks sick - too sick to walk - and too heavy for you to carry all the way back.  Sleighs won't be invented for another 1500 years, of course.</p>
+<p>The only option is <em>experimental emergency teleportation</em>.</p>
+<p>You hit the "experimental emergency teleportation" <span title="We've always had this button; we've just been too scared to press it.">button</span> on the device and push <em>I accept the risk</em> on no fewer than 18 different warning messages. Immediately, the device deploys hundreds of tiny <em>nanobots</em> which fly around the cavern, apparently assembling themselves into a very specific <em>formation</em>. The device lists the <code>X,Y,Z</code> position (<code>pos</code>) for each nanobot as well as its <em>signal radius</em> (<code>r</code>) on its tiny screen (your puzzle input).</p>
+<p>Each nanobot can transmit signals to any integer coordinate which is a distance away from it <em>less than or equal to</em> its signal radius (as measured by <a href="https://en.wikipedia.org/wiki/Taxicab_geometry">Manhattan distance</a>). Coordinates a distance away of less than or equal to a nanobot's signal radius are said to be <em>in range</em> of that nanobot.</p>
+<p>Before you start the teleportation process, you should determine which nanobot is the <em>strongest</em> (that is, which has the largest signal radius) and then, for that nanobot, the <em>total number of nanobots that are in range</em> of it, <em>including itself</em>.</p>
+<p>For example, given the following nanobots:</p>
+<pre><code>pos=&lt;0,0,0&gt;, r=4
+pos=&lt;1,0,0&gt;, r=1
+pos=&lt;4,0,0&gt;, r=3
+pos=&lt;0,2,0&gt;, r=1
+pos=&lt;0,5,0&gt;, r=3
+pos=&lt;0,0,3&gt;, r=1
+pos=&lt;1,1,1&gt;, r=1
+pos=&lt;1,1,2&gt;, r=1
+pos=&lt;1,3,1&gt;, r=1
+</code></pre>
+<p>The strongest nanobot is the first one (position <code>0,0,0</code>) because its signal radius, <code>4</code> is the largest. Using that nanobot's location and signal radius, the following nanobots are in or out of range:</p>
+<ul>
+<li>The nanobot at <code>0,0,0</code> is distance <code>0</code> away, and so it is <em>in range</em>.</li>
+<li>The nanobot at <code>1,0,0</code> is distance <code>1</code> away, and so it is <em>in range</em>.</li>
+<li>The nanobot at <code>4,0,0</code> is distance <code>4</code> away, and so it is <em>in range</em>.</li>
+<li>The nanobot at <code>0,2,0</code> is distance <code>2</code> away, and so it is <em>in range</em>.</li>
+<li>The nanobot at <code>0,5,0</code> is distance <code>5</code> away, and so it is <em>not</em> in range.</li>
+<li>The nanobot at <code>0,0,3</code> is distance <code>3</code> away, and so it is <em>in range</em>.</li>
+<li>The nanobot at <code>1,1,1</code> is distance <code>3</code> away, and so it is <em>in range</em>.</li>
+<li>The nanobot at <code>1,1,2</code> is distance <code>4</code> away, and so it is <em>in range</em>.</li>
+<li>The nanobot at <code>1,3,1</code> is distance <code>5</code> away, and so it is <em>not</em> in range.</li>
+</ul>
+<p>In this example, in total, <code><em>7</em></code> nanobots are in range of the nanobot with the largest signal radius.</p>
+<p>Find the nanobot with the largest signal radius.  <em>How many nanobots are in range</em> of its signals?</p>
+</article>
+<p>To begin, <a href="23/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="23/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Experimental+Emergency+Teleportation%22+%2D+Day+23+%2D+Advent+of+Code+2018&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F23&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Experimental+Emergency+Teleportation%22+%2D+Day+23+%2D+Advent+of+Code+2018+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F23';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

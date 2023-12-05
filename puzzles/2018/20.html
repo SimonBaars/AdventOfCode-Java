@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 20 - Advent of Code 2018</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2018/about">[About]</a></li><li><a href="/2018/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2018/settings">[Settings]</a></li><li><a href="/2018/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2018/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">28*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">/*</span><a href="/2018">2018</a><span class="title-event-wrap">*/</span></h1><nav><ul><li><a href="/2018">[Calendar]</a></li><li><a href="/2018/support">[AoC++]</a></li><li><a href="/2018/sponsors">[Sponsors]</a></li><li><a href="/2018/leaderboard">[Leaderboard]</a></li><li><a href="/2018/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2018/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://gurge.com/domains.html" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">.ai/io Domains</a> - Want a domain like coffee.ai or eth.io? Hundreds for sale!</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 20: A Regular Map ---</h2><p>While you were learning about instruction pointers, the Elves made considerable progress. When you look up, you discover that the North Pole base construction project has completely surrounded you.</p>
+<p>The area you are in is made up entirely of <em>rooms</em> and <em>doors</em>. The rooms are arranged in a grid, and rooms only connect to adjacent rooms when a door is present between them.</p>
+<p>For example, drawing rooms as <code>.</code>, walls as <code>#</code>, doors as <code>|</code> or <code>-</code>, your current position as <code>X</code>, and where north is up, the area you're in might look like this:</p>
+<pre><code>#####
+#.|.#
+#-###
+#.|X#
+#####
+</code></pre>
+<p>You get the attention of a passing construction Elf and ask for a map. "I don't have time to draw out a map of this place - it's <em>huge</em>. Instead, I can give you directions to <em>every room in the facility</em>!" He writes down some directions on a piece of parchment and runs off. In the example above, the instructions might have been <code>^WNE$</code>, a <a href="https://en.wikipedia.org/wiki/Regular_expression">regular expression</a> or "<em>regex</em>" (your puzzle input).</p>
+<p>The regex matches routes (like <code>WNE</code> for "west, north, east") that will take you from your current room through various doors in the facility. In aggregate, the routes will take you through <em>every door in the facility at least once</em>; mapping out all of these routes will let you build a proper map and find your way around.</p>
+<p><code>^</code> and <code>$</code> are at the beginning and end of your regex; these just mean that the regex doesn't match anything outside the routes it describes. (Specifically, <code>^</code> matches the start of the route, and <code>$</code> matches the end of it.) These characters will not appear elsewhere in the regex.</p>
+<p>The rest of the regex matches various sequences of the characters <code>N</code> (north), <code>S</code> (south), <code>E</code> (east), and <code>W</code> (west). In the example above, <code>^WNE$</code> matches only one route, <code>WNE</code>, which means you can move <em>west, then north, then east</em> from your current position. Sequences of letters like this always match that exact route in the same order.</p>
+<p>Sometimes, the route can <em>branch</em>. A branch is given by a <em>list of options</em> separated by pipes (<code>|</code>) and wrapped in parentheses. So, <code>^N(E|W)N$</code> contains a branch: after going north, you must choose to go <em>either east or west</em> before finishing your route by going north again. By tracing out the possible routes after branching, you can determine where the doors are and, therefore, where the rooms are in the facility.</p>
+<p>For example, consider this regex: <code>^ENWWW(NEEE|SSE(EE|N))$</code></p>
+<p>This regex begins with <code>ENWWW</code>, which means that from your current position, all routes must begin by moving east, north, and then west three times, in that order. After this, there is a branch.  Before you consider the branch, this is what you know about the map so far, with doors you aren't sure about marked with a <code>?</code>:</p>
+<pre><code>#?#?#?#?#
+?.|.|.|.?
+#?#?#?#-#
+    ?X|.?
+    #?#?#
+</code></pre>
+<p>After this point, there is <code>(NEEE|SSE(EE|N))</code>. This gives you exactly two options: <code>NEEE</code> and <code>SSE(EE|N)</code>. By following <code>NEEE</code>, the map now looks like this:</p>
+<pre><code>#?#?#?#?#
+?.|.|.|.?
+#-#?#?#?#
+?.|.|.|.?
+#?#?#?#-#
+    ?X|.?
+    #?#?#
+</code></pre>
+<p>Now, only <code>SSE(EE|N)</code> remains. Because it is in the same parenthesized group as <code>NEEE</code>, it starts from the same room <code>NEEE</code> started in. It states that starting from that point, there exist doors which will allow you to move south twice, then east; this ends up at another branch. After that, you can either move east twice or north once. This information fills in the rest of the doors:</p>
+<pre><code>#?#?#?#?#
+?.|.|.|.?
+#-#?#?#?#
+?.|.|.|.?
+#-#?#?#-#
+?.?.?X|.?
+#-#-#?#?#
+?.|.|.|.?
+#?#?#?#?#
+</code></pre>
+<p>Once you've followed all possible routes, you know the remaining unknown parts are all walls, producing a finished map of the facility:</p>
+<pre><code>#########
+#.|.|.|.#
+#-#######
+#.|.|.|.#
+#-#####-#
+#.#.#X|.#
+#-#-#####
+#.|.|.|.#
+#########
+</code></pre>
+<p>Sometimes, a list of options can have an <em>empty option</em>, like <code>(NEWS|WNSE|)</code>. This means that routes at this point could effectively skip the options in parentheses and move on immediately.  For example, consider this regex and the corresponding map:</p>
+<pre><code>^ENNWSWW(NEWS|)SSSEEN(WNSE|)EE(SWEN|)NNN$
+
+###########
+#.|.#.|.#.#
+#-###-#-#-#
+#.|.|.#.#.#
+#-#####-#-#
+#.#.#X|.#.#
+#-#-#####-#
+#.#.|.|.|.#
+#-###-###-#
+#.|.|.#.|.#
+###########
+</code></pre>
+<p>This regex has one main route which, at three locations, can optionally include additional detours and be valid: <code>(NEWS|)</code>, <code>(WNSE|)</code>, and <code>(SWEN|)</code>. Regardless of which option is taken, the route continues from the position it is left at after taking those steps. So, for example, this regex matches all of the following routes (and more that aren't listed here):</p>
+<ul>
+<li><code>ENNWSWWSSSEENEENNN</code></li>
+<li><code>ENNWSWW<em>NEWS</em>SSSEENEENNN</code></li>
+<li><code>ENNWSWW<em>NEWS</em>SSSEENEE<em>SWEN</em>NNN</code></li>
+<li><code>ENNWSWWSSSEEN<em>WNSE</em>EENNN</code></li>
+</ul>
+<p>By following the various routes the regex matches, a full map of all of the doors and rooms in the facility can be assembled.</p>
+<p>To get a sense for the size of this facility, you'd like to determine which room is <em>furthest</em> from you: specifically, you would like to find the room for which the <em>shortest path to that room would require passing through the most doors</em>.</p>
+<ul>
+<li>In the first example (<code>^WNE$</code>), this would be the north-east corner <code><em>3</em></code> doors away.</li>
+<li>In the second example (<code>^ENWWW(NEEE|SSE(EE|N))$</code>), this would be the south-east corner <code><em>10</em></code> doors away.</li>
+<li>In the third example (<code>^ENNWSWW(NEWS|)SSSEEN(WNSE|)EE(SWEN|)NNN$</code>), this would be the north-east corner <code><em>18</em></code> doors away.</li>
+</ul>
+<p>Here are a few more examples:</p>
+<pre><code>Regex: ^ESSWWN(E|NNENN(EESS(WNSE|)SSS|WWWSSSSE(SW|NNNE)))$
+Furthest room requires passing 23 doors
+
+#############
+#.|.|.|.|.|.#
+#-#####-###-#
+#.#.|.#.#.#.#
+#-#-###-#-#-#
+#.#.#.|.#.|.#
+#-#-#-#####-#
+#.#.#.#X|.#.#
+#-#-#-###-#-#
+#.|.#.|.#.#.#
+###-#-###-#-#
+#.|.#.|.|.#.#
+#############
+</code></pre>
+<pre><code>Regex: ^WSSEESWWWNW(S|NENNEEEENN(ESSSSW(NWSW|SSEN)|WSWWN(E|WWS(E|SS))))$
+Furthest room requires passing 31 doors
+
+###############
+#.|.|.|.#.|.|.#
+#-###-###-#-#-#
+#.|.#.|.|.#.#.#
+#-#########-#-#
+#.#.|.|.|.|.#.#
+#-#-#########-#
+#.#.#.|X#.|.#.#
+###-#-###-#-#-#
+#.|.#.#.|.#.|.#
+#-###-#####-###
+#.|.#.|.|.#.#.#
+#-#-#####-#-#-#
+#.#.|.|.|.#.|.#
+###############
+</code></pre>
+<p><em>What is the largest number of doors you would be required to pass through to reach a room?</em> That is, find the room for which the shortest path from your starting location to that room would require passing through the most doors; what is the fewest doors you can pass through to reach it?</p>
+</article>
+<p>To begin, <a href="20/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="20/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22A+Regular+Map%22+%2D+Day+20+%2D+Advent+of+Code+2018&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F20&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22A+Regular+Map%22+%2D+Day+20+%2D+Advent+of+Code+2018+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F20';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

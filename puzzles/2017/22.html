@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 22 - Advent of Code 2017</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2017/about">[About]</a></li><li><a href="/2017/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2017/settings">[Settings]</a></li><li><a href="/2017/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2017/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">2*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">/*</span><a href="/2017">2017</a><span class="title-event-wrap">*/</span></h1><nav><ul><li><a href="/2017">[Calendar]</a></li><li><a href="/2017/support">[AoC++]</a></li><li><a href="/2017/sponsors">[Sponsors]</a></li><li><a href="/2017/leaderboard">[Leaderboard]</a></li><li><a href="/2017/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2017/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://formlabs.com/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Formlabs</a> - We make powerful, affordable 3D printers for professionals.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 22: Sporifica Virus ---</h2><p>Diagnostics indicate that the local <em>grid computing cluster</em> has been contaminated with the <em>Sporifica Virus</em>. The grid computing cluster is a seemingly-<span title="The infinite is possible at AdventOfCodeCom.">infinite</span> two-dimensional grid of compute nodes.  Each node is either <em>clean</em> or <em>infected</em> by the virus.<p>
+<p>To <a href="https://en.wikipedia.org/wiki/Morris_worm#The_mistake">prevent overloading</a> the nodes (which would render them useless to the virus) or detection by system administrators, exactly one <em>virus carrier</em> moves through the network, infecting or cleaning nodes as it moves. The virus carrier is always located on a single node in the network (the <em>current node</em>) and keeps track of the <em>direction</em> it is facing.</p>
+<p>To avoid detection, the virus carrier works in bursts; in each burst, it <em>wakes up</em>, does some <em>work</em>, and goes back to <em>sleep</em>. The following steps are all executed <em>in order</em> one time each burst:</p>
+<ul>
+<li>If the <em>current node</em> is <em>infected</em>, it turns to its <em>right</em>.  Otherwise, it turns to its <em>left</em>. (Turning is done in-place; the <em>current node</em> does not change.)</li>
+<li>If the <em>current node</em> is <em>clean</em>, it becomes <em>infected</em>.  Otherwise, it becomes <em>cleaned</em>. (This is done <em>after</em> the node is considered for the purposes of changing direction.)</li>
+<li>The virus carrier <a href="https://www.youtube.com/watch?v=2vj37yeQQHg">moves</a> <em>forward</em> one node in the direction it is facing.</li>
+</ul>
+<p>Diagnostics have also provided a <em>map of the node infection status</em> (your puzzle input).  <em>Clean</em> nodes are shown as <code>.</code>; <em>infected</em> nodes are shown as <code>#</code>.  This map only shows the center of the grid; there are many more nodes beyond those shown, but none of them are currently infected.</p>
+<p>The virus carrier begins in the middle of the map facing <em>up</em>.</p>
+<p>For example, suppose you are given a map like this:</p>
+<pre><code>..#
+#..
+...
+</code></pre>
+<p>Then, the middle of the infinite grid looks like this, with the virus carrier's position marked with <code>[ ]</code>:</p>
+<pre><code>. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . # . . .
+. . . #[.]. . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+</code></pre>
+<p>The virus carrier is on a <em>clean</em> node, so it turns <em>left</em>, <em>infects</em> the node, and moves left:</p>
+<pre><code>. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . # . . .
+. . .[#]# . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+</code></pre>
+<p>The virus carrier is on an <em>infected</em> node, so it turns <em>right</em>, <em>cleans</em> the node, and moves up:</p>
+<pre><code>. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . .[.]. # . . .
+. . . . # . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+</code></pre>
+<p>Four times in a row, the virus carrier finds a <em>clean</em>, <em>infects</em> it, turns <em>left</em>, and moves forward, ending in the same place and still facing up:</p>
+<pre><code>. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . #[#]. # . . .
+. . # # # . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+</code></pre>
+<p>Now on the same node as before, it sees an infection, which causes it to turn <em>right</em>, <em>clean</em> the node, and move forward:</p>
+<pre><code>. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . # .[.]# . . .
+. . # # # . . . .
+. . . . . . . . .
+. . . . . . . . .
+. . . . . . . . .
+</code></pre>
+<p>After the above actions, a total of <code>7</code> bursts of activity had taken place. Of them, <code>5</code> bursts of activity caused an infection.</p>
+<p>After a total of <code>70</code>, the grid looks like this, with the virus carrier facing up:</p>
+<pre><code>. . . . . # # . .
+. . . . # . . # .
+. . . # . . . . #
+. . # . #[.]. . #
+. . # . # . . # .
+. . . . . # # . .
+. . . . . . . . .
+. . . . . . . . .
+</code></pre>
+<p>By this time, <code>41</code> bursts of activity caused an infection (though most of those nodes have since been cleaned).</p>
+<p>After a total of <code>10000</code> bursts of activity, <code>5587</code> bursts will have caused an infection.</p>
+<p>Given your actual map, after <code>10000</code> bursts of activity, <em>how many bursts cause a node to become infected</em>? (Do not count nodes that begin infected.)</p>
+</article>
+<p>To begin, <a href="22/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="22/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Sporifica+Virus%22+%2D+Day+22+%2D+Advent+of+Code+2017&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2017%2Fday%2F22&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Sporifica+Virus%22+%2D+Day+22+%2D+Advent+of+Code+2017+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2017%2Fday%2F22';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

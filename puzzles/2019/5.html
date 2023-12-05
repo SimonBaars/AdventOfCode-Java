@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 5 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">/^</span><a href="/2019">2019</a><span class="title-event-wrap">$/</span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://www.reaktor.com/advent-of-code" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Reaktor</a> - Tracking Santa from space since 2018. Always looking for more talented Santa&apos;s little helpers.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 5: Sunny with a Chance of Asteroids ---</h2><p>You're starting to sweat as the ship makes its way toward Mercury.  The Elves suggest that you get the air conditioner working by upgrading your ship computer to support the Thermal Environment Supervision Terminal.</p>
+<p>The Thermal Environment Supervision Terminal (TEST) starts by running a <em>diagnostic program</em> (your puzzle input).  The TEST diagnostic program will run on <a href="2">your existing Intcode computer</a> after a few modifications:</p>
+<p><em>First</em>, you'll need to add <em>two new instructions</em>:</p>
+<ul>
+<li>Opcode <code>3</code> takes a single integer as <em>input</em> and saves it to the position given by its only parameter. For example, the instruction <code>3,50</code> would take an input value and store it at address <code>50</code>.</li>
+<li>Opcode <code>4</code> <em>outputs</em> the value of its only parameter. For example, the instruction <code>4,50</code> would output the value at address <code>50</code>.</li>
+</ul>
+<p>Programs that use these instructions will come with documentation that explains what should be connected to the input and output. The program <code>3,0,4,0,99</code> outputs whatever it gets as input, then halts.</p>
+<p><em>Second</em>, you'll need to add support for <em>parameter modes</em>:</p>
+<p>Each parameter of an instruction is handled based on its parameter mode.  Right now, your ship computer already understands parameter mode <code>0</code>, <em>position mode</em>, which causes the parameter to be interpreted as a <em>position</em> - if the parameter is <code>50</code>, its value is <em>the value stored at address <code>50</code> in memory</em>. Until now, all parameters have been in position mode.</p>
+<p>Now, your ship computer will also need to handle parameters in mode <code>1</code>, <em>immediate mode</em>. In immediate mode, a parameter is interpreted as a <em>value</em> - if the parameter is <code>50</code>, its value is simply <em><code>50</code></em>.</p>
+<p>Parameter modes are stored in the same value as the instruction's opcode.  The opcode is a two-digit number based only on the ones and tens digit of the value, that is, the opcode is the rightmost two digits of the first value in an instruction. Parameter modes are single digits, one per parameter, read right-to-left from the opcode: the first parameter's mode is in the hundreds digit, the second parameter's mode is in the thousands digit, the third parameter's mode is in the ten-thousands digit, and so on. Any missing modes are <code>0</code>.</p>
+<p>For example, consider the program <code>1002,4,3,4,33</code>.</p>
+<p>The first instruction, <code>1002,4,3,4</code>, is a <em>multiply</em> instruction - the rightmost two digits of the first value, <code>02</code>, indicate opcode <code>2</code>, multiplication.  Then, going right to left, the parameter modes are <code>0</code> (hundreds digit), <code>1</code> (thousands digit), and <code>0</code> (ten-thousands digit, not present and therefore zero):</p>
+<pre><code>ABCDE
+ 1002
+
+DE - two-digit opcode,      02 == opcode 2
+ C - mode of 1st parameter,  0 == position mode
+ B - mode of 2nd parameter,  1 == immediate mode
+ A - mode of 3rd parameter,  0 == position mode,
+                                  omitted due to being a leading zero
+</code></pre>
+<p>This instruction multiplies its first two parameters.  The first parameter, <code>4</code> in position mode, works like it did before - its value is the value stored at address <code>4</code> (<code>33</code>). The second parameter, <code>3</code> in immediate mode, simply has value <code>3</code>. The result of this operation, <code>33 * 3 = 99</code>, is written according to the third parameter, <code>4</code> in position mode, which also works like it did before - <code>99</code> is written to address <code>4</code>.</p>
+<p>Parameters that an instruction writes to will <em>never be in immediate mode</em>.</p>
+<p><em>Finally</em>, some notes:</p>
+<ul>
+<li>It is important to remember that the instruction pointer should increase by <em>the number of values in the instruction</em> after the instruction finishes. Because of the new instructions, this amount is no longer always <code>4</code>.</li>
+<li>Integers can be negative: <code>1101,100,-1,4,0</code> is a valid program (find <code>100 + -1</code>, store the result in position <code>4</code>).</li>
+</ul>
+<p>The TEST diagnostic program will start by requesting from the user the ID of the system to test by running an <em>input</em> instruction - provide it <code>1</code>, the ID for the ship's air conditioner unit.</p>
+<p>It will then perform a series of diagnostic tests confirming that various parts of the Intcode computer, like parameter modes, function correctly. For each test, it will run an <em>output</em> instruction indicating how far the result of the test was from the expected value, where <code>0</code> means the test was successful.  Non-zero outputs mean that a function is not working correctly; check the instructions that were run before the output instruction to see which one failed.</p>
+<p>Finally, the program will output a <em>diagnostic code</em> and immediately halt. This final output isn't an error; an output followed immediately by a halt means the program finished.  If all outputs were zero except the diagnostic code, the diagnostic program ran successfully.</p>
+<p>After providing <code>1</code> to the only input instruction and passing all the tests, <em>what diagnostic code does the program produce?</em></p>
+</article>
+<p>Your puzzle answer was <code>11049715</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The air conditioner comes online! Its cold air feels good for a while, but then the TEST alarms start to go off. Since the air conditioner <span title="Honestly, I'm not sure what you expected.">can't vent its heat anywhere</span> but back into the spacecraft, it's actually making the air inside the ship <em>warmer</em>.</p>
+<p>Instead, you'll need to use the TEST to extend the <a href="https://en.wikipedia.org/wiki/Spacecraft_thermal_control">thermal radiators</a>. Fortunately, the diagnostic program (your puzzle input) is already equipped for this.  Unfortunately, your Intcode computer is not.</p>
+<p>Your computer is only missing a few opcodes:</p>
+<ul>
+<li>Opcode <code>5</code> is <em>jump-if-true</em>: if the first parameter is <em>non-zero</em>, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.</li>
+<li>Opcode <code>6</code> is <em>jump-if-false</em>: if the first parameter <em>is zero</em>, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.</li>
+<li>Opcode <code>7</code> is <em>less than</em>: if the first parameter is <em>less than</em> the second parameter, it stores <code>1</code> in the position given by the third parameter.  Otherwise, it stores <code>0</code>.</li>
+<li>Opcode <code>8</code> is <em>equals</em>: if the first parameter is <em>equal to</em> the second parameter, it stores <code>1</code> in the position given by the third parameter.  Otherwise, it stores <code>0</code>.</li>
+</ul>
+<p>Like all instructions, these instructions need to support <em>parameter modes</em> as described above.</p>
+<p>Normally, after an instruction is finished, the instruction pointer increases by the number of values in that instruction. <em>However</em>, if the instruction modifies the instruction pointer, that value is used and the instruction pointer is <em>not automatically increased</em>.</p>
+<p>For example, here are several programs that take one input, compare it to the value <code>8</code>, and then produce one output:</p>
+<ul>
+<li><code>3,9,8,9,10,9,4,9,99,-1,8</code> - Using <em>position mode</em>, consider whether the input is <em>equal to</em> <code>8</code>; output <code>1</code> (if it is) or <code>0</code> (if it is not).</li>
+<li><code>3,9,7,9,10,9,4,9,99,-1,8</code> - Using <em>position mode</em>, consider whether the input is <em>less than</em> <code>8</code>; output <code>1</code> (if it is) or <code>0</code> (if it is not).</li>
+<li><code>3,3,1108,-1,8,3,4,3,99</code> - Using <em>immediate mode</em>, consider whether the input is <em>equal to</em> <code>8</code>; output <code>1</code> (if it is) or <code>0</code> (if it is not).</li>
+<li><code>3,3,1107,-1,8,3,4,3,99</code> - Using <em>immediate mode</em>, consider whether the input is <em>less than </em><code>8</code>; output <code>1</code> (if it is) or <code>0</code> (if it is not).</li>
+</ul>
+<p>Here are some jump tests that take an input, then output <code>0</code> if the input was zero or <code>1</code> if the input was non-zero:</p>
+<ul>
+<li><code>3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9</code> (using <em>position mode</em>)</li>
+<li><code>3,3,1105,-1,9,1101,0,0,12,4,12,99,1</code> (using <em>immediate mode</em>)</li>
+</ul>
+<p>Here's a larger example:</p>
+<pre><code>3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
+999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99
+</code></pre>
+<p>The above example program uses an input instruction to ask for a single number.  The program will then output <code>999</code> if the input value is below <code>8</code>, output <code>1000</code> if the input value is equal to <code>8</code>, or output <code>1001</code> if the input value is greater than <code>8</code>.</p>
+<p>This time, when the TEST diagnostic program runs its input instruction to get the ID of the system to test, <em>provide it <code>5</code></em>, the ID for the ship's thermal radiator controller. This diagnostic test suite only outputs one number, the <em>diagnostic code</em>.</p>
+<p><em>What is the diagnostic code for system ID <code>5</code>?</em></p>
+</article>
+<p>Your puzzle answer was <code>2140710</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="5/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Sunny+with+a+Chance+of+Asteroids%22+%2D+Day+5+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F5&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Sunny+with+a+Chance+of+Asteroids%22+%2D+Day+5+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F5';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

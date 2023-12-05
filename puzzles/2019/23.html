@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 23 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">{year=&gt;</span><a href="/2019">2019</a><span class="title-event-wrap">}</span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://auricsystems.com/tokenize-almost-anything?utm_source=advent+of+code&amp;utm_medium=display&amp;utm_camapign=advent2019" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">AuricVault®</a> - Thieves can&apos;t steal -- what isn&apos;t there! Secure your sensitive data. Simple API. FREE test credentials. Start simplifying your compliance.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 23: Category Six ---</h2><p>The droids have finished repairing as much of the ship as they can.  Their <span title="If you don't at least exhale sharply through your nose after reading this joke, we probably can't be friends.">report</span> indicates that this was a <em>Category 6</em> disaster - not because it was that bad, but because it destroyed the stockpile of <a href="https://en.wikipedia.org/wiki/Category_6_cable">Category 6</a> network cables as well as most of the ship's network infrastructure.</p>
+<p>You'll need to <em>rebuild the network from scratch</em>.</p>
+<p>The computers on the network are standard <a href="9">Intcode</a> computers that communicate by sending <em>packets</em> to each other.  There are <code>50</code> of them in total, each running a copy of the same <em>Network Interface Controller</em> (NIC) software (your puzzle input). The computers have <em>network addresses</em> <code>0</code> through <code>49</code>; when each computer boots up, it will request its network address via a single input instruction. Be sure to give each computer a unique network address.</p>
+<p>Once a computer has received its network address, it will begin doing work and communicating over the network by sending and receiving <em>packets</em>. All packets contain <em>two values</em> named <code>X</code> and <code>Y</code>. Packets sent to a computer are queued by the recipient and read in the order they are received.</p>
+<p>To <em>send</em> a packet to another computer, the NIC will use <em>three output instructions</em> that provide the <em>destination address</em> of the packet followed by its <code>X</code> and <code>Y</code> values.  For example, three output instructions that provide the values <code>10</code>, <code>20</code>, <code>30</code> would send a packet with <code>X=20</code> and <code>Y=30</code> to the computer with address <code>10</code>.</p>
+<p>To <em>receive</em> a packet from another computer, the NIC will use an <em>input instruction</em>.  If the incoming packet queue is <em>empty</em>, provide <code>-1</code>.  Otherwise, provide the <code>X</code> value of the next packet; the computer will then use a second input instruction to receive the <code>Y</code> value for the same packet.  Once both values of the packet are read in this way, the packet is removed from the queue.</p>
+<p>Note that these input and output instructions never <a href="https://en.wikipedia.org/wiki/Blocking_(computing)">block</a>. Specifically, output instructions do not wait for the sent packet to be received - the computer might send multiple packets before receiving any. Similarly, input instructions do not wait for a packet to arrive - if no packet is waiting, input instructions should receive <code>-1</code>.</p>
+<p>Boot up all <code>50</code> computers and attach them to your network.  <em>What is the <code>Y</code> value of the first packet sent to address <code>255</code>?</em></p>
+</article>
+<p>Your puzzle answer was <code>17286</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Packets sent to address <code>255</code> are handled by a device called a NAT (Not Always Transmitting). The NAT is responsible for managing power consumption of the network by blocking certain packets and watching for idle periods in the computers.</p>
+<p>If a packet would be sent to address <code>255</code>, the NAT receives it instead.  The NAT remembers only the <em>last</em> packet it receives; that is, the data in each packet it receives overwrites the NAT's packet memory with the new packet's <code>X</code> and <code>Y</code> values.</p>
+<p>The NAT also monitors all computers on the network.  If all computers have <em>empty incoming packet queues</em> and are <em>continuously trying to receive packets</em> without sending packets, the network is considered <em>idle</em>.</p>
+<p>Once the network is idle, the NAT sends <em>only the last packet it received</em> to address <code>0</code>; this will cause the computers on the network to resume activity.  In this way, the NAT can throttle power consumption of the network when the ship needs power in other areas.</p>
+<p>Monitor packets released to the computer at address <code>0</code> by the NAT.  <em>What is the first <code>Y</code> value delivered by the NAT to the computer at address <code>0</code> twice in a row?</em></p>
+</article>
+<p>Your puzzle answer was <code>11249</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="23/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Category+Six%22+%2D+Day+23+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F23&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Category+Six%22+%2D+Day+23+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F23';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

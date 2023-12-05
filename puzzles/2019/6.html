@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 6 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap"></span><a href="/2019">2019</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://smartystreets.com/aoc" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">SmartyStreets</a> - Ridiculously -- Fast -------- Address ------ Verification --</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 6: Universal Orbit Map ---</h2><p>You've landed at the Universal Orbit Map facility on Mercury.  Because navigation in space often involves transferring between orbits, the orbit maps here are useful for finding efficient routes between, for example, you and Santa. You download a map of the local orbits (your puzzle input).</p>
+<p>Except for the universal Center of Mass (<code>COM</code>), every object in space is in orbit around <span title="What do you mean, Kerbal Space Program doesn't have accurate orbital physics?">exactly one other object</span>.  An <a href="https://en.wikipedia.org/wiki/Orbit">orbit</a> looks roughly like this:</p>
+<pre><code>                  \
+                   \
+                    |
+                    |
+AAA--&gt; o            o &lt;--BBB
+                    |
+                    |
+                   /
+                  /
+</code></pre>
+<p>In this diagram, the object <code>BBB</code> is in orbit around <code>AAA</code>. The path that <code>BBB</code> takes around <code>AAA</code> (drawn with lines) is only partly shown. In the map data, this orbital relationship is written <code>AAA)BBB</code>, which means "<code>BBB</code> is in orbit around <code>AAA</code>".</p>
+<p>Before you use your map data to plot a course, you need to make sure it wasn't corrupted during the download.  To verify maps, the Universal Orbit Map facility uses <em>orbit count checksums</em> - the total number of <em>direct orbits</em> (like the one shown above) and <em>indirect orbits</em>.</p>
+	<p>Whenever <code>A</code> orbits <code>B</code> and <code>B</code> orbits <code>C</code>, then <code>A</code> <em>indirectly orbits</em> <code>C</code>.  This chain can be any number of objects long: if <code>A</code> orbits <code>B</code>, <code>B</code> orbits <code>C</code>, and <code>C</code> orbits <code>D</code>, then <code>A</code> indirectly orbits <code>D</code>.
+<p>For example, suppose you have the following map:</p>
+<pre><code>COM)B
+B)C
+C)D
+D)E
+E)F
+B)G
+G)H
+D)I
+E)J
+J)K
+K)L
+</code></pre>
+<p>Visually, the above map of orbits looks like this:</p>
+<pre><code>        G - H       J - K - L
+       /           /
+COM - B - C - D - E - F
+               \
+                I
+</code></pre>
+<p>In this visual representation, when two objects are connected by a line, the one on the right directly orbits the one on the left.</p>
+<p>Here, we can count the total number of orbits as follows:</p>
+<ul>
+<li><code>D</code> directly orbits <code>C</code> and indirectly orbits <code>B</code> and <code>COM</code>, a total of <code>3</code> orbits.</li>
+<li><code>L</code> directly orbits <code>K</code> and indirectly orbits <code>J</code>, <code>E</code>, <code>D</code>, <code>C</code>, <code>B</code>, and <code>COM</code>, a total of <code>7</code> orbits.</li>
+<li><code>COM</code> orbits nothing.</li>
+</ul>
+<p>The total number of direct and indirect orbits in this example is <code><em>42</em></code>.</p>
+<p><em>What is the total number of direct and indirect orbits</em> in your map data?</p>
+</article>
+<p>Your puzzle answer was <code>186597</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now, you just need to figure out how many <em>orbital transfers</em> you (<code>YOU</code>) need to take to get to Santa (<code>SAN</code>).</p>
+<p>You start at the object <code>YOU</code> are orbiting; your destination is the object <code>SAN</code> is orbiting. An orbital transfer lets you move from any object to an object orbiting or orbited by that object.</p>
+<p>For example, suppose you have the following map:</p>
+<pre><code>COM)B
+B)C
+C)D
+D)E
+E)F
+B)G
+G)H
+D)I
+E)J
+J)K
+K)L
+K)YOU
+I)SAN
+</code></pre>
+<p>Visually, the above map of orbits looks like this:</p>
+<pre><code>                          <em>YOU</em>
+                         <em>/</em>
+        G - H       <em>J - K</em> - L
+       /           <em>/</em>
+COM - B - C - <em>D - E</em> - F
+               <em>\</em>
+                <em>I - SAN</em>
+</code></pre>
+<p>In this example, <code>YOU</code> are in orbit around <code>K</code>, and <code>SAN</code> is in orbit around <code>I</code>. To move from <code>K</code> to <code>I</code>, a minimum of <code>4</code> orbital transfers are required:</p>
+<ul>
+<li><code>K</code> to <code>J</code></li>
+<li><code>J</code> to <code>E</code></li>
+<li><code>E</code> to <code>D</code></li>
+<li><code>D</code> to <code>I</code></li>
+</ul>
+<p>Afterward, the map of orbits looks like this:</p>
+<pre><code>        G - H       J - K - L
+       /           /
+COM - B - C - D - E - F
+               \
+                I - SAN
+                 <em>\</em>
+                  <em>YOU</em>
+</code></pre>
+<p><em>What is the minimum number of orbital transfers required</em> to move from the object <code>YOU</code> are orbiting to the object <code>SAN</code> is orbiting? (Between the objects they are orbiting - <em>not</em> between <code>YOU</code> and <code>SAN</code>.)</p>
+</article>
+<p>Your puzzle answer was <code>412</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="6/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Universal+Orbit+Map%22+%2D+Day+6+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F6&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Universal+Orbit+Map%22+%2D+Day+6+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F6';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

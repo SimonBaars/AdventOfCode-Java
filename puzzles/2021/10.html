@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 10 - Advent of Code 2021</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2021/about">[About]</a></li><li><a href="/2021/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2021/settings">[Settings]</a></li><li><a href="/2021/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2021/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">0.0.0.0:</span><a href="/2021">2021</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2021">[Calendar]</a></li><li><a href="/2021/support">[AoC++]</a></li><li><a href="/2021/sponsors">[Sponsors]</a></li><li><a href="/2021/leaderboard">[Leaderboard]</a></li><li><a href="/2021/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2021/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://shopify.engineering/?utm_campaign=advent_of_code&amp;utm_medium=cpc" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Shopify</a> - Check out our engineering blog and learn how Yule be able to solve commerce problems at scale by joining Shopify. Happy Holidays!</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 10: Syntax Scoring ---</h2><p>You ask the submarine to determine the best route out of the deep-sea cave, but it only replies:</p>
+<pre><code>Syntax error in navigation subsystem on line: <span title="Some days, that's just how it is.">all of them</span></code></pre>
+<p><em>All of them?!</em> The damage is worse than you thought. You bring up a copy of the navigation subsystem (your puzzle input).</p>
+<p>The navigation subsystem syntax is made of several lines containing <em>chunks</em>. There are one or more chunks on each line, and chunks contain zero or more other chunks. Adjacent chunks are not separated by any delimiter; if one chunk stops, the next chunk (if any) can immediately start. Every chunk must <em>open</em> and <em>close</em> with one of four legal pairs of matching characters:</p>
+<ul>
+<li>If a chunk opens with <code>(</code>, it must close with <code>)</code>.</li>
+<li>If a chunk opens with <code>[</code>, it must close with <code>]</code>.</li>
+<li>If a chunk opens with <code>{</code>, it must close with <code>}</code>.</li>
+<li>If a chunk opens with <code>&lt;</code>, it must close with <code>&gt;</code>.</li>
+</ul>
+<p>So, <code>()</code> is a legal chunk that contains no other chunks, as is <code>[]</code>. More complex but valid chunks include <code>([])</code>, <code>{()()()}</code>, <code>&lt;([{}])&gt;</code>, <code>[&lt;&gt;({}){}[([])&lt;&gt;]]</code>, and even <code>(((((((((())))))))))</code>.</p>
+<p>Some lines are <em>incomplete</em>, but others are <em>corrupted</em>. Find and discard the corrupted lines first.</p>
+<p>A corrupted line is one where a chunk <em>closes with the wrong character</em> - that is, where the characters it opens and closes with do not form one of the four legal pairs listed above.</p>
+<p>Examples of corrupted chunks include <code>(]</code>, <code>{()()()&gt;</code>, <code>(((()))}</code>, and <code>&lt;([]){()}[{}])</code>. Such a chunk can appear anywhere within a line, and its presence causes the whole line to be considered corrupted.</p>
+<p>For example, consider the following navigation subsystem:</p>
+<pre><code>[({(&lt;(())[]&gt;[[{[]{&lt;()&lt;&gt;&gt;
+[(()[&lt;&gt;])]({[&lt;{&lt;&lt;[]&gt;&gt;(
+{([(&lt;{}[&lt;&gt;[]}&gt;{[]{[(&lt;()&gt;
+(((({&lt;&gt;}&lt;{&lt;{&lt;&gt;}{[]{[]{}
+[[&lt;[([]))&lt;([[{}[[()]]]
+[{[{({}]{}}([{[{{{}}([]
+{&lt;[[]]&gt;}&lt;{[{[{[]{()[[[]
+[&lt;(&lt;(&lt;(&lt;{}))&gt;&lt;([]([]()
+&lt;{([([[(&lt;&gt;()){}]&gt;(&lt;&lt;{{
+&lt;{([{{}}[&lt;[[[&lt;&gt;{}]]]&gt;[]]
+</code></pre>
+<p>Some of the lines aren't corrupted, just incomplete; you can ignore these lines for now. The remaining five lines are corrupted:</p>
+<ul>
+<li><code>{([(&lt;{}[&lt;&gt;[]}&gt;{[]{[(&lt;()&gt;</code> - Expected <code>]</code>, but found <code>}</code> instead.</li>
+<li><code>[[&lt;[([]))&lt;([[{}[[()]]]</code> - Expected <code>]</code>, but found <code>)</code> instead.</li>
+<li><code>[{[{({}]{}}([{[{{{}}([]</code> - Expected <code>)</code>, but found <code>]</code> instead.</li>
+<li><code>[&lt;(&lt;(&lt;(&lt;{}))&gt;&lt;([]([]()</code> - Expected <code>&gt;</code>, but found <code>)</code> instead.</li>
+<li><code>&lt;{([([[(&lt;&gt;()){}]&gt;(&lt;&lt;{{</code> - Expected <code>]</code>, but found <code>&gt;</code> instead.</li>
+</ul>
+<p>Stop at the first incorrect closing character on each corrupted line.</p>
+<p>Did you know that syntax checkers actually have contests to see who can get the high score for syntax errors in a file? It's true! To calculate the syntax error score for a line, take the <em>first illegal character</em> on the line and look it up in the following table:</p>
+<ul>
+<li><code>)</code>: <code>3</code> points.</li>
+<li><code>]</code>: <code>57</code> points.</li>
+<li><code>}</code>: <code>1197</code> points.</li>
+<li><code>&gt;</code>: <code>25137</code> points.</li>
+</ul>
+<p>In the above example, an illegal <code>)</code> was found twice (<code>2*3 = <em>6</em></code> points), an illegal <code>]</code> was found once (<code><em>57</em></code> points), an illegal <code>}</code> was found once (<code><em>1197</em></code> points), and an illegal <code>&gt;</code> was found once (<code><em>25137</em></code> points). So, the total syntax error score for this file is <code>6+57+1197+25137 = <em>26397</em></code> points!</p>
+<p>Find the first illegal character in each corrupted line of the navigation subsystem. <em>What is the total syntax error score for those errors?</em></p>
+</article>
+<p>Your puzzle answer was <code>392421</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now, discard the corrupted lines.  The remaining lines are <em>incomplete</em>.</p>
+<p>Incomplete lines don't have any incorrect characters - instead, they're missing some closing characters at the end of the line. To repair the navigation subsystem, you just need to figure out <em>the sequence of closing characters</em> that complete all open chunks in the line.</p>
+<p>You can only use closing characters (<code>)</code>, <code>]</code>, <code>}</code>, or <code>&gt;</code>), and you must add them in the correct order so that only legal pairs are formed and all chunks end up closed.</p>
+<p>In the example above, there are five incomplete lines:</p>
+<ul>
+<li><code>[({(&lt;(())[]&gt;[[{[]{&lt;()&lt;&gt;&gt;</code> - Complete by adding <code>}}]])})]</code>.</li>
+<li><code>[(()[&lt;&gt;])]({[&lt;{&lt;&lt;[]&gt;&gt;(</code> - Complete by adding <code>)}&gt;]})</code>.</li>
+<li><code>(((({&lt;&gt;}&lt;{&lt;{&lt;&gt;}{[]{[]{}</code> - Complete by adding <code>}}&gt;}&gt;))))</code>.</li>
+<li><code>{&lt;[[]]&gt;}&lt;{[{[{[]{()[[[]</code> - Complete by adding <code>]]}}]}]}&gt;</code>.</li>
+<li><code>&lt;{([{{}}[&lt;[[[&lt;&gt;{}]]]&gt;[]]</code> - Complete by adding <code>])}&gt;</code>.</li>
+</ul>
+<p>Did you know that autocomplete tools <em>also</em> have contests? It's true! The score is determined by considering the completion string character-by-character. Start with a total score of <code>0</code>. Then, for each character, multiply the total score by 5 and then increase the total score by the point value given for the character in the following table:</p>
+<ul>
+<li><code>)</code>: <code>1</code> point.</li>
+<li><code>]</code>: <code>2</code> points.</li>
+<li><code>}</code>: <code>3</code> points.</li>
+<li><code>&gt;</code>: <code>4</code> points.</li>
+</ul>
+<p>So, the last completion string above - <code>])}&gt;</code> - would be scored as follows:</p>
+<ul>
+<li>Start with a total score of <code>0</code>.</li>
+<li>Multiply the total score by 5 to get <code>0</code>, then add the value of <code>]</code> (2) to get a new total score of <code>2</code>.</li>
+<li>Multiply the total score by 5 to get <code>10</code>, then add the value of <code>)</code> (1) to get a new total score of <code>11</code>.</li>
+<li>Multiply the total score by 5 to get <code>55</code>, then add the value of <code>}</code> (3) to get a new total score of <code>58</code>.</li>
+<li>Multiply the total score by 5 to get <code>290</code>, then add the value of <code>&gt;</code> (4) to get a new total score of <code>294</code>.</li>
+</ul>
+<p>The five lines' completion strings have total scores as follows:</p>
+<ul>
+<li><code>}}]])})]</code> - <code>288957</code> total points.</li>
+<li><code>)}&gt;]})</code> - <code>5566</code> total points.</li>
+<li><code>}}&gt;}&gt;))))</code> - <code>1480781</code> total points.</li>
+<li><code>]]}}]}]}&gt;</code> - <code>995444</code> total points.</li>
+<li><code>])}&gt;</code> - <code>294</code> total points.</li>
+</ul>
+<p>Autocomplete tools are an odd bunch: the winner is found by <em>sorting</em> all of the scores and then taking the <em>middle</em> score. (There will always be an odd number of scores to consider.) In this example, the middle score is <code><em>288957</em></code> because there are the same number of scores smaller and larger than it.</p>
+<p>Find the completion string for each incomplete line, score the completion strings, and sort the scores. <em>What is the middle score?</em></p>
+</article>
+<p>Your puzzle answer was <code>2769449099</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2021">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="10/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Syntax+Scoring%22+%2D+Day+10+%2D+Advent+of+Code+2021&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2021%2Fday%2F10&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Syntax+Scoring%22+%2D+Day+10+%2D+Advent+of+Code+2021+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2021%2Fday%2F10';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

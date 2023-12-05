@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 16 - Advent of Code 2016</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2016/about">[About]</a></li><li><a href="/2016/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2016/settings">[Settings]</a></li><li><a href="/2016/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2016/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">2*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">{year=&gt;</span><a href="/2016">2016</a><span class="title-event-wrap">}</span></h1><nav><ul><li><a href="/2016">[Calendar]</a></li><li><a href="/2016/support">[AoC++]</a></li><li><a href="/2016/sponsors">[Sponsors]</a></li><li><a href="/2016/leaderboard">[Leaderboard]</a></li><li><a href="/2016/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2016/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="http://www.novetta.com/careers/#opportunities" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Novetta</a> - Unleash your imagination. Innovate at Novetta.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 16: Dragon Checksum ---</h2><p>You're done scanning this part of the network, but you've left traces of your presence. You need to <span title="If I ever find one of my disks overwritten with a dragon curve, I'll know it was you.">overwrite some disks</span> with random-looking data to cover your tracks and update the local security system with a new checksum for those disks.</p>
+<p>For the data to not be suspicious, it needs to have certain properties; purely random data will be detected as tampering. To generate appropriate random data, you'll need to use a modified <a href="https://en.wikipedia.org/wiki/Dragon_curve">dragon curve</a>.</p>
+<p>Start with an appropriate initial state (your puzzle input). Then, so long as you don't have enough data yet to fill the disk, repeat the following steps:</p>
+<ul>
+<li>Call the data you have at this point "a".</li>
+<li>Make a copy of "a"; call this copy "b".</li>
+<li>Reverse the order of the characters in "b".</li>
+<li>In "b", replace all instances of <code>0</code> with <code>1</code> and all <code>1</code>s with <code>0</code>.</li>
+<li>The resulting data is "a", then a single <code>0</code>, then "b".</li>
+</ul>
+<p>For example, after a single step of this process,</p>
+<ul>
+<li><code>1</code> becomes <code>100</code>.</li>
+<li><code>0</code> becomes <code>001</code>.</li>
+<li><code>11111</code> becomes <code>11111000000</code>.</li>
+<li><code>111100001010</code> becomes <code>1111000010100101011110000</code>.</li>
+</ul>
+<p>Repeat these steps until you have enough data to fill the desired disk.</p>
+<p>Once the data has been generated, you also need to create a checksum of that data. Calculate the checksum <em>only</em> for the data that fits on the disk, even if you generated more data than that in the previous step.</p>
+<p>The checksum for some given data is created by considering each non-overlapping <em>pair</em> of characters in the input data.  If the two characters match (<code>00</code> or <code>11</code>), the next checksum character is a <code>1</code>.  If the characters do not match (<code>01</code> or <code>10</code>), the next checksum character is a <code>0</code>. This should produce a new string which is exactly half as long as the original. If the length of the checksum is <em>even</em>, repeat the process until you end up with a checksum with an <em>odd</em> length.</p>
+<p>For example, suppose we want to fill a disk of length <code>12</code>, and when we finally generate a string of at least length <code>12</code>, the first <code>12</code> characters are <code>110010110100</code>. To generate its checksum:</p>
+<ul>
+<li>Consider each pair: <code>11</code>, <code>00</code>, <code>10</code>, <code>11</code>, <code>01</code>, <code>00</code>.</li>
+<li>These are same, same, different, same, different, same, producing <code>110101</code>.</li>
+<li>The resulting string has length <code>6</code>, which is <em>even</em>, so we repeat the process.</li>
+<li>The pairs are <code>11</code> (same), <code>01</code> (different), <code>01</code> (different).</li>
+<li>This produces the checksum <code>100</code>, which has an <em>odd</em> length, so we stop.</li>
+</ul>
+<p>Therefore, the checksum for <code>110010110100</code> is <code>100</code>.</p>
+<p>Combining all of these steps together, suppose you want to fill a disk of length <code>20</code> using an initial state of <code>10000</code>:</p>
+<ul>
+<li>Because <code>10000</code> is too short, we first use the modified dragon curve to make it longer.</li>
+<li>After one round, it becomes <code>10000011110</code> (<code>11</code> characters), still too short.</li>
+<li>After two rounds, it becomes <code>10000011110010000111110</code> (<code>23</code> characters), which is enough.</li>
+<li>Since we only need <code>20</code>, but we have <code>23</code>, we get rid of all but the first <code>20</code> characters: <code>10000011110010000111</code>.</li>
+<li>Next, we start calculating the checksum; after one round, we have <code>0111110101</code>, which <code>10</code> characters long (<em>even</em>), so we continue.</li>
+<li>After two rounds, we have <code>01100</code>, which is <code>5</code> characters long (<em>odd</em>), so we are done.</li>
+</ul>
+<p>In this example, the correct checksum would therefore be <code>01100</code>.</p>
+<p>The first disk you have to fill has length <code>272</code>. Using the initial state in your puzzle input, <em>what is the correct checksum</em>?</p>
+</article>
+<p>Your puzzle input is <code class="puzzle-input">00111101111101000</code>.</p>
+<form method="post" action="16/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Dragon+Checksum%22+%2D+Day+16+%2D+Advent+of+Code+2016&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2016%2Fday%2F16&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Dragon+Checksum%22+%2D+Day+16+%2D+Advent+of+Code+2016+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2016%2Fday%2F16';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

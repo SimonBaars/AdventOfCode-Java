@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 14 - Advent of Code 2018</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2018/about">[About]</a></li><li><a href="/2018/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2018/settings">[Settings]</a></li><li><a href="/2018/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2018/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">28*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">0x0000|</span><a href="/2018">2018</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2018">[Calendar]</a></li><li><a href="/2018/support">[AoC++]</a></li><li><a href="/2018/sponsors">[Sponsors]</a></li><li><a href="/2018/leaderboard">[Leaderboard]</a></li><li><a href="/2018/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2018/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://rainway.io/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Rainway</a> - Play all your favorite PC games anytime, anywhere, across a variety of different devices.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 14: Chocolate Charts ---</h2><p>You finally have a chance to look at all of the produce moving around. Chocolate, cinnamon, mint, chili peppers, nutmeg, vanilla... the Elves must be growing these plants to <span title="Please do not use a programming puzzle as a recipe for hot chocolate. I cannot guarantee your safety.">make</span> <em>hot chocolate</em>! As you realize this, you hear a conversation in the distance. When you go to investigate, you discover two Elves in what appears to be a makeshift underground kitchen/laboratory.</p>
+<p>The Elves are trying to come up with the ultimate hot chocolate recipe; they're even maintaining a scoreboard which tracks the quality <em>score</em> (<code>0</code>-<code>9</code>) of each recipe.</p>
+<p>Only two recipes are on the board: the first recipe got a score of <code>3</code>, the second, <code>7</code>. Each of the two Elves has a <em>current recipe</em>: the first Elf starts with the first recipe, and the second Elf starts with the second recipe.</p>
+<p>To create new recipes, the two Elves combine their current recipes.  This creates new recipes from the <em>digits of the sum</em> of the current recipes' scores.  With the current recipes' scores of <code>3</code> and <code>7</code>, their sum is <code>10</code>, and so two new recipes would be created: the first with score <code>1</code> and the second with score <code>0</code>. If the current recipes' scores were <code>2</code> and <code>3</code>, the sum, <code>5</code>, would only create one recipe (with a score of <code>5</code>) with its single digit.</p>
+<p>The new recipes are added to the end of the scoreboard in the order they are created.  So, after the first round, the scoreboard is <code>3, 7, 1, 0</code>.</p>
+<p>After all new recipes are added to the scoreboard, each Elf picks a new current recipe.  To do this, the Elf steps forward through the scoreboard a number of recipes equal to <em>1 plus the score of their current recipe</em>. So, after the first round, the first Elf moves forward <code>1 + 3 = 4</code> times, while the second Elf moves forward <code>1 + 7 = 8</code> times. If they run out of recipes, they loop back around to the beginning. After the first round, both Elves happen to loop around until they land on the same recipe that they had in the beginning; in general, they will move to different recipes.</p>
+<p>Drawing the first Elf as parentheses and the second Elf as square brackets, they continue this process:</p>
+<pre><code>(3)[7]
+(3)[7] 1  0 
+ 3  7  1 [0](1) 0 
+ 3  7  1  0 [1] 0 (1)
+(3) 7  1  0  1  0 [1] 2 
+ 3  7  1  0 (1) 0  1  2 [4]
+ 3  7  1 [0] 1  0 (1) 2  4  5 
+ 3  7  1  0 [1] 0  1  2 (4) 5  1 
+ 3 (7) 1  0  1  0 [1] 2  4  5  1  5 
+ 3  7  1  0  1  0  1  2 [4](5) 1  5  8 
+ 3 (7) 1  0  1  0  1  2  4  5  1  5  8 [9]
+ 3  7  1  0  1  0  1 [2] 4 (5) 1  5  8  9  1  6 
+ 3  7  1  0  1  0  1  2  4  5 [1] 5  8  9  1 (6) 7 
+ 3  7  1  0 (1) 0  1  2  4  5  1  5 [8] 9  1  6  7  7 
+ 3  7 [1] 0  1  0 (1) 2  4  5  1  5  8  9  1  6  7  7  9 
+ 3  7  1  0 [1] 0  1  2 (4) <em>5  1  5  8  9  1  6  7  7  9</em>  2 
+</code></pre>
+<p>The Elves think their skill will improve after making a few recipes (your puzzle input). However, that could take ages; you can speed this up considerably by identifying <em>the scores of the ten recipes</em> after that.  For example:</p>
+<ul>
+<li>If the Elves think their skill will improve after making <code>9</code> recipes, the scores of the ten recipes <em>after</em> the first nine on the scoreboard would be <code>5158916779</code> (highlighted in the last line of the diagram).</li>
+<li>After <code>5</code> recipes, the scores of the next ten would be <code>0124515891</code>.</li>
+<li>After <code>18</code> recipes, the scores of the next ten would be <code>9251071085</code>.</li>
+<li>After <code>2018</code> recipes, the scores of the next ten would be <code>5941429882</code>.</li>
+</ul>
+<p><em>What are the scores of the ten recipes immediately after the number of recipes in your puzzle input?</em></p>
+</article>
+<p>Your puzzle answer was <code>3171123923</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>As it turns out, you got the Elves' plan backwards.  They actually want to know how many recipes appear on the scoreboard to the left of the first recipes whose scores are the digits from your puzzle input.</p>
+<ul>
+<li><code>51589</code> first appears after <code>9</code> recipes.</li>
+<li><code>01245</code> first appears after <code>5</code> recipes.</li>
+<li><code>92510</code> first appears after <code>18</code> recipes.</li>
+<li><code>59414</code> first appears after <code>2018</code> recipes.</li>
+</ul>
+<p><em>How many recipes appear on the scoreboard to the left of the score sequence in your puzzle input?</em></p>
+</article>
+<p>Your puzzle answer was <code>20353748</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, you should <a href="/2018">return to your Advent calendar</a> and try another puzzle.</p>
+<p>Your puzzle input was <code class="puzzle-input">765071</code>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Chocolate+Charts%22+%2D+Day+14+%2D+Advent+of+Code+2018&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F14&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Chocolate+Charts%22+%2D+Day+14+%2D+Advent+of+Code+2018+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F14';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

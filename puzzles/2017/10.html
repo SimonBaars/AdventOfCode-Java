@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 10 - Advent of Code 2017</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2017/about">[About]</a></li><li><a href="/2017/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2017/settings">[Settings]</a></li><li><a href="/2017/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2017/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">2*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">{:year </span><a href="/2017">2017</a><span class="title-event-wrap">}</span></h1><nav><ul><li><a href="/2017">[Calendar]</a></li><li><a href="/2017/support">[AoC++]</a></li><li><a href="/2017/sponsors">[Sponsors]</a></li><li><a href="/2017/leaderboard">[Leaderboard]</a></li><li><a href="/2017/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2017/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://cheppers.com/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Cheppers</a> - xor(Pz0pQUI7Ch cmER8YDAEYAh4L GwEP, ↑↑↓↓←→←→BA)</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 10: Knot Hash ---</h2><p>You come across some programs that are trying to implement a software emulation of a hash based on knot-tying. The hash these programs are implementing isn't very strong, but you decide to help them anyway. You make a mental note to remind the Elves later not to <span title="NEW CRYPTOSYSTEM WHO DIS">invent their own cryptographic functions</span>.</p>
+<p>This hash function simulates tying a knot in a circle of string with 256 marks on it. Based on the input to be hashed, the function repeatedly selects a span of string, brings the ends together, and gives the span a half-twist to reverse the order of the marks within it. After doing this many times, the order of the marks is used to build the resulting hash.</p>
+<pre><code>  4--5   pinch   4  5           4   1
+ /    \  5,0,1  / \/ \  twist  / \ / \
+3      0  -->  3      0  -->  3   X   0
+ \    /         \ /\ /         \ / \ /
+  2--1           2  1           2   5
+</code></pre>
+<p>To achieve this, begin with a <em>list</em> of numbers from <code>0</code> to <code>255</code>, a <em>current position</em> which begins at <code>0</code> (the first element in the list), a <em>skip size</em> (which starts at <code>0</code>), and a sequence of <em>lengths</em> (your puzzle input).  Then, for each length:</p>
+<ul>
+<li><em>Reverse</em> the order of that <em>length</em> of elements in the <em>list</em>, starting with the element at the <em>current position</em>.</li>
+<li><em>Move</em> the <em>current position</em> forward by that <em>length</em> plus the <em>skip size</em>.</li>
+<li><em>Increase</em> the <em>skip size</em> by one.</li>
+</ul>
+<p>The <em>list</em> is circular; if the <em>current position</em> and the <em>length</em> try to reverse elements beyond the end of the list, the operation reverses using as many extra elements as it needs from the front of the list. If the <em>current position</em> moves past the end of the list, it wraps around to the front. <em>Lengths</em> larger than the size of the <em>list</em> are invalid.</p>
+<p>Here's an example using a smaller list:</p>
+<p>Suppose we instead only had a circular list containing five elements, <code>0, 1, 2, 3, 4</code>, and were given input lengths of <code>3, 4, 1, 5</code>.</p>
+<ul>
+<li>The list begins as <code>[0] 1 2 3 4</code> (where square brackets indicate the <em>current position</em>).</li>
+<li>The first length, <code>3</code>, selects <code>([0] 1 2) 3 4</code> (where parentheses indicate the sublist to be reversed).</li>
+<li>After reversing that section (<code>0 1 2</code> into <code>2 1 0</code>), we get <code>([2] 1 0) 3 4</code>.</li>
+<li>Then, the <em>current position</em> moves forward by the <em>length</em>, <code>3</code>, plus the <em>skip size</em>, 0: <code>2 1 0 [3] 4</code>. Finally, the <em>skip size</em> increases to <code>1</code>.</li>
+</ul>
+<ul>
+<li>The second length, <code>4</code>, selects a section which wraps: <code>2 1) 0 ([3] 4</code>.</li>
+<li>The sublist <code>3 4 2 1</code> is reversed to form <code>1 2 4 3</code>: <code>4 3) 0 ([1] 2</code>.</li>
+<li>The <em>current position</em> moves forward by the <em>length</em> plus the <em>skip size</em>, a total of <code>5</code>, causing it not to move because it wraps around: <code>4 3 0 [1] 2</code>. The <em>skip size</em> increases to <code>2</code>.</li>
+</ul>
+<ul>
+<li>The third length, <code>1</code>, selects a sublist of a single element, and so reversing it has no effect.</li>
+<li>The <em>current position</em> moves forward by the <em>length</em> (<code>1</code>) plus the <em>skip size</em> (<code>2</code>): <code>4 [3] 0 1 2</code>. The <em>skip size</em> increases to <code>3</code>.</li>
+</ul>
+<ul>
+<li>The fourth length, <code>5</code>, selects every element starting with the second: <code>4) ([3] 0 1 2</code>. Reversing this sublist (<code>3 0 1 2 4</code> into <code>4 2 1 0 3</code>) produces: <code>3) ([4] 2 1 0</code>.</li>
+<li>Finally, the <em>current position</em> moves forward by <code>8</code>: <code>3 4 2 1 [0]</code>. The <em>skip size</em> increases to <code>4</code>.</li>
+</ul>
+<p>In this example, the first two numbers in the list end up being <code>3</code> and <code>4</code>; to check the process, you can multiply them together to produce <code>12</code>.</p>
+<p>However, you should instead use the standard list size of <code>256</code> (with values <code>0</code> to <code>255</code>) and the sequence of <em>lengths</em> in your puzzle input. Once this process is complete, <em>what is the result of multiplying the first two numbers in the list</em>?</p>
+</article>
+<p>To begin, <a href="10/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="10/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Knot+Hash%22+%2D+Day+10+%2D+Advent+of+Code+2017&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2017%2Fday%2F10&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Knot+Hash%22+%2D+Day+10+%2D+Advent+of+Code+2017+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2017%2Fday%2F10';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

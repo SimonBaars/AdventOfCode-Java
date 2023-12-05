@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 16 - Advent of Code 2021</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2021/about">[About]</a></li><li><a href="/2021/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2021/settings">[Settings]</a></li><li><a href="/2021/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2021/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">$year=</span><a href="/2021">2021</a><span class="title-event-wrap">;</span></h1><nav><ul><li><a href="/2021">[Calendar]</a></li><li><a href="/2021/support">[AoC++]</a></li><li><a href="/2021/sponsors">[Sponsors]</a></li><li><a href="/2021/leaderboard">[Leaderboard]</a></li><li><a href="/2021/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2021/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://ahrefs.com/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Ahrefs</a> - Leverage modern hardware and advanced programming to process real big data. Work on the next general purpose search engine. From anywhere in the world. OCaml, Reasonml, C++</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 16: Packet Decoder ---</h2><p>As you leave the cave and reach open waters, you receive a transmission from the Elves back on the ship.</p>
+<p>The transmission was sent using the Buoyancy Interchange Transmission System (<span title="Just be glad it wasn't sent using the BuoyancY Transmission Encoding System.">BITS</span>), a method of packing numeric expressions into a binary sequence. Your submarine's computer has saved the transmission in <a href="https://en.wikipedia.org/wiki/Hexadecimal" target="_blank">hexadecimal</a> (your puzzle input).</p>
+<p>The first step of decoding the message is to convert the hexadecimal representation into binary. Each character of hexadecimal corresponds to four bits of binary data:</p>
+<pre><code>0 = 0000
+1 = 0001
+2 = 0010
+3 = 0011
+4 = 0100
+5 = 0101
+6 = 0110
+7 = 0111
+8 = 1000
+9 = 1001
+A = 1010
+B = 1011
+C = 1100
+D = 1101
+E = 1110
+F = 1111
+</code></pre>
+<p>The BITS transmission contains a single <em>packet</em> at its outermost layer which itself contains many other packets. The hexadecimal representation of this packet might encode a few extra <code>0</code> bits at the end; these are not part of the transmission and should be ignored.</p>
+<p>Every packet begins with a standard header: the first three bits encode the packet <em>version</em>, and the next three bits encode the packet <em>type ID</em>. These two values are numbers; all numbers encoded in any packet are represented as binary with the most significant bit first. For example, a version encoded as the binary sequence <code>100</code> represents the number <code>4</code>.</p>
+<p>Packets with type ID <code>4</code> represent a <em>literal value</em>. Literal value packets encode a single binary number. To do this, the binary number is padded with leading zeroes until its length is a multiple of four bits, and then it is broken into groups of four bits. Each group is prefixed by a <code>1</code> bit except the last group, which is prefixed by a <code>0</code> bit. These groups of five bits immediately follow the packet header. For example, the hexadecimal string <code>D2FE28</code> becomes:</p>
+<pre><code>110100101111111000101000
+VVVTTTAAAAABBBBBCCCCC
+</code></pre>
+<p>Below each bit is a label indicating its purpose:</p>
+<ul>
+<li>The three bits labeled <code>V</code> (<code>110</code>) are the packet version, <code>6</code>.</li>
+<li>The three bits labeled <code>T</code> (<code>100</code>) are the packet type ID, <code>4</code>, which means the packet is a literal value.</li>
+<li>The five bits labeled <code>A</code> (<code>10111</code>) start with a <code>1</code> (not the last group, keep reading) and contain the first four bits of the number, <code>0111</code>.</li>
+<li>The five bits labeled <code>B</code> (<code>11110</code>) start with a <code>1</code> (not the last group, keep reading) and contain four more bits of the number, <code>1110</code>.</li>
+<li>The five bits labeled <code>C</code> (<code>00101</code>) start with a <code>0</code> (last group, end of packet) and contain the last four bits of the number, <code>0101</code>.</li>
+<li>The three unlabeled <code>0</code> bits at the end are extra due to the hexadecimal representation and should be ignored.</li>
+</ul>
+<p>So, this packet represents a literal value with binary representation <code>011111100101</code>, which is <code>2021</code> in decimal.</p>
+<p>Every other type of packet (any packet with a type ID other than <code>4</code>) represent an <em>operator</em> that performs some calculation on one or more sub-packets contained within. Right now, the specific operations aren't important; focus on parsing the hierarchy of sub-packets.</p>
+<p>An operator packet contains one or more packets. To indicate which subsequent binary data represents its sub-packets, an operator packet can use one of two modes indicated by the bit immediately after the packet header; this is called the <em>length type ID</em>:</p>
+<ul>
+<li>If the length type ID is <code>0</code>, then the next <em>15</em> bits are a number that represents the <em>total length in bits</em> of the sub-packets contained by this packet.</li>
+<li>If the length type ID is <code>1</code>, then the next <em>11</em> bits are a number that represents the <em>number of sub-packets immediately contained</em> by this packet.</li>
+</ul>
+<p>Finally, after the length type ID bit and the 15-bit or 11-bit field, the sub-packets appear.</p>
+<p>For example, here is an operator packet (hexadecimal string <code>38006F45291200</code>) with length type ID <code>0</code> that contains two sub-packets:</p>
+<pre><code>00111000000000000110111101000101001010010001001000000000
+VVVTTTILLLLLLLLLLLLLLLAAAAAAAAAAABBBBBBBBBBBBBBBB
+</code></pre>
+<ul>
+<li>The three bits labeled <code>V</code> (<code>001</code>) are the packet version, <code>1</code>.</li>
+<li>The three bits labeled <code>T</code> (<code>110</code>) are the packet type ID, <code>6</code>, which means the packet is an operator.</li>
+<li>The bit labeled <code>I</code> (<code>0</code>) is the length type ID, which indicates that the length is a 15-bit number representing the number of bits in the sub-packets.</li>
+<li>The 15 bits labeled <code>L</code> (<code>000000000011011</code>) contain the length of the sub-packets in bits, <code>27</code>.</li>
+<li>The 11 bits labeled <code>A</code> contain the first sub-packet, a literal value representing the number <code>10</code>.</li>
+<li>The 16 bits labeled <code>B</code> contain the second sub-packet, a literal value representing the number <code>20</code>.</li>
+</ul>
+<p>After reading 11 and 16 bits of sub-packet data, the total length indicated in <code>L</code> (27) is reached, and so parsing of this packet stops.</p>
+<p>As another example, here is an operator packet (hexadecimal string <code>EE00D40C823060</code>) with length type ID <code>1</code> that contains three sub-packets:</p>
+<pre><code>11101110000000001101010000001100100000100011000001100000
+VVVTTTILLLLLLLLLLLAAAAAAAAAAABBBBBBBBBBBCCCCCCCCCCC
+</code></pre>
+<ul>
+<li>The three bits labeled <code>V</code> (<code>111</code>) are the packet version, <code>7</code>.</li>
+<li>The three bits labeled <code>T</code> (<code>011</code>) are the packet type ID, <code>3</code>, which means the packet is an operator.</li>
+<li>The bit labeled <code>I</code> (<code>1</code>) is the length type ID, which indicates that the length is a 11-bit number representing the number of sub-packets.</li>
+<li>The 11 bits labeled <code>L</code> (<code>00000000011</code>) contain the number of sub-packets, <code>3</code>.</li>
+<li>The 11 bits labeled <code>A</code> contain the first sub-packet, a literal value representing the number <code>1</code>.</li>
+<li>The 11 bits labeled <code>B</code> contain the second sub-packet, a literal value representing the number <code>2</code>.</li>
+<li>The 11 bits labeled <code>C</code> contain the third sub-packet, a literal value representing the number <code>3</code>.</li>
+</ul>
+<p>After reading 3 complete sub-packets, the number of sub-packets indicated in <code>L</code> (3) is reached, and so parsing of this packet stops.</p>
+<p>For now, parse the hierarchy of the packets throughout the transmission and <em>add up all of the version numbers</em>.</p>
+<p>Here are a few more examples of hexadecimal-encoded transmissions:</p>
+<ul>
+<li><code>8A004A801A8002F478</code> represents an operator packet (version 4) which contains an operator packet (version 1) which contains an operator packet (version 5) which contains a literal value (version 6); this packet has a version sum of <code><em>16</em></code>.</li>
+<li><code>620080001611562C8802118E34</code> represents an operator packet (version 3) which contains two sub-packets; each sub-packet is an operator packet that contains two literal values. This packet has a version sum of <code><em>12</em></code>.</li>
+<li><code>C0015000016115A2E0802F182340</code> has the same structure as the previous example, but the outermost packet uses a different length type ID. This packet has a version sum of <code><em>23</em></code>.</li>
+<li><code>A0016C880162017C3686B18A3D4780</code> is an operator packet that contains an operator packet that contains an operator packet that contains five literal values; it has a version sum of <code><em>31</em></code>.</li>
+</ul>
+<p>Decode the structure of your hexadecimal-encoded BITS transmission; <em>what do you get if you add up the version numbers in all packets?</em></p>
+</article>
+<p>Your puzzle answer was <code>871</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now that you have the structure of your transmission decoded, you can calculate the value of the expression it represents.</p>
+<p>Literal values (type ID <code>4</code>) represent a single number as described above. The remaining type IDs are more interesting:</p>
+<ul>
+<li>Packets with type ID <code>0</code> are <em>sum</em> packets - their value is the sum of the values of their sub-packets. If they only have a single sub-packet, their value is the value of the sub-packet.</li>
+<li>Packets with type ID <code>1</code> are <em>product</em> packets - their value is the result of multiplying together the values of their sub-packets. If they only have a single sub-packet, their value is the value of the sub-packet.</li>
+<li>Packets with type ID <code>2</code> are <em>minimum</em> packets - their value is the minimum of the values of their sub-packets.</li>
+<li>Packets with type ID <code>3</code> are <em>maximum</em> packets - their value is the maximum of the values of their sub-packets.</li>
+<li>Packets with type ID <code>5</code> are <em>greater than</em> packets - their value is <em>1</em> if the value of the first sub-packet is greater than the value of the second sub-packet; otherwise, their value is <em>0</em>. These packets always have exactly two sub-packets.</li>
+<li>Packets with type ID <code>6</code> are <em>less than</em> packets - their value is <em>1</em> if the value of the first sub-packet is less than the value of the second sub-packet; otherwise, their value is <em>0</em>. These packets always have exactly two sub-packets.</li>
+<li>Packets with type ID <code>7</code> are <em>equal to</em> packets - their value is <em>1</em> if the value of the first sub-packet is equal to the value of the second sub-packet; otherwise, their value is <em>0</em>. These packets always have exactly two sub-packets.</li>
+</ul>
+<p>Using these rules, you can now work out the value of the outermost packet in your BITS transmission.</p>
+<p>For example:</p>
+<ul>
+<li><code>C200B40A82</code> finds the sum of <code>1</code> and <code>2</code>, resulting in the value <code><em>3</em></code>.</li>
+<li><code>04005AC33890</code> finds the product of <code>6</code> and <code>9</code>, resulting in the value <code><em>54</em></code>.</li>
+<li><code>880086C3E88112</code> finds the minimum of <code>7</code>, <code>8</code>, and <code>9</code>, resulting in the value <code><em>7</em></code>.</li>
+<li><code>CE00C43D881120</code> finds the maximum of <code>7</code>, <code>8</code>, and <code>9</code>, resulting in the value <code><em>9</em></code>.</li>
+<li><code>D8005AC2A8F0</code> produces <code>1</code>, because <code>5</code> is less than <code>15</code>.</li>
+<li><code>F600BC2D8F</code> produces <code>0</code>, because <code>5</code> is not greater than <code>15</code>.</li>
+<li><code>9C005AC2F8F0</code> produces <code>0</code>, because <code>5</code> is not equal to <code>15</code>.</li>
+<li><code>9C0141080250320F1802104A08</code> produces <code>1</code>, because <code>1</code> + <code>3</code> = <code>2</code> * <code>2</code>.</li>
+</ul>
+<p><em>What do you get if you evaluate the expression represented by your hexadecimal-encoded BITS transmission?</em></p>
+</article>
+<p>Your puzzle answer was <code>68703010504</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2021">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="16/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Packet+Decoder%22+%2D+Day+16+%2D+Advent+of+Code+2021&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2021%2Fday%2F16&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Packet+Decoder%22+%2D+Day+16+%2D+Advent+of+Code+2021+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2021%2Fday%2F16';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 14 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">{:year </span><a href="/2019">2019</a><span class="title-event-wrap">}</span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://www.ing.jobs/Global/Careers/expertise/Tech.htm" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">ING</a> - Tech is simply at the core of what we do.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 14: Space Stoichiometry ---</h2><p>As you approach the rings of Saturn, your ship's <em>low fuel</em> indicator turns on.  There isn't any fuel here, but the rings have plenty of raw material.  Perhaps your ship's <span title="Yes, the acronym is intentional.">Inter-Stellar Refinery Union</span> brand <em>nanofactory</em> can turn these raw materials into fuel.</p>
+<p>You ask the nanofactory to produce a list of the <em>reactions</em> it can perform that are relevant to this process (your puzzle input). Every reaction turns some quantities of specific <em>input chemicals</em> into some quantity of an <em>output chemical</em>. Almost every <em>chemical</em> is produced by exactly one reaction; the only exception, <code>ORE</code>, is the raw material input to the entire process and is not produced by a reaction.</p>
+<p>You just need to know how much <code><em>ORE</em></code> you'll need to collect before you can produce one unit of <code><em>FUEL</em></code>.</p>
+<p>Each reaction gives specific quantities for its inputs and output; reactions cannot be partially run, so only whole integer multiples of these quantities can be used.  (It's okay to have leftover chemicals when you're done, though.) For example, the reaction <code>1 A, 2 B, 3 C =&gt; 2 D</code> means that exactly 2 units of chemical <code>D</code> can be produced by consuming exactly 1 <code>A</code>, 2 <code>B</code> and 3 <code>C</code>.  You can run the full reaction as many times as necessary; for example, you could produce 10 <code>D</code> by consuming 5 <code>A</code>, 10 <code>B</code>, and 15 <code>C</code>.</p>
+<p>Suppose your nanofactory produces the following list of reactions:</p>
+<pre><code>10 ORE =&gt; 10 A
+1 ORE =&gt; 1 B
+7 A, 1 B =&gt; 1 C
+7 A, 1 C =&gt; 1 D
+7 A, 1 D =&gt; 1 E
+7 A, 1 E =&gt; 1 FUEL
+</code></pre>
+<p>The first two reactions use only <code>ORE</code> as inputs; they indicate that you can produce as much of chemical <code>A</code> as you want (in increments of 10 units, each 10 costing 10 <code>ORE</code>) and as much of chemical <code>B</code> as you want (each costing 1 <code>ORE</code>).  To produce 1 <code>FUEL</code>, a total of <em>31</em> <code>ORE</code> is required: 1 <code>ORE</code> to produce 1 <code>B</code>, then 30 more <code>ORE</code> to produce the 7 + 7 + 7 + 7 = 28 <code>A</code> (with 2 extra <code>A</code> wasted) required in the reactions to convert the <code>B</code> into <code>C</code>, <code>C</code> into <code>D</code>, <code>D</code> into <code>E</code>, and finally <code>E</code> into <code>FUEL</code>. (30 <code>A</code> is produced because its reaction requires that it is created in increments of 10.)</p>
+<p>Or, suppose you have the following list of reactions:</p>
+<pre><code>9 ORE =&gt; 2 A
+8 ORE =&gt; 3 B
+7 ORE =&gt; 5 C
+3 A, 4 B =&gt; 1 AB
+5 B, 7 C =&gt; 1 BC
+4 C, 1 A =&gt; 1 CA
+2 AB, 3 BC, 4 CA =&gt; 1 FUEL
+</code></pre>
+<p>The above list of reactions requires <em>165</em> <code>ORE</code> to produce 1 <code>FUEL</code>:</p>
+<ul>
+<li>Consume 45 <code>ORE</code> to produce 10 <code>A</code>.</li>
+<li>Consume 64 <code>ORE</code> to produce 24 <code>B</code>.</li>
+<li>Consume 56 <code>ORE</code> to produce 40 <code>C</code>.</li>
+<li>Consume 6 <code>A</code>, 8 <code>B</code> to produce 2 <code>AB</code>.</li>
+<li>Consume 15 <code>B</code>, 21 <code>C</code> to produce 3 <code>BC</code>.</li>
+<li>Consume 16 <code>C</code>, 4 <code>A</code> to produce 4 <code>CA</code>.</li>
+<li>Consume 2 <code>AB</code>, 3 <code>BC</code>, 4 <code>CA</code> to produce 1 <code>FUEL</code>.</li>
+</ul>
+<p>Here are some larger examples:</p>
+<ul>
+<li><p><em>13312</em> <code>ORE</code> for 1 <code>FUEL</code>:</p>
+<pre><code>157 ORE =&gt; 5 NZVS
+165 ORE =&gt; 6 DCFZ
+44 XJWVT, 5 KHKGT, 1 QDVJ, 29 NZVS, 9 GPVTF, 48 HKGWZ =&gt; 1 FUEL
+12 HKGWZ, 1 GPVTF, 8 PSHF =&gt; 9 QDVJ
+179 ORE =&gt; 7 PSHF
+177 ORE =&gt; 5 HKGWZ
+7 DCFZ, 7 PSHF =&gt; 2 XJWVT
+165 ORE =&gt; 2 GPVTF
+3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF =&gt; 8 KHKGT
+</code></pre></li>
+<li><p><em>180697</em> <code>ORE</code> for 1 <code>FUEL</code>:</p>
+<pre><code>2 VPVL, 7 FWMGM, 2 CXFTF, 11 MNCFX =&gt; 1 STKFG
+17 NVRVD, 3 JNWZP =&gt; 8 VPVL
+53 STKFG, 6 MNCFX, 46 VJHF, 81 HVMC, 68 CXFTF, 25 GNMV =&gt; 1 FUEL
+22 VJHF, 37 MNCFX =&gt; 5 FWMGM
+139 ORE =&gt; 4 NVRVD
+144 ORE =&gt; 7 JNWZP
+5 MNCFX, 7 RFSQX, 2 FWMGM, 2 VPVL, 19 CXFTF =&gt; 3 HVMC
+5 VJHF, 7 MNCFX, 9 VPVL, 37 CXFTF =&gt; 6 GNMV
+145 ORE =&gt; 6 MNCFX
+1 NVRVD =&gt; 8 CXFTF
+1 VJHF, 6 MNCFX =&gt; 4 RFSQX
+176 ORE =&gt; 6 VJHF
+</code></pre></li>
+<li><p><em>2210736</em> <code>ORE</code> for 1 <code>FUEL</code>:</p>
+<pre><code>171 ORE => 8 CNZTR
+7 ZLQW, 3 BMBT, 9 XCVML, 26 XMNCP, 1 WPTQ, 2 MZWV, 1 RJRHP => 4 PLWSL
+114 ORE => 4 BHXH
+14 VRPVC => 6 BMBT
+6 BHXH, 18 KTJDG, 12 WPTQ, 7 PLWSL, 31 FHTLT, 37 ZDVW => 1 FUEL
+6 WPTQ, 2 BMBT, 8 ZLQW, 18 KTJDG, 1 XMNCP, 6 MZWV, 1 RJRHP => 6 FHTLT
+15 XDBXC, 2 LTCX, 1 VRPVC => 6 ZLQW
+13 WPTQ, 10 LTCX, 3 RJRHP, 14 XMNCP, 2 MZWV, 1 ZLQW => 1 ZDVW
+5 BMBT => 4 WPTQ
+189 ORE => 9 KTJDG
+1 MZWV, 17 XDBXC, 3 XCVML => 2 XMNCP
+12 VRPVC, 27 CNZTR => 2 XDBXC
+15 KTJDG, 12 BHXH => 5 XCVML
+3 BHXH, 2 VRPVC => 7 MZWV
+121 ORE => 7 VRPVC
+7 XCVML => 6 RJRHP
+5 BHXH, 4 VRPVC => 5 LTCX
+</code></pre></li>
+</ul>
+<p>Given the list of reactions in your puzzle input, <em>what is the minimum amount of <code>ORE</code> required to produce exactly 1 <code>FUEL</code>?</em></p>
+</article>
+<p>Your puzzle answer was <code>485720</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>After collecting <code>ORE</code> for a while, you check your cargo hold: <em>1 trillion</em> (<em>1000000000000</em>) units of <code>ORE</code>.</p>
+<p><em>With that much ore</em>, given the examples above:</p>
+<ul>
+<li>The 13312 <code>ORE</code>-per-<code>FUEL</code> example could produce <em>82892753</em> <code>FUEL</code>.</li>
+<li>The 180697 <code>ORE</code>-per-<code>FUEL</code> example could produce <em>5586022</em> <code>FUEL</code>.</li>
+<li>The 2210736 <code>ORE</code>-per-<code>FUEL</code> example could produce <em>460664</em> <code>FUEL</code>.</li>
+</ul>
+<p>Given 1 trillion <code>ORE</code>, <em>what is the maximum amount of <code>FUEL</code> you can produce?</em></p>
+</article>
+<p>Your puzzle answer was <code>3848998</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="14/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Space+Stoichiometry%22+%2D+Day+14+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F14&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Space+Stoichiometry%22+%2D+Day+14+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F14';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

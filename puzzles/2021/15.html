@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 15 - Advent of Code 2021</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2021/about">[About]</a></li><li><a href="/2021/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2021/settings">[Settings]</a></li><li><a href="/2021/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2021/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">λy.</span><a href="/2021">2021</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2021">[Calendar]</a></li><li><a href="/2021/support">[AoC++]</a></li><li><a href="/2021/sponsors">[Sponsors]</a></li><li><a href="/2021/leaderboard">[Leaderboard]</a></li><li><a href="/2021/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2021/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://www.tcgplayer.com/adventofcode/?utm_campaign=aoc&amp;utm_source=adventOfCode&amp;utm_medium=aocPromo" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">TCGplayer.com</a> - We grok you, your passion, and your local game store. And what we have done for trading card games, we&apos;ll now be doing for the collectibles industry! Looking for engineers, DevOps, product &amp; more - join us!</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 15: Chiton ---</h2><p>You've almost reached the exit of the cave, but the walls are getting closer together. Your submarine can barely still fit, though; the main problem is that the walls of the cave are covered in <a href="https://en.wikipedia.org/wiki/Chiton" target="_blank">chitons</a>, and it would be best not to bump any of them.</p>
+<p>The cavern is large, but has a very low ceiling, restricting your motion to two dimensions. The shape of the cavern resembles a square; a quick scan of chiton density produces a map of <em>risk level</em> throughout the cave (your puzzle input). For example:</p>
+<pre><code>1163751742
+1381373672
+2136511328
+3694931569
+7463417111
+1319128137
+1359912421
+3125421639
+1293138521
+2311944581
+</code></pre>
+<p>You start in the top left position, your destination is the bottom right position, and you <span title="Can't go diagonal until we can repair the caterpillar unit. Could be the liquid helium or the superconductors.">cannot move diagonally</span>. The number at each position is its <em>risk level</em>; to determine the total risk of an entire path, add up the risk levels of each position you <em>enter</em> (that is, don't count the risk level of your starting position unless you enter it; leaving it adds no risk to your total).</p>
+<p>Your goal is to find a path with the <em>lowest total risk</em>. In this example, a path with the lowest total risk is highlighted here:</p>
+<pre><code><em>1</em>163751742
+<em>1</em>381373672
+<em>2136511</em>328
+369493<em>15</em>69
+7463417<em>1</em>11
+1319128<em>13</em>7
+13599124<em>2</em>1
+31254216<em>3</em>9
+12931385<em>21</em>
+231194458<em>1</em>
+</code></pre>
+<p>The total risk of this path is <code><em>40</em></code> (the starting position is never entered, so its risk is not counted).</p>
+<p><em>What is the lowest total risk of any path from the top left to the bottom right?</em></p>
+</article>
+<p>Your puzzle answer was <code>741</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now that you know how to find low-risk paths in the cave, you can try to find your way out.</p>
+<p>The entire cave is actually <em>five times larger in both dimensions</em> than you thought; the area you originally scanned is just one tile in a 5x5 tile area that forms the full map. Your original map tile repeats to the right and downward; each time the tile repeats to the right or downward, all of its risk levels <em>are 1 higher</em> than the tile immediately up or left of it. However, risk levels above <code>9</code> wrap back around to <code>1</code>. So, if your original map had some position with a risk level of <code>8</code>, then that same position on each of the 25 total tiles would be as follows:</p>
+<pre><code>8 9 1 2 3
+9 1 2 3 4
+1 2 3 4 5
+2 3 4 5 6
+3 4 5 6 7
+</code></pre>
+<p>Each single digit above corresponds to the example position with a value of <code>8</code> on the top-left tile. Because the full map is actually five times larger in both dimensions, that position appears a total of 25 times, once in each duplicated tile, with the values shown above.</p>
+<p>Here is the full five-times-as-large version of the first example above, with the original map in the top left corner highlighted:</p>
+<pre><code><em>1163751742</em>2274862853338597396444961841755517295286
+<em>1381373672</em>2492484783351359589446246169155735727126
+<em>2136511328</em>3247622439435873354154698446526571955763
+<em>3694931569</em>4715142671582625378269373648937148475914
+<em>7463417111</em>8574528222968563933317967414442817852555
+<em>1319128137</em>2421239248353234135946434524615754563572
+<em>1359912421</em>2461123532357223464346833457545794456865
+<em>3125421639</em>4236532741534764385264587549637569865174
+<em>1293138521</em>2314249632342535174345364628545647573965
+<em>2311944581</em>3422155692453326671356443778246755488935
+22748628533385973964449618417555172952866628316397
+24924847833513595894462461691557357271266846838237
+32476224394358733541546984465265719557637682166874
+47151426715826253782693736489371484759148259586125
+85745282229685639333179674144428178525553928963666
+24212392483532341359464345246157545635726865674683
+24611235323572234643468334575457944568656815567976
+42365327415347643852645875496375698651748671976285
+23142496323425351743453646285456475739656758684176
+34221556924533266713564437782467554889357866599146
+33859739644496184175551729528666283163977739427418
+35135958944624616915573572712668468382377957949348
+43587335415469844652657195576376821668748793277985
+58262537826937364893714847591482595861259361697236
+96856393331796741444281785255539289636664139174777
+35323413594643452461575456357268656746837976785794
+35722346434683345754579445686568155679767926678187
+53476438526458754963756986517486719762859782187396
+34253517434536462854564757396567586841767869795287
+45332667135644377824675548893578665991468977611257
+44961841755517295286662831639777394274188841538529
+46246169155735727126684683823779579493488168151459
+54698446526571955763768216687487932779859814388196
+69373648937148475914825958612593616972361472718347
+17967414442817852555392896366641391747775241285888
+46434524615754563572686567468379767857948187896815
+46833457545794456865681556797679266781878137789298
+64587549637569865174867197628597821873961893298417
+45364628545647573965675868417678697952878971816398
+56443778246755488935786659914689776112579188722368
+55172952866628316397773942741888415385299952649631
+57357271266846838237795794934881681514599279262561
+65719557637682166874879327798598143881961925499217
+71484759148259586125936169723614727183472583829458
+28178525553928963666413917477752412858886352396999
+57545635726865674683797678579481878968159298917926
+57944568656815567976792667818781377892989248891319
+75698651748671976285978218739618932984172914319528
+56475739656758684176786979528789718163989182927419
+67554889357866599146897761125791887223681299833479
+</code></pre>
+<p>Equipped with the full map, you can now find a path from the top left corner to the bottom right corner with the lowest total risk:</p>
+<pre><code><em>1</em>1637517422274862853338597396444961841755517295286
+<em>1</em>3813736722492484783351359589446246169155735727126
+<em>2</em>1365113283247622439435873354154698446526571955763
+<em>3</em>6949315694715142671582625378269373648937148475914
+<em>7</em>4634171118574528222968563933317967414442817852555
+<em>1</em>3191281372421239248353234135946434524615754563572
+<em>1</em>3599124212461123532357223464346833457545794456865
+<em>3</em>1254216394236532741534764385264587549637569865174
+<em>1</em>2931385212314249632342535174345364628545647573965
+<em>2</em>3119445813422155692453326671356443778246755488935
+<em>2</em>2748628533385973964449618417555172952866628316397
+<em>2</em>4924847833513595894462461691557357271266846838237
+<em>324</em>76224394358733541546984465265719557637682166874
+47<em>15</em>1426715826253782693736489371484759148259586125
+857<em>4</em>5282229685639333179674144428178525553928963666
+242<em>1</em>2392483532341359464345246157545635726865674683
+246<em>1123532</em>3572234643468334575457944568656815567976
+423653274<em>1</em>5347643852645875496375698651748671976285
+231424963<em>2342</em>5351743453646285456475739656758684176
+342215569245<em>332</em>66713564437782467554889357866599146
+33859739644496<em>1</em>84175551729528666283163977739427418
+35135958944624<em>61</em>6915573572712668468382377957949348
+435873354154698<em>44</em>652657195576376821668748793277985
+5826253782693736<em>4</em>893714847591482595861259361697236
+9685639333179674<em>1</em>444281785255539289636664139174777
+3532341359464345<em>2461</em>575456357268656746837976785794
+3572234643468334575<em>4</em>579445686568155679767926678187
+5347643852645875496<em>3</em>756986517486719762859782187396
+3425351743453646285<em>4564</em>757396567586841767869795287
+4533266713564437782467<em>554</em>8893578665991468977611257
+449618417555172952866628<em>3163</em>9777394274188841538529
+462461691557357271266846838<em>2</em>3779579493488168151459
+546984465265719557637682166<em>8</em>7487932779859814388196
+693736489371484759148259586<em>125</em>93616972361472718347
+17967414442817852555392896366<em>6413</em>91747775241285888
+46434524615754563572686567468379<em>7</em>67857948187896815
+46833457545794456865681556797679<em>26</em>6781878137789298
+645875496375698651748671976285978<em>21</em>873961893298417
+4536462854564757396567586841767869<em>7</em>952878971816398
+5644377824675548893578665991468977<em>6112</em>579188722368
+5517295286662831639777394274188841538<em>5</em>299952649631
+5735727126684683823779579493488168151<em>4</em>599279262561
+6571955763768216687487932779859814388<em>1</em>961925499217
+7148475914825958612593616972361472718<em>34725</em>83829458
+28178525553928963666413917477752412858886<em>3</em>52396999
+57545635726865674683797678579481878968159<em>2</em>98917926
+57944568656815567976792667818781377892989<em>24</em>8891319
+756986517486719762859782187396189329841729<em>1431</em>9528
+564757396567586841767869795287897181639891829<em>2</em>7419
+675548893578665991468977611257918872236812998<em>33479</em>
+</code></pre>
+<p>The total risk of this path is <code><em>315</em></code> (the starting position is still never entered, so its risk is not counted).</p>
+<p>Using the full map, <em>what is the lowest total risk of any path from the top left to the bottom right?</em></p>
+</article>
+<p>Your puzzle answer was <code>2976</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2021">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="15/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Chiton%22+%2D+Day+15+%2D+Advent+of+Code+2021&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2021%2Fday%2F15&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Chiton%22+%2D+Day+15+%2D+Advent+of+Code+2021+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2021%2Fday%2F15';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

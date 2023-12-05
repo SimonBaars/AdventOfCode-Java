@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 25 - Advent of Code 2015</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2015/about">[About]</a></li><li><a href="/2015/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2015/settings">[Settings]</a></li><li><a href="/2015/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2015/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">14*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">int y=</span><a href="/2015">2015</a><span class="title-event-wrap">;</span></h1><nav><ul><li><a href="/2015">[Calendar]</a></li><li><a href="/2015/support">[AoC++]</a></li><li><a href="/2015/sponsors">[Sponsors]</a></li><li><a href="/2015/leaderboard">[Leaderboard]</a></li><li><a href="/2015/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 25: Let It Snow ---</h2><p>Merry Christmas!  Santa is booting up his weather machine; looks like you might get a <a href="1">white Christmas</a> after all.</p>
+<p>The weather machine beeps!  On the console of the machine is a copy protection message asking you to <a href="https://en.wikipedia.org/wiki/Copy_protection#Early_video_games">enter a code from the instruction manual</a>.  Apparently, it refuses to run unless you give it that code.  No problem; you'll just look up the code in the--</p>
+<p>"Ho ho ho", Santa ponders aloud.  "I can't seem to find the manual."</p>
+<p>You look up the support number for the manufacturer and give them a call.  Good thing, too - that 49th star wasn't going to earn itself.</p>
+<p>"Oh, that machine is quite old!", they tell you.  "That model went out of support six minutes ago, and we just finished shredding all of the manuals.  I bet we can find you the code generation algorithm, though."</p>
+<p>After putting you on hold for twenty minutes (your call is <em>very</em> important to them, it reminded you repeatedly), they finally find an engineer that remembers how the code system works.</p>
+<p>The codes are printed on an <span title="The paper is very thin so it can be folded up neatly into the manual.">infinite sheet of paper</span>, starting in the top-left corner.  The codes are filled in by diagonals: starting with the first row with an empty first box, the codes are filled in diagonally up and to the right.  This process repeats until the <a href="https://en.wikipedia.org/wiki/Cantor's_diagonal_argument">infinite paper is covered</a>.  So, the first few codes are filled in in this order:</p>
+<pre><code>   | 1   2   3   4   5   6  
+---+---+---+---+---+---+---+
+ 1 |  1   3   6  10  15  21
+ 2 |  2   5   9  14  20
+ 3 |  4   8  13  19
+ 4 |  7  12  18
+ 5 | 11  17
+ 6 | 16
+</code></pre>
+<p>For example, the 12th code would be written to row <code>4</code>, column <code>2</code>; the 15th code would be written to row <code>1</code>, column <code>5</code>.</p>
+<p>The voice on the other end of the phone continues with how the codes are actually generated.  The first code is <code>20151125</code>.  After that, each code is generated by taking the previous one, multiplying it by <code>252533</code>, and then keeping the remainder from dividing that value by <code>33554393</code>.</p>
+<p>So, to find the second code (which ends up in row <code>2</code>, column <code>1</code>), start with the previous value, <code>20151125</code>.  Multiply it by <code>252533</code> to get <code>5088824049625</code>.  Then, divide that by <code>33554393</code>, which leaves a remainder of <code>31916031</code>.  That remainder is the second code.</p>
+<p>"Oh!", says the voice.  "It looks like we missed a scrap from one of the manuals.  Let me read it to you."  You write down his numbers:</p>
+<pre><code>   |    1         2         3         4         5         6
+---+---------+---------+---------+---------+---------+---------+
+ 1 | 20151125  18749137  17289845  30943339  10071777  33511524
+ 2 | 31916031  21629792  16929656   7726640  15514188   4041754
+ 3 | 16080970   8057251   1601130   7981243  11661866  16474243
+ 4 | 24592653  32451966  21345942   9380097  10600672  31527494
+ 5 |    77061  17552253  28094349   6899651   9250759  31663883
+ 6 | 33071741   6796745  25397450  24659492   1534922  27995004
+</code></pre>
+<p>"Now remember", the voice continues, "that's not even all of the first few numbers; for example, you're missing the one at 7,1 that would come before 6,2.  But, it should be enough to let your-- oh, it's time for lunch!  Bye!"  The call disconnects.</p>
+<p>Santa looks nervous.  Your puzzle input contains the message on the machine's console.  <em>What code do you give the machine?</em></p>
+</article>
+<p>To begin, <a href="25/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="25/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Let+It+Snow%22+%2D+Day+25+%2D+Advent+of+Code+2015&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2015%2Fday%2F25&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Let+It+Snow%22+%2D+Day+25+%2D+Advent+of+Code+2015+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2015%2Fday%2F25';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

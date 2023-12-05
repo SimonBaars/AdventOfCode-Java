@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 25 - Advent of Code 2020</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2020/about">[About]</a></li><li><a href="/2020/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2020/settings">[Settings]</a></li><li><a href="/2020/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2020/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">λy.</span><a href="/2020">2020</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2020">[Calendar]</a></li><li><a href="/2020/support">[AoC++]</a></li><li><a href="/2020/sponsors">[Sponsors]</a></li><li><a href="/2020/leaderboard">[Leaderboard]</a></li><li><a href="/2020/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2020/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://www.educative.io/adventofcode" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Educative.io</a> - From CSS to System Design, gain in-demand tech skills at the speed you want. Text-based courses with live coding environments help you learn without the fluff</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 25: Combo Breaker ---</h2><p>You finally reach the check-in desk. Unfortunately, their registration systems are currently offline, and they cannot check you in. Noticing the look on your face, they quickly add that tech support is already on the way! They even created all the room keys this morning; you can take yours now and give them your room deposit once the registration system comes back online.</p>
+<p>The room key is a small <a href="https://en.wikipedia.org/wiki/Radio-frequency_identification" target="_blank">RFID</a> card. Your room is on the 25th floor and the elevators are also temporarily out of service, so it takes what little energy you have left to even climb the stairs and navigate the halls. You finally reach the door to your room, swipe your card, and - <em>beep</em> - the light turns red.</p>
+<p>Examining the card more closely, you discover a phone number for tech support.</p>
+<p>"Hello! How can we help you today?" You explain the situation.</p>
+<p>"Well, it sounds like the card isn't sending the right command to unlock the door. If you go back to the check-in desk, surely someone there can reset it for you." Still catching your breath, you describe the status of the elevator and the exact number of stairs you just had to climb.</p>
+<p>"I see! Well, your only other option would be to reverse-engineer the cryptographic handshake the card does with the door and then inject your own commands into the data stream, but that's definitely impossible." You thank them for their time.</p>
+<p>Unfortunately for the door, you know a thing or two about cryptographic handshakes.</p>
+<p>The handshake used by the card and the door involves an operation that <em>transforms</em> a <em>subject number</em>. To transform a subject number, start with the value <code>1</code>. Then, a number of times called the <em>loop size</em>, perform the following steps:</p>
+<ul>
+<li>Set the value to itself multiplied by the <em>subject number</em>.</li>
+<li>Set the value to the remainder after dividing the value by <em><code>20201227</code></em>.</li>
+</ul>
+<p>The card always uses a specific, secret <em>loop size</em> when it transforms a subject number. The door always uses a different, secret loop size.</p>
+<p>The cryptographic handshake works like this:</p>
+<ul>
+<li>The <em>card</em> transforms the subject number of <em><code>7</code></em> according to the <em>card's</em> secret loop size. The result is called the <em>card's public key</em>.</li>
+<li>The <em>door</em> transforms the subject number of <em><code>7</code></em> according to the <em>door's</em> secret loop size. The result is called the <em>door's public key</em>.</li>
+<li>The card and door use the wireless RFID signal to transmit the two public keys (your puzzle input) to the other device. Now, the <em>card</em> has the <em>door's</em> public key, and the <em>door</em> has the <em>card's</em> public key. Because you can eavesdrop on the signal, you have both public keys, but neither device's loop size.</li>
+<li>The <em>card</em> transforms the subject number of <em>the door's public key</em> according to the <em>card's</em> loop size. The result is the <em>encryption key</em>.</li>
+<li>The <em>door</em> transforms the subject number of <em>the card's public key</em> according to the <em>door's</em> loop size. The result is the same <em>encryption key</em> as the <em>card</em> calculated.</li>
+</ul>
+<p>If you can use the two public keys to determine each device's loop size, you will have enough information to calculate the secret <em>encryption key</em> that the card and door use to communicate; this would let you send the <code>unlock</code> command directly to the door!</p>
+<p>For example, suppose you know that the card's public key is <code>5764801</code>. With a little trial and error, you can work out that the card's loop size must be <em><code>8</code></em>, because transforming the initial subject number of <code>7</code> with a loop size of <code>8</code> produces <code>5764801</code>.</p>
+<p>Then, suppose you know that the door's public key is <code>17807724</code>. By the same process, you can determine that the door's loop size is <em><code>11</code></em>, because transforming the initial subject number of <code>7</code> with a loop size of <code>11</code> produces <code>17807724</code>.</p>
+<p>At this point, you can use either device's loop size with the other device's public key to calculate the <em>encryption key</em>. Transforming the subject number of <code>17807724</code> (the door's public key) with a loop size of <code>8</code> (the card's loop size) produces the encryption key, <em><code>14897079</code></em>. (Transforming the subject number of <code>5764801</code> (the card's public key) with a loop size of <code>11</code> (the door's loop size) produces the same encryption key: <em><code>14897079</code></em>.)</p>
+<p><em>What encryption key is the handshake trying to establish?</em></p>
+</article>
+<p>Your puzzle answer was <code>16881444</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p><span title="You notice the brand written on the side of the lock: Diffie, Hellman, and Merkle.">The light turns green and the door unlocks.</span> As you collapse onto the bed in your room, your pager goes off!</p>
+<p>"It's an emergency!" the Elf calling you explains. "The <a href="https://en.wikipedia.org/wiki/Soft_serve" target="_blank">soft serve</a> machine in the cafeteria on sub-basement 7 just failed and you're the only one that knows how to fix it! We've already dispatched a reindeer to your location to pick you up."</p>
+<p>You hear the sound of hooves landing on your balcony.</p>
+<p>The reindeer carefully explores the contents of your room while you figure out how you're going to pay the <em class="star">50 stars</em> you owe the resort before you leave. Noticing that you look concerned, the reindeer wanders over to you; you see that it's carrying a small pouch.</p>
+<p>"Sorry for the trouble," a note in the pouch reads. Sitting at the bottom of the pouch is a gold coin with a little picture of a starfish on it.</p>
+<p>Looks like you only needed <em class="star">49 stars</em> after all.</p>
+</article>
+<form method="post" action="25/answer"><input type="hidden" name="level" value="2"/><input type="hidden" name="answer" value="0"/><p>If you like, you can <input type="submit" value="[Check On Your Deposit]"/>.</p></form>
+<p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2020">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="25/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Combo+Breaker%22+%2D+Day+25+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F25&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Combo+Breaker%22+%2D+Day+25+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F25';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 20 - Advent of Code 2017</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2017/about">[About]</a></li><li><a href="/2017/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2017/settings">[Settings]</a></li><li><a href="/2017/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2017/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">2*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">{:year </span><a href="/2017">2017</a><span class="title-event-wrap">}</span></h1><nav><ul><li><a href="/2017">[Calendar]</a></li><li><a href="/2017/support">[AoC++]</a></li><li><a href="/2017/sponsors">[Sponsors]</a></li><li><a href="/2017/leaderboard">[Leaderboard]</a></li><li><a href="/2017/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2017/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="http://smartystreets.com/aoc" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">SmartyStreets</a> - U2VuZGluZyBDaH Jpc3RtYXMgY2Fy ZHMgdG8gYmFkIG FkZHJlc3Nlcz8K</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 20: Particle Swarm ---</h2><p>Suddenly, the GPU contacts you, asking for <span title="...as if millions of graphics pipelines suddenly cried out for help, but suddenly started working on something else instead because they all have to do the same thing at the same time and can't spend very long asking for help.">help</span>. Someone has asked it to simulate <em>too many particles</em>, and it won't be able to finish them all in time to render the next frame at this rate.</p>
+<p>It transmits to you a buffer (your puzzle input) listing each particle in order (starting with particle <code>0</code>, then particle <code>1</code>, particle <code>2</code>, and so on). For each particle, it provides the <code>X</code>, <code>Y</code>, and <code>Z</code> coordinates for the particle's position (<code>p</code>), velocity (<code>v</code>), and acceleration (<code>a</code>), each in the format <code>&lt;X,Y,Z&gt;</code>.</p>
+<p>Each tick, all particles are updated simultaneously. A particle's properties are updated in the following order:</p>
+<ul>
+<li>Increase the <code>X</code> velocity by the <code>X</code> acceleration.</li>
+<li>Increase the <code>Y</code> velocity by the <code>Y</code> acceleration.</li>
+<li>Increase the <code>Z</code> velocity by the <code>Z</code> acceleration.</li>
+<li>Increase the <code>X</code> position by the <code>X</code> velocity.</li>
+<li>Increase the <code>Y</code> position by the <code>Y</code> velocity.</li>
+<li>Increase the <code>Z</code> position by the <code>Z</code> velocity.</li>
+</ul>
+<p>Because of seemingly tenuous rationale involving <a href="https://en.wikipedia.org/wiki/Z-buffering">z-buffering</a>, the GPU would like to know which particle will stay closest to position <code>&lt;0,0,0&gt;</code> in the long term. Measure this using the <a href="https://en.wikipedia.org/wiki/Taxicab_geometry">Manhattan distance</a>, which in this situation is simply the sum of the absolute values of a particle's <code>X</code>, <code>Y</code>, and <code>Z</code> position.</p>
+<p>For example, suppose you are only given two particles, both of which stay entirely on the X-axis (for simplicity). Drawing the current states of particles <code>0</code> and <code>1</code> (in that order) with an adjacent a number line and diagram of current <code>X</code> positions (marked in parentheses), the following would take place:</p>
+<pre><code>p=&lt; 3,0,0&gt;, v=&lt; 2,0,0&gt;, a=&lt;-1,0,0&gt;    -4 -3 -2 -1  0  1  2  3  4
+p=&lt; 4,0,0&gt;, v=&lt; 0,0,0&gt;, a=&lt;-2,0,0&gt;                         (0)(1)
+
+p=&lt; 4,0,0&gt;, v=&lt; 1,0,0&gt;, a=&lt;-1,0,0&gt;    -4 -3 -2 -1  0  1  2  3  4
+p=&lt; 2,0,0&gt;, v=&lt;-2,0,0&gt;, a=&lt;-2,0,0&gt;                      (1)   (0)
+
+p=&lt; 4,0,0&gt;, v=&lt; 0,0,0&gt;, a=&lt;-1,0,0&gt;    -4 -3 -2 -1  0  1  2  3  4
+p=&lt;-2,0,0&gt;, v=&lt;-4,0,0&gt;, a=&lt;-2,0,0&gt;          (1)               (0)
+
+p=&lt; 3,0,0&gt;, v=&lt;-1,0,0&gt;, a=&lt;-1,0,0&gt;    -4 -3 -2 -1  0  1  2  3  4
+p=&lt;-8,0,0&gt;, v=&lt;-6,0,0&gt;, a=&lt;-2,0,0&gt;                         (0)   
+</code></pre>
+<p>At this point, particle <code>1</code> will never be closer to <code>&lt;0,0,0&gt;</code> than particle <code>0</code>, and so, in the long run, particle <code>0</code> will stay closest.</p>
+<p><em>Which particle will stay closest to position <code>&lt;0,0,0&gt;</code></em> in the long term?</p>
+</article>
+<p>To begin, <a href="20/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="20/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Particle+Swarm%22+%2D+Day+20+%2D+Advent+of+Code+2017&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2017%2Fday%2F20&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Particle+Swarm%22+%2D+Day+20+%2D+Advent+of+Code+2017+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2017%2Fday%2F20';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

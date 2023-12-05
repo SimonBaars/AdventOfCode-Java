@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 25 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">&lt;y&gt;</span><a href="/2019">2019</a><span class="title-event-wrap">&lt;/y&gt;</span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://auricsystems.com/tokenize-almost-anything?utm_source=advent+of+code&amp;utm_medium=display&amp;utm_camapign=advent2019" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">AuricVault®</a> - Thieves can&apos;t steal -- what isn&apos;t there! Secure your sensitive data. Simple API. FREE test credentials. Start simplifying your compliance.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 25: Cryostasis ---</h2><p>As you approach Santa's ship, your sensors report two important details:</p>
+<p>First, that you might be too late: the internal temperature is <span title="This is the same in Fahrenheit and Celsius."><code>-40</code> degrees</span>.</p>
+<p>Second, that one faint life signature is somewhere on the ship.</p>
+<p>The airlock door is locked with a code; your best option is to send in a small droid to investigate the situation.  You attach your ship to Santa's, break a small hole in the hull, and let the droid run in before you seal it up again. Before your ship starts freezing, you detach your ship and set it to automatically stay within range of Santa's ship.</p>
+<p>This droid can follow basic instructions and report on its surroundings; you can communicate with it through an <a href="9">Intcode</a> program (your puzzle input) running on an <a href="17">ASCII-capable</a> computer.</p>
+<p>As the droid moves through its environment, it will describe what it encounters.  When it says <code>Command?</code>, you can give it a single instruction terminated with a newline (ASCII code <code>10</code>). Possible instructions are:</p>
+<ul>
+<li><em>Movement</em> via <code>north</code>, <code>south</code>, <code>east</code>, or <code>west</code>.</li>
+<li>To <em>take</em> an item the droid sees in the environment, use the command <code>take &lt;name of item&gt;</code>. For example, if the droid reports seeing a <code>red ball</code>, you can pick it up with <code>take red ball</code>.</li>
+<li>To <em>drop</em> an item the droid is carrying, use the command <code>drop &lt;name of item&gt;</code>. For example, if the droid is carrying a <code>green ball</code>, you can drop it with <code>drop green ball</code>.</li>
+<li>To get a <em>list of all of the items</em> the droid is currently carrying, use the command <code>inv</code> (for "inventory").</li>
+</ul>
+<p>Extra spaces or other characters aren't allowed - instructions must be provided precisely.</p>
+<p>Santa's ship is a <em>Reindeer-class starship</em>; these ships use pressure-sensitive floors to determine the identity of droids and crew members.  The standard configuration for these starships is for all droids to weigh exactly the same amount to make them easier to detect.  If you need to get past such a sensor, you might be able to reach the correct weight by carrying items from the environment.</p>
+<p>Look around the ship and see if you can find the <em>password for the main airlock</em>.</p>
+</article>
+<p>Your puzzle answer was <code>34095120</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>As you move through the main airlock, the air inside the ship is already heating up to reasonable levels.  Santa explains that he didn't notice you coming because he was just taking a quick nap.  The ship wasn't frozen; he just had the thermostat set to "North Pole".</p>
+<p>You make your way over to the navigation console. It beeps. "Status: Stranded. Please supply measurements from <em class="star">49 stars</em> to recalibrate."</p>
+<p>"49 stars? But the Elves told me you needed fifty--"</p>
+<p>Santa just smiles and nods his head toward the window.  There, in the distance, you can see the center of the Solar System: the Sun!</p>
+<p>The navigation console beeps again.</p>
+</article>
+<form method="post" action="25/answer"><input type="hidden" name="level" value="2"/><input type="hidden" name="answer" value="0"/><p>If you like, you can <input type="submit" value="[Align the Warp Drive again]"/>.</p></form>
+<p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="25/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Cryostasis%22+%2D+Day+25+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F25&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Cryostasis%22+%2D+Day+25+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F25';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

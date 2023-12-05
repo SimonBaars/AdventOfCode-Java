@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 22 - Advent of Code 2022</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2022/about">[About]</a></li><li><a href="/2022/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2022/settings">[Settings]</a></li><li><a href="/2022/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2022/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">sub y{</span><a href="/2022">2022</a><span class="title-event-wrap">}</span></h1><nav><ul><li><a href="/2022">[Calendar]</a></li><li><a href="/2022/support">[AoC++]</a></li><li><a href="/2022/sponsors">[Sponsors]</a></li><li><a href="/2022/leaderboard">[Leaderboard]</a></li><li><a href="/2022/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2022/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://1password.com/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">1Password</a> - Like solving new challenges every day? Us too, and we need your help to secure the workflows of developers just like you.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 22: Monkey Map ---</h2><p>The monkeys take you on a surprisingly easy trail through the jungle. They're even going in roughly the right direction according to your handheld device's Grove Positioning System.</p>
+<p>As you walk, the monkeys explain that the grove is protected by a <em>force field</em>. To pass through the force field, you have to enter a password; doing so involves tracing a specific <em>path</em> on a strangely-shaped board.</p>
+<p>At least, you're pretty sure that's what you have to do; the elephants aren't exactly fluent in monkey.</p>
+<p>The monkeys give you notes that they took when they last saw the password entered (your puzzle input).</p>
+<p>For example:</p>
+<pre><code>        ...#
+        .#..
+        #...
+        ....
+...#.......#
+........#...
+..#....#....
+..........#.
+        ...#....
+        .....#..
+        .#......
+        ......#.
+
+10R5L5R10L4R5L5
+</code></pre>
+<p>The first half of the monkeys' notes is a <em>map of the board</em>. It is comprised of a set of <em>open tiles</em> (on which you can move, drawn <code>.</code>) and <em>solid walls</em> (tiles which you cannot enter, drawn <code>#</code>).</p>
+<p>The second half is a description of <em>the path you must follow</em>. It consists of alternating numbers and letters:</p>
+<ul>
+<li>A <em>number</em> indicates the <em>number of tiles to move</em> in the direction you are facing. If you run into a wall, you stop moving forward and continue with the next instruction.</li>
+<li>A <em>letter</em> indicates whether to turn 90 degrees <em>clockwise</em> (<code>R</code>) or <em><span title="Or &quot;anticlockwise&quot;, if you're anti-counterclockwise.">counterclockwise</span></em> (<code>L</code>). Turning happens in-place; it does not change your current tile.</li>
+</ul>
+<p>So, a path like <code>10R5</code> means "go forward 10 tiles, then turn clockwise 90 degrees, then go forward 5 tiles".</p>
+<p>You begin the path in the leftmost open tile of the top row of tiles. Initially, you are facing <em>to the right</em> (from the perspective of how the map is drawn).</p>
+<p>If a movement instruction would take you off of the map, you <em>wrap around</em> to the other side of the board. In other words, if your next tile is off of the board, you should instead look in the direction opposite of your current facing as far as you can until you find the opposite edge of the board, then reappear there.</p>
+<p>For example, if you are at <code>A</code> and facing to the right, the tile in front of you is marked <code>B</code>; if you are at <code>C</code> and facing down, the tile in front of you is marked <code>D</code>:</p>
+<pre><code>        ...#
+        .#..
+        #...
+        ....
+...#.<em>D</em>.....#
+........#...
+<em>B</em>.#....#...<em>A</em>
+.....<em>C</em>....#.
+        ...#....
+        .....#..
+        .#......
+        ......#.
+</code></pre>
+<p>It is possible for the next tile (after wrapping around) to be a <em>wall</em>; this still counts as there being a wall in front of you, and so movement stops before you actually wrap to the other side of the board.</p>
+<p>By drawing the <em>last facing you had</em> with an arrow on each tile you visit, the full path taken by the above example looks like this:</p>
+<pre><code>        &gt;&gt;v#    
+        .#v.    
+        #.v.    
+        ..v.    
+...#...v..v#    
+&gt;&gt;&gt;v...<em>&gt;</em>#.&gt;&gt;    
+..#v...#....    
+...&gt;&gt;&gt;&gt;v..#.    
+        ...#....
+        .....#..
+        .#......
+        ......#.
+</code></pre>
+<p>To finish providing the password to this strange input device, you need to determine numbers for your final <em>row</em>, <em>column</em>, and <em>facing</em> as your final position appears from the perspective of the original map. Rows start from <code>1</code> at the top and count downward; columns start from <code>1</code> at the left and count rightward. (In the above example, row 1, column 1 refers to the empty space with no tile on it in the top-left corner.) Facing is <code>0</code> for right (<code>&gt;</code>), <code>1</code> for down (<code>v</code>), <code>2</code> for left (<code>&lt;</code>), and <code>3</code> for up (<code>^</code>). The <em>final password</em> is the sum of 1000 times the row, 4 times the column, and the facing.</p>
+<p>In the above example, the final row is <code>6</code>, the final column is <code>8</code>, and the final facing is <code>0</code>. So, the final password is 1000 * 6 + 4 * 8 + 0: <code><em>6032</em></code>.</p>
+<p>Follow the path given in the monkeys' notes. <em>What is the final password?</em></p>
+</article>
+<p>Your puzzle answer was <code>58248</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>As you reach the force field, you think you hear some Elves in the distance. Perhaps they've already arrived?</p>
+<p>You approach the strange <em>input device</em>, but it isn't quite what the monkeys drew in their notes. Instead, you are met with a large <em>cube</em>; each of its six faces is a square of 50x50 tiles.</p>
+<p>To be fair, the monkeys' map <em>does</em> have six 50x50 regions on it. If you were to <em>carefully fold the map</em>, you should be able to shape it into a cube!</p>
+<p>In the example above, the six (smaller, 4x4) faces of the cube are:</p>
+<pre><code>        1111
+        1111
+        1111
+        1111
+222233334444
+222233334444
+222233334444
+222233334444
+        55556666
+        55556666
+        55556666
+        55556666
+</code></pre>
+<p>You still start in the same position and with the same facing as before, but the <em>wrapping</em> rules are different. Now, if you would walk off the board, you instead <em>proceed around the cube</em>. From the perspective of the map, this can look a little strange. In the above example, if you are at A and move to the right, you would arrive at B facing down; if you are at C and move down, you would arrive at D facing up:</p>
+<pre><code>        ...#
+        .#..
+        #...
+        ....
+...#.......#
+........#..<em>A</em>
+..#....#....
+.<em>D</em>........#.
+        ...#..<em>B</em>.
+        .....#..
+        .#......
+        ..<em>C</em>...#.
+</code></pre>
+<p>Walls still block your path, even if they are on a different face of the cube. If you are at E facing up, your movement is blocked by the wall marked by the arrow:</p>
+<pre><code>        ...#
+        .#..
+     <em>--&gt;#</em>...
+        ....
+...#..<em>E</em>....#
+........#...
+..#....#....
+..........#.
+        ...#....
+        .....#..
+        .#......
+        ......#.
+</code></pre>
+<p>Using the same method of drawing the <em>last facing you had</em> with an arrow on each tile you visit, the full path taken by the above example now looks like this:</p>
+<pre><code>        &gt;&gt;v#    
+        .#v.    
+        #.v.    
+        ..v.    
+...#..<em>^</em>...v#    
+.&gt;&gt;&gt;&gt;&gt;^.#.&gt;&gt;    
+.^#....#....    
+.^........#.    
+        ...#..v.
+        .....#v.
+        .#v&lt;&lt;&lt;&lt;.
+        ..v...#.
+</code></pre>
+<p>The final password is still calculated from your final position and facing from the perspective of the map. In this example, the final row is <code>5</code>, the final column is <code>7</code>, and the final facing is <code>3</code>, so the final password is 1000 * 5 + 4 * 7 + 3 = <code><em>5031</em></code>.</p>
+<p>Fold the map into a cube, <em>then</em> follow the path given in the monkeys' notes. <em>What is the final password?</em></p>
+</article>
+<p>Your puzzle answer was <code>179091</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2022">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="22/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Monkey+Map%22+%2D+Day+22+%2D+Advent+of+Code+2022&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2022%2Fday%2F22&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Monkey+Map%22+%2D+Day+22+%2D+Advent+of+Code+2022+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2022%2Fday%2F22';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

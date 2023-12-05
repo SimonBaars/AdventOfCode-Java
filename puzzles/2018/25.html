@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 25 - Advent of Code 2018</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2018/about">[About]</a></li><li><a href="/2018/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2018/settings">[Settings]</a></li><li><a href="/2018/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2018/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">28*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">/^</span><a href="/2018">2018</a><span class="title-event-wrap">$/</span></h1><nav><ul><li><a href="/2018">[Calendar]</a></li><li><a href="/2018/support">[AoC++]</a></li><li><a href="/2018/sponsors">[Sponsors]</a></li><li><a href="/2018/leaderboard">[Leaderboard]</a></li><li><a href="/2018/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2018/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://rainway.io/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Rainway</a> - Play all your favorite PC games anytime, anywhere, across a variety of different devices.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 25: Four-Dimensional Adventure ---</h2><p>The reindeer's symptoms are getting worse, and neither you nor the white-bearded man have a solution. At least the reindeer has a warm place to rest: a small bed near where you're sitting.</p>
+<p>As you reach down, the reindeer looks up at you, <span title="It was not an accident.">accidentally</span> bumping a button on your wrist-mounted device with its nose in the process - a button labeled <em>"help"</em>.</p>
+<p>"Hello, and welcome to the Time Travel Support Hotline! If you are lost in time and space, press 1. If you are trapped in a time paradox, press 2. If you need help caring for a sick reindeer, press 3. If you--"</p>
+<p><em>Beep.</em></p>
+<p>A few seconds later, you hear a new voice. "Hello; please state the nature of your reindeer." You try to describe the situation.</p>
+<p>"Just a moment, I think I can remotely run a diagnostic scan." A beam of light projects from the device and sweeps over the reindeer a few times.</p>
+<p>"Okay, it looks like your reindeer is very low on magical energy; it should fully recover if we can fix that.  Let me check your timeline for a source.... Got one. There's actually a powerful source of magical energy about 1000 years forward from you, and at roughly your position, too!  It looks like... hot chocolate?  Anyway, you should be able to travel there to pick some up; just don't forget a mug!  Is there anything else I can help you with today?"</p>
+<p>You explain that your device isn't capable of going forward in time.  "I... see. That's tricky. Well, according to this information, your device should have the necessary hardware to open a small portal and send some hot chocolate back to you. You'll need a list of <em>fixed points in spacetime</em>; I'm transmitting it to you now."</p>
+<p>"You just need to align your device to the constellations of fixed points so that it can lock on to the destination and open the portal. Let me look up how much hot chocolate that breed of reindeer needs."</p>
+<p>"It says here that your particular reindeer is-- this can't be right, it says there's only one like that in the universe!  But THAT means that you're--" You disconnect the call.</p>
+<p>The list of fixed points in spacetime (your puzzle input) is a set of four-dimensional coordinates. To align your device, acquire the hot chocolate, and save the reindeer, you just need to find the <em>number of constellations</em> of points in the list.</p>
+<p>Two points are in the same <em>constellation</em> if their manhattan distance apart is <em>no more than 3</em> or if they can form a chain of points, each a manhattan distance no more than 3 from the last, between the two of them. (That is, if a point is close enough to a constellation, it "joins" that constellation.) For example:</p>
+<pre><code> 0,0,0,0
+ 3,0,0,0
+ 0,3,0,0
+ 0,0,3,0
+ 0,0,0,3
+ 0,0,0,6
+ 9,0,0,0
+12,0,0,0
+</code></pre>
+<p>In the above list, the first six points form a single constellation: <code>0,0,0,0</code> is exactly distance <code>3</code> from the next four, and the point at <code>0,0,0,6</code> is connected to the others by being <code>3</code> away from <code>0,0,0,3</code>, which is already in the constellation. The bottom two points, <code>9,0,0,0</code> and <code>12,0,0,0</code> are in a separate constellation because no point is close enough to connect them to the first constellation.  So, in the above list, the number of constellations is <code><em>2</em></code>.  (If a point at <code>6,0,0,0</code> were present, it would connect <code>3,0,0,0</code> and <code>9,0,0,0</code>, merging all of the points into a single giant constellation instead.)</p>
+<p>In this example, the number of constellations is <code>4</code>:</p>
+<pre><code>-1,2,2,0
+0,0,2,-2
+0,0,0,-2
+-1,2,0,0
+-2,-2,-2,2
+3,0,2,-1
+-1,3,2,2
+-1,0,-1,0
+0,2,1,-2
+3,0,0,0
+</code></pre>
+<p>In this one, it's <code>3</code>:</p>
+<pre><code>1,-1,0,1
+2,0,-1,0
+3,2,-1,0
+0,0,3,1
+0,0,-1,-1
+2,3,-2,0
+-2,2,0,0
+2,-2,0,-1
+1,-1,0,-1
+3,2,0,2
+</code></pre>
+<p>Finally, in this one, it's <code>8</code>:</p>
+<pre><code>1,-1,-1,-2
+-2,-2,0,1
+0,2,1,3
+-2,3,-2,1
+0,2,3,-2
+-1,-1,1,-2
+0,-2,-1,0
+-2,2,3,-1
+1,2,2,0
+-1,-2,0,-2
+</code></pre>
+<p>The portly man nervously strokes his white beard. It's time to get that hot chocolate.</p>
+<p><em>How many constellations are formed by the fixed points in spacetime?</em></p>
+</article>
+<p>To begin, <a href="25/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="25/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Four%2DDimensional+Adventure%22+%2D+Day+25+%2D+Advent+of+Code+2018&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F25&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Four%2DDimensional+Adventure%22+%2D+Day+25+%2D+Advent+of+Code+2018+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F25';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 17 - Advent of Code 2017</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2017/about">[About]</a></li><li><a href="/2017/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2017/settings">[Settings]</a></li><li><a href="/2017/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2017/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">2*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">λy.</span><a href="/2017">2017</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2017">[Calendar]</a></li><li><a href="/2017/support">[AoC++]</a></li><li><a href="/2017/sponsors">[Sponsors]</a></li><li><a href="/2017/leaderboard">[Leaderboard]</a></li><li><a href="/2017/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2017/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="http://xebia.com/community/advent-of-code" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Xebia</a> - Passionate consultants taking up IT challenges all year round</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 17: Spinlock ---</h2><p>Suddenly, whirling in the distance, you notice what looks like a massive, <span title="You know, as opposed to all those non-pixelated hurricanes you see on TV.">pixelated hurricane</span>: a deadly <a href="https://en.wikipedia.org/wiki/Spinlock">spinlock</a>. This spinlock isn't just consuming computing power, but memory, too; vast, digital mountains are being ripped from the ground and consumed by the vortex.</p>
+<p>If you don't move quickly, fixing that printer will be the least of your problems.</p>
+<p>This spinlock's algorithm is simple but efficient, quickly consuming everything in its path. It starts with a circular buffer containing only the value <code>0</code>, which it marks as the <em>current position</em>. It then steps forward through the circular buffer some number of steps (your puzzle input) before inserting the first new value, <code>1</code>, after the value it stopped on.  The inserted value becomes the <em>current position</em>. Then, it steps forward from there the same number of steps, and wherever it stops, inserts after it the second new value, <code>2</code>, and uses that as the new <em>current position</em> again.</p>
+<p>It repeats this process of <em>stepping forward</em>, <em>inserting a new value</em>, and <em>using the location of the inserted value as the new current position</em> a total of <code><em>2017</em></code> times, inserting <code>2017</code> as its final operation, and ending with a total of <code>2018</code> values (including <code>0</code>) in the circular buffer.</p>
+<p>For example, if the spinlock were to step <code>3</code> times per insert, the circular buffer would begin to evolve like this (using parentheses to mark the current position after each iteration of the algorithm):</p>
+<ul>
+<li><code>(0)</code>, the initial state before any insertions.</li>
+<li><code>0&nbsp;(1)</code>: the spinlock steps forward three times (<code>0</code>, <code>0</code>, <code>0</code>), and then inserts the first value, <code>1</code>, after it. <code>1</code> becomes the current position.</li>
+<li><code>0&nbsp;(2)&nbsp;1</code>: the spinlock steps forward three times (<code>0</code>, <code>1</code>, <code>0</code>), and then inserts the second value, <code>2</code>, after it. <code>2</code> becomes the current position.</li>
+<li><code>0&nbsp;&nbsp;2&nbsp;(3)&nbsp;1</code>: the spinlock steps forward three times (<code>1</code>, <code>0</code>, <code>2</code>), and then inserts the third value, <code>3</code>, after it. <code>3</code> becomes the current position.</li>
+</ul>
+<p>And so on:</p>
+<ul>
+<li><code>0&nbsp;&nbsp;2&nbsp;(4)&nbsp;3&nbsp;&nbsp;1</code></li>
+<li><code>0&nbsp;(5)&nbsp;2&nbsp;&nbsp;4&nbsp;&nbsp;3&nbsp;&nbsp;1</code></li>
+<li><code>0&nbsp;&nbsp;5&nbsp;&nbsp;2&nbsp;&nbsp;4&nbsp;&nbsp;3&nbsp;(6)&nbsp;1</code></li>
+<li><code>0&nbsp;&nbsp;5&nbsp;(7)&nbsp;2&nbsp;&nbsp;4&nbsp;&nbsp;3&nbsp;&nbsp;6&nbsp;&nbsp;1</code></li>
+<li><code>0&nbsp;&nbsp;5&nbsp;&nbsp;7&nbsp;&nbsp;2&nbsp;&nbsp;4&nbsp;&nbsp;3&nbsp;(8)&nbsp;6&nbsp;&nbsp;1</code></li>
+<li><code>0&nbsp;(9)&nbsp;5&nbsp;&nbsp;7&nbsp;&nbsp;2&nbsp;&nbsp;4&nbsp;&nbsp;3&nbsp;&nbsp;8&nbsp;&nbsp;6&nbsp;&nbsp;1</code></li>
+</ul>
+<p>Eventually, after 2017 insertions, the section of the circular buffer near the last insertion looks like this:</p>
+<pre><code>1512  1134  151 (2017) 638  1513  851</code></pre>
+<p>Perhaps, if you can identify the value that will ultimately be <em>after</em> the last value written (<code>2017</code>), you can short-circuit the spinlock.  In this example, that would be <code>638</code>.</p>
+<p><em>What is the value after <code>2017</code></em> in your completed circular buffer?</p>
+</article>
+<p>Your puzzle input is <code class="puzzle-input">314</code>.</p>
+<form method="post" action="17/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Spinlock%22+%2D+Day+17+%2D+Advent+of+Code+2017&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2017%2Fday%2F17&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Spinlock%22+%2D+Day+17+%2D+Advent+of+Code+2017+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2017%2Fday%2F17';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

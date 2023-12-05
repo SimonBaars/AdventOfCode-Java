@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 22 - Advent of Code 2015</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2015/about">[About]</a></li><li><a href="/2015/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2015/settings">[Settings]</a></li><li><a href="/2015/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2015/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">14*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">0xffff&amp;</span><a href="/2015">2015</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2015">[Calendar]</a></li><li><a href="/2015/support">[AoC++]</a></li><li><a href="/2015/sponsors">[Sponsors]</a></li><li><a href="/2015/leaderboard">[Leaderboard]</a></li><li><a href="/2015/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 22: Wizard Simulator 20XX ---</h2><p>Little Henry Case decides that defeating bosses with <a href="21">swords and stuff</a> is boring.  Now he's playing the game with a <span title="Being a !@#$% Sorcerer.">wizard</span>.  Of course, he gets stuck on another boss and needs your help again.</p>
+<p>In this version, combat still proceeds with the player and the boss taking alternating turns.  The player still goes first.  Now, however, you don't get any equipment; instead, you must choose one of your spells to cast.  The first character at or below <code>0</code> hit points loses.</p>
+<p>Since you're a wizard, you don't get to wear armor, and you can't attack normally.  However, since you do <em>magic damage</em>, your opponent's armor is ignored, and so the boss effectively has zero armor as well.  As before, if armor (from a spell, in this case) would reduce damage below <code>1</code>, it becomes <code>1</code> instead - that is, the boss' attacks always deal at least <code>1</code> damage.</p>
+<p>On each of your turns, you must select one of your spells to cast.  If you cannot afford to cast any spell, you lose.  Spells cost <em>mana</em>; you start with <em>500</em> mana, but have no maximum limit.  You must have enough mana to cast a spell, and its cost is immediately deducted when you cast it.  Your spells are Magic Missile, Drain, Shield, Poison, and Recharge.</p>
+<ul>
+<li><em>Magic Missile</em> costs <code>53</code> mana.  It instantly does <code>4</code> damage.</li>
+<li><em>Drain</em> costs <code>73</code> mana.  It instantly does <code>2</code> damage and heals you for <code>2</code> hit points.</li>
+<li><em>Shield</em> costs <code>113</code> mana.  It starts an <em>effect</em> that lasts for <code>6</code> turns.  While it is active, your armor is increased by <code>7</code>.</li>
+<li><em>Poison</em> costs <code>173</code> mana.  It starts an <em>effect</em> that lasts for <code>6</code> turns.  At the start of each turn while it is active, it deals the boss <code>3</code> damage.</li>
+<li><em>Recharge</em> costs <code>229</code> mana.  It starts an <em>effect</em> that lasts for <code>5</code> turns.  At the start of each turn while it is active, it gives you <code>101</code> new mana.</li>
+</ul>
+<p><em>Effects</em> all work the same way.  Effects apply at the start of both the player's turns and the boss' turns.  Effects are created with a timer (the number of turns they last); at the start of each turn, after they apply any effect they have, their timer is decreased by one.  If this decreases the timer to zero, the effect ends.  You cannot cast a spell that would start an effect which is already active.  However, effects can be started on the same turn they end.</p>
+<p>For example, suppose the player has <code>10</code> hit points and <code>250</code> mana, and that the boss has <code>13</code> hit points and <code>8</code> damage:</p>
+<pre><code>-- Player turn --
+- Player has 10 hit points, 0 armor, 250 mana
+- Boss has 13 hit points
+Player casts Poison.
+
+-- Boss turn --
+- Player has 10 hit points, 0 armor, 77 mana
+- Boss has 13 hit points
+Poison deals 3 damage; its timer is now 5.
+Boss attacks for 8 damage.
+
+-- Player turn --
+- Player has 2 hit points, 0 armor, 77 mana
+- Boss has 10 hit points
+Poison deals 3 damage; its timer is now 4.
+Player casts Magic Missile, dealing 4 damage.
+
+-- Boss turn --
+- Player has 2 hit points, 0 armor, 24 mana
+- Boss has 3 hit points
+Poison deals 3 damage. This kills the boss, and the player wins.
+</code></pre>
+<p>Now, suppose the same initial conditions, except that the boss has <code>14</code> hit points instead:</p>
+<pre><code>-- Player turn --
+- Player has 10 hit points, 0 armor, 250 mana
+- Boss has 14 hit points
+Player casts Recharge.
+
+-- Boss turn --
+- Player has 10 hit points, 0 armor, 21 mana
+- Boss has 14 hit points
+Recharge provides 101 mana; its timer is now 4.
+Boss attacks for 8 damage!
+
+-- Player turn --
+- Player has 2 hit points, 0 armor, 122 mana
+- Boss has 14 hit points
+Recharge provides 101 mana; its timer is now 3.
+Player casts Shield, increasing armor by 7.
+
+-- Boss turn --
+- Player has 2 hit points, 7 armor, 110 mana
+- Boss has 14 hit points
+Shield's timer is now 5.
+Recharge provides 101 mana; its timer is now 2.
+Boss attacks for 8 - 7 = 1 damage!
+
+-- Player turn --
+- Player has 1 hit point, 7 armor, 211 mana
+- Boss has 14 hit points
+Shield's timer is now 4.
+Recharge provides 101 mana; its timer is now 1.
+Player casts Drain, dealing 2 damage, and healing 2 hit points.
+
+-- Boss turn --
+- Player has 3 hit points, 7 armor, 239 mana
+- Boss has 12 hit points
+Shield's timer is now 3.
+Recharge provides 101 mana; its timer is now 0.
+Recharge wears off.
+Boss attacks for 8 - 7 = 1 damage!
+
+-- Player turn --
+- Player has 2 hit points, 7 armor, 340 mana
+- Boss has 12 hit points
+Shield's timer is now 2.
+Player casts Poison.
+
+-- Boss turn --
+- Player has 2 hit points, 7 armor, 167 mana
+- Boss has 12 hit points
+Shield's timer is now 1.
+Poison deals 3 damage; its timer is now 5.
+Boss attacks for 8 - 7 = 1 damage!
+
+-- Player turn --
+- Player has 1 hit point, 7 armor, 167 mana
+- Boss has 9 hit points
+Shield's timer is now 0.
+Shield wears off, decreasing armor by 7.
+Poison deals 3 damage; its timer is now 4.
+Player casts Magic Missile, dealing 4 damage.
+
+-- Boss turn --
+- Player has 1 hit point, 0 armor, 114 mana
+- Boss has 2 hit points
+Poison deals 3 damage. This kills the boss, and the player wins.
+</code></pre>
+<p>You start with <em>50 hit points</em> and <em>500 mana points</em>. The boss's actual stats are in your puzzle input. What is the <em>least amount of mana</em> you can spend and still win the fight?  (Do not include mana recharge effects as "spending" negative mana.)</p>
+</article>
+<p>To begin, <a href="22/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="22/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Wizard+Simulator+20XX%22+%2D+Day+22+%2D+Advent+of+Code+2015&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2015%2Fday%2F22&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Wizard+Simulator+20XX%22+%2D+Day+22+%2D+Advent+of+Code+2015+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2015%2Fday%2F22';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

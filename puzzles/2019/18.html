@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 18 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">{:year </span><a href="/2019">2019</a><span class="title-event-wrap">}</span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://about.sourcegraph.com/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Sourcegraph</a> - Build the new standard developer platform on a globally-distributed remote-first team. We value ownership, autonomy, communication, and transparency.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 18: Many-Worlds Interpretation ---</h2><p>As you approach Neptune, a planetary security system detects you and activates a giant <a href="https://en.wikipedia.org/wiki/Tractor_beam">tractor beam</a> on <a href="https://en.wikipedia.org/wiki/Triton_(moon)">Triton</a>!  You have no choice but to land.</p>
+<p>A scan of the local area reveals only one interesting feature: a massive underground vault.  You generate a map of the tunnels (your puzzle input).  The tunnels are too narrow to move diagonally.</p>
+<p>Only one <em>entrance</em> (marked <code>@</code>) is present among the <em>open passages</em> (marked <code>.</code>) and <em>stone walls</em> (<code>#</code>), but you also detect an assortment of <em>keys</em> (shown as lowercase letters) and <em>doors</em> (shown as uppercase letters). Keys of a given letter open the door of the same letter: <code>a</code> opens <code>A</code>, <code>b</code> opens <code>B</code>, and so on.  You aren't sure which key you need to disable the tractor beam, so you'll need to <em>collect all of them</em>.</p>
+<p>For example, suppose you have the following map:</p>
+<pre><code>#########
+#b.A.@.a#
+#########
+</code></pre>
+<p>Starting from the entrance (<code>@</code>), you can only access a large door (<code>A</code>) and a key (<code>a</code>). Moving toward the door doesn't help you, but you can move <code>2</code> steps to collect the key, unlocking <code>A</code> in the process:</p>
+<pre><code>#########
+#b.....@#
+#########
+</code></pre>
+<p>Then, you can move <code>6</code> steps to collect the only other key, <code>b</code>:</p>
+<pre><code>#########
+#@......#
+#########
+</code></pre>
+<p>So, collecting every key took a total of <code><em>8</em></code> steps.</p>
+<p>Here is a larger example:</p>
+<pre><code>########################
+#f.D.E.e.C.b.A.@.a.B.c.#
+######################.#
+#d.....................#
+########################
+</code></pre>
+<p>The only reasonable move is to take key <code>a</code> and unlock door <code>A</code>:</p>
+<pre><code>########################
+#f.D.E.e.C.b.....@.B.c.#
+######################.#
+#d.....................#
+########################
+</code></pre>
+<p>Then, do the same with key <code>b</code>:</p>
+<pre><code>########################
+#f.D.E.e.C.@.........c.#
+######################.#
+#d.....................#
+########################
+</code></pre>
+<p>...and the same with key <code>c</code>:</p>
+<pre><code>########################
+#f.D.E.e.............@.#
+######################.#
+#d.....................#
+########################
+</code></pre>
+<p>Now, you have a choice between keys <code>d</code> and <code>e</code>.  While key <code>e</code> is closer, collecting it now would be slower in the long run than collecting key <code>d</code> first, so that's the best choice:</p>
+<pre><code>########################
+#f...E.e...............#
+######################.#
+#@.....................#
+########################
+</code></pre>
+<p>Finally, collect key <code>e</code> to unlock door <code>E</code>, then collect key <code>f</code>, taking a grand total of <code><em>86</em></code> steps.</p>
+<p>Here are a few more examples:</p>
+<ul>
+<li><pre><code>########################
+#...............b.C.D.f#
+#.######################
+#.....@.a.B.c.d.A.e.F.g#
+########################
+</code></pre>
+<p>Shortest path is <code>132</code> steps: <code>b</code>, <code>a</code>, <code>c</code>, <code>d</code>, <code>f</code>, <code>e</code>, <code>g</code></p></li>
+<li><pre><code>#################
+#i.G..c...e..H.p#
+########.########
+#j.A..b...f..D.o#
+########@########
+#k.E..a...g..B.n#
+########.########
+#l.F..d...h..C.m#
+#################
+</code></pre>
+<p>Shortest paths are <code>136</code> steps;<br/>one is: <code>a</code>, <code>f</code>, <code>b</code>, <code>j</code>, <code>g</code>, <code>n</code>, <code>h</code>, <code>d</code>, <code>l</code>, <code>o</code>, <code>e</code>, <code>p</code>, <code>c</code>, <code>i</code>, <code>k</code>, <code>m</code></p></li>
+<li><pre><code>########################
+#@..............ac.GI.b#
+###d#e#f################
+###A#B#C################
+###g#h#i################
+########################
+</code></pre>
+<p>Shortest paths are <code>81</code> steps; one is: <code>a</code>, <code>c</code>, <code>f</code>, <code>i</code>, <code>d</code>, <code>g</code>, <code>b</code>, <code>e</code>, <code>h</code></p></li>
+</ul>
+<p><em>How many steps is the shortest path that collects all of the keys?</em></p>
+</article>
+<p>Your puzzle answer was <code>5402</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You arrive at the vault only to <span title="To see the inspiration for this puzzle, look up 'Link to the Past Randomizer Multiworld'.">discover</span> that there is not one vault, but <em>four</em> - each with its own entrance.</p>
+<p>On your map, find the area in the middle that looks like this:</p>
+<pre><code>...
+.@.
+...
+</code></pre>
+<p>Update your map to instead use the correct data:</p>
+<pre><code>@#@
+###
+@#@
+</code></pre>
+<p>This change will split your map into four separate sections, each with its own entrance:</p>
+<pre><code>#######       #######
+#a.#Cd#       #a.#Cd#
+##...##       ##<em>@#@</em>##
+##.@.##  --&gt;  ##<em>###</em>##
+##...##       ##<em>@#@</em>##
+#cB#Ab#       #cB#Ab#
+#######       #######
+</code></pre>
+<p>Because some of the keys are for doors in other vaults, it would take much too long to collect all of the keys by yourself.  Instead, you deploy four remote-controlled robots. Each starts at one of the entrances (<code>@</code>).</p>
+<p>Your goal is still to <em>collect all of the keys in the fewest steps</em>, but now, each robot has its own position and can move independently.  You can only remotely control a single robot at a time. Collecting a key instantly unlocks any corresponding doors, regardless of the vault in which the key or door is found.</p>
+<p>For example, in the map above, the top-left robot first collects key <code>a</code>, unlocking door <code>A</code> in the bottom-right vault:</p>
+<pre><code>#######
+#@.#Cd#
+##.#@##
+#######
+##@#@##
+#cB#.b#
+#######
+</code></pre>
+<p>Then, the bottom-right robot collects key <code>b</code>, unlocking door <code>B</code> in the bottom-left vault:</p>
+<pre><code>#######
+#@.#Cd#
+##.#@##
+#######
+##@#.##
+#c.#.@#
+#######
+</code></pre>
+<p>Then, the bottom-left robot collects key <code>c</code>:</p>
+<pre><code>#######
+#@.#.d#
+##.#@##
+#######
+##.#.##
+#@.#.@#
+#######
+</code></pre>
+<p>Finally, the top-right robot collects key <code>d</code>:</p>
+<pre><code>#######
+#@.#.@#
+##.#.##
+#######
+##.#.##
+#@.#.@#
+#######
+</code></pre>
+<p>In this example, it only took <code><em>8</em></code> steps to collect all of the keys.</p>
+<p>Sometimes, multiple robots might have keys available, or a robot might have to wait for multiple keys to be collected:</p>
+<pre><code>###############
+#d.ABC.#.....a#
+######@#@######
+###############
+######@#@######
+#b.....#.....c#
+###############
+</code></pre>
+<p>First, the top-right, bottom-left, and bottom-right robots take turns collecting keys <code>a</code>, <code>b</code>, and <code>c</code>, a total of <code>6 + 6 + 6 = 18</code> steps. Then, the top-left robot can access key <code>d</code>, spending another <code>6</code> steps; collecting all of the keys here takes a minimum of <code><em>24</em></code> steps.</p>
+<p>Here's a more complex example:</p>
+<pre><code>#############
+#DcBa.#.GhKl#
+#.###@#@#I###
+#e#d#####j#k#
+###C#@#@###J#
+#fEbA.#.FgHi#
+#############
+</code></pre>
+<ul>
+<li>Top-left robot collects key <code>a</code>.</li>
+<li>Bottom-left robot collects key <code>b</code>.</li>
+<li>Top-left robot collects key <code>c</code>.</li>
+<li>Bottom-left robot collects key <code>d</code>.</li>
+<li>Top-left robot collects key <code>e</code>.</li>
+<li>Bottom-left robot collects key <code>f</code>.</li>
+<li>Bottom-right robot collects key <code>g</code>.</li>
+<li>Top-right robot collects key <code>h</code>.</li>
+<li>Bottom-right robot collects key <code>i</code>.</li>
+<li>Top-right robot collects key <code>j</code>.</li>
+<li>Bottom-right robot collects key <code>k</code>.</li>
+<li>Top-right robot collects key <code>l</code>.</li>
+</ul>
+<p>In the above example, the fewest steps to collect all of the keys is <code><em>32</em></code>.</p>
+<p>Here's an example with more choices:</p>
+<pre><code>#############
+#g#f.D#..h#l#
+#F###e#E###.#
+#dCba@#@BcIJ#
+#############
+#nK.L@#@G...#
+#M###N#H###.#
+#o#m..#i#jk.#
+#############
+</code></pre>
+<p>One solution with the fewest steps is:</p>
+<ul>
+<li>Top-left robot collects key <code>e</code>.</li>
+<li>Top-right robot collects key <code>h</code>.</li>
+<li>Bottom-right robot collects key <code>i</code>.</li>
+<li>Top-left robot collects key <code>a</code>.</li>
+<li>Top-left robot collects key <code>b</code>.</li>
+<li>Top-right robot collects key <code>c</code>.</li>
+<li>Top-left robot collects key <code>d</code>.</li>
+<li>Top-left robot collects key <code>f</code>.</li>
+<li>Top-left robot collects key <code>g</code>.</li>
+<li>Bottom-right robot collects key <code>k</code>.</li>
+<li>Bottom-right robot collects key <code>j</code>.</li>
+<li>Top-right robot collects key <code>l</code>.</li>
+<li>Bottom-left robot collects key <code>n</code>.</li>
+<li>Bottom-left robot collects key <code>m</code>.</li>
+<li>Bottom-left robot collects key <code>o</code>.</li>
+</ul>
+<p>This example requires at least <code><em>72</em></code> steps to collect all keys.</p>
+<p>After updating your map and using the remote-controlled robots, <em>what is the fewest steps necessary to collect all of the keys?</em></p>
+</article>
+<p>Your puzzle answer was <code>2138</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="18/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Many%2DWorlds+Interpretation%22+%2D+Day+18+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F18&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Many%2DWorlds+Interpretation%22+%2D+Day+18+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F18';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

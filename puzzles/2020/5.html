@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 5 - Advent of Code 2020</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2020/about">[About]</a></li><li><a href="/2020/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2020/settings">[Settings]</a></li><li><a href="/2020/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2020/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">var y=</span><a href="/2020">2020</a><span class="title-event-wrap">;</span></h1><nav><ul><li><a href="/2020">[Calendar]</a></li><li><a href="/2020/support">[AoC++]</a></li><li><a href="/2020/sponsors">[Sponsors]</a></li><li><a href="/2020/leaderboard">[Leaderboard]</a></li><li><a href="/2020/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2020/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://www.ing.jobs/Global/Careers/expertise/Tech.htm" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">ING</a> - ING partners up with Advent of Code. Will you join?</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 5: Binary Boarding ---</h2><p>You board your plane only to discover a new problem: you dropped your boarding pass! You aren't sure which seat is yours, and all of the flight attendants are busy with the flood of people that suddenly made it through passport control.</p>
+<p>You write a <span title="No problem!">quick program</span> to use your phone's camera to scan all of the nearby boarding passes (your puzzle input); perhaps you can find your seat through process of elimination.</p>
+<p>Instead of <a target="_blank" href="https://www.youtube.com/watch?v=oAHbLRjF0vo">zones or groups</a>, this airline uses <em>binary space partitioning</em> to seat people. A seat might be specified like <code>FBFBBFFRLR</code>, where <code>F</code> means "front", <code>B</code> means "back", <code>L</code> means "left", and <code>R</code> means "right".</p>
+<p>The first 7 characters will either be <code>F</code> or <code>B</code>; these specify exactly one of the <em>128 rows</em> on the plane (numbered <code>0</code> through <code>127</code>). Each letter tells you which half of a region the given seat is in. Start with the whole list of rows; the first letter indicates whether the seat is in the <em>front</em> (<code>0</code> through <code>63</code>) or the <em>back</em> (<code>64</code> through <code>127</code>). The next letter indicates which half of that region the seat is in, and so on until you're left with exactly one row.</p>
+<p>For example, consider just the first seven characters of <code>FBFBBFFRLR</code>:</p>
+<ul>
+<li>Start by considering the whole range, rows <code>0</code> through <code>127</code>.</li>
+<li><code>F</code> means to take the <em>lower half</em>, keeping rows <code>0</code> through <code>63</code>.</li>
+<li><code>B</code> means to take the <em>upper half</em>, keeping rows <code>32</code> through <code>63</code>.</li>
+<li><code>F</code> means to take the <em>lower half</em>, keeping rows <code>32</code> through <code>47</code>.</li>
+<li><code>B</code> means to take the <em>upper half</em>, keeping rows <code>40</code> through <code>47</code>.</li>
+<li><code>B</code> keeps rows <code>44</code> through <code>47</code>.</li>
+<li><code>F</code> keeps rows <code>44</code> through <code>45</code>.</li>
+<li>The final <code>F</code> keeps the lower of the two, <em>row <code>44</code></em>.</li>
+</ul>
+<p>The last three characters will be either <code>L</code> or <code>R</code>; these specify exactly one of the <em>8 columns</em> of seats on the plane (numbered <code>0</code> through <code>7</code>). The same process as above proceeds again, this time with only three steps.  <code>L</code> means to keep the <em>lower half</em>, while <code>R</code> means to keep the <em>upper half</em>.</p>
+<p>For example, consider just the last 3 characters of <code>FBFBBFFRLR</code>:</p>
+<ul>
+<li>Start by considering the whole range, columns <code>0</code> through <code>7</code>.</li>
+<li><code>R</code> means to take the <em>upper half</em>, keeping columns <code>4</code> through <code>7</code>.</li>
+<li><code>L</code> means to take the <em>lower half</em>, keeping columns <code>4</code> through <code>5</code>.</li>
+<li>The final <code>R</code> keeps the upper of the two, <em>column <code>5</code></em>.</li>
+</ul>
+<p>So, decoding <code>FBFBBFFRLR</code> reveals that it is the seat at <em>row <code>44</code>, column <code>5</code></em>.</p>
+<p>Every seat also has a unique <em>seat ID</em>: multiply the row by 8, then add the column. In this example, the seat has ID <code>44 * 8 + 5 = <em>357</em></code>.</p>
+<p>Here are some other boarding passes:</p>
+<ul>
+<li><code>BFFFBBFRRR</code>: row <code>70</code>, column <code>7</code>, seat ID <code>567</code>.</li>
+<li><code>FFFBBBFRRR</code>: row <code>14</code>, column <code>7</code>, seat ID <code>119</code>.</li>
+<li><code>BBFFBBFRLL</code>: row <code>102</code>, column <code>4</code>, seat ID <code>820</code>.</li>
+</ul>
+<p>As a sanity check, look through your list of boarding passes. <em>What is the highest seat ID on a boarding pass?</em></p>
+</article>
+<p>Your puzzle answer was <code>855</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p><em>Ding!</em> The "fasten seat belt" signs have turned on. Time to find your seat.</p>
+<p>It's a completely full flight, so your seat should be the only missing boarding pass in your list.  However, there's a catch: some of the seats at the very front and back of the plane don't exist on this aircraft, so they'll be missing from your list as well.</p>
+<p>Your seat wasn't at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.</p>
+<p><em>What is the ID of your seat?</em></p>
+</article>
+<p>Your puzzle answer was <code>552</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2020">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="5/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Binary+Boarding%22+%2D+Day+5+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F5&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Binary+Boarding%22+%2D+Day+5+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F5';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

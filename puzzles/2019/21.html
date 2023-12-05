@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 21 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">0.0.0.0:</span><a href="/2019">2019</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="http://educative.io/AdventOfCode" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Educative.io</a> - Gain in-demand tech skills, at the speed you want. Text-based courses with live coding environments help you learn without the fluff.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 21: Springdroid Adventure ---</h2><p>You lift off from Pluto and start flying in the direction of Santa.</p>
+<p>While experimenting further with the tractor beam, you accidentally pull an asteroid directly into your ship!  It deals significant damage to your hull and causes your ship to begin tumbling violently.</p>
+<p>You can send a droid out to investigate, but the tumbling is causing enough <a href="https://en.wikipedia.org/wiki/Artificial_gravity">artificial gravity</a> that one wrong step could send the droid through a hole in the hull and flying out into space.</p>
+<p>The clear choice for this mission is a <span title="I picture the Bouncy enemy from Kirby games.">droid</span> that can <em>jump</em> over the holes in the hull - a <em>springdroid</em>.</p>
+<p>You can use an <a href="9">Intcode</a> program (your puzzle input) running on an <a href="17">ASCII-capable</a> computer to <a href="https://en.wikipedia.org/wiki/Programmable_read-only_memory">program</a> the springdroid. However, springdroids don't run Intcode; instead, they run a simplified assembly language called <em>springscript</em>.</p>
+<p>While a springdroid is certainly capable of navigating the artificial gravity and giant holes, it has one downside: it can only remember at most <em>15</em> springscript instructions.</p>
+<p>The springdroid will move forward automatically, constantly thinking about <em>whether to jump</em>.  The springscript program defines the logic for this decision.</p>
+<p>Springscript programs only use <a href="https://en.wikipedia.org/wiki/Boolean_data_type">Boolean values</a>, not numbers or strings.  Two registers are available: <code>T</code>, the <em>temporary value</em> register, and <code>J</code>, the <em>jump</em> register.  If the jump register is <em>true</em> at the end of the springscript program, the springdroid will try to jump. Both of these registers start with the value <em>false</em>.</p>
+<p>Springdroids have a sensor that can detect <em>whether there is ground</em> at various distances in the direction it is facing; these values are provided in <em>read-only registers</em>.  Your springdroid can detect ground at four distances: one tile away (<code>A</code>), two tiles away (<code>B</code>), three tiles away (<code>C</code>), and four tiles away (<code>D</code>). If there is ground at the given distance, the register will be <em>true</em>; if there is a hole, the register will be <em>false</em>.</p>
+<p>There are only <em>three instructions</em> available in springscript:</p>
+<ul>
+<li><code>AND X Y</code> sets <code>Y</code> to <em>true</em> if both <code>X</code> and <code>Y</code> are <em>true</em>; otherwise, it sets <code>Y</code> to <em>false</em>.</li>
+<li><code>OR X Y</code> sets <code>Y</code> to <em>true</em> if at least one of <code>X</code> or <code>Y</code> is <em>true</em>; otherwise, it sets <code>Y</code> to <em>false</em>.</li>
+<li><code>NOT X Y</code> sets <code>Y</code> to <em>true</em> if <code>X</code> is <em>false</em>; otherwise, it sets <code>Y</code> to <em>false</em>.</li>
+</ul>
+<p>In all three instructions, the second argument (<code>Y</code>) needs to be a <em>writable register</em> (either <code>T</code> or <code>J</code>). The first argument (<code>X</code>) can be <em>any register</em> (including <code>A</code>, <code>B</code>, <code>C</code>, or <code>D</code>).</p>
+<p>For example, the one-instruction program <code>NOT A J</code> means "if the tile immediately in front of me is not ground, jump".</p>
+<p>Or, here is a program that jumps if a three-tile-wide hole (with ground on the other side of the hole) is detected:</p>
+<pre><code>NOT A J
+NOT B T
+AND T J
+NOT C T
+AND T J
+AND D J
+</code></pre>
+<p>The Intcode program expects ASCII inputs and outputs.  It will begin by displaying a prompt; then, input the desired instructions one per line. End each line with a newline (ASCII code <code>10</code>). <em>When you have finished entering your program</em>, provide the command <code>WALK</code> followed by a newline to instruct the springdroid to begin surveying the hull.</p>
+<p>If the springdroid <em>falls into space</em>, an ASCII rendering of the last moments of its life will be produced.  In these, <code>@</code> is the springdroid, <code>#</code> is hull, and <code>.</code> is empty space.  For example, suppose you program the springdroid like this:
+<pre><code>NOT D J
+WALK
+</code></pre>
+<p>This one-instruction program sets <code>J</code> to <em>true</em> if and only if there is no ground four tiles away.  In other words, it attempts to jump into any hole it finds:</p>
+<pre><code>.................
+.................
+<em>@</em>................
+#####.###########
+
+.................
+.................
+.<em>@</em>...............
+#####.###########
+
+.................
+..<em>@</em>..............
+.................
+#####.###########
+
+...<em>@</em>.............
+.................
+.................
+#####.###########
+
+.................
+....<em>@</em>............
+.................
+#####.###########
+
+.................
+.................
+.....<em>@</em>...........
+#####.###########
+
+.................
+.................
+.................
+#####<em>@</em>###########
+</code></pre>
+<p>However, if the springdroid successfully makes it across, it will use an output instruction to indicate the <em>amount of damage to the hull</em> as a single giant integer outside the normal ASCII range.</p>
+<p>Program the springdroid with logic that allows it to survey the hull without falling into space.  <em>What amount of hull damage does it report?</em></p>
+</article>
+<p>Your puzzle answer was <code>19352864</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>There are many areas the springdroid can't reach.  You flip through the manual and discover a way to <em>increase its sensor range</em>.</p>
+<p>Instead of ending your springcode program with <code>WALK</code>, use <code>RUN</code>. Doing this will enable <em>extended sensor mode</em>, capable of sensing ground up to <em>nine tiles away</em>. This data is available in <em>five new read-only registers</em>:</p>
+<ul>
+<li>Register <code>E</code> indicates whether there is ground <em>five</em> tiles away.</li>
+<li>Register <code>F</code> indicates whether there is ground <em>six</em> tiles away.</li>
+<li>Register <code>G</code> indicates whether there is ground <em>seven</em> tiles away.</li>
+<li>Register <code>H</code> indicates whether there is ground <em>eight</em> tiles away.</li>
+<li>Register <code>I</code> indicates whether there is ground <em>nine</em> tiles away.</li>
+</ul>
+<p>All other functions remain the same.</p>
+<p>Successfully survey the rest of the hull by ending your program with <code>RUN</code>.  <em>What amount of hull damage does the springdroid now report?</em></p>
+</article>
+<p>Your puzzle answer was <code>1142488337</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="21/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Springdroid+Adventure%22+%2D+Day+21+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F21&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Springdroid+Adventure%22+%2D+Day+21+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F21';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

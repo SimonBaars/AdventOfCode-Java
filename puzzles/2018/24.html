@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 24 - Advent of Code 2018</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2018/about">[About]</a></li><li><a href="/2018/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2018/settings">[Settings]</a></li><li><a href="/2018/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2018/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">28*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">{year=&gt;</span><a href="/2018">2018</a><span class="title-event-wrap">}</span></h1><nav><ul><li><a href="/2018">[Calendar]</a></li><li><a href="/2018/support">[AoC++]</a></li><li><a href="/2018/sponsors">[Sponsors]</a></li><li><a href="/2018/leaderboard">[Leaderboard]</a></li><li><a href="/2018/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2018/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://rainway.io/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Rainway</a> - Play all your favorite PC games anytime, anywhere, across a variety of different devices.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 24: Immune System Simulator 20XX ---</h2><p>After <a href="https://www.youtube.com/watch?v=NDVjLt_QHL8&t=7" target="_blank">a weird buzzing noise</a>, you appear back at the man's cottage. He seems relieved to see his friend, but quickly notices that the little reindeer caught some kind of cold while out exploring.</p>
+<p>The portly man explains that this reindeer's immune system isn't similar to regular reindeer immune systems:</p>
+<p>The <em>immune system</em> and the <em>infection</em> each have <span title="On second thought, it's pretty similar to regular reindeer immune systems.">an army</span> made up of several <em>groups</em>; each <em>group</em> consists of one or more identical <em>units</em>.  The armies repeatedly <em>fight</em> until only one army has units remaining.</p>
+<p><em>Units</em> within a group all have the same <em>hit points</em> (amount of damage a unit can take before it is destroyed), <em>attack damage</em> (the amount of damage each unit deals), an <em>attack type</em>, an <em>initiative</em> (higher initiative units attack first and win ties), and sometimes <em>weaknesses</em> or <em>immunities</em>. Here is an example group:</p>
+<pre><code>18 units each with 729 hit points (weak to fire; immune to cold, slashing)
+ with an attack that does 8 radiation damage at initiative 10
+</code></pre>
+<p>Each group also has an <em>effective power</em>: the number of units in that group multiplied by their attack damage. The above group has an effective power of <code>18 * 8 = 144</code>. Groups never have zero or negative units; instead, the group is removed from combat.</p>
+<p>Each <em>fight</em> consists of two phases: <em>target selection</em> and <em>attacking</em>.</p>
+<p>During the <em>target selection</em> phase, each group attempts to choose one target. In decreasing order of effective power, groups choose their targets; in a tie, the group with the higher initiative chooses first. The attacking group chooses to target the group in the enemy army to which it would deal the most damage (after accounting for weaknesses and immunities, but not accounting for whether the defending group has enough units to actually receive all of that damage).</p>
+<p>If an attacking group is considering two defending groups to which it would deal equal damage, it chooses to target the defending group with the largest effective power; if there is still a tie, it chooses the defending group with the highest initiative.  If it cannot deal any defending groups damage, it does not choose a target.  Defending groups can only be chosen as a target by one attacking group.</p>
+<p>At the end of the target selection phase, each group has selected zero or one groups to attack, and each group is being attacked by zero or one groups.</p>
+<p>During the <em>attacking</em> phase, each group deals damage to the target it selected, if any. Groups attack in decreasing order of initiative, regardless of whether they are part of the infection or the immune system. (If a group contains no units, it cannot attack.)</p>
+<p>The damage an attacking group deals to a defending group depends on the attacking group's attack type and the defending group's immunities and weaknesses.  By default, an attacking group would deal damage equal to its <em>effective power</em> to the defending group.  However, if the defending group is <em>immune</em> to the attacking group's attack type, the defending group instead takes <em>no damage</em>; if the defending group is <em>weak</em> to the attacking group's attack type, the defending group instead takes <em>double damage</em>.</p>
+<p>The defending group only loses <em>whole units</em> from damage; damage is always dealt in such a way that it kills the most units possible, and any remaining damage to a unit that does not immediately kill it is ignored. For example, if a defending group contains <code>10</code> units with <code>10</code> hit points each and receives <code>75</code> damage, it loses exactly <code>7</code> units and is left with <code>3</code> units at full health.</p>
+<p>After the fight is over, if both armies still contain units, a new fight begins; combat only ends once one army has lost all of its units.</p>
+<p>For example, consider the following armies:</p>
+<pre><code>Immune System:
+17 units each with 5390 hit points (weak to radiation, bludgeoning) with
+ an attack that does 4507 fire damage at initiative 2
+989 units each with 1274 hit points (immune to fire; weak to bludgeoning,
+ slashing) with an attack that does 25 slashing damage at initiative 3
+
+Infection:
+801 units each with 4706 hit points (weak to radiation) with an attack
+ that does 116 bludgeoning damage at initiative 1
+4485 units each with 2961 hit points (immune to radiation; weak to fire,
+ cold) with an attack that does 12 slashing damage at initiative 4
+</code></pre>
+<p>If these armies were to enter combat, the following fights, including details during the target selection and attacking phases, would take place:</p>
+<pre><code>Immune System:
+Group 1 contains 17 units
+Group 2 contains 989 units
+Infection:
+Group 1 contains 801 units
+Group 2 contains 4485 units
+
+Infection group 1 would deal defending group 1 185832 damage
+Infection group 1 would deal defending group 2 185832 damage
+Infection group 2 would deal defending group 2 107640 damage
+Immune System group 1 would deal defending group 1 76619 damage
+Immune System group 1 would deal defending group 2 153238 damage
+Immune System group 2 would deal defending group 1 24725 damage
+
+Infection group 2 attacks defending group 2, killing 84 units
+Immune System group 2 attacks defending group 1, killing 4 units
+Immune System group 1 attacks defending group 2, killing 51 units
+Infection group 1 attacks defending group 1, killing 17 units
+</code></pre>
+<pre><code>Immune System:
+Group 2 contains 905 units
+Infection:
+Group 1 contains 797 units
+Group 2 contains 4434 units
+
+Infection group 1 would deal defending group 2 184904 damage
+Immune System group 2 would deal defending group 1 22625 damage
+Immune System group 2 would deal defending group 2 22625 damage
+
+Immune System group 2 attacks defending group 1, killing 4 units
+Infection group 1 attacks defending group 2, killing 144 units
+</code></pre>
+<pre><code>Immune System:
+Group 2 contains 761 units
+Infection:
+Group 1 contains 793 units
+Group 2 contains 4434 units
+
+Infection group 1 would deal defending group 2 183976 damage
+Immune System group 2 would deal defending group 1 19025 damage
+Immune System group 2 would deal defending group 2 19025 damage
+
+Immune System group 2 attacks defending group 1, killing 4 units
+Infection group 1 attacks defending group 2, killing 143 units
+</code></pre>
+<pre><code>Immune System:
+Group 2 contains 618 units
+Infection:
+Group 1 contains 789 units
+Group 2 contains 4434 units
+
+Infection group 1 would deal defending group 2 183048 damage
+Immune System group 2 would deal defending group 1 15450 damage
+Immune System group 2 would deal defending group 2 15450 damage
+
+Immune System group 2 attacks defending group 1, killing 3 units
+Infection group 1 attacks defending group 2, killing 143 units
+</code></pre>
+<pre><code>Immune System:
+Group 2 contains 475 units
+Infection:
+Group 1 contains 786 units
+Group 2 contains 4434 units
+
+Infection group 1 would deal defending group 2 182352 damage
+Immune System group 2 would deal defending group 1 11875 damage
+Immune System group 2 would deal defending group 2 11875 damage
+
+Immune System group 2 attacks defending group 1, killing 2 units
+Infection group 1 attacks defending group 2, killing 142 units
+</code></pre>
+<pre><code>Immune System:
+Group 2 contains 333 units
+Infection:
+Group 1 contains 784 units
+Group 2 contains 4434 units
+
+Infection group 1 would deal defending group 2 181888 damage
+Immune System group 2 would deal defending group 1 8325 damage
+Immune System group 2 would deal defending group 2 8325 damage
+
+Immune System group 2 attacks defending group 1, killing 1 unit
+Infection group 1 attacks defending group 2, killing 142 units
+</code></pre>
+<pre><code>Immune System:
+Group 2 contains 191 units
+Infection:
+Group 1 contains 783 units
+Group 2 contains 4434 units
+
+Infection group 1 would deal defending group 2 181656 damage
+Immune System group 2 would deal defending group 1 4775 damage
+Immune System group 2 would deal defending group 2 4775 damage
+
+Immune System group 2 attacks defending group 1, killing 1 unit
+Infection group 1 attacks defending group 2, killing 142 units
+</code></pre>
+<pre><code>Immune System:
+Group 2 contains 49 units
+Infection:
+Group 1 contains 782 units
+Group 2 contains 4434 units
+
+Infection group 1 would deal defending group 2 181424 damage
+Immune System group 2 would deal defending group 1 1225 damage
+Immune System group 2 would deal defending group 2 1225 damage
+
+Immune System group 2 attacks defending group 1, killing 0 units
+Infection group 1 attacks defending group 2, killing 49 units
+</code></pre>
+<pre><code>Immune System:
+No groups remain.
+Infection:
+Group 1 contains 782 units
+Group 2 contains 4434 units
+</code></pre>
+<p>In the example above, the winning army ends up with <code>782 + 4434 = <em>5216</em></code> units.</p>
+<p>You scan the reindeer's condition (your puzzle input); the white-bearded man looks nervous.  As it stands now, <em>how many units would the winning army have</em>?</p>
+</article>
+<p>To begin, <a href="24/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="24/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Immune+System+Simulator+20XX%22+%2D+Day+24+%2D+Advent+of+Code+2018&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F24&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Immune+System+Simulator+20XX%22+%2D+Day+24+%2D+Advent+of+Code+2018+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F24';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

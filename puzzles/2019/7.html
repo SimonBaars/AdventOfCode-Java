@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 7 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;<span class="title-event-wrap">{&apos;year&apos;:</span><a href="/2019">2019</a><span class="title-event-wrap">}</span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://www.novetta.com/careers/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Novetta</a> - While Santa has elves, we have TS/SCI data scientists rapidly prototyping ML solutions...hot chocolate included. Check us out.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 7: Amplification Circuit ---</h2><p>Based on the navigational maps, you're going to need to send more power to your ship's thrusters to reach Santa in time. To do this, you'll need to configure a series of <a href="https://en.wikipedia.org/wiki/Amplifier">amplifiers</a> already installed on the ship.</p>
+<p>There are five <span title="As you can see, I know exactly how rockets work.">amplifiers connected in series</span>; each one receives an input signal and produces an output signal.  They are connected such that the first amplifier's output leads to the second amplifier's input, the second amplifier's output leads to the third amplifier's input, and so on.  The first amplifier's input value is <code>0</code>, and the last amplifier's output leads to your ship's thrusters.</p>
+<pre><code>    O-------O  O-------O  O-------O  O-------O  O-------O
+0 -&gt;| Amp A |-&gt;| Amp B |-&gt;| Amp C |-&gt;| Amp D |-&gt;| Amp E |-&gt; (to thrusters)
+    O-------O  O-------O  O-------O  O-------O  O-------O
+</code></pre>
+<p>The Elves have sent you some <em>Amplifier Controller Software</em> (your puzzle input), a program that should run on your <a href="5">existing Intcode computer</a>. Each amplifier will need to run a copy of the program.</p>
+<p>When a copy of the program starts running on an amplifier, it will first use an input instruction to ask the amplifier for its current <em>phase setting</em> (an integer from <code>0</code> to <code>4</code>). Each phase setting is used <em>exactly once</em>, but the Elves can't remember which amplifier needs which phase setting.</p>
+<p>The program will then call another input instruction to get the amplifier's input signal, compute the correct output signal, and supply it back to the amplifier with an output instruction. (If the amplifier has not yet received an input signal, it waits until one arrives.)</p>
+<p>Your job is to <em>find the largest output signal that can be sent to the thrusters</em> by trying every possible combination of phase settings on the amplifiers. Make sure that memory is not shared or reused between copies of the program.</p>
+<p>For example, suppose you want to try the phase setting sequence <code>3,1,2,4,0</code>, which would mean setting amplifier <code>A</code> to phase setting <code>3</code>, amplifier <code>B</code> to setting <code>1</code>, <code>C</code> to <code>2</code>, <code>D</code> to <code>4</code>, and <code>E</code> to <code>0</code>. Then, you could determine the output signal that gets sent from amplifier <code>E</code> to the thrusters with the following steps:</p>
+<ul>
+<li>Start the copy of the amplifier controller software that will run on amplifier <code>A</code>. At its first input instruction, provide it the amplifier's phase setting, <code>3</code>.  At its second input instruction, provide it the input signal, <code>0</code>.  After some calculations, it will use an output instruction to indicate the amplifier's output signal.</li>
+<li>Start the software for amplifier <code>B</code>. Provide it the phase setting (<code>1</code>) and then whatever output signal was produced from amplifier <code>A</code>. It will then produce a new output signal destined for amplifier <code>C</code>.</li>
+<li>Start the software for amplifier <code>C</code>, provide the phase setting (<code>2</code>) and the value from amplifier <code>B</code>, then collect its output signal.</li>
+<li>Run amplifier <code>D</code>'s software, provide the phase setting (<code>4</code>) and input value, and collect its output signal.</li>
+<li>Run amplifier <code>E</code>'s software, provide the phase setting (<code>0</code>) and input value, and collect its output signal.</li>
+</ul>
+<p>The final output signal from amplifier <code>E</code> would be sent to the thrusters. However, this phase setting sequence may not have been the best one; another sequence might have sent a higher signal to the thrusters.</p>
+<p>Here are some example programs:</p>
+<ul>
+<li><p>Max thruster signal <em><code>43210</code></em> (from phase setting sequence <code>4,3,2,1,0</code>):</p><pre><code>3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0</code></pre></li>
+<li><p>Max thruster signal <em><code>54321</code></em> (from phase setting sequence <code>0,1,2,3,4</code>):</p><pre><code>3,23,3,24,1002,24,10,24,1002,23,-1,23,<br/>101,5,23,23,1,24,23,23,4,23,99,0,0</code></pre></li>
+<li><p>Max thruster signal <em><code>65210</code></em> (from phase setting sequence <code>1,0,4,3,2</code>):</p><pre><code>3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,<br/>1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0</code></pre></li>
+</ul>
+<p>Try every combination of phase settings on the amplifiers.  <em>What is the highest signal that can be sent to the thrusters?</em></p>
+</article>
+<p>Your puzzle answer was <code>116680</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>It's no good - in this configuration, the amplifiers can't generate a large enough output signal to produce the thrust you'll need.  The Elves quickly talk you through rewiring the amplifiers into a <em>feedback loop</em>:</p>
+<pre><code>      O-------O  O-------O  O-------O  O-------O  O-------O
+0 -+-&gt;| Amp A |-&gt;| Amp B |-&gt;| Amp C |-&gt;| Amp D |-&gt;| Amp E |-.
+   |  O-------O  O-------O  O-------O  O-------O  O-------O |
+   |                                                        |
+   '--------------------------------------------------------+
+                                                            |
+                                                            v
+                                                     (to thrusters)
+</code></pre>
+<p>Most of the amplifiers are connected as they were before; amplifier <code>A</code>'s output is connected to amplifier <code>B</code>'s input, and so on. <em>However,</em> the output from amplifier <code>E</code> is now connected into amplifier <code>A</code>'s input. This creates the feedback loop: the signal will be sent through the amplifiers <em>many times</em>.</p>
+<p>In feedback loop mode, the amplifiers need <em>totally different phase settings</em>: integers from <code>5</code> to <code>9</code>, again each used exactly once. These settings will cause the Amplifier Controller Software to repeatedly take input and produce output many times before halting. Provide each amplifier its phase setting at its first input instruction; all further input/output instructions are for signals.</p>
+<p>Don't restart the Amplifier Controller Software on any amplifier during this process. Each one should continue receiving and sending signals until it halts.</p>
+<p>All signals sent or received in this process will be between pairs of amplifiers except the very first signal and the very last signal. To start the process, a <code>0</code> signal is sent to amplifier <code>A</code>'s input <em>exactly once</em>.</p>
+<p>Eventually, the software on the amplifiers will halt after they have processed the final loop. When this happens, the last output signal from amplifier <code>E</code> is sent to the thrusters. Your job is to <em>find the largest output signal that can be sent to the thrusters</em> using the new phase settings and feedback loop arrangement.</p>
+<p>Here are some example programs:</p>
+<ul>
+<li><p>Max thruster signal <em><code>139629729</code></em> (from phase setting sequence <code>9,8,7,6,5</code>):</p><pre><code>3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,<br/>27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5</code></pre></li>
+<li><p>Max thruster signal <em><code>18216</code></em> (from phase setting sequence <code>9,7,8,5,6</code>):</p><pre><code>3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,<br/>-5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,<br/>53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10</code></pre></li>
+</ul>
+<p>Try every combination of the new phase settings on the amplifier feedback loop.  <em>What is the highest signal that can be sent to the thrusters?</em></p>
+</article>
+<p>Your puzzle answer was <code>89603079</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="7/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Amplification+Circuit%22+%2D+Day+7+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F7&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Amplification+Circuit%22+%2D+Day+7+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F7';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 25 - Advent of Code 2022</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2022/about">[About]</a></li><li><a href="/2022/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2022/settings">[Settings]</a></li><li><a href="/2022/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2022/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">λy.</span><a href="/2022">2022</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2022">[Calendar]</a></li><li><a href="/2022/support">[AoC++]</a></li><li><a href="/2022/sponsors">[Sponsors]</a></li><li><a href="/2022/leaderboard">[Leaderboard]</a></li><li><a href="/2022/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2022/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://sentry.io/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Sentry.io</a> - More than 3.5 million developers across 85,000 organizations ship better software, faster, with Sentry. What are you waiting for?</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 25: Full of Hot Air ---</h2><p>As the expedition finally reaches the extraction point, several large <a href="https://en.wikipedia.org/wiki/Hot_air_balloon" target="_blank">hot air balloons</a> drift down to meet you. Crews quickly start unloading the equipment the balloons brought: many hot air balloon kits, some fuel tanks, and a <em>fuel heating machine</em>.</p>
+<p>The fuel heating machine is a new addition to the process. When this mountain was a volcano, the ambient temperature was more reasonable; now, it's so cold that the fuel won't work at all without being warmed up first.</p>
+<p>The Elves, seemingly in an attempt to make the new machine feel welcome, have already attached a pair of <a href="https://en.wikipedia.org/wiki/Googly_eyes" target="_blank">googly eyes</a> and started calling it "Bob".</p>
+<p>To heat the fuel, Bob needs to know the total amount of fuel that will be processed ahead of time so it can correctly calibrate heat output and flow rate. This amount is simply the <em>sum</em> of the fuel requirements of all of the hot air balloons, and those fuel requirements are even listed clearly on the side of each hot air balloon's burner.</p>
+<p>You assume the Elves will have no trouble adding up some numbers and are about to go back to figuring out which balloon is yours when you get a tap on the shoulder. Apparently, the fuel requirements use numbers written in a format the Elves don't recognize; predictably, they'd like your help deciphering them.</p>
+<p>You make a list of all of the fuel requirements (your puzzle input), but you don't recognize the number format either. For example:</p>
+<pre><code>1=-0-2
+12111
+2=0=
+21
+2=01
+111
+20012
+112
+1=-1=
+1-12
+12
+1=
+122
+</code></pre>
+<p>Fortunately, Bob is labeled with a support phone number. Not to be deterred, you call and ask for help.</p>
+<p>"That's right, just supply the fuel amount to the-- oh, for more than one burner? No problem, you just need to add together our Special Numeral-Analogue Fuel Units. Patent pending! They're way better than normal numbers for--"</p>
+<p>You mention that it's quite cold up here and ask if they can skip ahead.</p>
+<p>"Okay, our Special Numeral-Analogue Fuel Units - SNAFU for short - are sort of like normal numbers. You know how starting on the right, normal numbers have a ones place, a tens place, a hundreds place, and so on, where the digit in each place tells you how many of that value you have?"</p>
+<p>"SNAFU works the same way, except it uses powers of five instead of ten. Starting from the right, you have a ones place, a fives place, a twenty-fives place, a one-hundred-and-twenty-fives place, and so on. It's that easy!"</p>
+<p>You ask why some of the digits look like <code>-</code> or <code>=</code> instead of "digits".</p>
+<p>"You know, I never did ask the engineers why they did that. Instead of using digits four through zero, the digits are <code><em>2</em></code>, <code><em>1</em></code>, <code><em>0</em></code>, <em>minus</em> (written <code>-</code>), and <em>double-minus</em> (written <code>=</code>). Minus is worth -1, and double-minus is worth -2."</p>
+<p>"So, because ten (in normal numbers) is two fives and no ones, in SNAFU it is written <code>20</code>. Since eight (in normal numbers) is two fives minus two ones, it is written <code>2=</code>."</p>
+<p>"You can do it the other direction, too. Say you have the SNAFU number <code>2=-01</code>. That's <code>2</code> in the 625s place, <code>=</code> (double-minus) in the 125s place, <code>-</code> (minus) in the 25s place, <code>0</code> in the 5s place, and <code>1</code> in the 1s place. (2 times 625) plus (-2 times 125) plus (-1 times 25) plus (0 times 5) plus (1 times 1). That's 1250 plus -250 plus -25 plus 0 plus 1. <em>976</em>!"</p>
+<p>"I see here that you're connected via our premium uplink service, so I'll transmit our handy SNAFU brochure to you now. Did you need anything else?"</p>
+<p>You ask if the fuel will even work in these temperatures.</p>
+<p>"Wait, it's <em>how</em> cold? There's no <em>way</em> the fuel - or <em>any</em> fuel - would work in those conditions! There are only a few places in the-- where did you say you are again?"</p>
+<p>Just then, you notice one of the Elves pour a few drops from a snowflake-shaped container into one of the fuel tanks, thank the support representative for their time, and disconnect the call.</p>
+<p>The SNAFU brochure contains a few more examples of decimal ("normal") numbers and their SNAFU counterparts:</p>
+<pre><code>  Decimal          SNAFU
+        1              1
+        2              2
+        3             1=
+        4             1-
+        5             10
+        6             11
+        7             12
+        8             2=
+        9             2-
+       10             20
+       15            1=0
+       20            1-0
+     2022         1=11-2
+    12345        1-0---0
+314159265  1121-1110-1=0
+</code></pre>
+<p>Based on this process, the SNAFU numbers in the example above can be converted to decimal numbers as follows:</p>
+<pre><code> SNAFU  Decimal
+1=-0-2     1747
+ 12111      906
+  2=0=      198
+    21       11
+  2=01      201
+   111       31
+ 20012     1257
+   112       32
+ 1=-1=      353
+  1-12      107
+    12        7
+    1=        3
+   122       37
+</code></pre>
+<p>In decimal, the sum of these numbers is <code>4890</code>.</p>
+<p>As you go to input this number on Bob's console, you discover that some buttons you expected are missing. Instead, you are met with buttons labeled <code>=</code>, <code>-</code>, <code>0</code>, <code>1</code>, and <code>2</code>. Bob needs the input value expressed as a SNAFU number, not in decimal.</p>
+<p>Reversing the process, you can determine that for the decimal number <code>4890</code>, the SNAFU number you need to supply to Bob's console is <code><em>2=-1=0</em></code>.</p>
+<p>The Elves are starting to get cold. <em>What SNAFU number do you supply to Bob's console?</em></p>
+</article>
+<p>Your puzzle answer was <code>2=020-===0-1===2=020</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The <span title="You notice an engraving on the equipment: Balanced Quinary Industries.">hot air balloons</span> quickly carry you to the North Pole. As soon as you land, most of the expedition is escorted directly to a small building attached to the reindeer stables.</p>
+<p>The <em>head smoothie chef</em> has just finished warming up the industrial-grade smoothie blender as you arrive. It will take <em class="star">50 stars</em> to fill the blender. The expedition Elves turn their attention to you, and you begin emptying the fruit from your pack onto the table.</p>
+<p>As you do, a very young Elf - one you recognize from the expedition team - approaches the table and holds up a single <em class="star">star</em> fruit he found. The head smoothie chef places it in the blender.</p>
+<p>Only <em class="star">49 stars</em> to go.</p>
+</article>
+<form method="post" action="25/answer"><input type="hidden" name="level" value="2"/><input type="hidden" name="answer" value="0"/><p>If you like, you can <input type="submit" value="[Start The Blender Again]"/>.</p></form>
+<p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2022">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="25/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Full+of+Hot+Air%22+%2D+Day+25+%2D+Advent+of+Code+2022&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2022%2Fday%2F25&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Full+of+Hot+Air%22+%2D+Day+25+%2D+Advent+of+Code+2022+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2022%2Fday%2F25';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

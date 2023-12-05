@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 24 - Advent of Code 2020</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2020/about">[About]</a></li><li><a href="/2020/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2020/settings">[Settings]</a></li><li><a href="/2020/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2020/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">$year=</span><a href="/2020">2020</a><span class="title-event-wrap">;</span></h1><nav><ul><li><a href="/2020">[Calendar]</a></li><li><a href="/2020/support">[AoC++]</a></li><li><a href="/2020/sponsors">[Sponsors]</a></li><li><a href="/2020/leaderboard">[Leaderboard]</a></li><li><a href="/2020/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2020/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://jobs.americanexpress.com/technology" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">American Express</a> - We architect, code and ship software that makes us an essential part of our customers’ digital lives. Work with the latest tech and back the engineering community through open source. Find your place in tech on #TeamAmex.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 24: Lobby Layout ---</h2><p>Your raft makes it to the tropical island; it turns out that the small crab was an excellent navigator. You make your way to the resort.</p>
+<p>As you enter the lobby, you discover a small problem: the floor is being renovated. You can't even reach the check-in desk until they've finished installing the <em>new tile floor</em>.</p>
+<p>The tiles are all <em>hexagonal</em>; they need to be arranged in a <a href="https://en.wikipedia.org/wiki/Hexagonal_tiling">hex grid</a> with a very specific color pattern. Not in the mood to wait, you offer to help figure out the pattern.</p>
+<p>The tiles are all <em>white</em> on one side and <em>black</em> on the other. They start with the white side facing up. The lobby is large enough to fit whatever pattern might need to appear there.</p>
+<p>A member of the renovation crew gives you a <em>list of the tiles that need to be flipped over</em> (your puzzle input). Each line in the list identifies a single tile that needs to be flipped by giving a series of steps starting from a <em>reference tile</em> in the very center of the room. (Every line starts from the same reference tile.)</p>
+<p>Because the tiles are hexagonal, every tile has <em>six neighbors</em>: east, southeast, southwest, west, northwest, and northeast. These directions are given in your list, respectively, as <code>e</code>, <code>se</code>, <code>sw</code>, <code>w</code>, <code>nw</code>, and <code>ne</code>. A tile is identified by a series of these directions with <em>no delimiters</em>; for example, <code>esenee</code> identifies the tile you land on if you start at the reference tile and then move one tile east, one tile southeast, one tile northeast, and one tile east.</p>
+<p>Each time a tile is identified, it flips from white to black or from black to white. Tiles might be flipped more than once. For example, a line like <code>esew</code> flips a tile immediately adjacent to the reference tile, and a line like <code>nwwswee</code> flips the reference tile itself.</p>
+<p>Here is a larger example:</p>
+<pre><code>sesenwnenenewseeswwswswwnenewsewsw
+neeenesenwnwwswnenewnwwsewnenwseswesw
+seswneswswsenwwnwse
+nwnwneseeswswnenewneswwnewseswneseene
+swweswneswnenwsewnwneneseenw
+eesenwseswswnenwswnwnwsewwnwsene
+sewnenenenesenwsewnenwwwse
+wenwwweseeeweswwwnwwe
+wsweesenenewnwwnwsenewsenwwsesesenwne
+neeswseenwwswnwswswnw
+nenwswwsewswnenenewsenwsenwnesesenew
+enewnwewneswsewnwswenweswnenwsenwsw
+sweneswneswneneenwnewenewwneswswnese
+swwesenesewenwneswnwwneseswwne
+enesenwswwswneneswsenwnewswseenwsese
+wnwnesenesenenwwnenwsewesewsesesew
+nenewswnwewswnenesenwnesewesw
+eneswnwswnwsenenwnwnwwseeswneewsenese
+neswnwewnwnwseenwseesewsenwsweewe
+wseweeenwnesenwwwswnew
+</code></pre>
+<p>In the above example, 10 tiles are flipped once (to black), and 5 more are flipped twice (to black, then back to white). After all of these instructions have been followed, a total of <em><code>10</code></em> tiles are <em>black</em>.</p>
+<p>Go through the renovation crew's list and determine which tiles they need to flip. After all of the instructions have been followed, <em>how many tiles are left with the black side up?</em></p>
+</article>
+<p>Your puzzle answer was <code>479</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The tile floor in the lobby is meant to be a <span title="I need one of these!">living art exhibit</span>. Every day, the tiles are all flipped according to the following rules:</p>
+<ul>
+<li>Any <em>black</em> tile with <em>zero</em> or <em>more than 2</em> black tiles immediately adjacent to it is flipped to <em>white</em>.</li>
+<li>Any <em>white</em> tile with <em>exactly 2</em> black tiles immediately adjacent to it is flipped to <em>black</em>.</li>
+</ul>
+<p>Here, <em>tiles immediately adjacent</em> means the six tiles directly touching the tile in question.</p>
+<p>The rules are applied <em>simultaneously</em> to every tile; put another way, it is first determined which tiles need to be flipped, then they are all flipped at the same time.</p>
+<p>In the above example, the number of black tiles that are facing up after the given number of days has passed is as follows:</p>
+<pre><code>Day 1: 15
+Day 2: 12
+Day 3: 25
+Day 4: 14
+Day 5: 23
+Day 6: 28
+Day 7: 41
+Day 8: 37
+Day 9: 49
+Day 10: 37
+
+Day 20: 132
+Day 30: 259
+Day 40: 406
+Day 50: 566
+Day 60: 788
+Day 70: 1106
+Day 80: 1373
+Day 90: 1844
+Day 100: 2208
+</code></pre>
+<p>After executing this process a total of 100 times, there would be <em><code>2208</code></em> black tiles facing up.</p>
+<p><em>How many tiles will be black after 100 days?</em></p>
+</article>
+<p>Your puzzle answer was <code>4135</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2020">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="24/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Lobby+Layout%22+%2D+Day+24+%2D+Advent+of+Code+2020&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F24&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Lobby+Layout%22+%2D+Day+24+%2D+Advent+of+Code+2020+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2020%2Fday%2F24';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

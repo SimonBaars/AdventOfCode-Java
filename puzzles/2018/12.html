@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 12 - Advent of Code 2018</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2018/about">[About]</a></li><li><a href="/2018/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2018/settings">[Settings]</a></li><li><a href="/2018/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2018/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">28*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">&lt;y&gt;</span><a href="/2018">2018</a><span class="title-event-wrap">&lt;/y&gt;</span></h1><nav><ul><li><a href="/2018">[Calendar]</a></li><li><a href="/2018/support">[AoC++]</a></li><li><a href="/2018/sponsors">[Sponsors]</a></li><li><a href="/2018/leaderboard">[Leaderboard]</a></li><li><a href="/2018/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2018/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://www.honeypot.io/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Honeypot.io</a> - Europe&apos;s Tech Job Platform where companies apply to you with salary and tech stack upfront!</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 12: Subterranean Sustainability ---</h2><p>The year 518 is significantly more underground than your history books implied.  Either that, or you've arrived in a <span title="It's probably this one. Can never be too sure, though.">vast cavern network</span> under the North Pole.</p>
+<p>After exploring a little, you discover a long tunnel that contains a row of small pots as far as you can see to your left and right.  A few of them contain plants - someone is trying to grow things in these geothermally-heated caves.</p>
+<p>The pots are numbered, with <code>0</code> in front of you.  To the left, the pots are numbered <code>-1</code>, <code>-2</code>, <code>-3</code>, and so on; to the right, <code>1</code>, <code>2</code>, <code>3</code>.... Your puzzle input contains a list of pots from <code>0</code> to the right and whether they do (<code>#</code>) or do not (<code>.</code>) currently contain a plant, the <em>initial state</em>. (No other pots currently contain plants.) For example, an initial state of <code>#..##....</code> indicates that pots <code>0</code>, <code>3</code>, and <code>4</code> currently contain plants.</p>
+<p>Your puzzle input also contains some notes you find on a nearby table: someone has been trying to figure out how these plants <em>spread</em> to nearby pots.  Based on the notes, for each generation of plants, a given pot has or does not have a plant based on whether that pot (and the two pots on either side of it) had a plant in the last generation. These are written as <code>LLCRR =&gt; N</code>, where <code>L</code> are pots to the left, <code>C</code> is the current pot being considered, <code>R</code> are the pots to the right, and <code>N</code> is whether the current pot will have a plant in the next generation. For example:</p>
+<ul>
+<li>A note like <code>..#.. =&gt; .</code> means that a pot that contains a plant but with no plants within two pots of it will not have a plant in it during the next generation.</li>
+<li>A note like <code>##.## =&gt; .</code> means that an empty pot with two plants on each side of it will remain empty in the next generation.</li>
+<li>A note like <code>.##.# =&gt; #</code> means that a pot has a plant in a given generation if, in the previous generation, there were plants in that pot, the one immediately to the left, and the one two pots to the right, but not in the ones immediately to the right and two to the left.</li>
+</ul>
+<p>It's not clear what these plants are for, but you're sure it's important, so you'd like to make sure the current configuration of plants is sustainable by determining what will happen after <em><code>20</code> generations</em>.</p>
+<p>For example, given the following input:</p>
+<pre><code>initial state: #..#.#..##......###...###
+
+...## => #
+..#.. => #
+.#... => #
+.#.#. => #
+.#.## => #
+.##.. => #
+.#### => #
+#.#.# => #
+#.### => #
+##.#. => #
+##.## => #
+###.. => #
+###.# => #
+####. => #
+</code></pre>
+<p>For brevity, in this example, only the combinations which do produce a plant are listed. (Your input includes all possible combinations.) Then, the next 20 generations will look like this:</p>
+<pre><code>                 1         2         3     
+       0         0         0         0     
+ 0: ...#..#.#..##......###...###...........
+ 1: ...#...#....#.....#..#..#..#...........
+ 2: ...##..##...##....#..#..#..##..........
+ 3: ..#.#...#..#.#....#..#..#...#..........
+ 4: ...#.#..#...#.#...#..#..##..##.........
+ 5: ....#...##...#.#..#..#...#...#.........
+ 6: ....##.#.#....#...#..##..##..##........
+ 7: ...#..###.#...##..#...#...#...#........
+ 8: ...#....##.#.#.#..##..##..##..##.......
+ 9: ...##..#..#####....#...#...#...#.......
+10: ..#.#..#...#.##....##..##..##..##......
+11: ...#...##...#.#...#.#...#...#...#......
+12: ...##.#.#....#.#...#.#..##..##..##.....
+13: ..#..###.#....#.#...#....#...#...#.....
+14: ..#....##.#....#.#..##...##..##..##....
+15: ..##..#..#.#....#....#..#.#...#...#....
+16: .#.#..#...#.#...##...#...#.#..##..##...
+17: ..#...##...#.#.#.#...##...#....#...#...
+18: ..##.#.#....#####.#.#.#...##...##..##..
+19: .#..###.#..#.#.#######.#.#.#..#.#...#..
+20: .#....##....#####...#######....#.#..##.
+</code></pre>
+<p>The generation is shown along the left, where <code>0</code> is the initial state.  The pot numbers are shown along the top, where <code>0</code> labels the center pot, negative-numbered pots extend to the left, and positive pots extend toward the right. Remember, the initial state begins at pot <code>0</code>, which is not the leftmost pot used in this example.</p>
+<p>After one generation, only seven plants remain.  The one in pot <code>0</code> matched the rule looking for <code>..#..</code>, the one in pot <code>4</code> matched the rule looking for <code>.#.#.</code>, pot <code>9</code> matched <code>.##..</code>, and so on.</p>
+<p>In this example, after 20 generations, the pots shown as <code>#</code> contain plants, the furthest left of which is pot <code>-2</code>, and the furthest right of which is pot <code>34</code>. Adding up all the numbers of plant-containing pots after the 20th generation produces <code><em>325</em></code>.</p>
+<p><em>After <code>20</code> generations, what is the sum of the numbers of all pots which contain a plant?</em></p>
+</article>
+<p>Your puzzle answer was <code>4200</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You realize that 20 generations aren't enough.  After all, these plants will need to last another 1500 years to even reach your timeline, not to mention your future.</p>
+<p><em>After fifty billion (<code>50000000000</code>) generations, what is the sum of the numbers of all pots which contain a plant?</em></p>
+</article>
+<p>Your puzzle answer was <code>9699999999321</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, you should <a href="/2018">return to your Advent calendar</a> and try another puzzle.</p>
+<p>If you still want to see it, you can <a href="12/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Subterranean+Sustainability%22+%2D+Day+12+%2D+Advent+of+Code+2018&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F12&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Subterranean+Sustainability%22+%2D+Day+12+%2D+Advent+of+Code+2018+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F12';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

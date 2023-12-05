@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 18 - Advent of Code 2015</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2015/about">[About]</a></li><li><a href="/2015/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2015/settings">[Settings]</a></li><li><a href="/2015/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2015/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">14*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">$year=</span><a href="/2015">2015</a><span class="title-event-wrap">;</span></h1><nav><ul><li><a href="/2015">[Calendar]</a></li><li><a href="/2015/support">[AoC++]</a></li><li><a href="/2015/sponsors">[Sponsors]</a></li><li><a href="/2015/leaderboard">[Leaderboard]</a></li><li><a href="/2015/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 18: Like a GIF For Your Yard ---</h2><p>After the <a href="6">million lights incident</a>, the fire code has gotten stricter: now, at most <span title="This is an outrage!  We're going to the next town hall meeting.">ten thousand lights</span> are allowed.  You arrange them in a 100x100 grid.</p>
+<p>Never one to let you down, Santa again mails you instructions on the ideal lighting configuration.  With so few lights, he says, you'll have to resort to <em>animation</em>.</p>
+<p>Start by setting your lights to the included initial configuration (your puzzle input).  A <code>#</code> means "on", and a <code>.</code> means "off".</p>
+<p>Then, animate your grid in steps, where each step decides the next configuration based on the current one.  Each light's next state (either on or off) depends on its current state and the current states of the eight lights adjacent to it (including diagonals).  Lights on the edge of the grid might have fewer than eight neighbors; the missing ones always count as "off".</p>
+<p>For example, in a simplified 6x6 grid, the light marked <code>A</code> has the neighbors numbered <code>1</code> through <code>8</code>, and the light marked <code>B</code>, which is on an edge, only has the neighbors marked <code>1</code> through <code>5</code>:</p>
+<pre><code>1B5...
+234...
+......
+..123.
+..8A4.
+..765.
+</code></pre>
+<p>The state a light should have next is based on its current state (on or off) plus the <em>number of neighbors that are on</em>:</p>
+<ul>
+<li>A light which is <em>on</em> stays on when <code>2</code> or <code>3</code> neighbors are on, and turns off otherwise.</li>
+<li>A light which is <em>off</em> turns on if exactly <code>3</code> neighbors are on, and stays off otherwise.</li>
+</ul>
+<p>All of the lights update simultaneously; they all consider the same current state before moving to the next.</p>
+<p>Here's a few steps from an example configuration of another 6x6 grid:</p>
+<pre><code>Initial state:
+.#.#.#
+...##.
+#....#
+..#...
+#.#..#
+####..
+
+After 1 step:
+..##..
+..##.#
+...##.
+......
+#.....
+#.##..
+
+After 2 steps:
+..###.
+......
+..###.
+......
+.#....
+.#....
+
+After 3 steps:
+...#..
+......
+...#..
+..##..
+......
+......
+
+After 4 steps:
+......
+......
+..##..
+..##..
+......
+......
+</code></pre>
+<p>After <code>4</code> steps, this example has four lights on.</p>
+<p>In your grid of 100x100 lights, given your initial configuration, <em>how many lights are on after 100 steps</em>?</p>
+</article>
+<p>To begin, <a href="18/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="18/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22Like+a+GIF+For+Your+Yard%22+%2D+Day+18+%2D+Advent+of+Code+2015&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2015%2Fday%2F18&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22Like+a+GIF+For+Your+Yard%22+%2D+Day+18+%2D+Advent+of+Code+2015+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2015%2Fday%2F18';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

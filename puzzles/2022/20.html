@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 20 - Advent of Code 2022</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2022/about">[About]</a></li><li><a href="/2022/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2022/settings">[Settings]</a></li><li><a href="/2022/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2022/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">0xffff&amp;</span><a href="/2022">2022</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2022">[Calendar]</a></li><li><a href="/2022/support">[AoC++]</a></li><li><a href="/2022/sponsors">[Sponsors]</a></li><li><a href="/2022/leaderboard">[Leaderboard]</a></li><li><a href="/2022/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2022/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://optiver.com/advent-of-code" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Optiver</a> - Love solving puzzles? So do we! We&apos;re hiring engineers to code trading systems with sub-nanosecond performance. Get ready for daily challenges, continuous learning and the freedom to bring your software solutions to life</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 20: Grove Positioning System ---</h2><p>It's finally time to meet back up with the Elves. When you try to contact them, however, you get no reply. Perhaps you're out of range?</p>
+<p>You know they're headed to the grove where the <em class="star">star</em> fruit grows, so if you can figure out where that is, you should be able to meet back up with them.</p>
+<p>Fortunately, your handheld device has a file (your puzzle input) that contains the grove's coordinates! Unfortunately, the file is <em>encrypted</em> - just in case the device were to fall into the wrong hands.</p>
+<p>Maybe you can <span title="You once again make a mental note to remind the Elves later not to invent their own cryptographic functions.">decrypt</span> it?</p>
+<p>When you were still back at the camp, you overheard some Elves talking about coordinate file encryption. The main operation involved in decrypting the file is called <em>mixing</em>.</p>
+<p>The encrypted file is a list of numbers. To <em>mix</em> the file, move each number forward or backward in the file a number of positions equal to the value of the number being moved. The list is <em>circular</em>, so moving a number off one end of the list wraps back around to the other end as if the ends were connected.</p>
+<p>For example, to move the <code>1</code> in a sequence like <code>4, 5, 6, <em>1</em>, 7, 8, 9</code>, the <code>1</code> moves one position forward: <code>4, 5, 6, 7, <em>1</em>, 8, 9</code>. To move the <code>-2</code> in a sequence like <code>4, <em>-2</em>, 5, 6, 7, 8, 9</code>, the <code>-2</code> moves two positions backward, wrapping around: <code>4, 5, 6, 7, 8, <em>-2</em>, 9</code>.</p>
+<p>The numbers should be moved <em>in the order they originally appear</em> in the encrypted file. Numbers moving around during the mixing process do not change the order in which the numbers are moved.</p>
+<p>Consider this encrypted file:</p>
+<pre><code>1
+2
+-3
+3
+-2
+0
+4
+</code></pre>
+<p>Mixing this file proceeds as follows:</p>
+<pre><code>Initial arrangement:
+1, 2, -3, 3, -2, 0, 4
+
+1 moves between 2 and -3:
+2, 1, -3, 3, -2, 0, 4
+
+2 moves between -3 and 3:
+1, -3, 2, 3, -2, 0, 4
+
+-3 moves between -2 and 0:
+1, 2, 3, -2, -3, 0, 4
+
+3 moves between 0 and 4:
+1, 2, -2, -3, 0, 3, 4
+
+-2 moves between 4 and 1:
+1, 2, -3, 0, 3, 4, -2
+
+0 does not move:
+1, 2, -3, 0, 3, 4, -2
+
+4 moves between -3 and 0:
+1, 2, -3, 4, 0, 3, -2
+</code></pre>
+<p>Then, the grove coordinates can be found by looking at the 1000th, 2000th, and 3000th numbers after the value <code>0</code>, wrapping around the list as necessary. In the above example, the 1000th number after <code>0</code> is <code><em>4</em></code>, the 2000th is <code><em>-3</em></code>, and the 3000th is <code><em>2</em></code>; adding these together produces <code><em>3</em></code>.</p>
+<p>Mix your encrypted file exactly once. <em>What is the sum of the three numbers that form the grove coordinates?</em></p>
+</article>
+<p>Your puzzle answer was <code>5498</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>The grove coordinate values seem nonsensical. While you ponder the mysteries of Elf encryption, you suddenly remember the rest of the decryption routine you overheard back at camp.</p>
+<p>First, you need to apply the <em>decryption key</em>, <code>811589153</code>. Multiply each number by the decryption key before you begin; this will produce the actual list of numbers to mix.</p>
+<p>Second, you need to mix the list of numbers <em>ten times</em>. The order in which the numbers are mixed does not change during mixing; the numbers are still moved in the order they appeared in the original, pre-mixed list. (So, if -3 appears fourth in the original list of numbers to mix, -3 will be the fourth number to move during each round of mixing.)</p>
+<p>Using the same example as above:</p>
+<pre><code>Initial arrangement:
+811589153, 1623178306, -2434767459, 2434767459, -1623178306, 0, 3246356612
+
+After 1 round of mixing:
+0, -2434767459, 3246356612, -1623178306, 2434767459, 1623178306, 811589153
+
+After 2 rounds of mixing:
+0, 2434767459, 1623178306, 3246356612, -2434767459, -1623178306, 811589153
+
+After 3 rounds of mixing:
+0, 811589153, 2434767459, 3246356612, 1623178306, -1623178306, -2434767459
+
+After 4 rounds of mixing:
+0, 1623178306, -2434767459, 811589153, 2434767459, 3246356612, -1623178306
+
+After 5 rounds of mixing:
+0, 811589153, -1623178306, 1623178306, -2434767459, 3246356612, 2434767459
+
+After 6 rounds of mixing:
+0, 811589153, -1623178306, 3246356612, -2434767459, 1623178306, 2434767459
+
+After 7 rounds of mixing:
+0, -2434767459, 2434767459, 1623178306, -1623178306, 811589153, 3246356612
+
+After 8 rounds of mixing:
+0, 1623178306, 3246356612, 811589153, -2434767459, 2434767459, -1623178306
+
+After 9 rounds of mixing:
+0, 811589153, 1623178306, -2434767459, 3246356612, 2434767459, -1623178306
+
+After 10 rounds of mixing:
+0, -2434767459, 1623178306, 3246356612, -1623178306, 2434767459, 811589153
+</code></pre>
+<p>The grove coordinates can still be found in the same way. Here, the 1000th number after <code>0</code> is <code><em>811589153</em></code>, the 2000th is <code><em>2434767459</em></code>, and the 3000th is <code><em>-1623178306</em></code>; adding these together produces <code><em>1623178306</em></code>.</p>
+<p>Apply the decryption key and mix your encrypted file ten times. <em>What is the sum of the three numbers that form the grove coordinates?</em></p>
+</article>
+<p>Your puzzle answer was <code>3390007892081</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2022">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="20/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Grove+Positioning+System%22+%2D+Day+20+%2D+Advent+of+Code+2022&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2022%2Fday%2F20&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Grove+Positioning+System%22+%2D+Day+20+%2D+Advent+of+Code+2022+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2022%2Fday%2F20';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 20 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">0.0.0.0:</span><a href="/2019">2019</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://lifeatgalois.com/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Galois</a> - Employee-owned, self-directed, radically transparent. Tackle challenging computer science problems in a unique and nurturing community.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 20: Donut Maze ---</h2><p>You notice a strange pattern on the surface of Pluto and land nearby to get a closer look. Upon closer inspection, you realize you've come across one of the famous space-warping mazes of the long-lost Pluto civilization!</p>
+<p>Because there isn't much space on Pluto, the civilization that used to live here thrived by inventing a method for folding spacetime.  Although the technology is no longer understood, mazes like this one provide a small glimpse into the <span title="So really, this puzzle is more archaeology than math, right?">daily life of an ancient Pluto citizen</span>.</p>
+<p>This maze is shaped like a <a href="https://en.wikipedia.org/wiki/Torus">donut</a>. Portals along the inner and outer edge of the donut can instantly teleport you from one side to the other.  For example:</p>
+<pre><code>         A           
+         A           
+  #######.#########  
+  #######.........#  
+  #######.#######.#  
+  #######.#######.#  
+  #######.#######.#  
+  #####  B    ###.#  
+BC...##  C    ###.#  
+  ##.##       ###.#  
+  ##...DE  F  ###.#  
+  #####    G  ###.#  
+  #########.#####.#  
+DE..#######...###.#  
+  #.#########.###.#  
+FG..#########.....#  
+  ###########.#####  
+             Z       
+             Z       
+</code></pre>
+<p>This map of the maze shows solid walls (<code>#</code>) and open passages (<code>.</code>). Every maze on Pluto has a start (the open tile next to <code>AA</code>) and an end (the open tile next to <code>ZZ</code>). Mazes on Pluto also have portals; this maze has three pairs of portals: <code>BC</code>, <code>DE</code>, and <code>FG</code>. When on an open tile next to one of these labels, a single step can take you to the other tile with the same label. (You can only walk on <code>.</code> tiles; labels and empty space are not traversable.)</p>
+<p>One path through the maze doesn't require any portals.  Starting at <code>AA</code>, you could go down 1, right 8, down 12, left 4, and down 1 to reach <code>ZZ</code>, a total of 26 steps.</p>
+<p>However, there is a shorter path:  You could walk from <code>AA</code> to the inner <code>BC</code> portal (4 steps), warp to the outer <code>BC</code> portal (1 step), walk to the inner <code>DE</code> (6 steps), warp to the outer <code>DE</code> (1 step), walk to the outer <code>FG</code> (4 steps), warp to the inner <code>FG</code> (1 step), and finally walk to <code>ZZ</code> (6 steps). In total, this is only <em>23</em> steps.</p>
+<p>Here is a larger example:</p>
+<pre><code>                   A               
+                   A               
+  #################.#############  
+  #.#...#...................#.#.#  
+  #.#.#.###.###.###.#########.#.#  
+  #.#.#.......#...#.....#.#.#...#  
+  #.#########.###.#####.#.#.###.#  
+  #.............#.#.....#.......#  
+  ###.###########.###.#####.#.#.#  
+  #.....#        A   C    #.#.#.#  
+  #######        S   P    #####.#  
+  #.#...#                 #......VT
+  #.#.#.#                 #.#####  
+  #...#.#               YN....#.#  
+  #.###.#                 #####.#  
+DI....#.#                 #.....#  
+  #####.#                 #.###.#  
+ZZ......#               QG....#..AS
+  ###.###                 #######  
+JO..#.#.#                 #.....#  
+  #.#.#.#                 ###.#.#  
+  #...#..DI             BU....#..LF
+  #####.#                 #.#####  
+YN......#               VT..#....QG
+  #.###.#                 #.###.#  
+  #.#...#                 #.....#  
+  ###.###    J L     J    #.#.###  
+  #.....#    O F     P    #.#...#  
+  #.###.#####.#.#####.#####.###.#  
+  #...#.#.#...#.....#.....#.#...#  
+  #.#####.###.###.#.#.#########.#  
+  #...#.#.....#...#.#.#.#.....#.#  
+  #.###.#####.###.###.#.#.#######  
+  #.#.........#...#.............#  
+  #########.###.###.#############  
+           B   J   C               
+           U   P   P               
+</code></pre>
+<p>Here, <code>AA</code> has no direct path to <code>ZZ</code>, but it does connect to <code>AS</code> and <code>CP</code>. By passing through <code>AS</code>, <code>QG</code>, <code>BU</code>, and <code>JO</code>, you can reach <code>ZZ</code> in <em>58</em> steps.</p>
+<p>In your maze, <em>how many steps does it take to get from the open tile marked <code>AA</code> to the open tile marked <code>ZZ</code>?</em></p>
+</article>
+<p>Your puzzle answer was <code>498</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Strangely, the exit isn't open when you reach it.  Then, you remember: the ancient Plutonians were famous for building <em>recursive spaces</em>.</p>
+<p>The marked connections in the maze aren't portals: they <em>physically connect</em> to a larger or smaller copy of the maze. Specifically, the labeled tiles around the inside edge actually connect to a smaller copy of the same maze, and the smaller copy's inner labeled tiles connect to yet a <em>smaller</em> copy, and so on.</p>
+<p>When you enter the maze, you are at the outermost level; when at the outermost level, only the outer labels <code>AA</code> and <code>ZZ</code> function (as the start and end, respectively); all other outer labeled tiles are effectively walls. At any other level, <code>AA</code> and <code>ZZ</code> count as walls, but the other outer labeled tiles bring you one level outward.</p>
+<p>Your goal is to find a path through the maze that brings you back to <code>ZZ</code> at the outermost level of the maze.</p>
+<p>In the first example above, the shortest path is now the loop around the right side. If the starting level is <code>0</code>, then taking the previously-shortest path would pass through <code>BC</code> (to level <code>1</code>), <code>DE</code> (to level <code>2</code>), and <code>FG</code> (back to level <code>1</code>). Because this is not the outermost level, <code>ZZ</code> is a wall, and the only option is to go back around to <code>BC</code>, which would only send you even deeper into the recursive maze.</p>
+<p>In the second example above, there is no path that brings you to <code>ZZ</code> at the outermost level.</p>
+<p>Here is a more interesting example:</p>
+<pre><code>             Z L X W       C                 
+             Z P Q B       K                 
+  ###########.#.#.#.#######.###############  
+  #...#.......#.#.......#.#.......#.#.#...#  
+  ###.#.#.#.#.#.#.#.###.#.#.#######.#.#.###  
+  #.#...#.#.#...#.#.#...#...#...#.#.......#  
+  #.###.#######.###.###.#.###.###.#.#######  
+  #...#.......#.#...#...#.............#...#  
+  #.#########.#######.#.#######.#######.###  
+  #...#.#    F       R I       Z    #.#.#.#  
+  #.###.#    D       E C       H    #.#.#.#  
+  #.#...#                           #...#.#  
+  #.###.#                           #.###.#  
+  #.#....OA                       WB..#.#..ZH
+  #.###.#                           #.#.#.#  
+CJ......#                           #.....#  
+  #######                           #######  
+  #.#....CK                         #......IC
+  #.###.#                           #.###.#  
+  #.....#                           #...#.#  
+  ###.###                           #.#.#.#  
+XF....#.#                         RF..#.#.#  
+  #####.#                           #######  
+  #......CJ                       NM..#...#  
+  ###.#.#                           #.###.#  
+RE....#.#                           #......RF
+  ###.###        X   X       L      #.#.#.#  
+  #.....#        F   Q       P      #.#.#.#  
+  ###.###########.###.#######.#########.###  
+  #.....#...#.....#.......#...#.....#.#...#  
+  #####.#.###.#######.#######.###.###.#.#.#  
+  #.......#.......#.#.#.#.#...#...#...#.#.#  
+  #####.###.#####.#.#.#.#.###.###.#.###.###  
+  #.......#.....#.#...#...............#...#  
+  #############.#.#.###.###################  
+               A O F   N                     
+               A A D   M                     
+</code></pre>
+<p>One shortest path through the maze is the following:</p>
+<ul>
+<li>Walk from <code>AA</code> to <code>XF</code> (16 steps)</li>
+<li>Recurse into level 1 through <code>XF</code> (1 step)</li>
+<li>Walk from <code>XF</code> to <code>CK</code> (10 steps)</li>
+<li>Recurse into level 2 through <code>CK</code> (1 step)</li>
+<li>Walk from <code>CK</code> to <code>ZH</code> (14 steps)</li>
+<li>Recurse into level 3 through <code>ZH</code> (1 step)</li>
+<li>Walk from <code>ZH</code> to <code>WB</code> (10 steps)</li>
+<li>Recurse into level 4 through <code>WB</code> (1 step)</li>
+<li>Walk from <code>WB</code> to <code>IC</code> (10 steps)</li>
+<li>Recurse into level 5 through <code>IC</code> (1 step)</li>
+<li>Walk from <code>IC</code> to <code>RF</code> (10 steps)</li>
+<li>Recurse into level 6 through <code>RF</code> (1 step)</li>
+<li>Walk from <code>RF</code> to <code>NM</code> (8 steps)</li>
+<li>Recurse into level 7 through <code>NM</code> (1 step)</li>
+<li>Walk from <code>NM</code> to <code>LP</code> (12 steps)</li>
+<li>Recurse into level 8 through <code>LP</code> (1 step)</li>
+<li>Walk from <code>LP</code> to <code>FD</code> (24 steps)</li>
+<li>Recurse into level 9 through <code>FD</code> (1 step)</li>
+<li>Walk from <code>FD</code> to <code>XQ</code> (8 steps)</li>
+<li>Recurse into level 10 through <code>XQ</code> (1 step)</li>
+<li>Walk from <code>XQ</code> to <code>WB</code> (4 steps)</li>
+<li>Return to level 9 through <code>WB</code> (1 step)</li>
+<li>Walk from <code>WB</code> to <code>ZH</code> (10 steps)</li>
+<li>Return to level 8 through <code>ZH</code> (1 step)</li>
+<li>Walk from <code>ZH</code> to <code>CK</code> (14 steps)</li>
+<li>Return to level 7 through <code>CK</code> (1 step)</li>
+<li>Walk from <code>CK</code> to <code>XF</code> (10 steps)</li>
+<li>Return to level 6 through <code>XF</code> (1 step)</li>
+<li>Walk from <code>XF</code> to <code>OA</code> (14 steps)</li>
+<li>Return to level 5 through <code>OA</code> (1 step)</li>
+<li>Walk from <code>OA</code> to <code>CJ</code> (8 steps)</li>
+<li>Return to level 4 through <code>CJ</code> (1 step)</li>
+<li>Walk from <code>CJ</code> to <code>RE</code> (8 steps)</li>
+<li>Return to level 3 through <code>RE</code> (1 step)</li>
+<li>Walk from <code>RE</code> to <code>IC</code> (4 steps)</li>
+<li>Recurse into level 4 through <code>IC</code> (1 step)</li>
+<li>Walk from <code>IC</code> to <code>RF</code> (10 steps)</li>
+<li>Recurse into level 5 through <code>RF</code> (1 step)</li>
+<li>Walk from <code>RF</code> to <code>NM</code> (8 steps)</li>
+<li>Recurse into level 6 through <code>NM</code> (1 step)</li>
+<li>Walk from <code>NM</code> to <code>LP</code> (12 steps)</li>
+<li>Recurse into level 7 through <code>LP</code> (1 step)</li>
+<li>Walk from <code>LP</code> to <code>FD</code> (24 steps)</li>
+<li>Recurse into level 8 through <code>FD</code> (1 step)</li>
+<li>Walk from <code>FD</code> to <code>XQ</code> (8 steps)</li>
+<li>Recurse into level 9 through <code>XQ</code> (1 step)</li>
+<li>Walk from <code>XQ</code> to <code>WB</code> (4 steps)</li>
+<li>Return to level 8 through <code>WB</code> (1 step)</li>
+<li>Walk from <code>WB</code> to <code>ZH</code> (10 steps)</li>
+<li>Return to level 7 through <code>ZH</code> (1 step)</li>
+<li>Walk from <code>ZH</code> to <code>CK</code> (14 steps)</li>
+<li>Return to level 6 through <code>CK</code> (1 step)</li>
+<li>Walk from <code>CK</code> to <code>XF</code> (10 steps)</li>
+<li>Return to level 5 through <code>XF</code> (1 step)</li>
+<li>Walk from <code>XF</code> to <code>OA</code> (14 steps)</li>
+<li>Return to level 4 through <code>OA</code> (1 step)</li>
+<li>Walk from <code>OA</code> to <code>CJ</code> (8 steps)</li>
+<li>Return to level 3 through <code>CJ</code> (1 step)</li>
+<li>Walk from <code>CJ</code> to <code>RE</code> (8 steps)</li>
+<li>Return to level 2 through <code>RE</code> (1 step)</li>
+<li>Walk from <code>RE</code> to <code>XQ</code> (14 steps)</li>
+<li>Return to level 1 through <code>XQ</code> (1 step)</li>
+<li>Walk from <code>XQ</code> to <code>FD</code> (8 steps)</li>
+<li>Return to level 0 through <code>FD</code> (1 step)</li>
+<li>Walk from <code>FD</code> to <code>ZZ</code> (18 steps)</li>
+</ul>
+<p>This path takes a total of <em>396</em> steps to move from <code>AA</code> at the outermost layer to <code>ZZ</code> at the outermost layer.</p>
+<p>In your maze, when accounting for recursion, <em>how many steps does it take to get from the open tile marked <code>AA</code> to the open tile marked <code>ZZ</code>, both at the outermost layer?</em></p>
+</article>
+<p>Your puzzle answer was <code>5564</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="20/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Donut+Maze%22+%2D+Day+20+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F20&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Donut+Maze%22+%2D+Day+20+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F20';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

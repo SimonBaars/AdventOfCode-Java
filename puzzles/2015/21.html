@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 21 - Advent of Code 2015</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2015/about">[About]</a></li><li><a href="/2015/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2015/settings">[Settings]</a></li><li><a href="/2015/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2015/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">14*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">/^</span><a href="/2015">2015</a><span class="title-event-wrap">$/</span></h1><nav><ul><li><a href="/2015">[Calendar]</a></li><li><a href="/2015/support">[AoC++]</a></li><li><a href="/2015/sponsors">[Sponsors]</a></li><li><a href="/2015/leaderboard">[Leaderboard]</a></li><li><a href="/2015/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 21: RPG Simulator 20XX ---</h2><p>Little <span title="The sky above the battle is the color of television, tuned to a dead channel.">Henry Case</span> got a new video game for Christmas.  It's an <a href="https://en.wikipedia.org/wiki/Role-playing_video_game">RPG</a>, and he's stuck on a boss.  He needs to know what equipment to buy at the shop.  He hands you the <a href="https://en.wikipedia.org/wiki/Game_controller">controller</a>.</p>
+<p>In this game, the player (you) and the enemy (the boss) take turns attacking.  The player always goes first.  Each attack reduces the opponent's hit points by at least <code>1</code>.  The first character at or below <code>0</code> hit points loses.</p>
+<p>Damage dealt by an attacker each turn is equal to the attacker's damage score minus the defender's armor score.  An attacker always does at least <code>1</code> damage.  So, if the attacker has a damage score of <code>8</code>, and the defender has an armor score of <code>3</code>, the defender loses <code>5</code> hit points.  If the defender had an armor score of <code>300</code>, the defender would still lose <code>1</code> hit point.</p>
+<p>Your damage score and armor score both start at zero.  They can be increased by buying items in exchange for gold.  You start with no items and have as much gold as you need.  Your total damage or armor is equal to the sum of those stats from all of your items.  You have <em>100 hit points</em>.</p>
+<p>Here is what the item shop is selling:</p>
+<pre><code>Weapons:    Cost  Damage  Armor
+Dagger        8     4       0
+Shortsword   10     5       0
+Warhammer    25     6       0
+Longsword    40     7       0
+Greataxe     74     8       0
+
+Armor:      Cost  Damage  Armor
+Leather      13     0       1
+Chainmail    31     0       2
+Splintmail   53     0       3
+Bandedmail   75     0       4
+Platemail   102     0       5
+
+Rings:      Cost  Damage  Armor
+Damage +1    25     1       0
+Damage +2    50     2       0
+Damage +3   100     3       0
+Defense +1   20     0       1
+Defense +2   40     0       2
+Defense +3   80     0       3
+</code></pre>
+<p>You must buy exactly one weapon; no dual-wielding.  Armor is optional, but you can't use more than one.  You can buy 0-2 rings (at most one for each hand).  You must use any items you buy.  The shop only has one of each item, so you can't buy, for example, two rings of Damage +3.</p>
+<p>For example, suppose you have <code>8</code> hit points, <code>5</code> damage, and <code>5</code> armor, and that the boss has <code>12</code> hit points, <code>7</code> damage, and <code>2</code> armor:</p>
+<ul>
+<li>The player deals <code>5-2 = 3</code> damage; the boss goes down to 9 hit points.</li>
+<li>The boss deals <code>7-5 = 2</code> damage; the player goes down to 6 hit points.</li>
+<li>The player deals <code>5-2 = 3</code> damage; the boss goes down to 6 hit points.</li>
+<li>The boss deals <code>7-5 = 2</code> damage; the player goes down to 4 hit points.</li>
+<li>The player deals <code>5-2 = 3</code> damage; the boss goes down to 3 hit points.</li>
+<li>The boss deals <code>7-5 = 2</code> damage; the player goes down to 2 hit points.</li>
+<li>The player deals <code>5-2 = 3</code> damage; the boss goes down to 0 hit points.</li>
+</ul>
+<p>In this scenario, the player wins!  (Barely.)</p>
+<p>You have <em>100 hit points</em>.  The boss's actual stats are in your puzzle input.  What is <em>the least amount of gold you can spend</em> and still win the fight?</p>
+</article>
+<p>To begin, <a href="21/input" target="_blank">get your puzzle input</a>.</p>
+<form method="post" action="21/answer"><input type="hidden" name="level" value="1"/><p>Answer: <input type="text" name="answer" autocomplete="off"/> <input type="submit" value="[Submit]"/></p></form>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=%22RPG+Simulator+20XX%22+%2D+Day+21+%2D+Advent+of+Code+2015&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2015%2Fday%2F21&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=%22RPG+Simulator+20XX%22+%2D+Day+21+%2D+Advent+of+Code+2015+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2015%2Fday%2F21';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

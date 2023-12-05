@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 3 - Advent of Code 2018</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2018/about">[About]</a></li><li><a href="/2018/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2018/settings">[Settings]</a></li><li><a href="/2018/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2018/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">28*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">0.0.0.0:</span><a href="/2018">2018</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2018">[Calendar]</a></li><li><a href="/2018/support">[AoC++]</a></li><li><a href="/2018/sponsors">[Sponsors]</a></li><li><a href="/2018/leaderboard">[Leaderboard]</a></li><li><a href="/2018/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2018/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://rainway.io/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Rainway</a> - Play all your favorite PC games anytime, anywhere, across a variety of different devices.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 3: No Matter How You Slice It ---</h2><p>The Elves managed to locate the chimney-squeeze prototype fabric for Santa's suit (thanks to <span title="WAS IT YOU">someone</span> who helpfully wrote its box IDs on the wall of the warehouse in the middle of the night).  Unfortunately, anomalies are still affecting them - nobody can even agree on how to <em>cut</em> the fabric.</p>
+<p>The whole piece of fabric they're working on is a very large square - at least <code>1000</code> inches on each side.</p>
+<p>Each Elf has made a <em>claim</em> about which area of fabric would be ideal for Santa's suit.  All claims have an ID and consist of a single rectangle with edges parallel to the edges of the fabric.  Each claim's rectangle is defined as follows:</p>
+<ul>
+<li>The number of inches between the left edge of the fabric and the left edge of the rectangle.</li>
+<li>The number of inches between the top edge of the fabric and the top edge of the rectangle.</li>
+<li>The width of the rectangle in inches.</li>
+<li>The height of the rectangle in inches.</li>
+</ul>
+<p>A claim like <code>#123 @ 3,2: 5x4</code> means that claim ID <code>123</code> specifies a rectangle <code>3</code> inches from the left edge, <code>2</code> inches from the top edge, <code>5</code> inches wide, and <code>4</code> inches tall. Visually, it claims the square inches of fabric represented by <code>#</code> (and ignores the square inches of fabric represented by <code>.</code>) in the diagram below:</p>
+<pre><code>...........
+...........
+...#####...
+...#####...
+...#####...
+...#####...
+...........
+...........
+...........
+</code></pre>
+<p>The problem is that many of the claims <em>overlap</em>, causing two or more claims to cover part of the same areas.  For example, consider the following claims:</p>
+<pre><code>#1 @ 1,3: 4x4
+#2 @ 3,1: 4x4
+#3 @ 5,5: 2x2
+</code></pre>
+<p>Visually, these claim the following areas:</p>
+<pre><code>........
+...2222.
+...2222.
+.11XX22.
+.11XX22.
+.111133.
+.111133.
+........
+</code></pre>
+<p>The four square inches marked with <code>X</code> are claimed by <em>both <code>1</code> and <code>2</code></em>. (Claim <code>3</code>, while adjacent to the others, does not overlap either of them.)</p>
+<p>If the Elves all proceed with their own plans, none of them will have enough fabric. <em>How many square inches of fabric are within two or more claims?</em></p>
+</article>
+<p>Your puzzle answer was <code>103482</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Amidst the chaos, you notice that exactly one claim doesn't overlap by even a single square inch of fabric with any other claim. If you can somehow draw attention to it, maybe the Elves will be able to make Santa's suit after all!</p>
+<p>For example, in the claims above, only claim <code>3</code> is intact after all claims are made.</p>
+<p><em>What is the ID of the only claim that doesn't overlap?</em></p>
+</article>
+<p>Your puzzle answer was <code>686</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, you should <a href="/2018">return to your Advent calendar</a> and try another puzzle.</p>
+<p>If you still want to see it, you can <a href="3/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22No+Matter+How+You+Slice+It%22+%2D+Day+3+%2D+Advent+of+Code+2018&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F3&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22No+Matter+How+You+Slice+It%22+%2D+Day+3+%2D+Advent+of+Code+2018+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2018%2Fday%2F3';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

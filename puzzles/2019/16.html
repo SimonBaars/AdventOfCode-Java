@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 16 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">$year=</span><a href="/2019">2019</a><span class="title-event-wrap">;</span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://auricsystems.com/tokenize-almost-anything?utm_source=advent+of+code&amp;utm_medium=display&amp;utm_camapign=advent2019" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">AuricVault®</a> - Thieves can&apos;t steal -- what isn&apos;t there! Secure your sensitive data. Simple API. FREE test credentials. Start simplifying your compliance.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 16: Flawed Frequency Transmission ---</h2><p>You're 3/4ths of the way through the <a href="https://en.wikipedia.org/wiki/Gas_giant">gas giants</a>. Not only do roundtrip signals to Earth take <span title="In minutes, that's as many as thirty tens!">five hours</span>, but the signal quality is quite bad as well.  You can clean up the signal with the Flawed Frequency Transmission algorithm, or <em>FFT</em>.</p>
+<p>As input, FFT takes a list of numbers.  In the signal you received (your puzzle input), each number is a single digit: data like <code>15243</code> represents the sequence <code>1</code>, <code>5</code>, <code>2</code>, <code>4</code>, <code>3</code>.</p>
+<p>FFT operates in repeated <em>phases</em>.  In each phase, a new list is constructed with the same length as the input list.  This new list is also used as the input for the next phase.</p>
+<p>Each element in the new list is built by multiplying every value in the input list by a value in a repeating <em>pattern</em> and then adding up the results. So, if the input list were <code>9, 8, 7, 6, 5</code> and the pattern for a given element were <code>1, 2, 3</code>, the result would be <code>9*1 + 8*2 + 7*3 + 6*1 + 5*2</code> (with each input element on the left and each value in the repeating pattern on the right of each multiplication). Then, only the ones digit is kept: <code>38</code> becomes <code>8</code>, <code>-17</code> becomes <code>7</code>, and so on.</p>
+<p>While each element in the output array uses all of the same input array elements, the actual repeating pattern to use depends on <em>which output element</em> is being calculated. The base pattern is <code>0, 1, 0, -1</code>.  Then, repeat each value in the pattern a number of times equal to the <em>position in the output list</em> being considered. Repeat once for the first element, twice for the second element, three times for the third element, and so on.  So, if the third element of the output list is being calculated, repeating the values would produce: <code>0, 0, 0, 1, 1, 1, 0, 0, 0, -1, -1, -1</code>.</p>
+<p>When applying the pattern, skip the very first value exactly once. (In other words, offset the whole pattern left by one.) So, for the second element of the output list, the actual pattern used would be: <code>0, 1, 1, 0, 0, -1, -1, 0, 0, 1, 1, 0, 0, -1, -1, ...</code>.</p>
+<p>After using this process to calculate each element of the output list, the phase is complete, and the output list of this phase is used as the new input list for the next phase, if any.</p>
+<p>Given the input signal <code>12345678</code>, below are four phases of FFT. Within each phase, each output digit is calculated on a single line with the result at the far right; each multiplication operation shows the input digit on the left and the pattern value on the right:</p>
+<pre><code>Input signal: 12345678
+
+1*1  + 2*0  + 3*-1 + 4*0  + 5*1  + 6*0  + 7*-1 + 8*0  = 4
+1*0  + 2*1  + 3*1  + 4*0  + 5*0  + 6*-1 + 7*-1 + 8*0  = 8
+1*0  + 2*0  + 3*1  + 4*1  + 5*1  + 6*0  + 7*0  + 8*0  = 2
+1*0  + 2*0  + 3*0  + 4*1  + 5*1  + 6*1  + 7*1  + 8*0  = 2
+1*0  + 2*0  + 3*0  + 4*0  + 5*1  + 6*1  + 7*1  + 8*1  = 6
+1*0  + 2*0  + 3*0  + 4*0  + 5*0  + 6*1  + 7*1  + 8*1  = 1
+1*0  + 2*0  + 3*0  + 4*0  + 5*0  + 6*0  + 7*1  + 8*1  = 5
+1*0  + 2*0  + 3*0  + 4*0  + 5*0  + 6*0  + 7*0  + 8*1  = 8
+
+After 1 phase: 48226158
+
+4*1  + 8*0  + 2*-1 + 2*0  + 6*1  + 1*0  + 5*-1 + 8*0  = 3
+4*0  + 8*1  + 2*1  + 2*0  + 6*0  + 1*-1 + 5*-1 + 8*0  = 4
+4*0  + 8*0  + 2*1  + 2*1  + 6*1  + 1*0  + 5*0  + 8*0  = 0
+4*0  + 8*0  + 2*0  + 2*1  + 6*1  + 1*1  + 5*1  + 8*0  = 4
+4*0  + 8*0  + 2*0  + 2*0  + 6*1  + 1*1  + 5*1  + 8*1  = 0
+4*0  + 8*0  + 2*0  + 2*0  + 6*0  + 1*1  + 5*1  + 8*1  = 4
+4*0  + 8*0  + 2*0  + 2*0  + 6*0  + 1*0  + 5*1  + 8*1  = 3
+4*0  + 8*0  + 2*0  + 2*0  + 6*0  + 1*0  + 5*0  + 8*1  = 8
+
+After 2 phases: 34040438
+
+3*1  + 4*0  + 0*-1 + 4*0  + 0*1  + 4*0  + 3*-1 + 8*0  = 0
+3*0  + 4*1  + 0*1  + 4*0  + 0*0  + 4*-1 + 3*-1 + 8*0  = 3
+3*0  + 4*0  + 0*1  + 4*1  + 0*1  + 4*0  + 3*0  + 8*0  = 4
+3*0  + 4*0  + 0*0  + 4*1  + 0*1  + 4*1  + 3*1  + 8*0  = 1
+3*0  + 4*0  + 0*0  + 4*0  + 0*1  + 4*1  + 3*1  + 8*1  = 5
+3*0  + 4*0  + 0*0  + 4*0  + 0*0  + 4*1  + 3*1  + 8*1  = 5
+3*0  + 4*0  + 0*0  + 4*0  + 0*0  + 4*0  + 3*1  + 8*1  = 1
+3*0  + 4*0  + 0*0  + 4*0  + 0*0  + 4*0  + 3*0  + 8*1  = 8
+
+After 3 phases: 03415518
+
+0*1  + 3*0  + 4*-1 + 1*0  + 5*1  + 5*0  + 1*-1 + 8*0  = 0
+0*0  + 3*1  + 4*1  + 1*0  + 5*0  + 5*-1 + 1*-1 + 8*0  = 1
+0*0  + 3*0  + 4*1  + 1*1  + 5*1  + 5*0  + 1*0  + 8*0  = 0
+0*0  + 3*0  + 4*0  + 1*1  + 5*1  + 5*1  + 1*1  + 8*0  = 2
+0*0  + 3*0  + 4*0  + 1*0  + 5*1  + 5*1  + 1*1  + 8*1  = 9
+0*0  + 3*0  + 4*0  + 1*0  + 5*0  + 5*1  + 1*1  + 8*1  = 4
+0*0  + 3*0  + 4*0  + 1*0  + 5*0  + 5*0  + 1*1  + 8*1  = 9
+0*0  + 3*0  + 4*0  + 1*0  + 5*0  + 5*0  + 1*0  + 8*1  = 8
+
+After 4 phases: 01029498
+</code></pre>
+<p>Here are the first eight digits of the final output list after 100 phases for some larger inputs:</p>
+<ul>
+<li><code>80871224585914546619083218645595</code> becomes <code>24176176</code>.</li>
+<li><code>19617804207202209144916044189917</code> becomes <code>73745418</code>.</li>
+<li><code>69317163492948606335995924319873</code> becomes <code>52432133</code>.</li>
+</ul>
+<p>After <em>100</em> phases of FFT, <em>what are the first eight digits in the final output list?</em></p>
+</article>
+<p>Your puzzle answer was <code>12541048</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Now that your FFT is working, you can decode the <em>real signal</em>.</p>
+<p>The real signal is your puzzle input <em>repeated 10000 times</em>. Treat this new signal as a single input list. Patterns are still calculated as before, and 100 phases of FFT are still applied.</p>
+<p>The <em>first seven digits</em> of your initial input signal also represent the <em>message offset</em>. The message offset is the location of the eight-digit message in the final output list. Specifically, the message offset indicates <em>the number of digits to skip</em> before reading the eight-digit message. For example, if the first seven digits of your initial input signal were <code>1234567</code>, the eight-digit message would be the eight digits after skipping 1,234,567 digits of the final output list. Or, if the message offset were <code>7</code> and your final output list were <code>98765432109876543210</code>, the eight-digit message would be <code>21098765</code>. (Of course, your real message offset will be a seven-digit number, not a one-digit number like <code>7</code>.)</p>
+<p>Here is the eight-digit message in the final output list after 100 phases. The message offset given in each input has been highlighted. (Note that the inputs given below are repeated 10000 times to find the actual starting input lists.)</p>
+<ul>
+<li><code><em>0303673</em>2577212944063491565474664</code> becomes <code>84462026</code>.</li>
+<li><code><em>0293510</em>9699940807407585447034323</code> becomes <code>78725270</code>.</li>
+<li><code><em>0308177</em>0884921959731165446850517</code> becomes <code>53553731</code>.</li>
+</ul>
+<p>After repeating your input signal 10000 times and running 100 phases of FFT, <em>what is the eight-digit message embedded in the final output list?</em></p>
+</article>
+<p>Your puzzle answer was <code>62858988</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="16/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Flawed+Frequency+Transmission%22+%2D+Day+16+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F16&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Flawed+Frequency+Transmission%22+%2D+Day+16+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F16';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

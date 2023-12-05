@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 22 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">/^</span><a href="/2019">2019</a><span class="title-event-wrap">$/</span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://ximed.es/aoc" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Ximedes</a> - Help us write elegant, secure, and performant software that enables payments worldwide. We&apos;re hiring in the Netherlands and Serbia!</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 22: Slam Shuffle ---</h2><p>There isn't much to do while you wait for the droids to repair your ship.  At least you're drifting in the right direction.  You decide to practice a new <a href="https://en.wikipedia.org/wiki/Shuffling">card shuffle</a> you've been working on.</p>
+<p>Digging through the ship's storage, you find a deck of <em>space cards</em>! Just like <span title="What do you mean, you've never heard of space cards? They're all the rage in Zozo.">any deck of space cards</span>, there are 10007 cards in the deck numbered <code>0</code> through <code>10006</code>. The deck must be new - they're still in <em>factory order</em>, with <code>0</code> on the top, then <code>1</code>, then <code>2</code>, and so on, all the way through to <code>10006</code> on the bottom.</p>
+<p>You've been practicing three different <em>techniques</em> that you use while shuffling. Suppose you have a deck of only 10 cards (numbered <code>0</code> through <code>9</code>):</p>
+<p><em>To <code>deal into new stack</code></em>, create a new stack of cards by dealing the top card of the deck onto the top of the new stack repeatedly until you run out of cards:</p>
+<pre><code>Top          Bottom
+0 1 2 3 4 5 6 7 8 9   Your deck
+                      New stack
+
+  1 2 3 4 5 6 7 8 9   Your deck
+                  0   New stack
+
+    2 3 4 5 6 7 8 9   Your deck
+                1 0   New stack
+
+      3 4 5 6 7 8 9   Your deck
+              2 1 0   New stack
+
+Several steps later...
+
+                  9   Your deck
+  8 7 6 5 4 3 2 1 0   New stack
+
+                      Your deck
+9 8 7 6 5 4 3 2 1 0   New stack
+</code></pre>
+<p>Finally, pick up the new stack you've just created and use it as the deck for the next technique.</p>
+<p><em>To <code>cut N</code> cards</em>, take the top <code>N</code> cards off the top of the deck and move them as a single unit to the bottom of the deck, retaining their order. For example, to <code>cut 3</code>:</p>
+<pre><code>Top          Bottom
+0 1 2 3 4 5 6 7 8 9   Your deck
+
+      3 4 5 6 7 8 9   Your deck
+0 1 2                 Cut cards
+
+3 4 5 6 7 8 9         Your deck
+              0 1 2   Cut cards
+
+3 4 5 6 7 8 9 0 1 2   Your deck
+</code></pre>
+<p>You've also been getting pretty good at a version of this technique where <code>N</code> is negative! In that case, cut (the absolute value of) <code>N</code> cards from the bottom of the deck onto the top.  For example, to <code>cut -4</code>:</p>
+<pre><code>Top          Bottom
+0 1 2 3 4 5 6 7 8 9   Your deck
+
+0 1 2 3 4 5           Your deck
+            6 7 8 9   Cut cards
+
+        0 1 2 3 4 5   Your deck
+6 7 8 9               Cut cards
+
+6 7 8 9 0 1 2 3 4 5   Your deck
+</code></pre>
+<p><em>To <code>deal with increment N</code></em>, start by clearing enough space on your table to lay out all of the cards individually in a long line.  Deal the top card into the leftmost position. Then, move <code>N</code> positions to the right and deal the next card there. If you would move into a position past the end of the space on your table, wrap around and keep counting from the leftmost card again.  Continue this process until you run out of cards.</p>
+<p>For example, to <code>deal with increment 3</code>:</p>
+<pre><code>
+0 1 2 3 4 5 6 7 8 9   Your deck
+. . . . . . . . . .   Space on table
+^                     Current position
+
+Deal the top card to the current position:
+
+  1 2 3 4 5 6 7 8 9   Your deck
+0 . . . . . . . . .   Space on table
+^                     Current position
+
+Move the current position right 3:
+
+  1 2 3 4 5 6 7 8 9   Your deck
+0 . . . . . . . . .   Space on table
+      ^               Current position
+
+Deal the top card:
+
+    2 3 4 5 6 7 8 9   Your deck
+0 . . 1 . . . . . .   Space on table
+      ^               Current position
+
+Move right 3 and deal:
+
+      3 4 5 6 7 8 9   Your deck
+0 . . 1 . . 2 . . .   Space on table
+            ^         Current position
+
+Move right 3 and deal:
+
+        4 5 6 7 8 9   Your deck
+0 . . 1 . . 2 . . 3   Space on table
+                  ^   Current position
+
+Move right 3, wrapping around, and deal:
+
+          5 6 7 8 9   Your deck
+0 . 4 1 . . 2 . . 3   Space on table
+    ^                 Current position
+
+And so on:
+
+0 7 4 1 8 5 2 9 6 3   Space on table
+</code></pre>
+<p>Positions on the table which already contain cards are still counted; they're not skipped.  Of course, this technique is carefully designed so it will never put two cards in the same position or leave a position empty.</p>
+<p>Finally, collect the cards on the table so that the leftmost card ends up at the top of your deck, the card to its right ends up just below the top card, and so on, until the rightmost card ends up at the bottom of the deck.</p>
+<p>The complete shuffle process (your puzzle input) consists of applying many of these techniques.  Here are some examples that combine techniques; they all start with a <em>factory order</em> deck of 10 cards:</p>
+<pre><code>deal with increment 7
+deal into new stack
+deal into new stack
+Result: 0 3 6 9 2 5 8 1 4 7
+</code></pre>
+<pre><code>cut 6
+deal with increment 7
+deal into new stack
+Result: 3 0 7 4 1 8 5 2 9 6
+</code></pre>
+<pre><code>deal with increment 7
+deal with increment 9
+cut -2
+Result: 6 3 0 7 4 1 8 5 2 9
+</code></pre>
+<pre><code>deal into new stack
+cut -2
+deal with increment 7
+cut 8
+cut -4
+deal with increment 7
+cut 3
+deal with increment 9
+deal with increment 3
+cut -1
+Result: 9 2 5 8 1 4 7 0 3 6
+</code></pre>
+<p>Positions within the deck count from <code>0</code> at the top, then <code>1</code> for the card immediately below the top card, and so on to the bottom.  (That is, cards start in the position matching their number.)</p>
+<p>After shuffling your <em>factory order</em> deck of 10007 cards, <em>what is the position of card <code>2019</code>?</em></p>
+</article>
+<p>Your puzzle answer was <code>7860</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>After a while, you realize your shuffling skill won't improve much more with merely a single deck of cards.  You ask every 3D printer on the ship to make you some more cards while you check on the ship repairs.  While reviewing the work the droids have finished so far, you think you see <a href="https://en.wikipedia.org/wiki/Halley%27s_Comet">Halley's Comet</a> fly past!</p>
+<p>When you get back, you discover that the 3D printers have combined their power to create for you a single, giant, brand new, <em>factory order</em> deck of <em><code>119315717514047</code> space cards</em>.</p>
+<p>Finally, a deck of cards worthy of shuffling!</p>
+<p>You decide to apply your complete shuffle process (your puzzle input) to the deck <em><code>101741582076661</code> times in a row</em>.</p>
+<p>You'll need to be careful, though - one wrong move with this many cards and you might <em>overflow</em> your entire ship!</p>
+<p>After shuffling your new, giant, <em>factory order</em> deck that many times, <em>what number is on the card that ends up in position <code>2020</code>?</em></p>
+</article>
+<p>Your puzzle answer was <code>61256063148970</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="22/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Slam+Shuffle%22+%2D+Day+22+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F22&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Slam+Shuffle%22+%2D+Day+22+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F22';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

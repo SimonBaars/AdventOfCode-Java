@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 15 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">0.0.0.0:</span><a href="/2019">2019</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://auricsystems.com/tokenize-almost-anything?utm_source=advent+of+code&amp;utm_medium=display&amp;utm_camapign=advent2019" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">AuricVault®</a> - Thieves can&apos;t steal -- what isn&apos;t there! Secure your sensitive data. Simple API. FREE test credentials. Start simplifying your compliance.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 15: Oxygen System ---</h2><p>Out here in deep space, many things can go wrong. Fortunately, many of those things have <span title="Which indicator lights indicate when the indicator lights have failed?">indicator lights</span>. Unfortunately, one of those lights is lit: the oxygen system for part of the ship has failed!</p>
+<p>According to the readouts, the oxygen system must have failed days ago after a rupture in oxygen tank two; that section of the ship was automatically sealed once oxygen levels went dangerously low. A single remotely-operated <em>repair droid</em> is your only option for fixing the oxygen system.</p>
+<p>The Elves' care package included an <a href="9">Intcode</a> program (your puzzle input) that you can use to remotely control the repair droid. By running that program, you can direct the repair droid to the oxygen system and fix the problem.</p>
+<p>The remote control program executes the following steps in a loop forever:</p>
+<ul>
+<li>Accept a <em>movement command</em> via an input instruction.</li>
+<li>Send the movement command to the repair droid.</li>
+<li>Wait for the repair droid to finish the movement operation.</li>
+<li>Report on the <em>status</em> of the repair droid via an output instruction.</li>
+</ul>
+<p>Only four <em>movement commands</em> are understood: north (<code>1</code>), south (<code>2</code>), west (<code>3</code>), and east (<code>4</code>). Any other command is invalid. The movements differ in direction, but not in distance: in a long enough east-west hallway, a series of commands like <code>4,4,4,4,3,3,3,3</code> would leave the repair droid back where it started.</p>
+<p>The repair droid can reply with any of the following <em>status</em> codes:</p>
+<ul>
+<li><code>0</code>: The repair droid hit a wall. Its position has not changed.</li>
+<li><code>1</code>: The repair droid has moved one step in the requested direction.</li>
+<li><code>2</code>: The repair droid has moved one step in the requested direction; its new position is the location of the oxygen system.</li>
+</ul>
+<p>You don't know anything about the area around the repair droid, but you can figure it out by watching the status codes.</p>
+<p>For example, we can draw the area using <code>D</code> for the droid, <code>#</code> for walls, <code>.</code> for locations the droid can traverse, and empty space for unexplored locations.  Then, the initial state looks like this:</p>
+<pre><code>      
+      
+   D  
+      
+      
+</code></pre>
+<p>To make the droid go north, send it <code>1</code>. If it replies with <code>0</code>, you know that location is a wall and that the droid didn't move:</p>
+<pre><code>      
+   #  
+   D  
+      
+      
+</code></pre>
+<p>To move east, send <code>4</code>; a reply of <code>1</code> means the movement was successful:</p>
+<pre><code>      
+   #  
+   .D 
+      
+      
+</code></pre>
+<p>Then, perhaps attempts to move north (<code>1</code>), south (<code>2</code>), and east (<code>4</code>) are all met with replies of <code>0</code>:</p>
+<pre><code>      
+   ## 
+   .D#
+    # 
+      
+</code></pre>
+<p>Now, you know the repair droid is in a dead end. Backtrack with <code>3</code> (which you already know will get a reply of <code>1</code> because you already know that location is open):</p>
+<pre><code>      
+   ## 
+   D.#
+    # 
+      
+</code></pre>
+<p>Then, perhaps west (<code>3</code>) gets a reply of <code>0</code>, south (<code>2</code>) gets a reply of <code>1</code>, south again (<code>2</code>) gets a reply of <code>0</code>, and then west (<code>3</code>) gets a reply of <code>2</code>:</p>
+<pre><code>      
+   ## 
+  #..#
+  D.# 
+   #  
+</code></pre>
+<p>Now, because of the reply of <code>2</code>, you know you've found the <em>oxygen system</em>! In this example, it was only <code><em>2</em></code> moves away from the repair droid's starting position.</p>
+<p><em>What is the fewest number of movement commands</em> required to move the repair droid from its starting position to the location of the oxygen system?</p>
+</article>
+<p>Your puzzle answer was <code>380</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You quickly repair the oxygen system; oxygen gradually fills the area.</p>
+<p>Oxygen starts in the location containing the repaired oxygen system. It takes <em>one minute</em> for oxygen to spread to all open locations that are adjacent to a location that already contains oxygen. Diagonal locations are <em>not</em> adjacent.</p>
+<p>In the example above, suppose you've used the droid to explore the area fully and have the following map (where locations that currently contain oxygen are marked <code>O</code>):</p>
+<pre><code> ##   
+#..## 
+#.#..#
+#.O.# 
+ ###  
+</code></pre>
+<p>Initially, the only location which contains oxygen is the location of the repaired oxygen system.  However, after one minute, the oxygen spreads to all open (<code>.</code>) locations that are adjacent to a location containing oxygen:</p>
+<pre><code> ##   
+#..## 
+#.#..#
+#OOO# 
+ ###  
+</code></pre>
+<p>After a total of two minutes, the map looks like this:</p>
+<pre><code> ##   
+#..## 
+#O#O.#
+#OOO# 
+ ###  
+</code></pre>
+<p>After a total of three minutes:</p>
+<pre><code> ##   
+#O.## 
+#O#OO#
+#OOO# 
+ ###  
+</code></pre>
+<p>And finally, the whole region is full of oxygen after a total of four minutes:</p>
+<pre><code> ##   
+#OO## 
+#O#OO#
+#OOO# 
+ ###  
+</code></pre>
+<p>So, in this example, all locations contain oxygen after <code><em>4</em></code> minutes.</p>
+<p>Use the repair droid to get a complete map of the area. <em>How many minutes will it take to fill with oxygen?</em></p>
+</article>
+<p>Your puzzle answer was <code>410</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="15/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Oxygen+System%22+%2D+Day+15+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F15&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Oxygen+System%22+%2D+Day+15+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F15';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

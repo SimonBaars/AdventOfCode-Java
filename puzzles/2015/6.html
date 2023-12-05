@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 6 - Advent of Code 2015</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2015/about">[About]</a></li><li><a href="/2015/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2015/settings">[Settings]</a></li><li><a href="/2015/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2015/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">14*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">0xffff&amp;</span><a href="/2015">2015</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2015">[Calendar]</a></li><li><a href="/2015/support">[AoC++]</a></li><li><a href="/2015/sponsors">[Sponsors]</a></li><li><a href="/2015/leaderboard">[Leaderboard]</a></li><li><a href="/2015/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+</div><!--/sidebar-->
+
+<main>
+<article class="day-desc"><h2>--- Day 6: Probably a Fire Hazard ---</h2><p>Because your neighbors keep defeating you in the holiday house decorating contest year after year, you've decided to deploy one million lights in a <span title="Hey, be glad I'm not asking for the resistance between two points!">1000x1000 grid</span>.</p>
+<p>Furthermore, because you've been especially nice this year, Santa has mailed you instructions on how to display the ideal lighting configuration.</p>
+<p>Lights in your grid are numbered from 0 to 999 in each direction; the lights at each corner are at <code>0,0</code>, <code>0,999</code>, <code>999,999</code>, and <code>999,0</code>. The instructions include whether to <code>turn on</code>, <code>turn off</code>, or <code>toggle</code> various inclusive ranges given as coordinate pairs.  Each coordinate pair represents opposite corners of a rectangle, inclusive; a coordinate pair like <code>0,0 through 2,2</code> therefore refers to 9 lights in a 3x3 square.  The lights all start turned off.</code>
+<p>To defeat your neighbors this year, all you have to do is set up your lights by doing the instructions Santa sent you in order.</p>
+<p>For example:</p>
+<ul>
+<li><code>turn on 0,0 through 999,999</code> would turn on (or leave on) every light.</li>
+<li><code>toggle 0,0 through 999,0</code> would toggle the first line of 1000 lights, turning off the ones that were on, and turning on the ones that were off.</li>
+<li><code>turn off 499,499 through 500,500</code> would turn off (or leave off) the middle four lights.</li>
+</ul>
+<p>After following the instructions, <em>how many lights are lit</em>?</p>
+</article>
+<p>Your puzzle answer was <code>569999</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>You just finish implementing your winning light pattern when you realize you mistranslated Santa's message from Ancient Nordic Elvish.</p>
+<p>The light grid you bought actually has individual brightness controls; each light can have a brightness of zero or more.  The lights all start at zero.</p>
+<p>The phrase <code>turn on</code> actually means that you should increase the brightness of those lights by <code>1</code>.</p>
+<p>The phrase <code>turn off</code> actually means that you should decrease the brightness of those lights by <code>1</code>, to a minimum of zero.</p>
+<p>The phrase <code>toggle</code> actually means that you should increase the brightness of those lights by <code>2</code>.</p>
+<p>What is the <em>total brightness</em> of all lights combined after following Santa's instructions?</p>
+<p>For example:</p>
+<ul>
+<li><code>turn on 0,0 through 0,0</code> would increase the total brightness by <code>1</code>.</li>
+<li><code>toggle 0,0 through 999,999</code> would increase the total brightness by <code>2000000</code>.</li>
+</ul>
+</article>
+<p>Your puzzle answer was <code>17836115</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, you should <a href="/2015">return to your Advent calendar</a> and try another puzzle.</p>
+<p>If you still want to see it, you can <a href="6/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Probably+a+Fire+Hazard%22+%2D+Day+6+%2D+Advent+of+Code+2015&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2015%2Fday%2F6&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Probably+a+Fire+Hazard%22+%2D+Day+6+%2D+Advent+of+Code+2015+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2015%2Fday%2F6';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>

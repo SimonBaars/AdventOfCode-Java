@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 10 - Advent of Code 2019</title>
+<link rel="stylesheet" type="text/css" href="../style.css"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2019/about">[About]</a></li><li><a href="/2019/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2019/settings">[Settings]</a></li><li><a href="/2019/auth/logout">[Log Out]</a></li></ul></nav><div class="user">Simon <a href="/2019/support" class="supporter-badge" title="Advent of Code Supporter">(AoC++)</a> <span class="star-count">50*</span></div></div><div><h1 class="title-event">&nbsp;&nbsp;<span class="title-event-wrap">0.0.0.0:</span><a href="/2019">2019</a><span class="title-event-wrap"></span></h1><nav><ul><li><a href="/2019">[Calendar]</a></li><li><a href="/2019/support">[AoC++]</a></li><li><a href="/2019/sponsors">[Sponsors]</a></li><li><a href="/2019/leaderboard">[Leaderboard]</a></li><li><a href="/2019/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2019/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://www.codethink.co.uk/" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Codethink Ltd.</a> - Codethink is a software services company, expert in the use of Open Source technologies for systems software engineering.</div></div>
+</div><!--/sidebar-->
+
+<main>
+<style>article *[title]{border-bottom:1px dotted #ffff66;}</style><article class="day-desc"><h2>--- Day 10: Monitoring Station ---</h2><p>You fly into the asteroid belt and reach the Ceres monitoring station.  The Elves here have an emergency: they're having trouble tracking all of the asteroids and can't be sure they're safe.</p>
+<p>The Elves would like to build a new monitoring station in a nearby area of space; they hand you a map of all of the asteroids in that region (your puzzle input).</p>
+<p>The map indicates whether each position is empty (<code>.</code>) or contains an asteroid (<code>#</code>).  The asteroids are much smaller than they appear on the map, and every asteroid is exactly in the center of its marked position.  The asteroids can be described with <code>X,Y</code> coordinates where <code>X</code> is the distance from the left edge and <code>Y</code> is the distance from the top edge (so the top-left corner is <code>0,0</code> and the position immediately to its right is <code>1,0</code>).</p>
+<p>Your job is to figure out which asteroid would be the best place to build a <em>new monitoring station</em>. A monitoring station can <em>detect</em> any asteroid to which it has <em>direct line of sight</em> - that is, there cannot be another asteroid <em>exactly</em> between them. This line of sight can be at any angle, not just lines aligned to the grid or <span title="The Elves on Ceres are clearly not concerned with honor.">diagonally</span>. The <em>best</em> location is the asteroid that can <em>detect</em> the largest number of other asteroids.</p>
+<p>For example, consider the following map:</p>
+<pre><code>.#..#
+.....
+#####
+....#
+...<em>#</em>#
+</code></pre>
+<p>The best location for a new monitoring station on this map is the highlighted asteroid at <code>3,4</code> because it can detect <code>8</code> asteroids, more than any other location. (The only asteroid it cannot detect is the one at <code>1,0</code>; its view of this asteroid is blocked by the asteroid at <code>2,2</code>.) All other asteroids are worse locations; they can detect <code>7</code> or fewer other asteroids. Here is the number of other asteroids a monitoring station on each asteroid could detect:</p>
+<pre><code>.7..7
+.....
+67775
+....7
+...87
+</code></pre>
+<p>Here is an asteroid (<code>#</code>) and some examples of the ways its line of sight might be blocked. If there were another asteroid at the location of a capital letter, the locations marked with the corresponding lowercase letter would be blocked and could not be detected:</p>
+<pre><code>#.........
+...A......
+...B..a...
+.EDCG....a
+..F.c.b...
+.....c....
+..efd.c.gb
+.......c..
+....f...c.
+...e..d..c
+</code></pre>
+<p>Here are some larger examples:</p>
+<ul>
+<li><p>Best is <code>5,8</code> with <code>33</code> other asteroids detected:</p>
+<pre><code>......#.#.
+#..#.#....
+..#######.
+.#.#.###..
+.#..#.....
+..#....#.#
+#..#....#.
+.##.#..###
+##...<em>#</em>..#.
+.#....####
+</code></pre></li>
+<li><p>Best is <code>1,2</code> with <code>35</code> other asteroids detected:</p>
+<pre><code>#.#...#.#.
+.###....#.
+.<em>#</em>....#...
+##.#.#.#.#
+....#.#.#.
+.##..###.#
+..#...##..
+..##....##
+......#...
+.####.###.
+</code></pre></li>
+<li><p>Best is <code>6,3</code> with <code>41</code> other asteroids detected:</p>
+<pre><code>.#..#..###
+####.###.#
+....###.#.
+..###.<em>#</em>#.#
+##.##.#.#.
+....###..#
+..#.#..#.#
+#..#.#.###
+.##...##.#
+.....#.#..
+</code></pre></li>
+<li><p>Best is <code>11,13</code> with <code>210</code> other asteroids detected:</p>
+<pre><code>.#..##.###...#######
+##.############..##.
+.#.######.########.#
+.###.#######.####.#.
+#####.##.#.##.###.##
+..#####..#.#########
+####################
+#.####....###.#.#.##
+##.#################
+#####.##.###..####..
+..######..##.#######
+####.##.####...##..#
+.#####..#.######.###
+##...#.####<em>#</em>#####...
+#.##########.#######
+.####.#.###.###.#.##
+....##.##.###..#####
+.#.#.###########.###
+#.#.#.#####.####.###
+###.##.####.##.#..##
+</code></pre></li>
+</ul>
+<p>Find the best location for a new monitoring station.  <em>How many other asteroids can be detected from that location?</em></p>
+</article>
+<p>Your puzzle answer was <code>299</code>.</p><article class="day-desc"><h2 id="part2">--- Part Two ---</h2><p>Once you give them the coordinates, the Elves quickly deploy an Instant Monitoring Station to the location and discover <span title="The Elves on Ceres just have a unique system of values, that's all.">the worst</span>: there are simply too many asteroids.</p>
+<p>The only solution is <em>complete vaporization by giant laser</em>.</p>
+<p>Fortunately, in addition to an asteroid scanner, the new monitoring station also comes equipped with a giant rotating laser perfect for vaporizing asteroids. The laser starts by pointing <em>up</em> and always rotates <em>clockwise</em>, vaporizing any asteroid it hits.</p>
+<p>If multiple asteroids are <em>exactly</em> in line with the station, the laser only has enough power to vaporize <em>one</em> of them before continuing its rotation. In other words, the same asteroids that can be <em>detected</em> can be vaporized, but if vaporizing one asteroid makes another one detectable, the newly-detected asteroid won't be vaporized until the laser has returned to the same position by rotating a full 360 degrees.</p>
+<p>For example, consider the following map, where the asteroid with the new monitoring station (and laser) is marked <code>X</code>:</p>
+<pre><code>.#....#####...#..
+##...##.#####..##
+##...#...#.#####.
+..#.....X...###..
+..#.#.....#....##
+</code></pre>
+<p>The first nine asteroids to get vaporized, in order, would be:</p>
+<pre><code>.#....###<em>2</em><em>4</em>...#..
+##...##.<em>1</em><em>3</em>#<em>6</em><em>7</em>..<em>9</em>#
+##...#...<em>5</em>.<em>8</em>####.
+..#.....X...###..
+..#.#.....#....##
+</code></pre>
+<p>Note that some asteroids (the ones behind the asteroids marked <code>1</code>, <code>5</code>, and <code>7</code>) won't have a chance to be vaporized until the next full rotation.  The laser continues rotating; the next nine to be vaporized are:</p>
+<pre><code>.#....###.....#..
+##...##...#.....#
+##...#......<em>1</em><em>2</em><em>3</em><em>4</em>.
+..#.....X...<em>5</em>##..
+..#.<em>9</em>.....<em>8</em>....<em>7</em><em>6</em>
+</code></pre>
+<p>The next nine to be vaporized are then:</p>
+<pre><code>.<em>8</em>....###.....#..
+<em>5</em><em>6</em>...<em>9</em>#...#.....#
+<em>3</em><em>4</em>...<em>7</em>...........
+..<em>2</em>.....X....##..
+..<em>1</em>..............
+</code></pre>
+<p>Finally, the laser completes its first full rotation (<code>1</code> through <code>3</code>), a second rotation (<code>4</code> through <code>8</code>), and vaporizes the last asteroid (<code>9</code>) partway through its third rotation:</p>
+<pre><code>......<em>2</em><em>3</em><em>4</em>.....<em>6</em>..
+......<em>1</em>...<em>5</em>.....<em>7</em>
+.................
+........X....<em>8</em><em>9</em>..
+.................
+</code></pre>
+<p>In the large example above (the one with the best monitoring station location at <code>11,13</code>):</p>
+<ul>
+<li>The 1st asteroid to be vaporized is at <code>11,12</code>.</li>
+<li>The 2nd asteroid to be vaporized is at <code>12,1</code>.</li>
+<li>The 3rd asteroid to be vaporized is at <code>12,2</code>.</li>
+<li>The 10th asteroid to be vaporized is at <code>12,8</code>.</li>
+<li>The 20th asteroid to be vaporized is at <code>16,0</code>.</li>
+<li>The 50th asteroid to be vaporized is at <code>16,9</code>.</li>
+<li>The 100th asteroid to be vaporized is at <code>10,16</code>.</li>
+<li>The 199th asteroid to be vaporized is at <code>9,6</code>.</li>
+<li><em>The 200th asteroid to be vaporized is at <code>8,2</code>.</em></li>
+<li>The 201st asteroid to be vaporized is at <code>10,9</code>.</li>
+<li>The 299th and final asteroid to be vaporized is at <code>11,1</code>.</li>
+</ul>
+<p>The Elves are placing bets on which will be the <em>200th</em> asteroid to be vaporized.  Win the bet by determining which asteroid that will be; <em>what do you get if you multiply its X coordinate by <code>100</code> and then add its Y coordinate?</em> (For example, <code>8,2</code> becomes <em><code>802</code></em>.)</p>
+</article>
+<p>Your puzzle answer was <code>1419</code>.</p><p class="day-success">Both parts of this puzzle are complete! They provide two gold stars: **</p>
+<p>At this point, all that is left is for you to <a href="/2019">admire your Advent calendar</a>.</p>
+<p>If you still want to see it, you can <a href="10/input" target="_blank">get your puzzle input</a>.</p>
+<p>You can also <span class="share">[Share<span class="share-content">on
+  <a href="https://twitter.com/intent/tweet?text=I%27ve+completed+%22Monitoring+Station%22+%2D+Day+10+%2D+Advent+of+Code+2019&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F10&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a>
+  <a href="javascript:void(0);" onclick="var ms; try{ms=localStorage.getItem('mastodon.server')}finally{} if(typeof ms!=='string')ms=''; ms=prompt('Mastodon Server?',ms); if(typeof ms==='string' && ms.length){this.href='https://'+ms+'/share?text=I%27ve+completed+%22Monitoring+Station%22+%2D+Day+10+%2D+Advent+of+Code+2019+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2019%2Fday%2F10';try{localStorage.setItem('mastodon.server',ms);}finally{}}else{return false;}" target="_blank">Mastodon</a
+></span>]</span> this puzzle.</p>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-69522494-1', 'auto');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>
