@@ -3,9 +3,8 @@ package com.sbaars.adventofcode.year23.days;
 import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.year23.Day2023;
-import java.util.HashSet;
 
-import java.util.stream.Collectors;
+import java.util.HashSet;
 
 import static com.sbaars.adventofcode.common.Direction.eight;
 import static java.lang.Long.parseLong;
