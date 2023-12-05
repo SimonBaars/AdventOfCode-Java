@@ -30,7 +30,7 @@ public class DownloadTests {
   }
 
   public static void main(String[] args) {
-    new DownloadTests().retrieveTests("1", "2023");
+    new DownloadTests().retrieveTests("4", "2023");
   }
 
   public void retrieveTests(String day, String year) {
