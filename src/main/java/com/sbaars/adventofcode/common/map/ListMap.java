@@ -1,5 +1,7 @@
 package com.sbaars.adventofcode.common.map;
 
+import com.google.mu.util.stream.BiStream;
+
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -79,6 +81,12 @@ public class ListMap<K, V> extends HashMap<K, List<V>> {
 
   public Stream<V> valueStream() {
     return values().stream().flatMap(List::stream);
+  }
+
+  public BiStream<K, List<V>> stream() {
+    BiStream.Builder<K, List<V>> builder = BiStream.builder();
+    forEach(builder::add);
+    return builder.build();
   }
 
   public boolean hasValue(V v) {

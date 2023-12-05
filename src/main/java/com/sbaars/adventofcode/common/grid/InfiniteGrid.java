@@ -1,18 +1,20 @@
 package com.sbaars.adventofcode.common.grid;
 
+import com.google.mu.util.stream.BiStream;
+import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.location.Loc;
+import com.sbaars.adventofcode.common.map.ListMap;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.sbaars.adventofcode.common.Direction.eight;
+import static com.sbaars.adventofcode.common.Direction.four;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -56,6 +58,18 @@ public class InfiniteGrid implements Grid {
 
   public Optional<Character> get(Loc p) {
     return grid.containsKey(p) ? of(grid.get(p)) : empty();
+  }
+
+  public Optional<Character> get(long x, long y) {
+    return get(x, y);
+  }
+
+  public Character getOptimistic(long x, long y) {
+    return get(x, y).orElseThrow();
+  }
+
+  public Character getOptimistic(Loc l) {
+    return get(l).orElseThrow();
   }
 
   public char getChar(Loc p) {
@@ -138,6 +152,41 @@ public class InfiniteGrid implements Grid {
 
   public Stream<Loc> stream() {
     return grid.keySet().stream();
+  }
+
+  public BiStream<Loc, Character> streamChars() {
+    BiStream.Builder<Loc, Character> builder = BiStream.builder();
+    grid.forEach(builder::add);
+    return builder.build();
+  }
+
+  public BiStream<List<Loc>, String> findGroups(Predicate<Character> predicate, boolean horizontal) {
+    var groups = new HashMap<List<Loc>, String>();
+    StringBuilder currentGroup = new StringBuilder();
+    List<Loc> currentLocs = new ArrayList<>();
+    long width = width();
+    long height = height();
+    for(int i = 0; i<(horizontal ? width : height); i++) {
+      for(int j = 0; j<(horizontal ? height : width); j++) {
+        Loc l = new Loc(horizontal ? j : i, horizontal ? i : j);
+        Character c = getOptimistic(l);
+        if(predicate.test(c)) {
+          currentGroup.append(c);
+          currentLocs.add(l);
+        } else if (!currentGroup.isEmpty()) {
+          groups.put(new ArrayList<>(currentLocs), currentGroup.toString());
+          currentGroup.delete(0, currentGroup.length());
+          currentLocs.clear();
+        }
+      }
+    }
+    BiStream.Builder<List<Loc>, String> builder = BiStream.builder();
+    groups.forEach(builder::add);
+    return builder.build();
+  }
+
+  public Stream<Loc> findAround(Predicate<Character> predicate, Stream<Loc> locs, boolean diagonal) {
+    return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l))).distinct().filter(l -> get(l).filter(predicate).isPresent());
   }
 
   public void removeIf(BiPredicate<Loc, Character> p) {
