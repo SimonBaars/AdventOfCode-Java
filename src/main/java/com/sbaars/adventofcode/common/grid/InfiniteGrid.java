@@ -185,6 +185,10 @@ public class InfiniteGrid implements Grid {
     return builder.build();
   }
 
+  public Stream<Loc> findAll(Character c) {
+    return stream().filter(l -> get(l).filter(ch -> ch == c).isPresent());
+  }
+
   public Stream<Loc> findAround(Predicate<Character> predicate, Stream<Loc> locs, boolean diagonal) {
     return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l))).filter(l -> get(l).filter(predicate).isPresent());
   }
