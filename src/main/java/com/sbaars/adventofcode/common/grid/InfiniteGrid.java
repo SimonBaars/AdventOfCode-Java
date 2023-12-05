@@ -161,7 +161,7 @@ public class InfiniteGrid implements Grid {
   }
 
   public BiStream<List<Loc>, String> findGroups(Predicate<Character> predicate, boolean horizontal) {
-    var groups = new HashMap<List<Loc>, String>();
+    BiStream.Builder<List<Loc>, String> builder = BiStream.builder();
     StringBuilder currentGroup = new StringBuilder();
     List<Loc> currentLocs = new ArrayList<>();
     long width = width();
@@ -170,23 +170,23 @@ public class InfiniteGrid implements Grid {
       for(int j = 0; j<(horizontal ? height : width); j++) {
         Loc l = new Loc(horizontal ? j : i, horizontal ? i : j);
         Character c = getOptimistic(l);
-        if(predicate.test(c)) {
+        boolean matchesPredicate = predicate.test(c);
+        if(matchesPredicate) {
           currentGroup.append(c);
           currentLocs.add(l);
-        } else if (!currentGroup.isEmpty()) {
-          groups.put(new ArrayList<>(currentLocs), currentGroup.toString());
+        }
+        if ((!matchesPredicate && !currentGroup.isEmpty()) || j == (horizontal ? height : width) - 1) {
+          builder.add(new ArrayList<>(currentLocs), currentGroup.toString());
           currentGroup.delete(0, currentGroup.length());
           currentLocs.clear();
         }
       }
     }
-    BiStream.Builder<List<Loc>, String> builder = BiStream.builder();
-    groups.forEach(builder::add);
     return builder.build();
   }
 
   public Stream<Loc> findAround(Predicate<Character> predicate, Stream<Loc> locs, boolean diagonal) {
-    return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l))).distinct().filter(l -> get(l).filter(predicate).isPresent());
+    return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l))).filter(l -> get(l).filter(predicate).isPresent());
   }
 
   public void removeIf(BiPredicate<Loc, Character> p) {
