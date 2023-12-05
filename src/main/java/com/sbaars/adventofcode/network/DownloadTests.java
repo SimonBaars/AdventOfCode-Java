@@ -20,6 +20,8 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static com.sbaars.adventofcode.network.FetchInput.doRequest;
+
 public class DownloadTests {
   private final HttpClient client;
 
@@ -32,10 +34,11 @@ public class DownloadTests {
   }
 
   public void retrieveTests(String day, String year) {
-    var matches = getMatchesByXpath(doRequest(year + "/day/" + day), "/html/body/main/p/code");
+    var matches = getMatchesByXpath(doRequest(client,year + "/day/" + day), "/html/body/main/p/code");
     String y = year.substring(2);
-    getFile(day, y).getParentFile().mkdirs();
-    writeFile(getFile(day, y), """
+    File file = getFile(day, y);
+    file.getParentFile().mkdirs();
+    writeFile(file, """
         package com.sbaars.adventofcode.year%s.days;
                     
         import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -83,17 +86,6 @@ public class DownloadTests {
       XPath xpathObj = XPathFactory.newInstance().newXPath();
       NodeList matches = (NodeList) xpathObj.evaluate(xpath, doc, XPathConstants.NODESET);
       return IntStream.range(0, matches.getLength()).mapToObj(matches::item).map(Node::getTextContent).toList();
-    } catch (Exception e) {
-      throw new IllegalStateException(e);
-    }
-  }
-
-  private String doRequest(String path) {
-    try {
-      HttpRequest req = HttpRequest.newBuilder()
-          .uri(URI.create("https://adventofcode.com/" + path))
-          .GET().build();
-      return client.send(req, HttpResponse.BodyHandlers.ofString()).body();
     } catch (Exception e) {
       throw new IllegalStateException(e);
     }
