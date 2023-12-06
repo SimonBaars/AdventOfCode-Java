@@ -67,7 +67,7 @@ public class AOCUtils {
   }
 
   public static <A> Stream<Pair<A, A>> pairs(List<A> l) {
-    return range(1, l.size() / 2).map(i -> i + ((i - 1) * 2)).mapToObj(i -> pair(l.get(i - 1), l.get(i)));
+    return range(0, l.size() / 2).mapToObj(i -> new Pair<>(l.get(i * 2), l.get(i * 2 + 1)));
   }
 
   public static <A> Stream<Pair<A, A>> allPairs(List<A> l) {

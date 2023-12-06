@@ -31,12 +31,12 @@ public class Day5 extends Day2023 {
     return findLocations(day, seeds);
   }
 
-  private static ArrayList getSeeds(String[] day) {
+  private ArrayList getSeeds(String[] day) {
     return readString(day[0], "seeds: %ln", " ", ArrayList.class);
   }
 
-  private static long findLocations(String[] day, List<Long> seeds) {
-    List<Mapping> mappings = Arrays.stream(Arrays.copyOfRange(day, 1, day.length)).map(s -> readString(s, "%s-to-%s map:\n%l(%n %n %n)", "\n", Mapping.class, SeedNumbers.class)).toList();
+  private long findLocations(String[] day, List<Long> seeds) {
+    List<Mapping> mappings = mappings(day);
     return mappings
             .stream()
             .reduce(seeds, (acc, m) -> acc.stream().map(seed -> m.nums.stream().map(n -> new Loc(n.sourceStart, n.sourceStart + n.size - 1).contains(seed) ? seed + (n.destinationStart - n.sourceStart) : -1).filter(n -> n != -1).findAny().orElse(seed)).toList(), (a, b) -> {
@@ -49,11 +49,15 @@ public class Day5 extends Day2023 {
             .getAsLong();
   }
 
+  private static List<Mapping> mappings(String[] day) {
+    return Arrays.stream(Arrays.copyOfRange(day, 1, day.length)).map(s -> readString(s, "%s-to-%s map:\n%l(%n %n %n)", "\n", Mapping.class, SeedNumbers.class)).toList();
+  }
+
   @Override
   public Object part2() {
+    this.example = 1;
     String[] day = day().split("\n\n");
     List<Long> seeds = getSeeds(day);
-    seeds = pairs(seeds).flatMap(p -> LongStream.range(p.a(), p.a() + p.b()).boxed()).toList();
-    return findLocations(day, seeds);
+    return findLocations(day, pairs(seeds).flatMap(p -> LongStream.range(p.a(), p.a() + p.b()).boxed()).toList());
   }
 }
