@@ -149,4 +149,8 @@ public class Loc implements Comparable<Loc> {
     ToLongFunction<Loc> tlf = a -> a.x * Integer.MAX_VALUE + a.y;
     return Comparator.comparingLong(tlf).compare(this, o);
   }
+
+  public boolean contains(long l) {
+    return l >= x && l <= y;
+  }
 }
