@@ -27,9 +27,10 @@ package com.sbaars.adventofcode.common.location;
 
 import com.sbaars.adventofcode.common.Direction;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.ToLongFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
