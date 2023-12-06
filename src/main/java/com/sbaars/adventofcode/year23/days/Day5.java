@@ -28,15 +28,15 @@ public class Day5 extends Day2023 {
   public Object part1() {
     String[] day = day().split("\n\n");
     List<Long> seeds = getSeeds(day);
-    return seeds.stream().mapToLong(seed -> findLocations(day, seed)).min().getAsLong();
+    List<Mapping> mappings = mappings(day);
+    return seeds.stream().mapToLong(seed -> findLocations(day, mappings, seed)).min().getAsLong();
   }
 
   private ArrayList<Long> getSeeds(String[] day) {
     return readString(day[0], "seeds: %ln", " ", ArrayList.class);
   }
 
-  private long findLocations(String[] day, long seed) {
-    List<Mapping> mappings = mappings(day);
+  private long findLocations(String[] day, List<Mapping> mappings, long seed) {
     return mappings
             .stream()
             .reduce(seed, (s, m) -> m.nums.stream().map(n -> new Loc(n.sourceStart, n.sourceStart + n.size - 1).contains(s) ? s + (n.destinationStart - n.sourceStart) : -1).filter(n -> n != -1).findAny().orElse(s), Long::sum);
@@ -50,6 +50,7 @@ public class Day5 extends Day2023 {
   public Object part2() {
     String[] day = day().split("\n\n");
     List<Long> seeds = getSeeds(day);
-    return pairs(seeds).flatMap(p -> LongStream.range(p.a(), p.a() + p.b()).boxed()).mapToLong(s -> findLocations(day, s)).min().getAsLong();
+    List<Mapping> mappings = mappings(day);
+    return pairs(seeds).flatMap(p -> LongStream.range(p.a(), p.a() + p.b()).boxed()).parallel().mapToLong(s -> findLocations(day, mappings, s)).min().getAsLong();
   }
 }
