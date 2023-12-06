@@ -55,7 +55,6 @@ public class Day5 extends Day2023 {
 
   @Override
   public Object part2() {
-    this.example = 1;
     String[] day = day().split("\n\n");
     List<Long> seeds = getSeeds(day);
     return findLocations(day, pairs(seeds).flatMap(p -> LongStream.range(p.a(), p.a() + p.b()).boxed()).toList());
