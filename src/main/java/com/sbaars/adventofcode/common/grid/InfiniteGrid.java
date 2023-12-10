@@ -1,10 +1,8 @@
 package com.sbaars.adventofcode.common.grid;
 
 import com.google.mu.util.stream.BiStream;
-import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.location.Loc;
-import com.sbaars.adventofcode.common.map.ListMap;
 
 import java.util.*;
 import java.util.function.*;
@@ -25,6 +23,15 @@ public class InfiniteGrid implements Grid {
     this(g, ' ');
   }
 
+  public InfiniteGrid(char c, long width, long height) {
+    this();
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        grid.put(new Loc(j, i), c);
+      }
+    }
+  }
+
   public InfiniteGrid(char[][] g, char transparent) {
     this();
     for (int i = 0; i < g.length; i++) {
@@ -34,6 +41,11 @@ public class InfiniteGrid implements Grid {
         }
       }
     }
+  }
+
+  public InfiniteGrid(Collection<Loc> locs, char c) {
+    this();
+    locs.forEach(l -> grid.put(l, c));
   }
 
   public InfiniteGrid(Map<Loc, Character> grid) {
@@ -166,12 +178,12 @@ public class InfiniteGrid implements Grid {
     List<Loc> currentLocs = new ArrayList<>();
     long width = width();
     long height = height();
-    for(int i = 0; i<(horizontal ? width : height); i++) {
-      for(int j = 0; j<(horizontal ? height : width); j++) {
+    for (int i = 0; i < (horizontal ? width : height); i++) {
+      for (int j = 0; j < (horizontal ? height : width); j++) {
         Loc l = new Loc(horizontal ? j : i, horizontal ? i : j);
         Character c = getOptimistic(l);
         boolean matchesPredicate = predicate.test(c);
-        if(matchesPredicate) {
+        if (matchesPredicate) {
           currentGroup.append(c);
           currentLocs.add(l);
         }
@@ -186,7 +198,7 @@ public class InfiniteGrid implements Grid {
   }
 
   public Stream<Loc> findAll(Character c) {
-    return stream().filter(l -> get(l).filter(ch -> ch == c).isPresent());
+    return stream().filter(l -> contains(l) && getOptimistic(l) == c);
   }
 
   public Stream<Loc> findAround(Predicate<Character> predicate, Stream<Loc> locs, boolean diagonal) {
@@ -215,5 +227,43 @@ public class InfiniteGrid implements Grid {
 
   public void replace(char find, char replaceWith) {
     grid.entrySet().stream().filter(e -> e.getValue() == find).forEach(e -> grid.put(e.getKey(), replaceWith));
+  }
+
+  public Set<Loc> floodFill(Loc start, Predicate<Character> predicate) {
+    Set<Loc> output = new HashSet<>();
+    Set<Loc> toCheck = new HashSet<>();
+    toCheck.add(start);
+    while (!toCheck.isEmpty()) {
+      Set<Loc> newToCheck = new HashSet<>();
+      for (Loc l : toCheck) {
+        if (predicate.test(getChar(l))) {
+          output.add(l);
+          newToCheck.addAll(four().map(d -> d.move(l)).filter(this::contains).filter(l2 -> !output.contains(l2)).collect(Collectors.toSet()));
+        }
+      }
+      toCheck = newToCheck;
+    }
+    return output;
+  }
+
+  public InfiniteGrid withBorder(long thickness, char borderChar) {
+    InfiniteGrid g = new InfiniteGrid(this);
+    long minX = minX();
+    long minY = minY();
+    long maxX = maxX();
+    long maxY = maxY();
+    for (long i = minY - thickness; i <= maxY + thickness; i++) {
+      for (long j = 1; j <= thickness; j++) {
+        g.set(new Loc(minX - j, i), borderChar);
+        g.set(new Loc(maxX + j, i), borderChar);
+      }
+    }
+    for (long i = minX - thickness; i <= maxX + thickness; i++) {
+      for (long j = 1; j <= thickness; j++) {
+        g.set(new Loc(i, minY - j), borderChar);
+        g.set(new Loc(i, maxY + j), borderChar);
+      }
+    }
+    return g;
   }
 }

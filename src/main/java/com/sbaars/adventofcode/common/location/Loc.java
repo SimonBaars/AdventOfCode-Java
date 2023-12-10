@@ -27,11 +27,11 @@ package com.sbaars.adventofcode.common.location;
 
 import com.sbaars.adventofcode.common.Direction;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.function.ToLongFunction;
+import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -153,5 +153,9 @@ public class Loc implements Comparable<Loc> {
 
   public boolean contains(long l) {
     return l >= x && l <= y;
+  }
+
+  public Loc translate(UnaryOperator<Long> mapper) {
+    return new Loc(mapper.apply(x), mapper.apply(y));
   }
 }
