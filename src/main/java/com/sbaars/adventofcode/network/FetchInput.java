@@ -29,7 +29,7 @@ public class FetchInput {
   }
 
   public static void main(String[] args) {
-    new FetchInput().retrieveDay("9", "2023");
+    new FetchInput().retrieveDay("10", "2023");
   }
 
   private void retrieveDay(String day, String year) {
@@ -38,7 +38,7 @@ public class FetchInput {
   }
 
   public void retrieveExamples(String day, String year) {
-    var matches = getMatchesByXpath(doRequest(client,year + "/day/" + day), "//pre/code");
+    var matches = getMatchesByXpath(doRequest(client, year + "/day/" + day), "//pre/code");
     for (int i = 0; i < matches.size(); i++) {
       File file = getFile(day + "-" + (i + 1), year + "-examples");
       file.getParentFile().mkdirs();
