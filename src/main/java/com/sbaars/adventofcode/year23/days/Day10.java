@@ -7,7 +7,7 @@ import com.sbaars.adventofcode.year23.Day2023;
 
 import java.util.stream.Stream;
 
-import static com.sbaars.adventofcode.common.Direction.four;
+import static com.sbaars.adventofcode.common.Direction.*;
 
 public class Day10 extends Day2023 {
   public Day10() {
@@ -43,12 +43,12 @@ public class Day10 extends Day2023 {
 
   public Stream<Direction> connections(char c) {
     return switch (c) {
-      case 'F' -> Stream.of(Direction.EAST, Direction.SOUTH);
-      case '7' -> Stream.of(Direction.SOUTH, Direction.WEST);
-      case 'L' -> Stream.of(Direction.NORTH, Direction.EAST);
-      case 'J' -> Stream.of(Direction.NORTH, Direction.WEST);
-      case '-' -> Stream.of(Direction.EAST, Direction.WEST);
-      case '|' -> Stream.of(Direction.NORTH, Direction.SOUTH);
+      case 'F' -> Stream.of(EAST, SOUTH);
+      case '7' -> Stream.of(SOUTH, WEST);
+      case 'L' -> Stream.of(NORTH, EAST);
+      case 'J' -> Stream.of(NORTH, WEST);
+      case '-' -> Stream.of(EAST, WEST);
+      case '|' -> Stream.of(NORTH, SOUTH);
       default -> Stream.empty();
     };
   }
