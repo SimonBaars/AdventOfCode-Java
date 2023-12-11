@@ -266,4 +266,12 @@ public class InfiniteGrid implements Grid {
     }
     return g;
   }
+
+  public Map<Long, List<Loc>> columns() {
+    return stream().collect(Collectors.groupingBy(Loc::getX));
+  }
+
+  public Map<Long, List<Loc>> rows() {
+    return stream().collect(Collectors.groupingBy(Loc::getY));
+  }
 }
