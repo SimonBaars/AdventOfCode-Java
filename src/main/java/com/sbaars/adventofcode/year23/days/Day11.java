@@ -26,20 +26,24 @@ public class Day11 extends Day2023 {
 
   @Override
   public Object part1() {
-    var grid = new InfiniteGrid(dayGrid());
-    Set<Long> emptyRows = grid.rows().entrySet().stream().filter(e -> e.getValue().stream().allMatch(c -> grid.getOptimistic(c) == '.')).map(Map.Entry::getKey).collect(toSet());
-    Set<Long> emptyCols = grid.columns().entrySet().stream().filter(e -> e.getValue().stream().allMatch(c -> grid.getOptimistic(c) == '.')).map(Map.Entry::getKey).collect(toSet());
-    return allPairs(grid.findAll('#').toList()).mapToLong(p -> p.a().distance(p.b()) + countEmpty(p, Loc::getX, emptyCols) + countEmpty(p, Loc::getY, emptyRows)).sum();
-  }
-
-  private long countEmpty(Pair<Loc, Loc> p, Function<Loc, Long> func, Set<Long> emptyRows) {
-    long coord1 = func.apply(p.a());
-    long coord2 = func.apply(p.b());
-    return rangeClosed(min(coord1, coord2), max(coord1, coord2)).filter(emptyRows::contains).count();
+    return solve(true);
   }
 
   @Override
   public Object part2() {
-    return "";
+    return solve(false);
+  }
+
+  private long solve(boolean part1) {
+    var grid = new InfiniteGrid(dayGrid());
+    Set<Long> emptyRows = grid.rows().entrySet().stream().filter(e -> e.getValue().stream().allMatch(c -> grid.getOptimistic(c) == '.')).map(Map.Entry::getKey).collect(toSet());
+    Set<Long> emptyCols = grid.columns().entrySet().stream().filter(e -> e.getValue().stream().allMatch(c -> grid.getOptimistic(c) == '.')).map(Map.Entry::getKey).collect(toSet());
+    return allPairs(grid.findAll('#').toList()).mapToLong(p -> p.a().distance(p.b()) + countEmpty(p, Loc::getX, emptyCols, part1) + countEmpty(p, Loc::getY, emptyRows, part1)).sum();
+  }
+
+  private long countEmpty(Pair<Loc, Loc> p, Function<Loc, Long> func, Set<Long> emptyRows, boolean part1) {
+    long coord1 = func.apply(p.a());
+    long coord2 = func.apply(p.b());
+    return rangeClosed(min(coord1, coord2), max(coord1, coord2)).filter(emptyRows::contains).count() * (part1 ? 1 : (1000000 - 1));
   }
 }
