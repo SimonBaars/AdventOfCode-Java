@@ -39,7 +39,9 @@ public class Day11 extends Day2023 {
     var grid = new InfiniteGrid(dayGrid());
     Set<Long> emptyRows = countEmpty(grid.rows(), grid);
     Set<Long> emptyCols = countEmpty(grid.columns(), grid);
-    return allPairs(grid.findAll('#').toList()).mapToLong(p -> p.a().distance(p.b()) + countEmpty(p, Loc::getX, emptyCols, part1) + countEmpty(p, Loc::getY, emptyRows, part1)).sum();
+    return allPairs(grid.findAll('#').toList())
+        .mapToLong(p -> p.a().distance(p.b()) + countEmpty(p, Loc::getX, emptyCols, part1) + countEmpty(p, Loc::getY, emptyRows, part1))
+        .sum();
   }
 
   private static Set<Long> countEmpty(Map<Long, List<Loc>> rowsOrCols, InfiniteGrid grid) {
