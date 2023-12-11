@@ -1,11 +1,14 @@
 # adventOfCode(Language.JAVA)
 
+Hi there! Thanks for checking out my Advent of Code repo!
+
+I solve Advent of Code problems in Java, making extensive use of its Stream API. I also like to refactor generic
+concepts into abstractions, to keep the code as easy to read as possible. Though sometimes I still succumb to the chaos
+monster!
+
+Feel free to use this repo to learn about solution directions, or fork it as a template for your own solutions :)
+
 ## 2023
-
-Hi! Thanks for checking out this repo! This year, I will miss the first ten days (I'll try to do them retrospectively)!
-After that, I'll do them during the official competitive hours as normal :)
-
-Let's go!
 
 ### Days
 
