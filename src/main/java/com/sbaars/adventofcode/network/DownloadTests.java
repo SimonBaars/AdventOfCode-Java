@@ -12,10 +12,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -30,11 +27,11 @@ public class DownloadTests {
   }
 
   public static void main(String[] args) {
-    new DownloadTests().retrieveTests("6", "2023");
+    new DownloadTests().retrieveTests("13", "2023");
   }
 
   public void retrieveTests(String day, String year) {
-    var matches = getMatchesByXpath(doRequest(client,year + "/day/" + day), "/html/body/main/p/code");
+    var matches = getMatchesByXpath(doRequest(client, year + "/day/" + day), "/html/body/main/p/code");
     String y = year.substring(2);
     File file = getFile(day, y);
     file.getParentFile().mkdirs();
