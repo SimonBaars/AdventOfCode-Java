@@ -40,10 +40,11 @@ public class Day13 extends Day2023 {
         .filter(r -> zip(r.a().getValue().stream(), r.b().getValue().stream()).filter(c -> c.a() != c.b()).count() +
             range(0, r.a().getKey())
                 .mapToObj(i -> new Pair<>(r.a().getKey() - i - 1, r.b().getKey() + i + 1))
-                .filter(p -> chars.containsKey(p.a()) && chars.containsKey(p.b()) && !chars.get(p.a()).equals(chars.get(p.b())))
+                .filter(p -> chars.containsKey(p.a()) && chars.containsKey(p.b()))
+                .flatMap(p -> zip(chars.get(p.a()).stream(), chars.get(p.b()).stream()))
+                .filter(p -> p.a() != p.b())
                 .count() == errorsAllowed
         )
-        .peek(System.out::println)
         .mapToLong(p -> p.b().getKey())
         .max()
         .orElse(0);
