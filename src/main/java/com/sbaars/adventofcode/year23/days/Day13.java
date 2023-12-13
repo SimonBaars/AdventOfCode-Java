@@ -32,7 +32,10 @@ public class Day13 extends Day2023 {
   }
 
   private long solve(long errorsAllowed) {
-    return stream(day().split("\n\n")).map(InfiniteGrid::new).mapToLong(g -> findReflection(g.columnValues(), errorsAllowed) + findReflection(g.rowValues(), errorsAllowed) * 100).sum();
+    return stream(day().split("\n\n"))
+        .map(InfiniteGrid::new)
+        .mapToLong(g -> findReflection(g.columnValues(), errorsAllowed) + findReflection(g.rowValues(), errorsAllowed) * 100)
+        .sum();
   }
 
   private long findReflection(Map<Long, List<Character>> chars, long errorsAllowed) {
