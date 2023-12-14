@@ -1,16 +1,17 @@
 package com.sbaars.adventofcode.year23.days;
 
 import com.sbaars.adventofcode.common.Direction;
-import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
-import com.sbaars.adventofcode.util.Solver;
 import com.sbaars.adventofcode.year23.Day2023;
 
 import java.util.stream.Stream;
 
-import static com.sbaars.adventofcode.common.Direction.NORTH;
+import static com.sbaars.adventofcode.common.Direction.*;
+import static com.sbaars.adventofcode.util.Solver.solve;
 import static java.lang.Math.abs;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.reverseOrder;
 
 public class Day14 extends Day2023 {
   public Day14() {
@@ -33,7 +34,7 @@ public class Day14 extends Day2023 {
   }
 
   private void turn(InfiniteGrid grid, Direction dir) {
-    grid.findAll('O').forEach(r -> {
+    grid.findAll('O').sorted(dir == EAST || dir == SOUTH ? reverseOrder() : naturalOrder()).forEach(r -> {
       Loc loc = r;
       while (grid.get(dir.move(loc)).map(c -> c == '.').orElse(false)) {
         loc = dir.move(loc);
@@ -46,12 +47,11 @@ public class Day14 extends Day2023 {
   @Override
   public Object part2() {
     var grid = new InfiniteGrid(dayGrid());
-    Direction d = NORTH;
-    return Solver.solve(Stream.iterate(new Pair<>(NORTH, grid), this::doTurn), p -> calculateSum(p.b()), 1000000000L);
+    return solve(Stream.iterate(grid, this::doTurn), Day14::calculateSum, 1000000000L);
   }
 
-  private Pair<Direction, InfiniteGrid> doTurn(Pair<Direction, InfiniteGrid> pair) {
-    turn(pair.b(), pair.a());
-    return new Pair<>(pair.a().turn(), pair.b());
+  private InfiniteGrid doTurn(InfiniteGrid grid) {
+    Stream.of(NORTH, WEST, SOUTH, EAST).forEach(d -> turn(grid, d));
+    return grid;
   }
 }
