@@ -21,7 +21,7 @@ public class Day15 extends Day2021 {
     return shortestPath(in, in.sizeX() - 1, in.sizeY() - 1, 1);
   }
 
-  record Cell(int x, int y, long distance) {
+  public record Cell(int x, int y, long distance) {
   }
 
   static long shortestPath(NumGrid g, int row, int col, int resize) {
