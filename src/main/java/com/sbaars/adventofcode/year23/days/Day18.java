@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.sbaars.adventofcode.common.Direction.*;
+import static com.sbaars.adventofcode.util.AOCUtils.connectedPairs;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
-import static java.lang.Math.abs;
 
 public class Day18 extends Day2023 {
   public Day18() {
@@ -53,12 +53,7 @@ public class Day18 extends Day2023 {
       route.add(end);
       start = end;
     }
-    long total = 0;
-    Loc[] routeArray = route.toArray(new Loc[0]);
-    for (int i = 0; i < routeArray.length - 1; i++) {
-      total += (routeArray[i].y + routeArray[i + 1].y) * (routeArray[i].x - routeArray[i + 1].x);
-    }
-    return outline / 2 + abs(total) / 2 + 1;
+    return outline / 2 + connectedPairs(route).mapToLong(p -> (p.a().y + p.b().y) * (p.a().x - p.b().x)).sum() / 2 + 1;
   }
 
   private List<Dig> input() {
