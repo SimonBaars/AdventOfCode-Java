@@ -232,13 +232,15 @@ public class InfiniteGrid implements Grid {
   public Set<Loc> floodFill(Loc start, Predicate<Character> predicate) {
     Set<Loc> output = new HashSet<>();
     Set<Loc> toCheck = new HashSet<>();
+    long minX = minX(), minY = minY(), maxX = maxX(), maxY = maxY();
+    Predicate<Loc> inBounds = l -> l.x >= minX && l.x <= maxX && l.y >= minY && l.y <= maxY;
     toCheck.add(start);
     while (!toCheck.isEmpty()) {
       Set<Loc> newToCheck = new HashSet<>();
       for (Loc l : toCheck) {
         if (predicate.test(getChar(l))) {
           output.add(l);
-          newToCheck.addAll(four().map(d -> d.move(l)).filter(l2 -> !output.contains(l2)).collect(Collectors.toSet()));
+          newToCheck.addAll(four().map(d -> d.move(l)).filter(inBounds).filter(l2 -> !output.contains(l2)).collect(Collectors.toSet()));
         }
       }
       toCheck = newToCheck;

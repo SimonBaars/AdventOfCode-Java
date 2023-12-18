@@ -28,7 +28,7 @@ Feel free to use this repo to learn about solution directions, or fork it as a t
 - [Day 14](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day14.java)
 - [Day 15](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day15.java)
 - [Day 16](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day16.java)
-- [Day 17](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day17.java)
+- [Day 17](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day17.java) (currently broken, will fix later™)
 - [Day 18](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day18.java)
 - [Day 19](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day19.java)
 - [Day 20](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day20.java)
