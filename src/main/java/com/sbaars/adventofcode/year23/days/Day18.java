@@ -1,6 +1,16 @@
 package com.sbaars.adventofcode.year23.days;
 
+import com.sbaars.adventofcode.common.Direction;
+import com.sbaars.adventofcode.common.grid.InfiniteGrid;
+import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year23.Day2023;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.sbaars.adventofcode.common.Direction.*;
+import static com.sbaars.adventofcode.util.DataMapper.readString;
+import static java.lang.Math.abs;
 
 public class Day18 extends Day2023 {
   public Day18() {
@@ -11,13 +21,47 @@ public class Day18 extends Day2023 {
     new Day18().printParts();
   }
 
+  public record Dig(Direction dir, int n, long part2N, Direction part2Dir) {
+    public Dig(char dir, int n, String hex) {
+      this(Direction.getByDirCode(dir), n, Long.parseLong(hex.substring(0, hex.length() - 1), 16), hex.charAt(hex.length() - 1) == '0' ? EAST : hex.charAt(hex.length() - 1) == '1' ? SOUTH : hex.charAt(hex.length() - 1) == '2' ? WEST : NORTH);
+    }
+  }
+
   @Override
   public Object part1() {
-    return "";
+    var in = input();
+    Loc start = new Loc(0, 0);
+    InfiniteGrid grid = new InfiniteGrid();
+    for (Dig dig : in) {
+      Loc end = dig.dir.move(start, dig.n);
+      grid.draw(start, end, '#');
+      start = end;
+    }
+    grid.floodFill(new Loc(1, 1), c -> c != '#').forEach(l -> grid.set(l, '#'));
+    return grid.grid.size();
   }
 
   @Override
   public Object part2() {
-    return "";
+    var in = input();
+    Loc start = new Loc(0, 0);
+    List<Loc> route = new ArrayList<>();
+    long outline = 0;
+    for (Dig dig : in) {
+      Loc end = dig.part2Dir.move(start, dig.part2N);
+      outline += start.distance(end);
+      route.add(end);
+      start = end;
+    }
+    long total = 0;
+    Loc[] routeArray = route.toArray(new Loc[0]);
+    for (int i = 0; i < routeArray.length - 1; i++) {
+      total += (routeArray[i].y + routeArray[i + 1].y) * (routeArray[i].x - routeArray[i + 1].x);
+    }
+    return outline / 2 + abs(total) / 2 + 1;
+  }
+
+  private List<Dig> input() {
+    return dayStream().map(s -> readString(s, "%c %i (#%s)", Dig.class)).toList();
   }
 }

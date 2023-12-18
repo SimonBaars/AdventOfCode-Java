@@ -238,7 +238,7 @@ public class InfiniteGrid implements Grid {
       for (Loc l : toCheck) {
         if (predicate.test(getChar(l))) {
           output.add(l);
-          newToCheck.addAll(four().map(d -> d.move(l)).filter(this::contains).filter(l2 -> !output.contains(l2)).collect(Collectors.toSet()));
+          newToCheck.addAll(four().map(d -> d.move(l)).filter(l2 -> !output.contains(l2)).collect(Collectors.toSet()));
         }
       }
       toCheck = newToCheck;
@@ -281,5 +281,11 @@ public class InfiniteGrid implements Grid {
 
   public Map<Long, List<Character>> rowValues() {
     return rows().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().stream().map(this::getChar).collect(Collectors.toList())));
+  }
+
+  public void draw(Loc start, Loc end, char c) {
+    for (Loc l : start.line(end)) {
+      set(l, c);
+    }
   }
 }

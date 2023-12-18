@@ -105,6 +105,7 @@ public class Day17 extends Day2023 {
 
   @Override
   public Object part2() {
+    this.example = 4;
     var in = new NumGrid(day(), "\n", "");
     return shortestPath(in, in.sizeX() - 1, in.sizeY() - 1, false) - in.get(new Point(0, 0));
   }
