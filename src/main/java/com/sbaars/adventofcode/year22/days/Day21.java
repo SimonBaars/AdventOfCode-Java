@@ -14,6 +14,7 @@ import static com.sbaars.adventofcode.util.AOCUtils.*;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.stream.LongStream.range;
 
 public class Day21 extends Day2022 {
   public Day21() {
@@ -40,7 +41,7 @@ public class Day21 extends Day2022 {
   @Override
   public Object part2() {
     Map<String, Object> in = input();
-    long[] valid = LongStream.range(0, Long.MAX_VALUE).filter(i -> diff(in, new long[]{}, i) != Long.MAX_VALUE).limit(2).toArray();
+    long[] valid = range(0, Long.MAX_VALUE).filter(i -> diff(in, new long[]{}, i) != Long.MAX_VALUE).limit(2).toArray();
     return (binarySearch(i -> diff(in, valid, i), valid[0], Long.MAX_VALUE / (valid[1] - valid[0])) * (valid[1] - valid[0])) + valid[0];
   }
 

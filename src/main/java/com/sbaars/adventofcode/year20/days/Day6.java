@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.IntStream.range;
 
@@ -21,14 +22,15 @@ public class Day6 extends Day2020 {
 
   @Override
   public Object part1() {
-    return Arrays.stream(day().split("\n\n"))
-        .map(i -> i.replace("\n", ""))
-        .mapToLong(i -> i.chars().distinct().count()).sum();
+    return dayStream("\n\n")
+            .map(s -> s.replace("\n", ""))
+            .mapToLong(s -> s.chars().distinct().count())
+            .sum();
   }
 
   @Override
   public Object part2() {
-    return Arrays.stream(day().split("\n\n")).mapToInt(group -> {
+    return stream(day().split("\n\n")).mapToInt(group -> {
       String[] people = group.split("\n");
       List<Integer> c = people[0].chars().boxed().collect(toCollection(ArrayList::new));
       range(1, people.length).forEach(i -> c.retainAll(people[i].chars().boxed().toList()));

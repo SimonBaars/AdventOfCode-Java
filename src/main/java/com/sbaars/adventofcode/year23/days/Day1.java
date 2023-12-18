@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.util.stream.IntStream.range;
+
 public class Day1 extends Day2023 {
   private static final Map<String, Integer> nums = Map.of("one", 1, "two", 2, "three", 3, "four", 4, "five", 5, "six", 6, "seven", 7, "eight", 8, "nine", 9);
 
@@ -33,7 +35,7 @@ public class Day1 extends Day2023 {
   }
 
   private static Stream<Pair<Integer, String>> pairStream(String s) {
-    return IntStream.range(0, s.length()).mapToObj(i -> Pair.of(i, s.charAt(i) + "")).filter(x -> Character.isDigit(x.getRight().charAt(0)));
+    return range(0, s.length()).mapToObj(i -> Pair.of(i, s.charAt(i) + "")).filter(x -> Character.isDigit(x.getRight().charAt(0)));
   }
 
   @Override
