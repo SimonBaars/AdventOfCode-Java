@@ -3,7 +3,10 @@ package com.sbaars.adventofcode.year23.days;
 import com.sbaars.adventofcode.common.map.CountMap;
 import com.sbaars.adventofcode.year23.Day2023;
 
+import java.util.Comparator;
+
 import static com.sbaars.adventofcode.util.AOCUtils.zip;
+import static com.sbaars.adventofcode.util.AOCUtils.zipWithIndex;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.util.stream.IntStream.range;
 
@@ -22,12 +25,18 @@ public class Day7 extends Day2023 {
 
     @Override
     public Object part1() {
-        return zip(dayStream().map(s -> readString(s, "%s %i", Hand.class)).sorted(this::compareHands), range(1, Integer.MAX_VALUE).boxed()).mapToLong(p -> (long) p.a().bet * p.b()).sum();
+        return solve(this::compareHands);
     }
 
     @Override
     public Object part2() {
-        return zip(dayStream().map(s -> readString(s, "%s %i", Hand.class)).sorted(this::compareHands2), range(1, Integer.MAX_VALUE).boxed()).mapToLong(p -> (long) p.a().bet * p.b()).sum();
+        return solve(this::compareHands2);
+    }
+
+    private long solve(Comparator<Hand> comparator) {
+        return zipWithIndex(
+                dayStream().map(s -> readString(s, "%s %i", Hand.class)).sorted(comparator)
+                ).mapToLong(hand -> (long) hand.e().bet * (hand.i() + 1)).sum();
     }
 
     public int compareHands(Hand h1, Hand h2) {
