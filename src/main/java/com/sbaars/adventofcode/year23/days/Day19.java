@@ -81,19 +81,19 @@ public class Day19 extends Day2023 {
     var items = workflows.get(workflow);
     for (var item : items) {
       if (item.c == ' ') {
-        return checkItem(workflows, p, item);
+        return isAccepted(workflows, p, item);
       } else {
         if (item.op == '<') {
-          if (p.numbers.get(item.c) < item.n) return checkItem(workflows, p, item);
+          if (p.numbers.get(item.c) < item.n) return isAccepted(workflows, p, item);
         } else if (item.op == '>') {
-          if (p.numbers.get(item.c) > item.n) return checkItem(workflows, p, item);
+          if (p.numbers.get(item.c) > item.n) return isAccepted(workflows, p, item);
         } else throw new IllegalStateException("Unknown operator: " + item.op);
       }
     }
     throw new IllegalStateException("Reached end = impossible");
   }
 
-  private boolean checkItem(Map<String, List<WorkflowItem>> workflows, Part p, WorkflowItem item) {
+  private boolean isAccepted(Map<String, List<WorkflowItem>> workflows, Part p, WorkflowItem item) {
     if (item.s.equals("A")) return true;
     else if (item.s.equals("R")) return false;
     else return isAccepted(workflows, p, item.s);
@@ -106,31 +106,26 @@ public class Day19 extends Day2023 {
   }
 
   private long countAccepted(Map<String, List<WorkflowItem>> workflows, Map<Character, Constraint> constraints, String workflow) {
-    var items = workflows.get(workflow);
-    long sum = 0;
-    for (var item : items) {
-      if (item.c == ' ') {
-        sum += checkItem2(workflows, constraints, item);
-      } else {
-        if (item.op == '<') {
-          var newConstraints = new HashMap<>(constraints);
-          var constraint = constraints.get(item.c);
-          newConstraints.put(item.c, constraint.lessThan(item.n));
-          constraints.put(item.c, constraint.moreThan(item.n - 1));
-          sum += checkItem2(workflows, newConstraints, item);
-        } else if (item.op == '>') {
-          var newConstraints = new HashMap<>(constraints);
-          var constraint = constraints.get(item.c);
-          newConstraints.put(item.c, constraint.moreThan(item.n));
-          constraints.put(item.c, constraint.lessThan(item.n + 1));
-          sum += checkItem2(workflows, newConstraints, item);
-        } else throw new IllegalStateException("Unknown operator: " + item.op);
-      }
-    }
-    return sum;
+    return workflows.get(workflow).stream().mapToLong(item -> applyOperation(workflows, constraints, item)).sum();
   }
 
-  private long checkItem2(Map<String, List<WorkflowItem>> workflows, Map<Character, Constraint> constraints, WorkflowItem item) {
+  private long applyOperation(Map<String, List<WorkflowItem>> workflows, Map<Character, Constraint> constraints, WorkflowItem item) {
+    if (item.c != ' ') {
+      var newConstraints = new HashMap<>(constraints);
+      var constraint = constraints.get(item.c);
+      if (item.op == '<') {
+        newConstraints.put(item.c, constraint.lessThan(item.n));
+        constraints.put(item.c, constraint.moreThan(item.n - 1));
+      } else if (item.op == '>') {
+        newConstraints.put(item.c, constraint.moreThan(item.n));
+        constraints.put(item.c, constraint.lessThan(item.n + 1));
+      } else throw new IllegalStateException("Unknown operator: " + item.op);
+      return countAccepted(workflows, newConstraints, item);
+    }
+    return countAccepted(workflows, constraints, item);
+  }
+
+  private long countAccepted(Map<String, List<WorkflowItem>> workflows, Map<Character, Constraint> constraints, WorkflowItem item) {
     if (item.s.equals("A"))
       return constraints.values().stream().mapToLong(Constraint::numsAccepted).reduce(1, (a, b) -> a * b);
     else if (item.s.equals("R")) return 0;
