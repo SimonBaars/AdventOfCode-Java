@@ -5,6 +5,8 @@ import com.sbaars.adventofcode.year22.Day2022;
 import java.util.Arrays;
 import java.util.stream.LongStream;
 
+import static java.util.Arrays.stream;
+
 public class Day1 extends Day2022 {
   public Day1() {
     super(1);
@@ -26,6 +28,6 @@ public class Day1 extends Day2022 {
   }
 
   private LongStream input() {
-    return dayStream("\n\n").mapToLong(s -> Arrays.stream(s.split("\n")).mapToLong(Long::parseLong).sum());
+    return dayStream("\n\n").mapToLong(s -> stream(s.split("\n")).mapToLong(Long::parseLong).sum());
   }
 }
