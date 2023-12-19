@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.sbaars.adventofcode.util.DataMapper.readString;
-import static com.sbaars.adventofcode.year23.days.Day19.Constraint.newLessThan;
-import static com.sbaars.adventofcode.year23.days.Day19.Constraint.newMoreThan;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toMap;
 
@@ -50,12 +48,8 @@ public class Day19 extends Day2023 {
   }
 
   public record Constraint(long moreThan, long lessThan) {
-    public static Constraint newMoreThan(long moreThan) {
-      return new Constraint(moreThan, 4001);
-    }
-
-    public static Constraint newLessThan(long lessThan) {
-      return new Constraint(-1, lessThan);
+    public static Constraint create() {
+      return new Constraint(0, 4001);
     }
 
     public Constraint moreThan(long moreThan) {
@@ -107,7 +101,8 @@ public class Day19 extends Day2023 {
 
   @Override
   public Object part2() {
-    return countAccepted(getWorkflows(), new HashMap<>(), "in");
+    var workflows = getWorkflows();
+    return countAccepted(workflows, new HashMap<>("xmas".chars().boxed().collect(toMap(e -> (char) e.intValue(), e -> Constraint.create()))), "in");
   }
 
   private long countAccepted(Map<String, List<WorkflowItem>> workflows, Map<Character, Constraint> constraints, String workflow) {
@@ -119,25 +114,15 @@ public class Day19 extends Day2023 {
       } else {
         if (item.op == '<') {
           var newConstraints = new HashMap<>(constraints);
-          if (constraints.containsKey(item.c)) {
-            var constraint = constraints.get(item.c);
-            newConstraints.put(item.c, constraint.lessThan(item.n));
-            constraints.put(item.c, constraint.moreThan(item.n - 1));
-          } else {
-            newConstraints.put(item.c, newLessThan(item.n));
-            constraints.put(item.c, newMoreThan(item.n - 1));
-          }
+          var constraint = constraints.get(item.c);
+          newConstraints.put(item.c, constraint.lessThan(item.n));
+          constraints.put(item.c, constraint.moreThan(item.n - 1));
           sum += checkItem2(workflows, newConstraints, item);
         } else if (item.op == '>') {
           var newConstraints = new HashMap<>(constraints);
-          if (constraints.containsKey(item.c)) {
-            var constraint = constraints.get(item.c);
-            newConstraints.put(item.c, constraint.moreThan(item.n));
-            constraints.put(item.c, constraint.lessThan(item.n + 1));
-          } else {
-            newConstraints.put(item.c, newMoreThan(item.n));
-            constraints.put(item.c, newLessThan(item.n + 1));
-          }
+          var constraint = constraints.get(item.c);
+          newConstraints.put(item.c, constraint.moreThan(item.n));
+          constraints.put(item.c, constraint.lessThan(item.n + 1));
           sum += checkItem2(workflows, newConstraints, item);
         } else throw new IllegalStateException("Unknown operator: " + item.op);
       }
@@ -146,9 +131,9 @@ public class Day19 extends Day2023 {
   }
 
   private long checkItem2(Map<String, List<WorkflowItem>> workflows, Map<Character, Constraint> constraints, WorkflowItem item) {
-    if (item.s.equals("A")) {
+    if (item.s.equals("A"))
       return constraints.values().stream().mapToLong(Constraint::numsAccepted).reduce(1, (a, b) -> a * b);
-    } else if (item.s.equals("R")) return 0;
+    else if (item.s.equals("R")) return 0;
     else return countAccepted(workflows, constraints, item.s);
   }
 }
