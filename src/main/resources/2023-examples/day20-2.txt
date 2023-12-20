@@ -1,0 +1,12 @@
+button -low-> broadcaster
+broadcaster -low-> a
+broadcaster -low-> b
+broadcaster -low-> c
+a -high-> b
+b -high-> c
+c -high-> inv
+inv -low-> a
+a -low-> b
+b -low-> c
+c -low-> inv
+inv -high-> a

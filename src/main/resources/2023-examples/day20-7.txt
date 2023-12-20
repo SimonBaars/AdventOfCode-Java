@@ -1,0 +1,6 @@
+button -low-> broadcaster
+broadcaster -low-> a
+a -low-> inv
+a -low-> con
+inv -high-> b
+con -high-> output

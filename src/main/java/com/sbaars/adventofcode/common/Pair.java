@@ -16,7 +16,7 @@ public record Pair<A, B>(A a, B b) implements Comparable<Pair<A, B>> {
     return b;
   }
 
-  public <C, D> Pair<C, D> map(BiFunction<A, B, Pair<C, D>> func) {
+  public <C> C map(BiFunction<A, B, C> func) {
     return func.apply(a(), b());
   }
 
