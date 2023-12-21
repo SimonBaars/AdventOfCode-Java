@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.LongStream;
 
-import static com.sbaars.adventofcode.util.AOCUtils.pairs;
+import static com.sbaars.adventofcode.util.AoCUtils.pairs;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day5 extends Day2023 {
@@ -21,8 +21,11 @@ public class Day5 extends Day2023 {
     new Day5().printParts();
   }
 
-  public record Mapping(String source, String dest, List<SeedNumbers> nums) {}
-  public record SeedNumbers(long destinationStart, long sourceStart, long size) {}
+  public record Mapping(String source, String dest, List<SeedNumbers> nums) {
+  }
+
+  public record SeedNumbers(long destinationStart, long sourceStart, long size) {
+  }
 
   @Override
   public Object part1() {
@@ -38,8 +41,8 @@ public class Day5 extends Day2023 {
 
   private long findLocations(String[] day, List<Mapping> mappings, long seed) {
     return mappings
-            .stream()
-            .reduce(seed, (s, m) -> m.nums.stream().map(n -> new Loc(n.sourceStart, n.sourceStart + n.size - 1).contains(s) ? s + (n.destinationStart - n.sourceStart) : -1).filter(n -> n != -1).findAny().orElse(s), Long::sum);
+        .stream()
+        .reduce(seed, (s, m) -> m.nums.stream().map(n -> new Loc(n.sourceStart, n.sourceStart + n.size - 1).contains(s) ? s + (n.destinationStart - n.sourceStart) : -1).filter(n -> n != -1).findAny().orElse(s), Long::sum);
   }
 
   private static List<Mapping> mappings(String[] day) {

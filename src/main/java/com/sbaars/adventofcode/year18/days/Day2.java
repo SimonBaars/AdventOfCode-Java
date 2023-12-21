@@ -6,7 +6,7 @@ import com.sbaars.adventofcode.year18.Day2018;
 import java.util.List;
 import java.util.Optional;
 
-import static com.sbaars.adventofcode.util.AOCUtils.allPairs;
+import static com.sbaars.adventofcode.util.AoCUtils.allPairs;
 import static java.util.Optional.empty;
 
 public class Day2 extends Day2018 {

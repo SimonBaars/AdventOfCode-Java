@@ -8,7 +8,7 @@ import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.sbaars.adventofcode.util.AOCUtils.connectedPairs;
+import static com.sbaars.adventofcode.util.AoCUtils.connectedPairs;
 
 /**
  * The solver looks for patterns in an infinite stream of numeric data, to find the result further in the repetition.

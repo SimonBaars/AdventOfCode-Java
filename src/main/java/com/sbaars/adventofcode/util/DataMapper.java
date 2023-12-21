@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.sbaars.adventofcode.common.Tuple.of;
-import static com.sbaars.adventofcode.util.AOCUtils.verify;
+import static com.sbaars.adventofcode.util.AoCUtils.verify;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
@@ -39,7 +39,7 @@ public interface DataMapper {
       if (pattern.length() > 1 && pattern.charAt(0) == '%') {
         char c = pattern.charAt(1);
         Class<?> mapList = null;
-        if(c == 'l' && pattern.charAt(2) == '(') {
+        if (c == 'l' && pattern.charAt(2) == '(') {
           verify(nested.length > 0, "Please specify the class that will contain the objects of the list.");
           mapList = nested[listIndex % nested.length];
         }
@@ -61,7 +61,7 @@ public interface DataMapper {
         throw new IllegalStateException("Illegal crunch, pattern = " + pattern + " and s = " + s);
       }
     }
-    if(pattern.startsWith("%l")) mappedObjs.add(new ArrayList<>());
+    if (pattern.startsWith("%l")) mappedObjs.add(new ArrayList<>());
     try {
       verify(target.getConstructors().length > 0, "Class " + target + " has no constructor!");
       verify(stream(target.getConstructors()).anyMatch(c -> c.getParameterCount() == mappedObjs.size()), "Class " + target + " has no constructor of size " + mappedObjs.size() + "!");

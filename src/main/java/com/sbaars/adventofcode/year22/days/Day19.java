@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.sbaars.adventofcode.util.AOCUtils.zipWithIndex;
+import static com.sbaars.adventofcode.util.AoCUtils.zipWithIndex;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.util.Comparator.comparing;
 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.sbaars.adventofcode.common.Direction.*;
-import static com.sbaars.adventofcode.util.AOCUtils.connectedPairs;
+import static com.sbaars.adventofcode.util.AoCUtils.connectedPairs;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day18 extends Day2023 {

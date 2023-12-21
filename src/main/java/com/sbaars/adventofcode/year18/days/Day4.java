@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.sbaars.adventofcode.util.AOCUtils.findMax;
+import static com.sbaars.adventofcode.util.AoCUtils.findMax;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day4 extends Day2018 {

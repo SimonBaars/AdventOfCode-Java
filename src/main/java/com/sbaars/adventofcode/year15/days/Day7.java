@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.sbaars.adventofcode.util.AOCUtils.fixedPoint;
+import static com.sbaars.adventofcode.util.AoCUtils.fixedPoint;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.lang.Integer.parseInt;
 import static java.util.Optional.empty;

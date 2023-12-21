@@ -5,7 +5,7 @@ import com.sbaars.adventofcode.year23.Day2023;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sbaars.adventofcode.util.AOCUtils.connectedPairs;
+import static com.sbaars.adventofcode.util.AoCUtils.connectedPairs;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day9 extends Day2023 {
@@ -23,16 +23,16 @@ public class Day9 extends Day2023 {
   }
 
   private long solution(boolean part1) {
-    List<List<Long>> in = dayStream().map(s -> (List<Long>)readString(s, "%ln", " ", ArrayList.class)).toList();
+    List<List<Long>> in = dayStream().map(s -> (List<Long>) readString(s, "%ln", " ", ArrayList.class)).toList();
     return in.stream().mapToLong(longs -> (part1 ? longs.get(longs.size() - 1) + calcRes(longs, true) : longs.get(0) - calcRes(longs, false))).sum();
   }
 
   private long calcRes(List<Long> longs, boolean part1) {
     List<Long> deltas = connectedPairs(longs).map(p -> difference(p.a(), p.b())).toList();
-    if(deltas.stream().distinct().count() > 1L) {
-      return part1 ? deltas.get(deltas.size()-1) + calcRes(deltas, true) : deltas.get(0) - calcRes(deltas, false);
+    if (deltas.stream().distinct().count() > 1L) {
+      return part1 ? deltas.get(deltas.size() - 1) + calcRes(deltas, true) : deltas.get(0) - calcRes(deltas, false);
     }
-    return deltas.get(deltas.size()-1);
+    return deltas.get(deltas.size() - 1);
   }
 
   public long difference(long l1, long l2) {

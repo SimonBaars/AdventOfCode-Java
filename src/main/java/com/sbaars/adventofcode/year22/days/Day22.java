@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.sbaars.adventofcode.common.Direction.*;
-import static com.sbaars.adventofcode.util.AOCUtils.alternating;
+import static com.sbaars.adventofcode.util.AoCUtils.alternating;
 import static java.util.stream.IntStream.range;
 
 public class Day22 extends Day2022 {
@@ -112,7 +112,7 @@ public class Day22 extends Day2022 {
   }
 
   private Range square(int x, int y) {
-    Loc a = new Loc(x * CUBE_SIZE, y * CUBE_SIZE);
+    Loc a = new Loc((long) x * CUBE_SIZE, (long) y * CUBE_SIZE);
     return new Range(a, new Loc(a.x + CUBE_SIZE - 1, a.y + CUBE_SIZE - 1));
   }
 }

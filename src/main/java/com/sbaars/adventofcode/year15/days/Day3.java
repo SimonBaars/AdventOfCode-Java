@@ -5,7 +5,7 @@ import com.sbaars.adventofcode.common.location.MutableLoc;
 import com.sbaars.adventofcode.year15.Day2015;
 
 import static com.sbaars.adventofcode.common.Direction.*;
-import static com.sbaars.adventofcode.util.AOCUtils.zipWithIndex;
+import static com.sbaars.adventofcode.util.AoCUtils.zipWithIndex;
 
 public class Day3 extends Day2015 {
   public Day3() {

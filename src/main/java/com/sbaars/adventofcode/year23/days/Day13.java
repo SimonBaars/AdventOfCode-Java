@@ -7,8 +7,8 @@ import com.sbaars.adventofcode.year23.Day2023;
 import java.util.List;
 import java.util.Map;
 
-import static com.sbaars.adventofcode.util.AOCUtils.connectedPairs;
-import static com.sbaars.adventofcode.util.AOCUtils.zip;
+import static com.sbaars.adventofcode.util.AoCUtils.connectedPairs;
+import static com.sbaars.adventofcode.util.AoCUtils.zip;
 import static java.util.Arrays.stream;
 import static java.util.stream.LongStream.range;
 
