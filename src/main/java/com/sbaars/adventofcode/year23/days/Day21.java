@@ -8,6 +8,8 @@ import com.sbaars.adventofcode.year23.Day2023;
 import java.util.*;
 
 import static com.sbaars.adventofcode.common.Direction.four;
+import static com.sbaars.adventofcode.util.AoCUtils.connectedPairs;
+import static java.util.stream.Collectors.toCollection;
 
 public class Day21 extends Day2023 {
   public Day21() {
@@ -42,13 +44,11 @@ public class Day21 extends Day2023 {
     places.get().add(start);
     distances.put(start, 0);
     List<Long> totals = new ArrayList<>();
-    List<Long> deltas = new ArrayList<>();
-    List<Long> deltaDeltas = new ArrayList<>();
     long totalReached = 0;
     for (int i = 1; ; i++) {
       int finalIndex = i;
       places.get().stream().flatMap(l -> four().map(d -> d.move(l))).forEach(l -> {
-        if (distances.get(l) == null) {
+        if (!distances.containsKey(l)) {
           if (grid[((l.intX() % grid.length) + grid.length) % grid.length][((l.intY() % grid.length) + grid.length) % grid.length] != '#') {
             places.getNew().add(l);
             distances.put(l, finalIndex);
@@ -59,21 +59,14 @@ public class Day21 extends Day2023 {
         totalReached += places.getNew().size();
         if (i % 262 == 65) {
           totals.add(totalReached);
-          int currTotals = totals.size();
-          if (currTotals > 1) {
-            deltas.add(totals.get(currTotals - 1) - totals.get(currTotals - 2));
-          }
-          int currDeltas = deltas.size();
-          if (currDeltas > 1) {
-            deltaDeltas.add(deltas.get(currDeltas - 1) - deltas.get(currDeltas - 2));
-          }
+          List<Long> deltaDeltas = deltaAtLevel(totals, 2);
           if (deltaDeltas.size() > 1) {
             long neededLoopCount = 26501365 / 262 - 1;
             long currentLoopCount = i / 262 - 1;
             long deltaLoopCount = neededLoopCount - currentLoopCount;
             long deltaLoopCountTriangular = (neededLoopCount * (neededLoopCount + 1)) / 2 - (currentLoopCount * (currentLoopCount + 1)) / 2;
             long deltaDelta = deltaDeltas.get(deltaDeltas.size() - 1);
-            long initialDelta = deltas.get(0);
+            long initialDelta = deltaAtLevel(totals, 1).get(0);
             return deltaDelta * deltaLoopCountTriangular + initialDelta * deltaLoopCount + totalReached;
           }
         }
@@ -81,5 +74,12 @@ public class Day21 extends Day2023 {
       }
       places.refresh();
     }
+  }
+
+  private static List<Long> deltaAtLevel(List<Long> deltas, int level) {
+    for (int i = 0; i < level; i++) {
+      deltas = connectedPairs(deltas).map(p -> p.b() - p.a()).collect(toCollection(ArrayList::new));
+    }
+    return deltas;
   }
 }
