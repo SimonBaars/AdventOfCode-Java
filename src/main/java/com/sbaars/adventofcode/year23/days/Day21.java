@@ -5,7 +5,10 @@ import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year23.Day2023;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.sbaars.adventofcode.common.Direction.four;
 import static com.sbaars.adventofcode.util.AoCUtils.connectedPairs;
@@ -39,19 +42,18 @@ public class Day21 extends Day2023 {
     Loc start = infGrid.findAll('S').findAny().get();
 
     // Core algorithm by abnew123: https://github.com/abnew123/aoc2023/blob/main/src/solutions/Day21.java
-    Map<Loc, Integer> distances = new HashMap<>();
+    Set<Loc> reached = new HashSet<>();
     Builder<Set<Loc>> places = new Builder<>(HashSet::new);
     places.get().add(start);
-    distances.put(start, 0);
+    reached.add(start);
     List<Long> totals = new ArrayList<>();
     long totalReached = 0;
     for (int i = 1; ; i++) {
-      int finalIndex = i;
       places.get().stream().flatMap(l -> four().map(d -> d.move(l))).forEach(l -> {
-        if (!distances.containsKey(l)) {
+        if (!reached.contains(l)) {
           if (grid[((l.intX() % grid.length) + grid.length) % grid.length][((l.intY() % grid.length) + grid.length) % grid.length] != '#') {
             places.getNew().add(l);
-            distances.put(l, finalIndex);
+            reached.add(l);
           }
         }
       });
