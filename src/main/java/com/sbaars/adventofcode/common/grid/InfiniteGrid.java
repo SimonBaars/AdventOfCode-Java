@@ -11,8 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.sbaars.adventofcode.common.Direction.eight;
-import static com.sbaars.adventofcode.common.Direction.four;
+import static com.sbaars.adventofcode.common.Direction.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -288,6 +287,18 @@ public class InfiniteGrid implements Grid {
   public void draw(Loc start, Loc end, char c) {
     for (Loc l : start.line(end)) {
       set(l, c);
+    }
+  }
+
+  public void repeat(int nTimes) {
+    for (int i = 0; i < nTimes; i++) {
+      long minX = minX(), minY = minY(), maxX = maxX(), maxY = maxY();
+      long width = maxX - minX + 1, height = maxY - minY + 1;
+      List<Loc> locs = new ArrayList<>(grid.keySet());
+      eight().forEach(d -> {
+        Loc corner = d.move(new Loc(minX, minY), d == NORTH || d == SOUTH ? height : width);
+        locs.forEach(l -> set(new Loc(l.x - minX, l.y - minY).move(corner), getOptimistic(l)));
+      });
     }
   }
 }
