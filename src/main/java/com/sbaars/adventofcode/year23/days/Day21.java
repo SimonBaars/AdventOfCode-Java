@@ -72,7 +72,6 @@ public class Day21 extends Day2023 {
             return deltaDelta * deltaLoopCountTriangular + initialDelta * deltaLoopCount + totalReached;
           }
         }
-
       }
       places.refresh();
     }
