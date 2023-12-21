@@ -31,7 +31,10 @@ public class Solver {
 
   private static Optional<Long> findPattern(List<Long> nums, long target, int minSize) {
     return findCycleDeltaPattern(nums, target, minSize)
-        .or(() -> findDevelopingDeltaPattern(nums, target, minSize));
+        .or(() -> findDevelopingDeltaPattern(nums, target, minSize, 1))
+        .or(() -> findDevelopingDeltaPattern(nums, target, minSize, 2))
+        .or(() -> findDevelopingDeltaPattern(nums, target, minSize, 3))
+        .or(() -> findDevelopingDeltaPattern(nums, target, minSize, 4));
   }
 
   private static Optional<Long> findCycleDeltaPattern(List<Long> nums, long target, int minSize) {
@@ -49,11 +52,17 @@ public class Solver {
     return Optional.empty();
   }
 
-  private static Optional<Long> findDevelopingDeltaPattern(List<Long> nums, long target, int minSize) {
-    List<Long> deltas = connectedPairs(nums).map(p -> p.b() - p.a()).collect(Collectors.toCollection(ArrayList::new));
-    deltas.add(0, nums.get(0)); // baseline delta
-    target++; // Adjust target to cover baseline
+  private static Optional<Long> findDevelopingDeltaPattern(List<Long> nums, long target, int minSize, int level) {
+    List<Long> deltas = nums;
+    for (int i = 0; i < level; i++) {
+      deltas = connectedPairs(deltas).map(p -> p.b() - p.a()).collect(Collectors.toCollection(ArrayList::new));
+      if (i == 0) {
+        deltas.add(0, nums.get(0)); // baseline delta
+        target++; // Adjust target to cover baseline
+      }
+    }
     if (deltas.size() >= minSize * 2) {
+      System.out.println(deltas.get(deltas.size() - 1));
       int subListIndex = Collections.indexOfSubList(deltas, deltas.subList(deltas.size() - minSize, deltas.size()));
       if (subListIndex < deltas.size() - (minSize * 2) + 1) {
         List<Long> repeating = deltas.subList(subListIndex, deltas.size() - minSize);
@@ -69,4 +78,5 @@ public class Solver {
     }
     return Optional.empty();
   }
+
 }
