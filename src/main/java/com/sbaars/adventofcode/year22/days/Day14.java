@@ -4,7 +4,7 @@ import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.common.location.MutableLoc;
 import com.sbaars.adventofcode.common.location.Range;
-import com.sbaars.adventofcode.util.AOCUtils;
+import com.sbaars.adventofcode.util.AoCUtils;
 import com.sbaars.adventofcode.year22.Day2022;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class Day14 extends Day2022 {
   private static InfiniteGrid constructWalls(List<Path> paths) {
     return paths.stream()
         .map(Path::locs)
-        .flatMap(AOCUtils::connectedPairs)
+        .flatMap(AoCUtils::connectedPairs)
         .map(Range::new)
         .flatMap(Range::stream)
         .collect(toInfiniteGrid('#'));

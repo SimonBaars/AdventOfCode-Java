@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.sbaars.adventofcode.util.AOCUtils.verify;
+import static com.sbaars.adventofcode.util.AoCUtils.verify;
 
 public class Day23 extends Day2021 {
   public Day23() {
@@ -98,7 +98,6 @@ public class Day23 extends Day2021 {
 
     public State copy(long newEnergy) {
       int[][] room = Arrays.stream(rooms).map(int[]::clone).toArray(int[][]::new);
-      ;
       int[] wait = Arrays.copyOf(waiting, waiting.length);
       return new State(room, wait, energySpent + newEnergy, moves + 1);
     }

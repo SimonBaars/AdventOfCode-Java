@@ -3,13 +3,13 @@ package com.sbaars.adventofcode.year18.days;
 import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.year18.Day2018;
 
-import static com.sbaars.adventofcode.util.AOCUtils.*;
+import static com.sbaars.adventofcode.util.AoCUtils.*;
 import static java.lang.Math.abs;
 import static java.util.stream.IntStream.range;
 
 public class Day5 extends Day2018 {
 
-  private static int DIFF = 'a' - 'A';
+  private static final int DIFF = 'a' - 'A';
 
   public Day5() {
     super(5);

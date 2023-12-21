@@ -8,9 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
-import static com.sbaars.adventofcode.util.AOCUtils.*;
+import static com.sbaars.adventofcode.util.AoCUtils.*;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;

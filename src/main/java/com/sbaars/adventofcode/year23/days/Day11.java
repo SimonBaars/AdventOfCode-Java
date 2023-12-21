@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import static com.sbaars.adventofcode.util.AOCUtils.allPairs;
+import static com.sbaars.adventofcode.util.AoCUtils.allPairs;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.stream.Collectors.toSet;

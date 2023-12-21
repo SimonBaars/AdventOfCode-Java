@@ -12,7 +12,7 @@ import static com.sbaars.adventofcode.common.Pair.pair;
 import static java.lang.Long.MAX_VALUE;
 import static java.util.stream.IntStream.range;
 
-public class AOCUtils {
+public class AoCUtils {
   public static void verify(boolean b) {
     verify(b, "Something went wrong");
   }

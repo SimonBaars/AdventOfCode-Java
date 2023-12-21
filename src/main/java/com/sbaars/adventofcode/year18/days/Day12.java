@@ -8,8 +8,7 @@ import java.util.function.ToLongFunction;
 import java.util.stream.Stream;
 
 import static com.sbaars.adventofcode.common.SmartArray.toSmartArray;
-import static com.sbaars.adventofcode.util.AOCUtils.connectedPairs;
-import static com.sbaars.adventofcode.util.AOCUtils.zip;
+import static com.sbaars.adventofcode.util.AoCUtils.zip;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static com.sbaars.adventofcode.util.Solver.solve;
 import static java.util.stream.IntStream.range;
@@ -24,8 +23,11 @@ public class Day12 extends Day2018 {
     new Day12().printParts();
   }
 
-  public record Input(String initial, List<Note> notes) {}
-  public record Note(String adjecent, char c) {}
+  public record Input(String initial, List<Note> notes) {
+  }
+
+  public record Note(String adjecent, char c) {
+  }
 
   @Override
   public Object part1() {
@@ -44,17 +46,17 @@ public class Day12 extends Day2018 {
   private Stream<SmartArray<Integer>> growth() {
     Input in = readString(day(), "initial state: %s\n\n%l(%s => %c)", "\n", Input.class, Note.class);
     var plants = range(0, in.initial.length()).filter(i -> in.initial.charAt(i) == '#').boxed().collect(toSmartArray());
-    return Stream.iterate(plants, p -> range(p.get(0) - 2, p.get(p.size() -1) + 2)
-                    .filter(i -> plantGrows(in.notes, p, i))
-                    .boxed().collect(toSmartArray()));
+    return Stream.iterate(plants, p -> range(p.get(0) - 2, p.get(p.size() - 1) + 2)
+        .filter(i -> plantGrows(in.notes, p, i))
+        .boxed().collect(toSmartArray()));
   }
 
   private boolean plantGrows(List<Note> notes, SmartArray<Integer> arr, int i) {
     return notes
-            .stream()
-            .filter(n -> zip(n.adjecent.chars().boxed(), rangeClosed(-2, 2).boxed()).allMatch(e -> (e.a() == '#') == arr.contains(i+e.b())))
-            .map(n -> n.c == '#')
-            .findFirst()
-            .orElse(false);
+        .stream()
+        .filter(n -> zip(n.adjecent.chars().boxed(), rangeClosed(-2, 2).boxed()).allMatch(e -> (e.a() == '#') == arr.contains(i + e.b())))
+        .map(n -> n.c == '#')
+        .findFirst()
+        .orElse(false);
   }
 }

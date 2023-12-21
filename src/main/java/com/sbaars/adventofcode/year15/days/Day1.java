@@ -2,8 +2,8 @@ package com.sbaars.adventofcode.year15.days;
 
 import com.sbaars.adventofcode.year15.Day2015;
 
-import static com.sbaars.adventofcode.util.AOCUtils.findReduce;
-import static com.sbaars.adventofcode.util.AOCUtils.zipWithIndex;
+import static com.sbaars.adventofcode.util.AoCUtils.findReduce;
+import static com.sbaars.adventofcode.util.AoCUtils.zipWithIndex;
 
 public class Day1 extends Day2015 {
   public Day1() {

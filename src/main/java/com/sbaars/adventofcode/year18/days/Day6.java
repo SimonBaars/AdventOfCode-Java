@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static com.sbaars.adventofcode.common.grid.InfiniteGrid.toInfiniteGrid;
 import static com.sbaars.adventofcode.common.map.ListMap.toListMap;
-import static com.sbaars.adventofcode.util.AOCUtils.zip;
+import static com.sbaars.adventofcode.util.AoCUtils.zip;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 import static java.util.stream.IntStream.range;
 
