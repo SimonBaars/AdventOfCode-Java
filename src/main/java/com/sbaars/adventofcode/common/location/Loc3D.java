@@ -27,6 +27,8 @@ package com.sbaars.adventofcode.common.location;
 
 import java.util.List;
 
+import static java.util.stream.LongStream.rangeClosed;
+
 public class Loc3D {
   public final long x;
   public final long y;
@@ -129,5 +131,19 @@ public class Loc3D {
 
   public boolean sameDistance(Loc3D m, Loc3D n) {
     return (x + m.x) == n.x && (y + m.y) == n.y && (z + m.z) == n.z;
+  }
+
+  public List<Loc3D> lineTo(Loc3D loc3D) {
+    if (x < loc3D.x) {
+      return rangeClosed(x, loc3D.x).mapToObj(i -> new Loc3D(i, y, z)).toList();
+    } else if (y < loc3D.y) {
+      return rangeClosed(y, loc3D.y).mapToObj(i -> new Loc3D(x, i, z)).toList();
+    } else if (z < loc3D.z) {
+      return rangeClosed(z, loc3D.z).mapToObj(i -> new Loc3D(x, y, i)).toList();
+    } else if (equals(loc3D)) {
+      return List.of(this);
+    } else {
+      throw new IllegalStateException("Invalid line: " + this + " to " + loc3D);
+    }
   }
 }
