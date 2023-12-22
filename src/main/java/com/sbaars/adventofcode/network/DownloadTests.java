@@ -27,7 +27,7 @@ public class DownloadTests {
   }
 
   public static void main(String[] args) {
-    new DownloadTests().retrieveTests("13", "2023");
+    new DownloadTests().retrieveTests("22", "2023");
   }
 
   public void retrieveTests(String day, String year) {
