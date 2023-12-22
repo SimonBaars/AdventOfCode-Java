@@ -49,10 +49,7 @@ public class Day22 extends Day2023 {
     ListMap<Brick, Brick> supportedBy = findSupported(bricks, (b1, b2) -> new Pair<>(b2, b1));
     ListMap<Brick, Brick> supports = findSupported(bricks, Pair::new);
     var stream = bricks.parallelStream().filter(b -> part1 == (!supports.containsKey(b) || supports.get(b).stream().allMatch(b2 -> supportedBy.get(b2).size() > 1)));
-    if (part1) {
-      return stream.count();
-    }
-    return stream.mapToLong(b -> collectAll(b, bricks)).sum();
+    return part1 ? stream.count() : stream.mapToLong(b -> collectAll(b, bricks)).sum();
   }
 
   private static ListMap<Brick, Brick> findSupported(Set<Brick> bricks, BiFunction<Brick, Brick, Pair<Brick, Brick>> toPair) {
