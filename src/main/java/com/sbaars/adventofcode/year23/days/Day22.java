@@ -74,7 +74,8 @@ public class Day22 extends Day2023 {
     bricks.getNew().addAll(new HashSet<>(bricksToDrop));
     while (!bricks.get().equals(bricks.getNew())) { // while loop till a fixed point is reached
       bricks.refresh();
-      bricks.setNew(bricks.get().parallelStream().map(b -> b.cubes.stream().anyMatch(c -> c.z == 1 || bricks.get().stream().filter(b2 -> !b.equals(b2)).anyMatch(b2 -> b2.cubes.contains(c.move(0, 0, -1)))) ? b : new Brick(b.id, b.cubes.stream().map(c -> c.move(0, 0, -1)).toList())).collect(Collectors.toSet()));
+      bricks.setNew(
+          bricks.get().parallelStream().map(b -> b.cubes.stream().anyMatch(c -> c.z == 1 || bricks.get().stream().filter(b2 -> !b.equals(b2)).anyMatch(b2 -> b2.cubes.contains(c.move(0, 0, -1)))) ? b : new Brick(b.id, b.cubes.stream().map(c -> c.move(0, 0, -1)).toList())).collect(Collectors.toSet()));
     }
     return bricks.get();
   }
