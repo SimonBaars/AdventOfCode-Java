@@ -54,7 +54,6 @@ public class Day23 extends Day2023 {
             }}, l));
       }).collect(toSet()));
       longest = Math.max(longest, curr.getNew().stream().mapToInt(p -> p.visited.size() - 1).max().getAsInt());
-      curr.getNew().stream().findAny().ifPresent(x -> System.out.println(x.visited.size() + " " + curr.getNew().size()));
       curr.getNew().removeIf(p -> p.currentLoc.equals(target));
       curr.refresh();
     }
