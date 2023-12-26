@@ -1,0 +1,39 @@
+Hailstone A: 19, 13, 30 @ -2, 1, -2
+Hailstone B: 18, 19, 22 @ -1, -1, -2
+Hailstones' paths will cross inside the test area (at x=14.333, y=15.333).
+
+Hailstone A: 19, 13, 30 @ -2, 1, -2
+Hailstone B: 20, 25, 34 @ -2, -2, -4
+Hailstones' paths will cross inside the test area (at x=11.667, y=16.667).
+
+Hailstone A: 19, 13, 30 @ -2, 1, -2
+Hailstone B: 12, 31, 28 @ -1, -2, -1
+Hailstones' paths will cross outside the test area (at x=6.2, y=19.4).
+
+Hailstone A: 19, 13, 30 @ -2, 1, -2
+Hailstone B: 20, 19, 15 @ 1, -5, -3
+Hailstones' paths crossed in the past for hailstone A.
+
+Hailstone A: 18, 19, 22 @ -1, -1, -2
+Hailstone B: 20, 25, 34 @ -2, -2, -4
+Hailstones' paths are parallel; they never intersect.
+
+Hailstone A: 18, 19, 22 @ -1, -1, -2
+Hailstone B: 12, 31, 28 @ -1, -2, -1
+Hailstones' paths will cross outside the test area (at x=-6, y=-5).
+
+Hailstone A: 18, 19, 22 @ -1, -1, -2
+Hailstone B: 20, 19, 15 @ 1, -5, -3
+Hailstones' paths crossed in the past for both hailstones.
+
+Hailstone A: 20, 25, 34 @ -2, -2, -4
+Hailstone B: 12, 31, 28 @ -1, -2, -1
+Hailstones' paths will cross outside the test area (at x=-2, y=3).
+
+Hailstone A: 20, 25, 34 @ -2, -2, -4
+Hailstone B: 20, 19, 15 @ 1, -5, -3
+Hailstones' paths crossed in the past for hailstone B.
+
+Hailstone A: 12, 31, 28 @ -1, -2, -1
+Hailstone B: 20, 19, 15 @ 1, -5, -3
+Hailstones' paths crossed in the past for both hailstones.
