@@ -74,6 +74,34 @@ public class Loc3D {
     return new Loc3D(x + dx, y + dy, z + dz);
   }
 
+  public Loc3D multiply(long dx, long dy, long dz) {
+    return new Loc3D(x * dx, y * dy, z * dz);
+  }
+
+  public Loc3D divide(long dx, long dy, long dz) {
+    return new Loc3D(x / dx, y / dy, z / dz);
+  }
+
+  public Loc3D move(Loc3D p) {
+    return move(p.x, p.y, p.z);
+  }
+
+  public Loc3D multiply(Loc3D p) {
+    return multiply(p.x, p.y, p.z);
+  }
+
+  public Loc3D multiply(long m) {
+    return multiply(m, m, m);
+  }
+
+  public Loc3D divide(Loc3D p) {
+    return divide(p.x, p.y, p.z);
+  }
+
+  public Loc3D divide(long m) {
+    return divide(m, m, m);
+  }
+
   public double distance(Loc3D p) {
     return Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2) + Math.pow(z - p.getZ(), 2));
   }

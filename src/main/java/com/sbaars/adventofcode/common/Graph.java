@@ -2,10 +2,7 @@ package com.sbaars.adventofcode.common;
 
 import com.sbaars.adventofcode.common.map.ListMap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -20,6 +17,7 @@ public record Graph<T>(Map<T, Node<T>> nodes) {
     this(Stream.concat(map.keySet().stream(), map.valueStream()).distinct().map(Node::new).collect(Collectors.toMap(Node::data, a -> a)));
     map.forEach((a, b) -> nodes.get(a).children.addAll(b.stream().map(nodes::get).toList()));
     map.forEach((a, b) -> b.forEach(c -> nodes.get(c).parents.add(nodes.get(a))));
+
   }
 
   public static <T> Collector<Pair<T, T>, ListMap<T, T>, Graph<T>> toGraph() {
@@ -36,6 +34,41 @@ public record Graph<T>(Map<T, Node<T>> nodes) {
 
   public Stream<Node<T>> stream() {
     return getNodes().stream();
+  }
+
+  public List<Node<T>> dijkstra(T start, T end) {
+    Map<T, Node<T>> previousNodes = new HashMap<>();
+    Map<T, Double> shortestDistances = new HashMap<>();
+    PriorityQueue<Node<T>> queue = new PriorityQueue<>(Comparator.comparing(node -> shortestDistances.get(node.data)));
+
+    nodes.values().forEach(node -> shortestDistances.put(node.data, Double.POSITIVE_INFINITY));
+    shortestDistances.put(start, 0.0);
+
+    queue.add(nodes.get(start));
+
+    while (!queue.isEmpty()) {
+      Node<T> currentNode = queue.poll();
+
+      for (Node<T> neighbor : currentNode.children) {
+        double tentativeDistance = shortestDistances.get(currentNode.data) + 1; // assuming all edges have weight=1
+
+        if (tentativeDistance < shortestDistances.get(neighbor.data)) {
+          shortestDistances.put(neighbor.data, tentativeDistance);
+          previousNodes.put(neighbor.data, currentNode);
+
+          queue.remove(neighbor);
+          queue.add(neighbor);
+        }
+      }
+    }
+
+    List<Node<T>> path = new ArrayList<>();
+    for (Node<T> node = nodes.get(end); node != null; node = previousNodes.get(node.data)) {
+      path.add(node);
+    }
+
+    Collections.reverse(path);
+    return path;
   }
 
   public record Node<V>(V data, List<Node<V>> children, List<Node<V>> parents) implements Comparable<Node<V>> {
