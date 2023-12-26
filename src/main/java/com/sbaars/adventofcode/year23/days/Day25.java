@@ -40,7 +40,7 @@ public class Day25 extends Day2023 {
     }
     Map<String, PathComponent> pathComponents = new HashMap<>();
     allNodes.forEach(s -> dijkstra(connections, s).forEach((k, v) -> {
-      var label = k.compareTo(v.a()) < 0 ? k + " " + v.a() : v.a() + " " + k;
+      var label = k.compareTo(v.node) < 0 ? k + " " + v.node : v.node + " " + k;
       pathComponents.computeIfAbsent(label, t -> new PathComponent(t, new AtomicInteger())).counter.incrementAndGet();
     }));
     pathComponents.values().stream().sorted(reverseOrder()).limit(3L).map(PathComponent::label).map(s -> s.split(" ")).forEach(s -> {
@@ -51,7 +51,7 @@ public class Day25 extends Day2023 {
     return reducedSize * (totalSize - reducedSize);
   }
 
-  record ND(String node, int distance) implements Comparable<ND> {
+  public record ND(String node, int distance) implements Comparable<ND> {
 
     @Override
     public int compareTo(ND o) {
@@ -66,20 +66,20 @@ public class Day25 extends Day2023 {
     return "That's all!";
   }
 
-  public Map<String, Pair<T, Integer>> dijkstra(ListMap<T, T> nodes, T node) {
-    var queue = new PriorityQueue<Pair<T, Integer>>();
-    Set<T> visited = new HashSet<>();
-    Map<T, Pair<T, Integer>> distanceMap = new HashMap<>();
-    queue.add(new Pair<>(node, 0));
+  public Map<String, ND> dijkstra(ListMap<String, String> nodes, String node) {
+    var queue = new PriorityQueue<ND>();
+    Set<String> visited = new HashSet<>();
+    Map<String, ND> distanceMap = new HashMap<>();
+    queue.add(new ND(node, 0));
     while (!queue.isEmpty()) {
       var current = queue.remove();
-      visited.add(current.a());
-      nodes.get(current.a()).stream()
+      visited.add(current.node);
+      nodes.get(current.node).stream()
           .filter(s -> !visited.contains(s))
-          .filter(s -> !distanceMap.containsKey(s) || distanceMap.get(s).b() > current.b() + 1)
+          .filter(s -> !distanceMap.containsKey(s) || distanceMap.get(s).distance > current.distance + 1)
           .forEach(s -> {
-            distanceMap.put(s, new Pair<>(current.a(), current.b() + 1));
-            queue.add(new Pair<>(s, current.b() + 1));
+            distanceMap.put(s, new ND(current.node, current.distance + 1));
+            queue.add(new ND(s, current.distance + 1));
           });
     }
     return distanceMap;
