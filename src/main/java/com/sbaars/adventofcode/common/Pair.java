@@ -20,6 +20,10 @@ public record Pair<A, B>(A a, B b) implements Comparable<Pair<A, B>> {
     return func.apply(a(), b());
   }
 
+  public Pair<B, A> flip() {
+    return new Pair<>(b, a);
+  }
+
   @Override
   public int compareTo(Pair<A, B> t) {
     if (a instanceof Comparable && t.a instanceof Comparable) {
