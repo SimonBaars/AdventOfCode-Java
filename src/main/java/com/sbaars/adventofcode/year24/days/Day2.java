@@ -2,8 +2,6 @@ package com.sbaars.adventofcode.year24.days;
 
 import com.sbaars.adventofcode.year24.Day2024;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Day2 extends Day2024 {
