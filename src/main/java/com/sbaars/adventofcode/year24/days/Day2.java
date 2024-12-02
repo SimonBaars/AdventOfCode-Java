@@ -17,14 +17,12 @@ public class Day2 extends Day2024 {
 
   @Override
   public Object part1() {
-    List<String> input = dayStream().collect(Collectors.toList());
-    return input.stream().filter(this::isSafeReport).count();
+    return dayStream().filter(this::isSafeReport).count();
   }
 
   @Override
   public Object part2() {
-    List<String> input = dayStream().collect(Collectors.toList());
-    return input.stream().filter(this::isSafeWithDampener).count();
+    return dayStream().filter(this::isSafeWithDampener).count();
   }
 
   private boolean isSafeReport(String report) {
