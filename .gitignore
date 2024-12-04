@@ -90,5 +90,5 @@ fabric.properties
 # Custom stuff
 APIKEY
 
-src/main/resources
-puzzles
+src/main/resources/*
+puzzles/*
