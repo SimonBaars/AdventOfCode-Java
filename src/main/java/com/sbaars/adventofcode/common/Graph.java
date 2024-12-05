@@ -11,13 +11,11 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 public record Graph<T>(Map<T, Node<T>> nodes) {
   public Graph(ListMap<T, T> map) {
     this(Stream.concat(map.keySet().stream(), map.valueStream()).distinct().map(Node::new).collect(Collectors.toMap(Node::data, a -> a)));
     map.forEach((a, b) -> nodes.get(a).children.addAll(b.stream().map(nodes::get).toList()));
     map.forEach((a, b) -> b.forEach(c -> nodes.get(c).parents.add(nodes.get(a))));
-
   }
 
   public static <T> Collector<Pair<T, T>, ListMap<T, T>, Graph<T>> toGraph() {
