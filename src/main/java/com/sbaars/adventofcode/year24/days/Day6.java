@@ -90,10 +90,9 @@ public class Day6 extends Day2024 {
     long minX = grid.minX(), maxX = grid.maxX(), minY = grid.minY(), maxY = grid.maxY();
     Loc pos = guardStart.a();
     Direction facing = guardStart.b();
-    long x = pos.x, y = pos.y;
     Set<Loc> visitedPositions = new HashSet<>();
     Set<Pair<Loc, Direction>> visitedStates = new HashSet<>();
-    visitedPositions.add(new Loc(x, y));
+    visitedPositions.add(pos);
     visitedStates.add(Pair.of(pos, facing));
     boolean looped = false;
 
@@ -112,29 +111,24 @@ public class Day6 extends Day2024 {
           break;
         }
         visitedStates.add(state);
-        Loc nextPos = facing.move(new Loc(x, y));
+        Loc nextPos = facing.move(pos);
         if (nextPos.x < minX || nextPos.x > maxX || nextPos.y < minY || nextPos.y > maxY) break;
         continue;
       } else {
         for (long i = 0; i < nSteps; i++) {
           pos = pos.move(facing);
-          x = pos.x;
-          y = pos.y;
-          Loc newPos = new Loc(x, y);
           Pair<Loc, Direction> state = Pair.of(pos, facing);
           if (visitedStates.contains(state)) {
             looped = true;
             break;
           }
           visitedStates.add(state);
-          if (x >= minX && x <= maxX && y >= minY && y <= maxY) visitedPositions.add(newPos);
+          if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) visitedPositions.add(pos);
           else break;
         }
         if (looped) break;
-        Loc l = new Loc(x, y).move(facing);
-        long nx = l.x, ny = l.y;
-        if (nx < minX || nx > maxX || ny < minY || ny > maxY) break;
-        Loc nextPos = new Loc(nx, ny);
+        Loc nextPos = pos.move(facing);
+        if (nextPos.x < minX || nextPos.x > maxX || nextPos.y < minY || nextPos.y > maxY) break;
         if (obstructionData.obstruction().contains(nextPos)) {
           facing = facing.turn(true);
           Pair<Loc, Direction> state = Pair.of(pos, facing);
