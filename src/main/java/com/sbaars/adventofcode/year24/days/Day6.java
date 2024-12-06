@@ -92,9 +92,9 @@ public class Day6 extends Day2024 {
     Direction facing = guardStart.b();
     long x = pos.x, y = pos.y;
     Set<Loc> visitedPositions = new HashSet<>();
-    Set<Triple<Long, Long, Direction>> visitedStates = new HashSet<>();
+    Set<Pair<Loc, Direction>> visitedStates = new HashSet<>();
     visitedPositions.add(new Loc(x, y));
-    visitedStates.add(Triple.of(x, y, facing));
+    visitedStates.add(Pair.of(pos, facing));
     boolean looped = false;
 
     while (true) {
@@ -106,7 +106,7 @@ public class Day6 extends Day2024 {
       long nSteps = Math.min(stepsToObst, stepsToEdge);
       if (nSteps <= 0) {
         facing = facing.turn(true);
-        Triple<Long, Long, Direction> state = Triple.of(x, y, facing);
+        Pair<Loc, Direction> state = Pair.of(pos, facing);
         if (visitedStates.contains(state)) {
           looped = true;
           break;
@@ -117,12 +117,11 @@ public class Day6 extends Day2024 {
         continue;
       } else {
         for (long i = 0; i < nSteps; i++) {
-          Loc l = new Loc(x, y).move(facing);
-          pos = l;
-          x = l.x;
-          y = l.y;
+          pos = pos.move(facing);
+          x = pos.x;
+          y = pos.y;
           Loc newPos = new Loc(x, y);
-          Triple<Long, Long, Direction> state = Triple.of(x, y, facing);
+          Pair<Loc, Direction> state = Pair.of(pos, facing);
           if (visitedStates.contains(state)) {
             looped = true;
             break;
@@ -138,7 +137,7 @@ public class Day6 extends Day2024 {
         Loc nextPos = new Loc(nx, ny);
         if (obstructionData.obstruction().contains(nextPos)) {
           facing = facing.turn(true);
-          Triple<Long, Long, Direction> state = Triple.of(x, y, facing);
+          Pair<Loc, Direction> state = Pair.of(pos, facing);
           if (visitedStates.contains(state)) {
             looped = true;
             break;
