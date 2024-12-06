@@ -80,6 +80,10 @@ public class Loc implements Comparable<Loc> {
     return new Loc(x + l.x, y + l.y);
   }
 
+  public Loc move(Direction d) {
+    return d.move(this);
+  }
+
   public Point getPoint() {
     return new Point(intX(), intY());
   }
