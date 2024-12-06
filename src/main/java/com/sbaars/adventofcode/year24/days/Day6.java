@@ -112,7 +112,7 @@ public class Day6 extends Day2024 {
         }
         visitedStates.add(state);
         Loc nextPos = facing.move(pos);
-        if (nextPos.x < minX || nextPos.x > maxX || nextPos.y < minY || nextPos.y > maxY) break;
+        if (!grid.contains(nextPos)) break;
         continue;
       } else {
         for (long i = 0; i < nSteps; i++) {
@@ -123,12 +123,12 @@ public class Day6 extends Day2024 {
             break;
           }
           visitedStates.add(state);
-          if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) visitedPositions.add(pos);
+          if (grid.contains(pos)) visitedPositions.add(pos);
           else break;
         }
         if (looped) break;
         Loc nextPos = pos.move(facing);
-        if (nextPos.x < minX || nextPos.x > maxX || nextPos.y < minY || nextPos.y > maxY) break;
+        if (!grid.contains(nextPos)) break;
         if (obstructionData.obstruction().contains(nextPos)) {
           facing = facing.turn(true);
           Pair<Loc, Direction> state = Pair.of(pos, facing);
