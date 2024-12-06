@@ -1,7 +1,6 @@
 package com.sbaars.adventofcode.year24.days;
 
 import com.sbaars.adventofcode.common.Direction;
-import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year24.Day2024;
@@ -10,6 +9,7 @@ import static java.lang.Long.MAX_VALUE;
 
 import java.util.*;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 public class Day6 extends Day2024 {
@@ -43,7 +43,7 @@ public class Day6 extends Day2024 {
   public Pair<Loc, Direction> findGuardStart(InfiniteGrid grid) {
     return grid.grid.entrySet().stream()
         .filter(e -> "^v<>".indexOf(e.getValue()) != -1)
-        .map(e -> new Pair<>(e.getKey(), Direction.caretToDirection(e.getValue())))
+        .map(e -> Pair.of(e.getKey(), Direction.caretToDirection(e.getValue())))
         .findFirst()
         .orElseThrow(() -> new IllegalStateException("Guard starting position not found."));
   }
@@ -88,8 +88,8 @@ public class Day6 extends Day2024 {
 
   private Triple<Integer, Set<Loc>, Boolean> simulate(InfiniteGrid grid, ObstructionData obstructionData, Pair<Loc, Direction> guardStart, Loc obstructionPos) {
     long minX = grid.minX(), maxX = grid.maxX(), minY = grid.minY(), maxY = grid.maxY();
-    Loc pos = guardStart.a();
-    Direction facing = guardStart.b();
+    Loc pos = guardStart.getLeft();
+    Direction facing = guardStart.getRight();
     Set<Loc> visitedPositions = new HashSet<>();
     Set<Pair<Loc, Direction>> visitedStates = new HashSet<>();
     visitedPositions.add(pos);
