@@ -12,8 +12,6 @@ import java.util.*;
 
 import org.apache.commons.lang3.tuple.Triple;
 
-import static com.sbaars.adventofcode.common.Direction.*;
-
 public class Day6 extends Day2024 {
 
   public Day6() {
@@ -101,9 +99,9 @@ public class Day6 extends Day2024 {
 
     while (true) {
       long stepsToObst = MAX_VALUE, stepsToEdge = MAX_VALUE;
-      var obstaclesAhead = getObstaclesAhead(obstructionData, facing, x, y);
-      if (!obstaclesAhead.isEmpty()) stepsToObst = getStepsToObst(obstaclesAhead, facing, x, y);
-      stepsToEdge = getStepsToEdge(facing, x, y, minX, maxX, minY, maxY);
+      var obstaclesAhead = getObstaclesAhead(obstructionData, facing, pos);
+      if (!obstaclesAhead.isEmpty()) stepsToObst = getStepsToObst(obstaclesAhead, facing, pos);
+      stepsToEdge = getStepsToEdge(facing, pos, minX, maxX, minY, maxY);
 
       long nSteps = Math.min(stepsToObst, stepsToEdge);
       if (nSteps <= 0) {
@@ -120,6 +118,7 @@ public class Day6 extends Day2024 {
       } else {
         for (long i = 0; i < nSteps; i++) {
           Loc l = new Loc(x, y).move(facing);
+          pos = l;
           x = l.x;
           y = l.y;
           Loc newPos = new Loc(x, y);
@@ -151,32 +150,32 @@ public class Day6 extends Day2024 {
     return Triple.of(visitedPositions.size(), visitedPositions, looped);
   }
 
-  private Set<Long> getObstaclesAhead(ObstructionData obstructionData, Direction facing, long x, long y) {
+  private Set<Long> getObstaclesAhead(ObstructionData obstructionData, Direction facing, Loc pos) {
     return switch (facing) {
-      case NORTH -> obstructionData.obstructionYInCol().getOrDefault(x, new TreeSet<>()).headSet(y, false);
-      case SOUTH -> obstructionData.obstructionYInCol().getOrDefault(x, new TreeSet<>()).tailSet(y + 1);
-      case WEST -> obstructionData.obstructionXInRow().getOrDefault(y, new TreeSet<>()).headSet(x, false);
-      case EAST -> obstructionData.obstructionXInRow().getOrDefault(y, new TreeSet<>()).tailSet(x + 1);
+      case NORTH -> obstructionData.obstructionYInCol().getOrDefault(pos.x, new TreeSet<>()).headSet(pos.y, false);
+      case SOUTH -> obstructionData.obstructionYInCol().getOrDefault(pos.x, new TreeSet<>()).tailSet(pos.y + 1);
+      case WEST -> obstructionData.obstructionXInRow().getOrDefault(pos.y, new TreeSet<>()).headSet(pos.x, false);
+      case EAST -> obstructionData.obstructionXInRow().getOrDefault(pos.y, new TreeSet<>()).tailSet(pos.x + 1);
       default -> new TreeSet<>();
     };
   }
 
-  private long getStepsToObst(Set<Long> obstaclesAhead, Direction facing, long x, long y) {
+  private long getStepsToObst(Set<Long> obstaclesAhead, Direction facing, Loc pos) {
     return switch (facing) {
-      case NORTH -> y - ((TreeSet<Long>) obstaclesAhead).last() - 1;
-      case SOUTH -> ((TreeSet<Long>) obstaclesAhead).first() - y - 1;
-      case WEST -> x - ((TreeSet<Long>) obstaclesAhead).last() - 1;
-      case EAST -> ((TreeSet<Long>) obstaclesAhead).first() - x - 1;
+      case NORTH -> pos.y - ((TreeSet<Long>) obstaclesAhead).last() - 1;
+      case SOUTH -> ((TreeSet<Long>) obstaclesAhead).first() - pos.y - 1;
+      case WEST -> pos.x - ((TreeSet<Long>) obstaclesAhead).last() - 1;
+      case EAST -> ((TreeSet<Long>) obstaclesAhead).first() - pos.x - 1;
       default -> MAX_VALUE;
     };
   }
 
-  private long getStepsToEdge(Direction facing, long x, long y, long minX, long maxX, long minY, long maxY) {
+  private long getStepsToEdge(Direction facing, Loc pos, long minX, long maxX, long minY, long maxY) {
     return switch (facing) {
-      case NORTH -> y - minY;
-      case SOUTH -> maxY - y;
-      case WEST -> x - minX;
-      case EAST -> maxX - x;
+      case NORTH -> pos.y - minY;
+      case SOUTH -> maxY - pos.y;
+      case WEST -> pos.x - minX;
+      case EAST -> maxX - pos.x;
       default -> MAX_VALUE;
     };
   }
