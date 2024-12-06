@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year24.days;
 
 import com.sbaars.adventofcode.common.Direction;
+import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year24.Day2024;
@@ -9,8 +10,9 @@ import static java.lang.Long.MAX_VALUE;
 
 import java.util.*;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+
+import static com.sbaars.adventofcode.common.Direction.*;
 
 public class Day6 extends Day2024 {
 
@@ -43,7 +45,7 @@ public class Day6 extends Day2024 {
   public Pair<Loc, Direction> findGuardStart(InfiniteGrid grid) {
     return grid.grid.entrySet().stream()
         .filter(e -> "^v<>".indexOf(e.getValue()) != -1)
-        .map(e -> Pair.of(e.getKey(), Direction.caretToDirection(e.getValue())))
+        .map(e -> new Pair<>(e.getKey(), Direction.caretToDirection(e.getValue())))
         .findFirst()
         .orElseThrow(() -> new IllegalStateException("Guard starting position not found."));
   }
@@ -51,9 +53,9 @@ public class Day6 extends Day2024 {
   public record ObstructionData(Set<Loc> obstruction, Map<Long, NavigableSet<Long>> obstructionXInRow, Map<Long, NavigableSet<Long>> obstructionYInCol) {}
 
   public ObstructionData buildObstructionData(InfiniteGrid grid) {
-    var obstruction = new HashSet<Loc>();
-    var obstructionXInRow = new HashMap<Long, NavigableSet<Long>>();
-    var obstructionYInCol = new HashMap<Long, NavigableSet<Long>>();
+    Set<Loc> obstruction = new HashSet<>();
+    Map<Long, NavigableSet<Long>> obstructionXInRow = new HashMap<>();
+    Map<Long, NavigableSet<Long>> obstructionYInCol = new HashMap<>();
 
     grid.grid.forEach((loc, c) -> {
       if (c == '#') {
@@ -71,15 +73,15 @@ public class Day6 extends Day2024 {
   }
 
   public boolean simulateGuardWithObstruction(InfiniteGrid grid, ObstructionData obstructionData, Pair<Loc, Direction> guardStart, Loc obstructionPos) {
-    var obstruction = new HashSet<>(obstructionData.obstruction());
+    Set<Loc> obstruction = new HashSet<>(obstructionData.obstruction());
     if (obstruction.contains(obstructionPos)) return false;
     obstruction.add(obstructionPos);
 
-    var obstructionXInRow = new HashMap<Long, NavigableSet<Long>>();
+    Map<Long, NavigableSet<Long>> obstructionXInRow = new HashMap<>();
     obstructionData.obstructionXInRow().forEach((k, v) -> obstructionXInRow.put(k, new TreeSet<>(v)));
     obstructionXInRow.computeIfAbsent(obstructionPos.y, k -> new TreeSet<>()).add(obstructionPos.x);
 
-    var obstructionYInCol = new HashMap<Long, NavigableSet<Long>>();
+    Map<Long, NavigableSet<Long>> obstructionYInCol = new HashMap<>();
     obstructionData.obstructionYInCol().forEach((k, v) -> obstructionYInCol.put(k, new TreeSet<>(v)));
     obstructionYInCol.computeIfAbsent(obstructionPos.x, k -> new TreeSet<>()).add(obstructionPos.y);
 
@@ -88,50 +90,56 @@ public class Day6 extends Day2024 {
 
   private Triple<Integer, Set<Loc>, Boolean> simulate(InfiniteGrid grid, ObstructionData obstructionData, Pair<Loc, Direction> guardStart, Loc obstructionPos) {
     long minX = grid.minX(), maxX = grid.maxX(), minY = grid.minY(), maxY = grid.maxY();
-    Loc pos = guardStart.getLeft();
-    Direction facing = guardStart.getRight();
-    var visitedPositions = new HashSet<Loc>();
-    var visitedStates = new HashSet<Pair<Loc, Direction>>();
-    visitedPositions.add(pos);
-    visitedStates.add(Pair.of(pos, facing));
+    Loc pos = guardStart.a();
+    Direction facing = guardStart.b();
+    long x = pos.x, y = pos.y;
+    Set<Loc> visitedPositions = new HashSet<>();
+    Set<Triple<Long, Long, Direction>> visitedStates = new HashSet<>();
+    visitedPositions.add(new Loc(x, y));
+    visitedStates.add(Triple.of(x, y, facing));
     boolean looped = false;
 
     while (true) {
       long stepsToObst = MAX_VALUE, stepsToEdge = MAX_VALUE;
-      var obstaclesAhead = getObstaclesAhead(obstructionData, facing, pos);
-      if (!obstaclesAhead.isEmpty()) stepsToObst = getStepsToObst(obstaclesAhead, facing, pos);
-      stepsToEdge = getStepsToEdge(facing, pos, minX, maxX, minY, maxY);
+      var obstaclesAhead = getObstaclesAhead(obstructionData, facing, x, y);
+      if (!obstaclesAhead.isEmpty()) stepsToObst = getStepsToObst(obstaclesAhead, facing, x, y);
+      stepsToEdge = getStepsToEdge(facing, x, y, minX, maxX, minY, maxY);
 
       long nSteps = Math.min(stepsToObst, stepsToEdge);
       if (nSteps <= 0) {
-        facing = facing.turn();
-        var state = Pair.of(pos, facing);
+        facing = facing.turn(true);
+        Triple<Long, Long, Direction> state = Triple.of(x, y, facing);
         if (visitedStates.contains(state)) {
           looped = true;
           break;
         }
         visitedStates.add(state);
-        pos = facing.move(pos);
-        if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY) break;
+        Loc nextPos = facing.move(new Loc(x, y));
+        if (nextPos.x < minX || nextPos.x > maxX || nextPos.y < minY || nextPos.y > maxY) break;
         continue;
       } else {
         for (long i = 0; i < nSteps; i++) {
-          pos = pos.move(facing);
-          var state = Pair.of(pos, facing);
+          Loc l = new Loc(x, y).move(facing);
+          x = l.x;
+          y = l.y;
+          Loc newPos = new Loc(x, y);
+          Triple<Long, Long, Direction> state = Triple.of(x, y, facing);
           if (visitedStates.contains(state)) {
             looped = true;
             break;
           }
           visitedStates.add(state);
-          if (grid.contains(pos)) visitedPositions.add(pos);
+          if (x >= minX && x <= maxX && y >= minY && y <= maxY) visitedPositions.add(newPos);
           else break;
         }
         if (looped) break;
-        pos = pos.move(facing);
-        if (!grid.contains(pos)) break;
-        if (obstructionData.obstruction().contains(pos)) {
-          facing = facing.turn();
-          var state = Pair.of(pos, facing);
+        Loc l = new Loc(x, y).move(facing);
+        long nx = l.x, ny = l.y;
+        if (nx < minX || nx > maxX || ny < minY || ny > maxY) break;
+        Loc nextPos = new Loc(nx, ny);
+        if (obstructionData.obstruction().contains(nextPos)) {
+          facing = facing.turn(true);
+          Triple<Long, Long, Direction> state = Triple.of(x, y, facing);
           if (visitedStates.contains(state)) {
             looped = true;
             break;
@@ -143,32 +151,32 @@ public class Day6 extends Day2024 {
     return Triple.of(visitedPositions.size(), visitedPositions, looped);
   }
 
-  private Set<Long> getObstaclesAhead(ObstructionData obstructionData, Direction facing, Loc loc) {
+  private Set<Long> getObstaclesAhead(ObstructionData obstructionData, Direction facing, long x, long y) {
     return switch (facing) {
-      case NORTH -> obstructionData.obstructionYInCol().getOrDefault(loc.x, new TreeSet<>()).headSet(loc.y, false);
-      case SOUTH -> obstructionData.obstructionYInCol().getOrDefault(loc.x, new TreeSet<>()).tailSet(loc.y + 1);
-      case WEST -> obstructionData.obstructionXInRow().getOrDefault(loc.y, new TreeSet<>()).headSet(loc.x, false);
-      case EAST -> obstructionData.obstructionXInRow().getOrDefault(loc.y, new TreeSet<>()).tailSet(loc.x + 1);
+      case NORTH -> obstructionData.obstructionYInCol().getOrDefault(x, new TreeSet<>()).headSet(y, false);
+      case SOUTH -> obstructionData.obstructionYInCol().getOrDefault(x, new TreeSet<>()).tailSet(y + 1);
+      case WEST -> obstructionData.obstructionXInRow().getOrDefault(y, new TreeSet<>()).headSet(x, false);
+      case EAST -> obstructionData.obstructionXInRow().getOrDefault(y, new TreeSet<>()).tailSet(x + 1);
       default -> new TreeSet<>();
     };
   }
 
-  private long getStepsToObst(Set<Long> obstaclesAhead, Direction facing, Loc loc) {
+  private long getStepsToObst(Set<Long> obstaclesAhead, Direction facing, long x, long y) {
     return switch (facing) {
-      case NORTH -> loc.y - ((TreeSet<Long>) obstaclesAhead).last() - 1;
-      case SOUTH -> ((TreeSet<Long>) obstaclesAhead).first() - loc.y - 1;
-      case WEST -> loc.x - ((TreeSet<Long>) obstaclesAhead).last() - 1;
-      case EAST -> ((TreeSet<Long>) obstaclesAhead).first() - loc.x - 1;
+      case NORTH -> y - ((TreeSet<Long>) obstaclesAhead).last() - 1;
+      case SOUTH -> ((TreeSet<Long>) obstaclesAhead).first() - y - 1;
+      case WEST -> x - ((TreeSet<Long>) obstaclesAhead).last() - 1;
+      case EAST -> ((TreeSet<Long>) obstaclesAhead).first() - x - 1;
       default -> MAX_VALUE;
     };
   }
 
-  private long getStepsToEdge(Direction facing, Loc loc, long minX, long maxX, long minY, long maxY) {
+  private long getStepsToEdge(Direction facing, long x, long y, long minX, long maxX, long minY, long maxY) {
     return switch (facing) {
-      case NORTH -> loc.y - minY;
-      case SOUTH -> maxY - loc.y;
-      case WEST -> loc.x - minX;
-      case EAST -> maxX - loc.x;
+      case NORTH -> y - minY;
+      case SOUTH -> maxY - y;
+      case WEST -> x - minX;
+      case EAST -> maxX - x;
       default -> MAX_VALUE;
     };
   }
