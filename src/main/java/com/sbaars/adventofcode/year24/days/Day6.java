@@ -92,13 +92,11 @@ public class Day6 extends Day2024 {
     long minX = grid.minX(), maxX = grid.maxX(), minY = grid.minY(), maxY = grid.maxY();
     Loc pos = guardStart.a();
     Direction facing = guardStart.b();
-    Direction[] dirOrder = {NORTH, EAST, SOUTH, WEST};
-    int dirIndex = Arrays.asList(dirOrder).indexOf(facing);
     long x = pos.x, y = pos.y;
     Set<Loc> visitedPositions = new HashSet<>();
-    Set<Triple<Long, Long, Integer>> visitedStates = new HashSet<>();
+    Set<Triple<Long, Long, Direction>> visitedStates = new HashSet<>();
     visitedPositions.add(new Loc(x, y));
-    visitedStates.add(Triple.of(x, y, dirIndex));
+    visitedStates.add(Triple.of(x, y, facing));
     boolean looped = false;
 
     while (true) {
@@ -109,9 +107,8 @@ public class Day6 extends Day2024 {
 
       long nSteps = Math.min(stepsToObst, stepsToEdge);
       if (nSteps <= 0) {
-        dirIndex = (dirIndex + 1) % 4;
-        facing = dirOrder[dirIndex];
-        Triple<Long, Long, Integer> state = Triple.of(x, y, dirIndex);
+        facing = facing.turn(true);
+        Triple<Long, Long, Direction> state = Triple.of(x, y, facing);
         if (visitedStates.contains(state)) {
           looped = true;
           break;
@@ -126,7 +123,7 @@ public class Day6 extends Day2024 {
           x = l.x;
           y = l.y;
           Loc newPos = new Loc(x, y);
-          Triple<Long, Long, Integer> state = Triple.of(x, y, dirIndex);
+          Triple<Long, Long, Direction> state = Triple.of(x, y, facing);
           if (visitedStates.contains(state)) {
             looped = true;
             break;
@@ -141,9 +138,8 @@ public class Day6 extends Day2024 {
         if (nx < minX || nx > maxX || ny < minY || ny > maxY) break;
         Loc nextPos = new Loc(nx, ny);
         if (obstructionData.obstruction().contains(nextPos)) {
-          dirIndex = (dirIndex + 1) % 4;
-          facing = dirOrder[dirIndex];
-          Triple<Long, Long, Integer> state = Triple.of(x, y, dirIndex);
+          facing = facing.turn(true);
+          Triple<Long, Long, Direction> state = Triple.of(x, y, facing);
           if (visitedStates.contains(state)) {
             looped = true;
             break;
