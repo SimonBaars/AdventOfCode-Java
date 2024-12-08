@@ -36,7 +36,7 @@ public class Day8 extends Day2024 {
   @Override
   public Object part2() {
     var in = new InfiniteGrid(dayGrid());
-    return getAntennasByFrequency(in).stream().filter((c, locs) -> locs.size() > 1).flatMapToObj((c, locs) -> {
+    return getAntennasByFrequency(in).stream().flatMapToObj((c, locs) -> {
       return allPairs(locs).flatMap(p -> {
         long dx = p.b().x - p.a().x;
         long dy = p.b().y - p.a().y;
