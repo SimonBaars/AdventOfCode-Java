@@ -66,18 +66,22 @@ public class AoCUtils {
     }).filter(p -> p.a() != null);
   }
 
+  // [A,B,C] -> [(A,B), (B,C)]
   public static <A> Stream<Pair<A, A>> connectedPairs(List<A> l) {
     return range(1, l.size()).mapToObj(i -> pair(l.get(i - 1), l.get(i)));
   }
 
+  // [A,B,C] -> [(A,B)]
   public static <A> Stream<Pair<A, A>> pairs(List<A> l) {
     return range(0, l.size() / 2).mapToObj(i -> new Pair<>(l.get(i * 2), l.get(i * 2 + 1)));
   }
 
+  // [A,B,C] -> [(A,B), (A,C), (B,C)]
   public static <A> Stream<Pair<A, A>> allPairs(List<A> l) {
     return range(0, l.size()).boxed().flatMap(i -> range(i + 1, l.size()).mapToObj(j -> new Pair<>(l.get(i), l.get(j))));
   }
 
+  // [A,B,C] [D,E,F] -> [(A,D), (A,E), (A,F), (B,D), (B,E), (B,F), (C,D), (C,E), (C,F)]
   public static <A, B> Stream<Pair<A, B>> allPairs(List<A> l1, List<B> l2) {
     return range(0, l1.size()).boxed().flatMap(i -> l2.stream().map(b -> new Pair<>(l1.get(i), b)));
   }
