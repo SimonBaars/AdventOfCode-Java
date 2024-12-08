@@ -1,7 +1,7 @@
 package com.sbaars.adventofcode.year19.days;
 
 import com.sbaars.adventofcode.year19.Day2019;
-
+import static com.sbaars.adventofcode.util.AoCUtils.gcd;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,15 +16,6 @@ public class Day12 extends Day2019 {
 
   public static void main(String[] args) {
     new Day12().printParts();
-  }
-
-  private static long gcd(long a, long b) {
-    while (b > 0) {
-      long temp = b;
-      b = a % b; // % is remainder
-      a = temp;
-    }
-    return a;
   }
 
   public static long lcm(long a, long b) {

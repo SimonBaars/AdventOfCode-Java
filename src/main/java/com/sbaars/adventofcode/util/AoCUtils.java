@@ -40,6 +40,10 @@ public class AoCUtils {
     return a;
   }
 
+  public static <A> Stream<A> appendWhile(UnaryOperator<A> func, Predicate<A> pred, A start) {
+    return Stream.iterate(start, func).takeWhile(pred);
+  }
+
   public static <A> A findMax(Collection<A> l, ToLongFunction<A> condition) {
     A res = null;
     long max = Long.MIN_VALUE;
@@ -190,5 +194,14 @@ public class AoCUtils {
   public static <A, B> A findReduce(Stream<A> chars, B acc, BiFunction<A, B, B> func, Predicate<B> pred) {
     MutablePair<A, B> pair = new MutablePair<>(null, acc);
     return chars.peek(p -> pair.set(p, func.apply(p, pair.b()))).filter(p -> pred.test(pair.b())).findFirst().get();
+  }
+
+  public static long gcd(long a, long b) {
+    while (b != 0) {
+        long temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
   }
 }
