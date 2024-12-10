@@ -8,11 +8,6 @@ import java.util.stream.Collectors;
 import com.sbaars.adventofcode.year24.Day2024;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 
-/**
- * day() is the input of the day as a string
- * dayStream() is the input of the day as a stream of lines
- */
-
 public class Day1 extends Day2024 {
   public Day1() {
     super(1);
