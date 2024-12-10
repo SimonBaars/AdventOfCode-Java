@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year24.days;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import com.sbaars.adventofcode.common.location.Loc3D;
 import com.sbaars.adventofcode.year24.Day2024;
@@ -16,14 +17,14 @@ import static java.util.stream.LongStream.range;
  */
 
 public class Day0 extends Day2024 {
+    private final int LENGTH = 30;
+
     public Day0() {
         super(0);
     }
 
     public static void main(String[] args) {
-        var d = new Day0();
-//        d.example = 1;
-        d.printParts();
+        new Day0().printParts();
     }
 
     public record Pair(int a, int b) {}
@@ -54,31 +55,26 @@ public class Day0 extends Day2024 {
 
     private Long[][][] calcGrid() {
         var in = dayStream().map(Instruction::new).toList();
-        var q = new LinkedList<Long>();
-        Long[][][] g = new Long[30][30][30];
-        for(long x = 0; x<g.length; x++){
-            for(long y = 0; y<g.length; y++){
-                for(long z = 0; z<g.length; z++){
-                    q.clear();
-                    long c = 0;
-                    whileloop: while(c<in.size()) {
-                        var inst = in.get(toIntExact(c));
-                        switch(inst.type()) {
-                            case "push": q.push(switch(toLowerCase(inst.dimension)) {
-                                case 'x' -> x;
-                                case 'y' -> y;
-                                case 'z' -> z;
-                                default -> inst.n;
-                            }); break;
-                            case "add": q.push(q.pop() + q.pop()); break;
-                            case "jmpos": if(q.pop() >= 0) { c += inst.n; } break;
-                            case "ret": g[toIntExact(z)][toIntExact(y)][toIntExact(x)] = q.pop(); break whileloop;
-                        }
-                        c++;
-                    }
+        Long[][][] g = new Long[LENGTH][LENGTH][LENGTH];
+        allPositions().forEach(l -> {
+            var q = new LinkedList<Long>();
+            long c = 0;
+            while(c<in.size()) {
+                var inst = in.get(toIntExact(c));
+                switch(inst.type()) {
+                    case "push": q.push(switch(toLowerCase(inst.dimension)) {
+                        case 'x' -> l.x;
+                        case 'y' -> l.y;
+                        case 'z' -> l.z;
+                        default -> inst.n;
+                    }); break;
+                    case "add": q.push(q.pop() + q.pop()); break;
+                    case "jmpos": if(q.pop() >= 0) { c += inst.n; } break;
+                    case "ret": g[l.intX()][l.intY()][l.intZ()] = q.pop(); return;
                 }
+                c++;
             }
-        }
+        });
         return g;
     }
 
@@ -98,9 +94,13 @@ public class Day0 extends Day2024 {
     @Override
     public Object part2() {
         Long[][][] g = calcGrid();
-        var coords = range(0, g.length).boxed().flatMap(x -> range(0, g[0].length).boxed().flatMap(y -> range(0, g[0][0].length).boxed().map(z -> new Loc3D(x, y, z))))
+        var coords = allPositions()
                 .filter(l -> g[l.intX()][l.intY()][l.intZ()] > 0)
                 .toList();
         return count(coords);
+    }
+
+    private Stream<Loc3D> allPositions() {
+        return range(0, LENGTH).boxed().flatMap(x -> range(0, LENGTH).boxed().flatMap(y -> range(0, LENGTH).boxed().map(z -> new Loc3D(x, y, z))));
     }
 }
