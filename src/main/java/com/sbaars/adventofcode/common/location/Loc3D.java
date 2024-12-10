@@ -27,6 +27,7 @@ package com.sbaars.adventofcode.common.location;
 
 import java.util.List;
 
+import static java.lang.Math.toIntExact;
 import static java.util.stream.LongStream.rangeClosed;
 
 public class Loc3D {
@@ -68,6 +69,18 @@ public class Loc3D {
 
   public double getZ() {
     return z;
+  }
+
+  public int intX() {
+    return toIntExact(x);
+  }
+
+  public int intY() {
+    return toIntExact(y);
+  }
+
+  public int intZ() {
+    return toIntExact(z);
   }
 
   public Loc3D move(long dx, long dy, long dz) {
