@@ -9,7 +9,7 @@ import com.sbaars.adventofcode.year24.Day2024;
 import static com.sbaars.adventofcode.common.Direction3D.six;
 import static java.lang.Character.toLowerCase;
 import static java.lang.Long.parseLong;
-import static java.lang.Math.toIntExact;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.LongStream.range;
 
 /**
@@ -36,34 +36,23 @@ public class Day0 extends Day2024 {
 
     public record Instruction(String type, long n, char dimension) {
         public Instruction(String s) {
-            this(
-                    s.split(" ")[0],
+            this(s.split(" ")[0],
                     s.contains(" ") && !isLetter(s.charAt(s.indexOf(' ') + 1)) ? parseLong(s.split(" ")[1]) : 0,
-                    s.contains(" ") && isLetter(s.charAt(s.indexOf(' ') + 1)) ? s.charAt(s.indexOf(' ') + 1) : 0
-            );
+                    s.contains(" ") && isLetter(s.charAt(s.indexOf(' ') + 1)) ? s.charAt(s.indexOf(' ') + 1) : 0);
         }
     }
 
     @Override
     public Object part1() {
-        Long[][][] g = calcGrid();
-        return Arrays.stream(g)
-                .flatMap(Arrays::stream)
-                .flatMap(Arrays::stream)
-                .mapToLong(Long::longValue)
-                .sum();
+        return calcGrid().values().stream().mapToLong(Long::longValue).sum();
     }
 
-    private Long[][][] calcGrid() {
+    private Map<Loc3D, Long> calcGrid() {
         var in = dayStream().map(Instruction::new).toList();
-        Long[][][] g = new Long[LENGTH][LENGTH][LENGTH];
-        allPositions().forEach(l -> {
-            g[l.intX()][l.intY()][l.intZ()] = runProgram(l, in, g);
-        });
-        return g;
+        return allPositions().collect(toMap(l -> l, l -> runProgram(l, in)));
     }
 
-    private static Long runProgram(Loc3D l, List<Instruction> in, Long[][][] g) {
+    private static Long runProgram(Loc3D l, List<Instruction> in) {
         var q = new LinkedList<Long>();
         for (int c = 0; c < in.size(); c++) {
             var inst = in.get(c);
@@ -102,10 +91,8 @@ public class Day0 extends Day2024 {
 
     @Override
     public Object part2() {
-        Long[][][] g = calcGrid();
-        var coords = allPositions()
-                .filter(l -> g[l.intX()][l.intY()][l.intZ()] > 0)
-                .toList();
+        Map<Loc3D, Long> g = calcGrid();
+        var coords = g.keySet().stream().filter(l -> g.get(l) > 0).toList();
         return count(coords);
     }
 
