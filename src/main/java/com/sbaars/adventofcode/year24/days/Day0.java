@@ -27,7 +27,8 @@ public class Day0 extends Day2024 {
         new Day0().printParts();
     }
 
-    public record Pair(int a, int b) {}
+    public record Pair(int a, int b) {
+    }
 
     private static boolean isLetter(char c) {
         return toLowerCase(c) >= 'x' && toLowerCase(c) <= 'z';
@@ -57,25 +58,33 @@ public class Day0 extends Day2024 {
         var in = dayStream().map(Instruction::new).toList();
         Long[][][] g = new Long[LENGTH][LENGTH][LENGTH];
         allPositions().forEach(l -> {
-            var q = new LinkedList<Long>();
-            long c = 0;
-            while(c<in.size()) {
-                var inst = in.get(toIntExact(c));
-                switch(inst.type()) {
-                    case "push": q.push(switch(toLowerCase(inst.dimension)) {
-                        case 'x' -> l.x;
-                        case 'y' -> l.y;
-                        case 'z' -> l.z;
-                        default -> inst.n;
-                    }); break;
-                    case "add": q.push(q.pop() + q.pop()); break;
-                    case "jmpos": if(q.pop() >= 0) { c += inst.n; } break;
-                    case "ret": g[l.intX()][l.intY()][l.intZ()] = q.pop(); return;
-                }
-                c++;
-            }
+            g[l.intX()][l.intY()][l.intZ()] = runProgram(l, in, g);
         });
         return g;
+    }
+
+    private static Long runProgram(Loc3D l, List<Instruction> in, Long[][][] g) {
+        var q = new LinkedList<Long>();
+        for (int c = 0; c < in.size(); c++) {
+            var inst = in.get(c);
+            switch (inst.type()) {
+                case "push" -> q.push(switch (toLowerCase(inst.dimension)) {
+                    case 'x' -> l.x;
+                    case 'y' -> l.y;
+                    case 'z' -> l.z;
+                    default -> inst.n;
+                });
+                case "add" -> q.push(q.pop() + q.pop());
+                case "jmpos" -> {
+                    if (q.pop() >= 0)
+                        c += inst.n;
+                }
+                case "ret" -> {
+                    return q.pop();
+                }
+            }
+        }
+        throw new IllegalStateException("Program didn't return");
     }
 
     private static void dfs(Loc3D start, Set<Loc3D> locs) {
@@ -101,6 +110,7 @@ public class Day0 extends Day2024 {
     }
 
     private Stream<Loc3D> allPositions() {
-        return range(0, LENGTH).boxed().flatMap(x -> range(0, LENGTH).boxed().flatMap(y -> range(0, LENGTH).boxed().map(z -> new Loc3D(x, y, z))));
+        return range(0, LENGTH).boxed().flatMap(
+                x -> range(0, LENGTH).boxed().flatMap(y -> range(0, LENGTH).boxed().map(z -> new Loc3D(x, y, z))));
     }
 }
