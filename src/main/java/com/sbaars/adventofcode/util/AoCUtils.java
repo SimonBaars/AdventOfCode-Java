@@ -10,6 +10,9 @@ import java.util.stream.StreamSupport;
 import static com.sbaars.adventofcode.common.MutableElement.mutable;
 import static com.sbaars.adventofcode.common.Pair.pair;
 import static java.lang.Long.MAX_VALUE;
+import static java.util.Objects.requireNonNull;
+import static java.util.Spliterators.iterator;
+import static java.util.Spliterators.spliterator;
 import static java.util.stream.IntStream.range;
 
 public class AoCUtils {
@@ -32,16 +35,40 @@ public class AoCUtils {
   }
 
   public static <A> A fixedPoint(A value, UnaryOperator<A> func, long limit) {
-    A a = func.apply(value);
-    A a2;
-    for(long i = 0; !(a2 = func.apply(a)).equals(a) && i<limit-1; i++) {
+    A a = value;
+    A a2 = func.apply(a);
+    for (long i = 0; !a2.equals(a) && i < limit - 1; i++) {
       a = a2;
+      a2 = func.apply(a);
     }
-    return a;
+    return a2;
   }
 
   public static <A> Stream<A> appendWhile(UnaryOperator<A> func, Predicate<A> pred, A start) {
     return Stream.iterate(start, func).takeWhile(pred);
+  }
+
+  public static <A> Stream<A> transformStream(Stream<A> inputStream, UnaryOperator<Stream<A>> transformFunction, Predicate<A> predicate) {
+    Stream<A> currentStream = inputStream;
+    Stream.Builder<A> outputBuilder = Stream.builder();
+
+    while (true) {
+      currentStream = transformFunction.apply(currentStream);
+      List<A> currentList = currentStream.toList();
+
+      if (currentList.isEmpty()) {
+        break;
+      }
+
+      currentList.stream().filter(predicate).forEach(outputBuilder::add);
+      currentStream = currentList.stream().filter(a -> !predicate.test(a));
+    }
+    return outputBuilder.build();
+  }
+
+  public static <A, B> B split(Stream<A> stream, BiFunction<Stream<A>, Stream<A>, B> zipper) {
+    List<A> list = stream.toList();
+    return zipper.apply(list.stream(), list.stream());
   }
 
   public static <A> A findMax(Collection<A> l, ToLongFunction<A> condition) {
@@ -99,9 +126,9 @@ public class AoCUtils {
   }
 
   public static <A, B, C> Stream<C> zip(Stream<? extends A> a, Stream<? extends B> b, BiFunction<? super A, ? super B, ? extends C> zipper) {
-    Objects.requireNonNull(zipper);
-    Spliterator<? extends A> aSpliterator = Objects.requireNonNull(a).spliterator();
-    Spliterator<? extends B> bSpliterator = Objects.requireNonNull(b).spliterator();
+    requireNonNull(zipper);
+    Spliterator<? extends A> aSpliterator = requireNonNull(a).spliterator();
+    Spliterator<? extends B> bSpliterator = requireNonNull(b).spliterator();
 
     int characteristics = aSpliterator.characteristics() & bSpliterator.characteristics() &
         ~(Spliterator.DISTINCT | Spliterator.SORTED);
@@ -110,8 +137,8 @@ public class AoCUtils {
         ? Math.min(aSpliterator.getExactSizeIfKnown(), bSpliterator.getExactSizeIfKnown())
         : -1;
 
-    Iterator<A> aIterator = Spliterators.iterator(aSpliterator);
-    Iterator<B> bIterator = Spliterators.iterator(bSpliterator);
+    Iterator<A> aIterator = iterator(aSpliterator);
+    Iterator<B> bIterator = iterator(bSpliterator);
     Iterator<C> cIterator = new Iterator<>() {
       @Override
       public boolean hasNext() {
@@ -124,7 +151,7 @@ public class AoCUtils {
       }
     };
 
-    Spliterator<C> split = Spliterators.spliterator(cIterator, zipSize, characteristics);
+    Spliterator<C> split = spliterator(cIterator, zipSize, characteristics);
     return (a.isParallel() || b.isParallel())
         ? StreamSupport.stream(split, true)
         : StreamSupport.stream(split, false);

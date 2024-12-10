@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import static com.sbaars.adventofcode.common.Direction.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static com.sbaars.adventofcode.common.Pair.pair;
 
 public class InfiniteGrid implements Grid {
   public final Map<Loc, Character> grid;
@@ -202,6 +203,14 @@ public class InfiniteGrid implements Grid {
 
   public Stream<Loc> findAround(Predicate<Character> predicate, Stream<Loc> locs, boolean diagonal) {
     return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l))).filter(l -> get(l).filter(predicate).isPresent());
+  }
+
+  public Stream<Loc> findAround(BiPredicate<Character, Character> predicate, Stream<Loc> locs, boolean diagonal) {
+    return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l)).filter(l2 -> get(l2).filter(c -> predicate.test(getOptimistic(l), c)).isPresent()));
+  }
+
+  public Stream<Stream<Loc>> around(BiPredicate<Character, Character> predicate, Stream<Loc> locs, boolean diagonal) {
+    return locs.map(l -> (diagonal ? eight() : four()).map(d -> d.move(l)).filter(l2 -> get(l2).filter(c -> predicate.test(getOptimistic(l), c)).isPresent()));
   }
 
   public void removeIf(BiPredicate<Loc, Character> p) {
