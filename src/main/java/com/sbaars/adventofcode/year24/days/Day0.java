@@ -27,13 +27,6 @@ public class Day0 extends Day2024 {
         new Day0().printParts();
     }
 
-    public record Pair(int a, int b) {
-    }
-
-    private static boolean isLetter(char c) {
-        return toLowerCase(c) >= 'x' && toLowerCase(c) <= 'z';
-    }
-
     public record Instruction(String type, long n, char dimension) {
         public Instruction(String s) {
             this(s.split(" ")[0],
@@ -45,6 +38,17 @@ public class Day0 extends Day2024 {
     @Override
     public Object part1() {
         return calcGrid().values().stream().mapToLong(Long::longValue).sum();
+    }
+
+    @Override
+    public Object part2() {
+        var clouds = calcGrid().keySet().stream().filter(l -> g.get(l) > 0).toList();
+        return count(clouds);
+    }
+
+    private Stream<Loc3D> allPositions() {
+        return range(0, LENGTH).boxed().flatMap(
+                x -> range(0, LENGTH).boxed().flatMap(y -> range(0, LENGTH).boxed().map(z -> new Loc3D(x, y, z))));
     }
 
     private Map<Loc3D, Long> calcGrid() {
@@ -89,15 +93,7 @@ public class Day0 extends Day2024 {
         return locs.stream().filter(set::contains).peek(l -> dfs(l, set)).count();
     }
 
-    @Override
-    public Object part2() {
-        Map<Loc3D, Long> g = calcGrid();
-        var coords = g.keySet().stream().filter(l -> g.get(l) > 0).toList();
-        return count(coords);
-    }
-
-    private Stream<Loc3D> allPositions() {
-        return range(0, LENGTH).boxed().flatMap(
-                x -> range(0, LENGTH).boxed().flatMap(y -> range(0, LENGTH).boxed().map(z -> new Loc3D(x, y, z))));
+    private static boolean isLetter(char c) {
+        return toLowerCase(c) >= 'x' && toLowerCase(c) <= 'z';
     }
 }
