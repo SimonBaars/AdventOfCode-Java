@@ -42,7 +42,8 @@ public class Day0 extends Day2024 {
 
     @Override
     public Object part2() {
-        var clouds = calcGrid().keySet().stream().filter(l -> g.get(l) > 0).toList();
+        var g = calcGrid();
+        var clouds = g.keySet().stream().filter(l -> g.get(l) > 0).toList();
         return count(clouds);
     }
 
