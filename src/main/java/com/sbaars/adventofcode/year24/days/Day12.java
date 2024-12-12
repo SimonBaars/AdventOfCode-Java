@@ -28,12 +28,12 @@ public class Day12 extends Day2024 {
 
   @Override
   public Object part1() {
-    return solve((g, data) -> Stream.of());
+    return solve((grid, data) -> Stream.of());
   }
 
   @Override
   public Object part2() {
-    return solve((g, data) -> concat(explorePerimeter(g, data.edge.a(), data.d, g.getChar(data.edge.a()), true), explorePerimeter(g, data.edge.a(), data.d, g.getChar(data.edge.a()), false)));
+    return solve((grid, data) -> concat(explorePerimeter(grid, data.edge.a(), data.d, grid.getChar(data.edge.a()), true), explorePerimeter(grid, data.edge.a(), data.d, grid.getChar(data.edge.a()), false)));
   }
 
   record Edge(Loc a, Loc b) {}
@@ -42,27 +42,27 @@ public class Day12 extends Day2024 {
   public long solve(BiFunction<InfiniteGrid, Data, Stream<Edge>> lambda) {
     Set<Loc> visited = new HashSet<>();
     var stack = new LinkedList<Loc>();
-    var g = new InfiniteGrid(dayGrid());
-    return g.streamChars()
-            .filter((l, c) -> !visited.contains(l))
-            .mapToLong((p, c) -> {
-        Set<Edge> visited2 = new HashSet<>();
+    var grid = new InfiniteGrid(dayGrid());
+    return grid.streamChars()
+            .filter((loc, charValue) -> !visited.contains(loc))
+            .mapToLong((position, charValue) -> {
+        Set<Edge> visitedEdges = new HashSet<>();
         stack.clear();
-        stack.push(p);
+        stack.push(position);
         AtomicLong area = al(), perimeter = al();
 
         while (!stack.isEmpty()) {
-          Loc curr = stack.pop();
-          if (visited.add(curr)) {
+          Loc current = stack.pop();
+          if (visited.add(current)) {
             area.incrementAndGet();
-            g.walkAround(curr).forEach((next, d) -> {
-              if (g.getChar(next) == c) {
+            grid.walkAround(current).forEach((next, direction) -> {
+              if (grid.getChar(next) == charValue) {
                 stack.push(next);
               } else {
-                var edge = new Edge(curr, next);
-                if (visited2.add(edge)) {
+                var edge = new Edge(current, next);
+                if (visitedEdges.add(edge)) {
                   perimeter.incrementAndGet();
-                  lambda.apply(g, new Data(edge, d)).forEach(visited2::add);
+                  lambda.apply(grid, new Data(edge, direction)).forEach(visitedEdges::add);
                 }
               }
             });
@@ -72,12 +72,12 @@ public class Day12 extends Day2024 {
       }).sum();
   }
 
-  private Stream<Edge> explorePerimeter(InfiniteGrid g, Loc curr, Direction d, char c, boolean turnRight) {
-      Direction d2 = d.turn(turnRight);
+  private Stream<Edge> explorePerimeter(InfiniteGrid grid, Loc current, Direction direction, char charValue, boolean turnRight) {
+      Direction newDirection = direction.turn(turnRight);
       return appendWhile(
-          p -> new Edge(p.a().move(d2), p.a().move(d2).move(d)),
-          p -> g.contains(p.a()) && g.getChar(p.a()) == c && (!g.contains(p.b()) || g.getChar(p.b()) != c),
-          new Edge(curr.move(d2), curr.move(d2).move(d))
+          edge -> new Edge(edge.a().move(newDirection), edge.a().move(newDirection).move(direction)),
+          edge -> grid.contains(edge.a()) && grid.getChar(edge.a()) == charValue && (!grid.contains(edge.b()) || grid.getChar(edge.b()) != charValue),
+          new Edge(current.move(newDirection), current.move(newDirection).move(direction))
       );
   }
 }
