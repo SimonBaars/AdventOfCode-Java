@@ -71,11 +71,11 @@ public class Day12 extends Day2024 {
   }
 
   private Stream<Edge> explorePerimeter(InfiniteGrid grid, Loc current, Direction direction, char charValue, boolean turnRight) {
-      Direction newDirection = direction.turn(turnRight);
-      return appendWhile(
-          edge -> new Edge(edge.a().move(newDirection), edge.a().move(newDirection).move(direction)),
-          edge -> grid.contains(edge.a()) && grid.getChar(edge.a()) == charValue && (!grid.contains(edge.b()) || grid.getChar(edge.b()) != charValue),
-          new Edge(current.move(newDirection), current.move(newDirection).move(direction))
-      );
+    Direction newDirection = direction.turn(turnRight);
+    return appendWhile(
+      edge -> new Edge(edge.a().move(newDirection), edge.a().move(newDirection).move(direction)),
+      edge -> grid.contains(edge.a()) && grid.getChar(edge.a()) == charValue && (!grid.contains(edge.b()) || grid.getChar(edge.b()) != charValue),
+      new Edge(current.move(newDirection), current.move(newDirection).move(direction))
+    );
   }
 }
