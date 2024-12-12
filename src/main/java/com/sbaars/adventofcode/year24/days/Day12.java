@@ -5,16 +5,15 @@ import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year24.Day2024;
 
+import org.apache.commons.lang3.function.TriFunction;
+
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.function.TriFunction;
-
 import static java.util.stream.Stream.concat;
-
-import java.util.HashSet;
-import java.util.LinkedList;
 import static com.sbaars.adventofcode.util.AoCUtils.al;
 import static com.sbaars.adventofcode.util.AoCUtils.appendWhile;
 
