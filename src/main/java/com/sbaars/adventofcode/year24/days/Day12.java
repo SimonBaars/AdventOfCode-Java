@@ -7,8 +7,9 @@ import com.sbaars.adventofcode.year24.Day2024;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.BiFunction;
 import java.util.stream.Stream;
+
+import org.apache.commons.lang3.function.TriFunction;
 
 import static java.util.stream.Stream.concat;
 
@@ -28,24 +29,21 @@ public class Day12 extends Day2024 {
 
   @Override
   public Object part1() {
-    return solve((grid, data) -> Stream.of());
+    return solve((grid, edge, direction) -> Stream.of());
   }
 
   @Override
   public Object part2() {
-    return solve((grid, data) -> concat(explorePerimeter(grid, data.edge.a(), data.d, grid.getChar(data.edge.a()), true), explorePerimeter(grid, data.edge.a(), data.d, grid.getChar(data.edge.a()), false)));
+    return solve((grid, edge, direction) -> concat(explorePerimeter(grid, edge.a(), direction, grid.getChar(edge.a()), true), explorePerimeter(grid, edge.a(), direction, grid.getChar(edge.a()), false)));
   }
 
   record Edge(Loc a, Loc b) {}
-  public record Data(Edge edge, Direction d) {}
 
-  public long solve(BiFunction<InfiniteGrid, Data, Stream<Edge>> lambda) {
+  public long solve(TriFunction<InfiniteGrid, Edge, Direction, Stream<Edge>> lambda) {
     Set<Loc> visited = new HashSet<>();
     var stack = new LinkedList<Loc>();
     var grid = new InfiniteGrid(dayGrid());
-    return grid.streamChars()
-            .filter((loc, charValue) -> !visited.contains(loc))
-            .mapToLong((position, charValue) -> {
+    return grid.streamChars().filter((loc, charValue) -> !visited.contains(loc)).mapToLong((position, charValue) -> {
         Set<Edge> visitedEdges = new HashSet<>();
         stack.clear();
         stack.push(position);
@@ -62,7 +60,7 @@ public class Day12 extends Day2024 {
                 var edge = new Edge(current, next);
                 if (visitedEdges.add(edge)) {
                   perimeter.incrementAndGet();
-                  lambda.apply(grid, new Data(edge, direction)).forEach(visitedEdges::add);
+                  lambda.apply(grid, edge, direction).forEach(visitedEdges::add);
                 }
               }
             });
