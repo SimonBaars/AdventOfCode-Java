@@ -34,7 +34,7 @@ public class Day10 extends Day2024 {
     InfiniteGrid g = new InfiniteGrid(dayGrid());
     return transformStream(
       g.findAll('0').map(l -> new Pair<>(l, l)),
-      s -> split(s, (s1, s2) -> zip(s1, g.around((c1, c2) -> Character.getNumericValue(c1) + 1 == Character.getNumericValue(c2), s2.map(p -> p.b()), false)).flatMapToObj((a, b) -> b.map(l -> new Pair<>(a.a(), l)))),
+      s -> split(s, (s1, s2) -> zip(s1, g.around((c1, c2) -> Character.getNumericValue(c1) + 1 == Character.getNumericValue(c2), s2.map(p -> p.b()))).flatMapToObj((a, b) -> b.map(l -> new Pair<>(a.a(), l)))),
       p -> g.getOptimistic(p.b()) == '9'
     );
   }

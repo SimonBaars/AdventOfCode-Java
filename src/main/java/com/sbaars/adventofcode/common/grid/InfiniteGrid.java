@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.common.grid;
 
 import com.google.mu.util.stream.BiStream;
+import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.location.Loc;
 
@@ -205,12 +206,42 @@ public class InfiniteGrid implements Grid {
     return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l))).filter(l -> get(l).filter(predicate).isPresent());
   }
 
+  public Stream<Loc> findAround(Predicate<Character> predicate, Stream<Loc> locs) {
+    return findAround(predicate, locs, false);
+  }
+
   public Stream<Loc> findAround(BiPredicate<Character, Character> predicate, Stream<Loc> locs, boolean diagonal) {
     return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l)).filter(l2 -> get(l2).filter(c -> predicate.test(getOptimistic(l), c)).isPresent()));
   }
 
+  public Stream<Loc> findAround(BiPredicate<Character, Character> predicate, Stream<Loc> locs) {
+    return findAround(predicate, locs, false);
+  }
+
   public Stream<Stream<Loc>> around(BiPredicate<Character, Character> predicate, Stream<Loc> locs, boolean diagonal) {
     return locs.map(l -> (diagonal ? eight() : four()).map(d -> d.move(l)).filter(l2 -> get(l2).filter(c -> predicate.test(getOptimistic(l), c)).isPresent()));
+  }
+
+  public Stream<Stream<Loc>> around(BiPredicate<Character, Character> predicate, Stream<Loc> locs) {
+    return around(predicate, locs, false);
+  }
+
+  public BiStream<Loc, Direction> walkAround(Loc l, boolean diagonal) {
+    BiStream.Builder<Loc, Direction> builder = BiStream.builder();
+    (diagonal ? eight() : four()).forEach(d -> builder.add(d.move(l), d));
+    return builder.build();
+  }
+
+  public BiStream<Loc, Direction> walkAround(Loc l) {
+    return walkAround(l, false);
+  }
+
+  public Stream<Loc> around(Loc l, boolean diagonal) {
+    return (diagonal ? eight() : four()).map(d -> d.move(l));
+  }
+
+  public Stream<Loc> around(Loc l) {
+    return around(l, false);
   }
 
   public void removeIf(BiPredicate<Loc, Character> p) {

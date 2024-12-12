@@ -3,6 +3,7 @@ package com.sbaars.adventofcode.util;
 import com.sbaars.adventofcode.common.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -234,5 +235,9 @@ public class AoCUtils {
         a = temp;
     }
     return a;
+  }
+
+  public static AtomicLong al() {
+    return new AtomicLong();
   }
 }
