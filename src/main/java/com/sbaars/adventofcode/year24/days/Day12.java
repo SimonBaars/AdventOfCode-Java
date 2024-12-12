@@ -43,10 +43,10 @@ public class Day12 extends Day2024 {
     Set<Loc> visited = new HashSet<>();
     var stack = new LinkedList<Loc>();
     var grid = new InfiniteGrid(dayGrid());
-    return grid.streamChars().filter((loc, charValue) -> !visited.contains(loc)).mapToLong((position, charValue) -> {
+    return grid.stream().filter(loc -> !visited.contains(loc)).mapToLong(loc -> {
       Set<Edge> visitedEdges = new HashSet<>();
       stack.clear();
-      stack.push(position);
+      stack.push(loc);
       AtomicLong area = al(), perimeter = al();
 
       while (!stack.isEmpty()) {
@@ -54,7 +54,7 @@ public class Day12 extends Day2024 {
         if (visited.add(current)) {
           area.incrementAndGet();
           grid.walkAround(current).forEach((next, direction) -> {
-            if (grid.getChar(next) == charValue) {
+            if (grid.getChar(next) == grid.getChar(loc)) {
               stack.push(next);
             } else {
               var edge = new Edge(current, next);
