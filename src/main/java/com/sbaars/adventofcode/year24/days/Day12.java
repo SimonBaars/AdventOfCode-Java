@@ -44,30 +44,30 @@ public class Day12 extends Day2024 {
     var stack = new LinkedList<Loc>();
     var grid = new InfiniteGrid(dayGrid());
     return grid.streamChars().filter((loc, charValue) -> !visited.contains(loc)).mapToLong((position, charValue) -> {
-        Set<Edge> visitedEdges = new HashSet<>();
-        stack.clear();
-        stack.push(position);
-        AtomicLong area = al(), perimeter = al();
+      Set<Edge> visitedEdges = new HashSet<>();
+      stack.clear();
+      stack.push(position);
+      AtomicLong area = al(), perimeter = al();
 
-        while (!stack.isEmpty()) {
-          Loc current = stack.pop();
-          if (visited.add(current)) {
-            area.incrementAndGet();
-            grid.walkAround(current).forEach((next, direction) -> {
-              if (grid.getChar(next) == charValue) {
-                stack.push(next);
-              } else {
-                var edge = new Edge(current, next);
-                if (visitedEdges.add(edge)) {
-                  perimeter.incrementAndGet();
-                  lambda.apply(grid, edge, direction).forEach(visitedEdges::add);
-                }
+      while (!stack.isEmpty()) {
+        Loc current = stack.pop();
+        if (visited.add(current)) {
+          area.incrementAndGet();
+          grid.walkAround(current).forEach((next, direction) -> {
+            if (grid.getChar(next) == charValue) {
+              stack.push(next);
+            } else {
+              var edge = new Edge(current, next);
+              if (visitedEdges.add(edge)) {
+                perimeter.incrementAndGet();
+                lambda.apply(grid, edge, direction).forEach(visitedEdges::add);
               }
-            });
-          }
+            }
+          });
         }
-        return area.get() * perimeter.get();
-      }).sum();
+      }
+      return area.get() * perimeter.get();
+    }).sum();
   }
 
   private Stream<Edge> explorePerimeter(InfiniteGrid grid, Loc current, Direction direction, char charValue, boolean turnRight) {
