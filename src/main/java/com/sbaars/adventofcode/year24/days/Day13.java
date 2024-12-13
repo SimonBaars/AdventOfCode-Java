@@ -44,7 +44,8 @@ public class Day13 extends Day2024 {
       long r = aX == 0 ? aY : aX;
       if (l % r != 0) return 0;
       long a = l / r;
-      return (a * aY + b * bY != prizeY) ? 0 : 3 * a + b;
+      return (a * aY + b * bY == prizeY) ? 3 * a + b : 0;
     }
   }
 }
+
