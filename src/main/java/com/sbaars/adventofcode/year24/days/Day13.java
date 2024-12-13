@@ -42,9 +42,8 @@ public class Day13 extends Day2024 {
       long remX = prizeX - b * bX;
       long l = aX == 0 ? prizeY : remX;
       long r = aX == 0 ? aY : aX;
-      if (l % r != 0) return 0;
       long a = l / r;
-      return (a * aY + b * bY == prizeY) ? 3 * a + b : 0;
+      return (a * aY + b * bY == prizeY && l % r == 0) ? 3 * a + b : 0;
     }
   }
 }
