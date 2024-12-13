@@ -47,4 +47,3 @@ public class Day13 extends Day2024 {
     }
   }
 }
-
