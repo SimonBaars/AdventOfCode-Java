@@ -40,13 +40,10 @@ public class Day13 extends Day2024 {
       long numerator = prizeX * aY - prizeY * aX;
       long b = numerator / (bX * aY - bY * aX);
       long remX = prizeX - b * bX;
-      if (aX == 0) {
-        long a = prizeY / aY;
-        return 3 * a + b;
-      }
-
-      if (remX % aX != 0) return 0;
-      long a = remX / aX;
+      long l = aX == 0 ? prizeY : remX;
+      long r = aX == 0 ? aY : aX;
+      if (l % r != 0) return 0;
+      long a = l / r;
       return (a * aY + b * bY != prizeY) ? 0 : 3 * a + b;
     }
   }
