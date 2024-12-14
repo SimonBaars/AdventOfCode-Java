@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 import static com.sbaars.adventofcode.common.Direction.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static com.sbaars.adventofcode.common.Pair.pair;
 
 public class InfiniteGrid implements Grid {
   public final Map<Loc, Character> grid;

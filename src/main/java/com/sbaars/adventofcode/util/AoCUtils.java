@@ -15,6 +15,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Spliterators.iterator;
 import static java.util.Spliterators.spliterator;
 import static java.util.stream.IntStream.range;
+import static java.util.stream.Stream.iterate;
 
 public class AoCUtils {
   public static void verify(boolean b) {
@@ -25,6 +26,10 @@ public class AoCUtils {
     if (!b) {
       throw new IllegalStateException(message);
     }
+  }
+
+  public static <A> A doTimes(A start, int times, UnaryOperator<A> func) {
+    return iterate(start, func).limit(times + 1).reduce((first, second) -> second).orElse(start);
   }
 
   public static <A> A findWhere(Stream<A> l, Predicate<A> condition) {
@@ -46,7 +51,7 @@ public class AoCUtils {
   }
 
   public static <A> Stream<A> appendWhile(UnaryOperator<A> func, Predicate<A> pred, A start) {
-    return Stream.iterate(start, func).takeWhile(pred);
+    return iterate(start, func).takeWhile(pred);
   }
 
   public static <A> Stream<A> transformStream(Stream<A> inputStream, UnaryOperator<Stream<A>> transformFunction, Predicate<A> predicate) {
