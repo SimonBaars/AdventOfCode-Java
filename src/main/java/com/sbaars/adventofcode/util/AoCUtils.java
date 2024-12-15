@@ -8,6 +8,8 @@ import java.util.function.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.lang3.function.TriFunction;
+
 import static com.sbaars.adventofcode.common.MutableElement.mutable;
 import static com.sbaars.adventofcode.common.Pair.pair;
 import static java.lang.Long.MAX_VALUE;
@@ -38,6 +40,29 @@ public class AoCUtils {
 
   public static <A> A fixedPoint(A value, UnaryOperator<A> func) {
     return fixedPoint(value, func, MAX_VALUE);
+  }
+
+  public static <A> void alternating(Stream<A> stream, Consumer<A> func1, Consumer<A> func2) {
+    zipWithIndex(stream).forEach(p -> {
+      if (p.i() % 2 == 0) {
+        func1.accept(p.e());
+      } else {
+        func2.accept(p.e());
+      }
+    });
+  }
+
+  public static <A, B> A recurse(A value, B seed, TriFunction<A, Deque<B>, B, A> func) {
+    var stack = new LinkedList<B>();
+    stack.push(seed);
+    while (!stack.isEmpty()) {
+      B current = stack.pop();
+      A next = func.apply(value, stack, current);
+      if (next != value) {
+        stack.push(current);
+      }
+    }
+    return value;
   }
 
   public static <A> A fixedPoint(A value, UnaryOperator<A> func, long limit) {

@@ -88,8 +88,9 @@ public class InfiniteGrid implements Grid {
     return get(p).orElse((char) 0);
   }
 
-  public void set(Loc p, char c) {
-    grid.put(p, c);
+  public char set(Loc p, char c) {
+    Character old = grid.put(p, c);
+    return old == null ? (char) 0 : old;
   }
 
   public String toString() {
@@ -140,6 +141,10 @@ public class InfiniteGrid implements Grid {
 
   public long maxX() {
     return grid.keySet().stream().mapToLong(e -> e.x).max().orElse(0);
+  }
+
+  public InfiniteGrid move(Direction d) {
+    return new InfiniteGrid(grid.entrySet().stream().map(e -> new Pair<>(e.getKey().move(d), e.getValue())).collect(Collectors.toMap(Pair::a, Pair::b)));
   }
 
   public InfiniteGrid move(long x, long y) {
@@ -199,6 +204,10 @@ public class InfiniteGrid implements Grid {
 
   public Stream<Loc> findAll(Character c) {
     return stream().filter(l -> contains(l) && getOptimistic(l) == c);
+  }
+
+  public Stream<Loc> findAll(Predicate<Character> predicate) {
+    return stream().filter(l -> contains(l) && predicate.test(getOptimistic(l)));
   }
 
   public Stream<Loc> findAround(Predicate<Character> predicate, Stream<Loc> locs, boolean diagonal) {
@@ -339,5 +348,20 @@ public class InfiniteGrid implements Grid {
         locs.forEach(l -> set(new Loc(l.x - minX, l.y - minY).move(corner), getOptimistic(l)));
       });
     }
+  }
+
+  public InfiniteGrid zoom(int zoomX, int zoomY) {
+    Map<Loc, Character> newGrid = new HashMap<>();
+    for (Map.Entry<Loc, Character> entry : grid.entrySet()) {
+        Loc loc = entry.getKey();
+        Character c = entry.getValue();
+        for (int dx = 0; dx < zoomX; dx++) {
+            for (int dy = 0; dy < zoomY; dy++) {
+                Loc newLoc = new Loc(loc.x * zoomX + dx, loc.y * zoomY + dy);
+                newGrid.put(newLoc, c);
+            }
+        }
+    }
+    return new InfiniteGrid(newGrid);
   }
 }
