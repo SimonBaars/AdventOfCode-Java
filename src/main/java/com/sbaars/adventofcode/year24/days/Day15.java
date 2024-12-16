@@ -43,11 +43,11 @@ public class Day15 extends Day2024 {
       if (g.get(currentLoc).filter(c -> c == '#' || c == '.').isPresent()) return component;
       char ch = g.set(currentLoc, '.');
       component.set(currentLoc, ch);
-      stack.push(currentLoc.move(initialDirection));
+      stack.add(currentLoc.move(initialDirection));
       if (ch == '[') {
-        stack.push(currentLoc.move(EAST));
+        stack.add(currentLoc.move(EAST));
       } else if (ch == ']') {
-        stack.push(currentLoc.move(WEST));
+        stack.add(currentLoc.move(WEST));
       }
       return component;
     });

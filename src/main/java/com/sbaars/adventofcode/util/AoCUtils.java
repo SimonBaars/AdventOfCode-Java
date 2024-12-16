@@ -52,14 +52,18 @@ public class AoCUtils {
     });
   }
 
-  public static <A, B> A recurse(A value, B seed, TriFunction<A, Deque<B>, B, A> func) {
-    var stack = new LinkedList<B>();
+  public static <A, B> A recurse(A value, B seed, TriFunction<A, Queue<B>, B, A> func) {
+    var stack = new ArrayDeque<B>();
     stack.push(seed);
+    return recurseQueue(value, stack, func);
+  }
+
+  public static <A, B> A recurseQueue(A value, Queue<B> stack, TriFunction<A, Queue<B>, B, A> func) {
     while (!stack.isEmpty()) {
-      B current = stack.pop();
+      B current = stack.poll();
       A next = func.apply(value, stack, current);
       if (next != value) {
-        stack.push(current);
+        stack.add(current);
       }
     }
     return value;
