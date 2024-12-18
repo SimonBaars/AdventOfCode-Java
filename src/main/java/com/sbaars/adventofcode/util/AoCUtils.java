@@ -59,14 +59,25 @@ public class AoCUtils {
   }
 
   public static <A, B> A recurseQueue(A value, Queue<B> stack, TriFunction<A, Queue<B>, B, A> func) {
+    A next = null;
     while (!stack.isEmpty()) {
       B current = stack.poll();
-      A next = func.apply(value, stack, current);
-      if (next != value) {
-        stack.add(current);
-      }
+      next = func.apply(value, stack, current);
     }
-    return value;
+    return next;
+  }
+
+  public static <B> B recurse(B seed, Predicate<B> accept, BiConsumer<Queue<B>, B> func) {
+    var stack = new ArrayDeque<B>();
+    stack.push(seed);
+    while (!stack.isEmpty()) {
+      B current = stack.poll();
+      if (accept.test(current)) {
+        return current;
+      }
+      func.accept(stack, current);
+    }
+    throw new IllegalStateException("No solution found");
   }
 
   public static <A> A fixedPoint(A value, UnaryOperator<A> func, long limit) {
