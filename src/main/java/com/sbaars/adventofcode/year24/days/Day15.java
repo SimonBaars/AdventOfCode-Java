@@ -54,7 +54,7 @@ public class Day15 extends Day2024 {
   }
 
   public static long solve(InfiniteGrid g, String moves) {
-    Loc robotPos = g.findAll('@').findAny().get();
+    Loc robotPos = g.find('@');
     for (char move : moves.replace("\n", "").toCharArray()) {
       Direction d = Direction.caretToDirection(move);
       InfiniteGrid component = extractComponent(g, robotPos, d);

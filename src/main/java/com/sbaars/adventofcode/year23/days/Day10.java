@@ -21,7 +21,7 @@ public class Day10 extends Day2023 {
   @Override
   public Object part1() {
     var grid = new InfiniteGrid(dayGrid());
-    Loc start = grid.findAll('S').findAny().get();
+    Loc start = grid.find('S');
     Direction comeFrom = four()
         .filter(d -> grid.contains(d.move(start)))
         .filter(d -> connections(grid.get(d.move(start)).get()).anyMatch(d2 -> d2.equals(d.turnDegrees(180))))
@@ -57,7 +57,7 @@ public class Day10 extends Day2023 {
   public Object part2() {
     var grid = new InfiniteGrid(dayGrid());
     var visited = new InfiniteGrid(' ', grid.width() * 2, grid.height() * 2);
-    Loc start = grid.findAll('S').findAny().get();
+    Loc start = grid.find('S');
     Direction comeFrom = four().filter(d -> grid.contains(d.move(start))).filter(d -> connections(grid.get(d.move(start)).get()).anyMatch(d2 -> d2.equals(d.turnDegrees(180)))).findAny().get();
     Loc currentLoc = moveLoc(start, comeFrom, visited);
     while (!currentLoc.equals(start)) {

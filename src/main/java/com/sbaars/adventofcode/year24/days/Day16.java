@@ -26,7 +26,7 @@ public class Day16 extends Day2024 {
   @Override
   public Object part1() {
     InfiniteGrid grid = new InfiniteGrid(dayGrid());
-    Loc end = grid.findAll('E').findFirst().orElseThrow();
+    Loc end = grid.find('E');
     Map<State, Long> costMap = calculateCosts(grid);
     return score(costMap, end);
   }
@@ -34,7 +34,7 @@ public class Day16 extends Day2024 {
   @Override
   public Object part2() {
     InfiniteGrid grid = new InfiniteGrid(dayGrid());
-    Loc end = grid.findAll('E').findFirst().orElseThrow();
+    Loc end = grid.find('E');
     Map<State, Long> costMap = calculateCosts(grid);
     long minScore = score(costMap, end);
     Set<State> minPath = costMap.keySet().stream().filter(state -> state.loc.equals(end) && costMap.get(state) == minScore).collect(toSet());
@@ -71,7 +71,7 @@ public class Day16 extends Day2024 {
   }
 
   private Map<State, Long> calculateCosts(InfiniteGrid grid) {
-    Loc start = grid.findAll('S').findFirst().orElseThrow();
+    Loc start = grid.find('S');
     PriorityQueue<State> queue = new PriorityQueue<>(comparingLong(s -> s.score));
     queue.add(new State(start, EAST, 0));
     return recurseQueue(new HashMap<>(), queue, (costMap, stack, current) -> {

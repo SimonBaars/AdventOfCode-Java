@@ -13,6 +13,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.sbaars.adventofcode.common.Direction.*;
+import static com.sbaars.adventofcode.util.AoCUtils.recurse;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -202,6 +203,10 @@ public class InfiniteGrid implements Grid {
     return builder.build();
   }
 
+  public Loc find(Character c) {
+    return findAll(c).findFirst().orElseThrow();
+  }
+
   public Stream<Loc> findAll(Character c) {
     return stream().filter(l -> contains(l) && getOptimistic(l) == c);
   }
@@ -363,5 +368,30 @@ public class InfiniteGrid implements Grid {
         }
     }
     return new InfiniteGrid(newGrid);
+  }
+
+  public Map<Loc, Integer> bfs(Loc loc, char...walls) {
+    return bfs(loc, Integer.MAX_VALUE, walls);
+  }
+
+  public Map<Loc, Integer> bfs(Loc loc, int maxSteps, char...walls) {
+    return recurse(new HashMap<Loc, Integer>(Map.of(loc, 0)), loc, (dist, queue, current) -> {
+      if (dist.get(current) == maxSteps) {
+        return dist;
+      }
+      four().map(current::move).filter(l -> !dist.containsKey(l) && (walls.length == 0 || getChar(l) != '#')).forEach(l -> {
+        dist.put(l, dist.get(current) + 1);
+        queue.add(l);
+      });
+      return dist;
+    });
+  }
+
+  public BiStream<Loc, Integer> bfsStream(Loc loc, char...walls) {
+    return BiStream.from(bfs(loc, walls));
+  }
+
+  public BiStream<Loc, Integer> bfsStream(Loc loc, int maxSteps, char...walls) {
+    return BiStream.from(bfs(loc, maxSteps, walls));
   }
 }

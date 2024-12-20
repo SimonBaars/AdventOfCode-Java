@@ -27,7 +27,7 @@ public class Day21 extends Day2023 {
   public Object part1() {
     var grid = new InfiniteGrid(dayGrid());
     Builder<Set<Loc>> places = new Builder<>(HashSet::new);
-    places.get().add(grid.findAll('S').findAny().get());
+    places.get().add(grid.find('S'));
     for (int i = 0; i < 64; i++) {
       places.get().stream().flatMap(l -> four().map(d -> d.move(l))).filter(l -> grid.getChar(l) != '#').forEach(places.getNew()::add);
       places.refresh();
@@ -39,7 +39,7 @@ public class Day21 extends Day2023 {
   public Object part2() {
     char[][] grid = dayGrid();
     var infGrid = new InfiniteGrid(grid);
-    Loc start = infGrid.findAll('S').findAny().get();
+    Loc start = infGrid.find('S');
 
     // Core algorithm by abnew123: https://github.com/abnew123/aoc2023/blob/main/src/solutions/Day21.java
     Set<Loc> reached = new HashSet<>();
