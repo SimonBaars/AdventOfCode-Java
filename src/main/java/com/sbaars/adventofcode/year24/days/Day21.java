@@ -20,12 +20,7 @@ public class Day21 extends Day2024 {
   }
 
   private static final InfiniteGrid arrows = new InfiniteGrid(" ^A\n<v>");
-  private static final InfiniteGrid numpad = new InfiniteGrid("""
-      789
-      456
-      123
-       0A
-      """);
+  private static final InfiniteGrid numpad = new InfiniteGrid("789\n456\n123\n 0A");
   private static final Loc a = arrows.find('A');
 
   public record State(Loc s, Loc e, int layers) {}
