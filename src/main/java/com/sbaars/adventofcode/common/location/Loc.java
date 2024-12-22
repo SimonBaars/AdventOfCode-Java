@@ -153,4 +153,8 @@ public class Loc implements Comparable<Loc> {
     }
     return line;
   }
+
+  public Loc flip() {
+    return new Loc(y, x);
+  }
 }

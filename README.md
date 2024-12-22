@@ -38,6 +38,14 @@ Feel free to use this repo to learn about solution directions, or fork it as a t
 - [Day 24](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year24/days/Day24.java)
 - [Day 25](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year24/days/Day25.java)
 
+_"Me: Mom, can we have functional programming?"_
+
+_"Mom: No, we have functional programming at home."_
+
+_"Functional programming at home: Java Stream API."_
+
+(this year I did every day using ridiculous Java streams, enjoy :D)
+
 ### Console output
 
 ```

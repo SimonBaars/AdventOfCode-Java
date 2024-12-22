@@ -34,6 +34,10 @@ public class AoCUtils {
     return iterate(start, func).limit(times + 1).reduce((first, second) -> second).orElse(start);
   }
 
+  public static <A> Stream<A> applySelf(A start, int times, UnaryOperator<A> func) {
+    return iterate(start, func).limit(times + 1);
+  }
+
   public static <A> A findWhere(Stream<A> l, Predicate<A> condition) {
     return l.filter(condition).findAny().get();
   }
@@ -130,6 +134,11 @@ public class AoCUtils {
     return res;
   }
 
+  public static <A> Stream<List<A>> window(Stream<A> stream, int size) {
+    List<A> list = stream.toList();
+    return range(0, list.size() - size + 1).mapToObj(start -> list.subList(start, start + size));
+  }
+
   public static <A> Stream<Pair<A, A>> connectedPairs(Stream<A> l) {
     MutableElement<A> m = mutable();
     return l.map(e -> {
@@ -157,10 +166,6 @@ public class AoCUtils {
   // [A,B,C] [D,E,F] -> [(A,D), (A,E), (A,F), (B,D), (B,E), (B,F), (C,D), (C,E), (C,F)]
   public static <A, B> Stream<Pair<A, B>> allPairs(List<A> l1, List<B> l2) {
     return range(0, l1.size()).boxed().flatMap(i -> l2.stream().map(b -> new Pair<>(l1.get(i), b)));
-  }
-
-  public static <E> E last(List<E> list) {
-    return list.get(list.size() - 1);
   }
 
   public static <A, B> Stream<Pair<A, B>> zip(Stream<? extends A> a, Stream<? extends B> b) {
@@ -262,7 +267,7 @@ public class AoCUtils {
       int i;
       for (i = 0; i < s.length() && digit == Character.isDigit(s.charAt(i)); i++) ;
       String substring = s.substring(0, i);
-      either.add(new Either<>(!digit ? substring : null, digit ? Long.parseLong(substring) : null));
+      either.add(new Either<String, Long>(!digit ? substring : null, digit ? Long.parseLong(substring) : null));
       s = s.substring(i);
     }
     return either;
