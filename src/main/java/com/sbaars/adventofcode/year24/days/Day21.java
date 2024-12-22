@@ -28,6 +28,8 @@ public class Day21 extends Day2024 {
       """);
   private static final Loc a = arrows.find('A');
 
+  public record State(Loc s, Loc e, int layers) {}
+
   @Override
   public Object part1() {
     return computeScore(3);
@@ -38,55 +40,52 @@ public class Day21 extends Day2024 {
     return computeScore(26);
   }
 
-  private long computeScore(int layersLimit) {
-    Map<String, Long> cache = new HashMap<>();
+  private long computeScore(int limit) {
+    Map<State, Long> cache = new HashMap<>();
     return dayStream().mapToLong(line ->
       parseInt(line.substring(0, 3)) * connectedPairs(("A" + line).chars().boxed()).mapToLong((s, e) ->
-        shortest(numpad.find((char)(int)s), numpad.find((char)(int)e), layersLimit, cache, layersLimit)
+        shortest(new State(numpad.find((char)(int)s), numpad.find((char)(int)e), limit), cache, limit)
       ).sum()
     ).sum();
   }
 
-  private long shortest(Loc start, Loc end, int layers, Map<String, Long> cache, int layersLimit) {
-    String key = start.toString() + "|" + end.toString() + "|" + layers;
-    if (cache.containsKey(key)) {
-      return cache.get(key);
-    } else if (layers == 0) {
+  private long shortest(State state, Map<State, Long> cache, int limit) {
+    if (cache.containsKey(state)) {
+      return cache.get(state);
+    } else if (state.layers == 0) {
       return 1L;
     }
-    Loc s = (start != null) ? start : a;
-    Loc e = (end != null) ? end : a;
-    Loc v = e.y < s.y ? arrows.find('^') : (e.y > s.y ? arrows.find('v') : null);
-    Loc h = e.x < s.x ? arrows.find('<') : (e.x > s.x ? arrows.find('>') : null);
-    cache.put(key, calculateResult(s, e, h, v, layers, cache, layersLimit, layers < layersLimit));
-    return cache.get(key);
+    Loc v = state.e.y < state.s.y ? arrows.find('^') : (state.e.y > state.s.y ? arrows.find('v') : null);
+    Loc h = state.e.x < state.s.x ? arrows.find('<') : (state.e.x > state.s.x ? arrows.find('>') : null);
+    cache.put(state, calculateResult(state.s, state.e, h, v, state.layers, cache, limit, state.layers < limit));
+    return cache.get(state);
   }
 
-  private long calculateResult(Loc startPos, Loc endPos, Loc h, Loc v, int layers, Map<String, Long> cache, int layersLimit, boolean b) {
+  private long calculateResult(Loc startPos, Loc endPos, Loc h, Loc v, int layers, Map<State, Long> cache, int limit, boolean b) {
     if (h == null && v == null) {
-      return shortest(a, a, layers - 1, cache, layersLimit);
+      return shortest(new State(a, a, layers - 1), cache, limit);
     } else if (h == null) {
-      return shortest(a, v, layers - 1, cache, layersLimit)
-              + (Math.abs(endPos.getY() - startPos.getY()) - 1) * shortest(v, v, layers - 1, cache, layersLimit)
-              + shortest(v, a, layers - 1, cache, layersLimit);
+      return shortest(new State(a, v, layers - 1), cache, limit)
+              + (Math.abs(endPos.getY() - startPos.getY()) - 1) * shortest(new State(v, v, layers - 1), cache, limit)
+              + shortest(new State(v, a, layers - 1), cache, limit);
     } else if (v == null) {
-      return shortest(a, h, layers - 1, cache, layersLimit)
-              + (Math.abs(endPos.getX() - startPos.getX()) - 1) * shortest(h, h, layers - 1, cache, layersLimit)
-              + shortest(h, a, layers - 1, cache, layersLimit);
+      return shortest(new State(a, h, layers - 1), cache, limit)
+              + (Math.abs(endPos.getX() - startPos.getX()) - 1) * shortest(new State(h, h, layers - 1), cache, limit)
+              + shortest(new State(h, a, layers - 1), cache, limit);
     }
     return Math.min(
       endPos.getX() == 0 && (b || startPos.getY() == 3) ? Long.MAX_VALUE : 
-        shortest(a, h, layers - 1, cache, layersLimit) +
-        (Math.abs(endPos.getX() - startPos.getX()) - 1) * shortest(h, h, layers - 1, cache, layersLimit) +
-        shortest(h, v, layers - 1, cache, layersLimit) +
-        (Math.abs(endPos.getY() - startPos.getY()) - 1) * shortest(v, v, layers - 1, cache, layersLimit) +
-        shortest(v, a, layers - 1, cache, layersLimit),
+        shortest(new State(a, h, layers - 1), cache, limit) +
+        (Math.abs(endPos.getX() - startPos.getX()) - 1) * shortest(new State(h, h, layers - 1), cache, limit) +
+        shortest(new State(h, v, layers - 1), cache, limit) +
+        (Math.abs(endPos.getY() - startPos.getY()) - 1) * shortest(new State(v, v, layers - 1), cache, limit) +
+        shortest(new State(v, a, layers - 1), cache, limit),
       startPos.getX() == 0 && (b || endPos.getY() == 3) ? Long.MAX_VALUE : 
-        shortest(a, v, layers - 1, cache, layersLimit) +
-        (Math.abs(endPos.getY() - startPos.getY()) - 1) * shortest(v, v, layers - 1, cache, layersLimit) +
-        shortest(v, h, layers - 1, cache, layersLimit) +
-        (Math.abs(endPos.getX() - startPos.getX()) - 1) * shortest(h, h, layers - 1, cache, layersLimit) +
-        shortest(h, a, layers - 1, cache, layersLimit)
+        shortest(new State(a, v, layers - 1), cache, limit) +
+        (Math.abs(endPos.getY() - startPos.getY()) - 1) * shortest(new State(v, v, layers - 1), cache, limit) +
+        shortest(new State(v, h, layers - 1), cache, limit) +
+        (Math.abs(endPos.getX() - startPos.getX()) - 1) * shortest(new State(h, h, layers - 1), cache, limit) +
+        shortest(new State(h, a, layers - 1), cache, limit)
     );
   }
 }
