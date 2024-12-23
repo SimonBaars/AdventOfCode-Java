@@ -1,5 +1,6 @@
 package com.sbaars.adventofcode.common;
 
+import com.google.mu.util.stream.BiStream;
 import com.sbaars.adventofcode.common.map.ListMap;
 
 import java.util.*;
@@ -11,11 +12,11 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public record Graph<T>(Map<T, Node<T>> nodes) {
+public class Graph<T> extends HashMap<T, Graph.Node<T>> {
   public Graph(ListMap<T, T> map) {
-    this(Stream.concat(map.keySet().stream(), map.valueStream()).distinct().map(Node::new).collect(Collectors.toMap(Node::data, a -> a)));
-    map.forEach((a, b) -> nodes.get(a).children.addAll(b.stream().map(nodes::get).toList()));
-    map.forEach((a, b) -> b.forEach(c -> nodes.get(c).parents.add(nodes.get(a))));
+    super(Stream.concat(map.keySet().stream(), map.valueStream()).distinct().map(Node::new).collect(Collectors.toMap(Node::data, a -> a)));
+    map.forEach((a, b) -> get(a).children.addAll(b.stream().map(this::get).toList()));
+    map.forEach((a, b) -> b.forEach(c -> get(c).parents.add(get(a))));
   }
 
   public static <T> Collector<Pair<T, T>, ListMap<T, T>, Graph<T>> toGraph() {
@@ -27,7 +28,7 @@ public record Graph<T>(Map<T, Node<T>> nodes) {
   }
 
   public Collection<Node<T>> getNodes() {
-    return nodes.values();
+    return values();
   }
 
   public Stream<Node<T>> stream() {
@@ -39,10 +40,10 @@ public record Graph<T>(Map<T, Node<T>> nodes) {
     Map<T, Double> shortestDistances = new HashMap<>();
     PriorityQueue<Node<T>> queue = new PriorityQueue<>(Comparator.comparing(node -> shortestDistances.get(node.data)));
 
-    nodes.values().forEach(node -> shortestDistances.put(node.data, Double.POSITIVE_INFINITY));
+    values().forEach(node -> shortestDistances.put(node.data, Double.POSITIVE_INFINITY));
     shortestDistances.put(start, 0.0);
 
-    queue.add(nodes.get(start));
+    queue.add(get(start));
 
     while (!queue.isEmpty()) {
       Node<T> currentNode = queue.poll();
@@ -61,7 +62,7 @@ public record Graph<T>(Map<T, Node<T>> nodes) {
     }
 
     List<Node<T>> path = new ArrayList<>();
-    for (Node<T> node = nodes.get(end); node != null; node = previousNodes.get(node.data)) {
+    for (Node<T> node = get(end); node != null; node = previousNodes.get(node.data)) {
       path.add(node);
     }
 
@@ -69,13 +70,37 @@ public record Graph<T>(Map<T, Node<T>> nodes) {
     return path;
   }
 
-  public record Node<V>(V data, List<Node<V>> children, List<Node<V>> parents) implements Comparable<Node<V>> {
+  public List<T> getData(T data) {
+    return get(data).children().stream().map(Node::data).toList();
+  }
+
+  public BiStream<T, T> edgeStream() {
+    BiStream.Builder<T, T> builder = BiStream.builder();
+    stream().forEach(node -> node.children().forEach(child -> builder.add(node.data(), child.data())));
+    return builder.build();
+  }
+
+  public static class Node<V> implements Comparable<Node<V>> {
+    private final V data;
+    private final List<Node<V>> children;
+    private final List<Node<V>> parents;
+
     public Node(V data) {
-      this(data, new ArrayList<>(), new ArrayList<>());
+      this.data = data;
+      this.children = new ArrayList<>();
+      this.parents = new ArrayList<>();
+    }
+
+    public V data() {
+      return data;
     }
 
     public List<Node<V>> children() {
       return children;
+    }
+
+    public List<Node<V>> parents() {
+      return parents;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.common;
 
 import java.util.function.BiFunction;
+import java.util.stream.Stream;
 
 public record Pair<A, B>(A a, B b) implements Comparable<Pair<A, B>> {
 
