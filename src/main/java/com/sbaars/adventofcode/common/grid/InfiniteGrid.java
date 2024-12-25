@@ -145,11 +145,13 @@ public class InfiniteGrid implements Grid {
   }
 
   public InfiniteGrid move(Direction d) {
-    return new InfiniteGrid(grid.entrySet().stream().map(e -> new Pair<>(e.getKey().move(d), e.getValue())).collect(Collectors.toMap(Pair::a, Pair::b)));
+    return new InfiniteGrid(grid.entrySet().stream().map(e -> new Pair<>(e.getKey().move(d), e.getValue()))
+        .collect(Collectors.toMap(Pair::a, Pair::b)));
   }
 
   public InfiniteGrid move(long x, long y) {
-    return new InfiniteGrid(grid.entrySet().stream().map(e -> new Pair<>(e.getKey().move(x, y), e.getValue())).collect(Collectors.toMap(Pair::a, Pair::b)));
+    return new InfiniteGrid(grid.entrySet().stream().map(e -> new Pair<>(e.getKey().move(x, y), e.getValue()))
+        .collect(Collectors.toMap(Pair::a, Pair::b)));
   }
 
   public void place(InfiniteGrid s) {
@@ -216,7 +218,8 @@ public class InfiniteGrid implements Grid {
   }
 
   public Stream<Loc> findAround(Predicate<Character> predicate, Stream<Loc> locs, boolean diagonal) {
-    return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l))).filter(l -> get(l).filter(predicate).isPresent());
+    return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l)))
+        .filter(l -> get(l).filter(predicate).isPresent());
   }
 
   public Stream<Loc> findAround(Predicate<Character> predicate, Stream<Loc> locs) {
@@ -224,7 +227,8 @@ public class InfiniteGrid implements Grid {
   }
 
   public Stream<Loc> findAround(BiPredicate<Character, Character> predicate, Stream<Loc> locs, boolean diagonal) {
-    return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l)).filter(l2 -> get(l2).filter(c -> predicate.test(getOptimistic(l), c)).isPresent()));
+    return locs.flatMap(l -> (diagonal ? eight() : four()).map(d -> d.move(l))
+        .filter(l2 -> get(l2).filter(c -> predicate.test(getOptimistic(l), c)).isPresent()));
   }
 
   public Stream<Loc> findAround(BiPredicate<Character, Character> predicate, Stream<Loc> locs) {
@@ -232,7 +236,8 @@ public class InfiniteGrid implements Grid {
   }
 
   public Stream<Stream<Loc>> around(BiPredicate<Character, Character> predicate, Stream<Loc> locs, boolean diagonal) {
-    return locs.map(l -> (diagonal ? eight() : four()).map(d -> d.move(l)).filter(l2 -> get(l2).filter(c -> predicate.test(getOptimistic(l), c)).isPresent()));
+    return locs.map(l -> (diagonal ? eight() : four()).map(d -> d.move(l))
+        .filter(l2 -> get(l2).filter(c -> predicate.test(getOptimistic(l), c)).isPresent()));
   }
 
   public Stream<Stream<Loc>> around(BiPredicate<Character, Character> predicate, Stream<Loc> locs) {
@@ -258,7 +263,8 @@ public class InfiniteGrid implements Grid {
   }
 
   public void removeIf(BiPredicate<Loc, Character> p) {
-    new HashSet<>(grid.entrySet()).stream().filter(e -> p.test(e.getKey(), e.getValue())).forEach(e -> grid.remove(e.getKey()));
+    new HashSet<>(grid.entrySet()).stream().filter(e -> p.test(e.getKey(), e.getValue()))
+        .forEach(e -> grid.remove(e.getKey()));
   }
 
   public char[][] getGrid() {
@@ -292,7 +298,8 @@ public class InfiniteGrid implements Grid {
       for (Loc l : toCheck) {
         if (predicate.test(getChar(l))) {
           output.add(l);
-          newToCheck.addAll(four().map(d -> d.move(l)).filter(inBounds).filter(l2 -> !output.contains(l2)).collect(Collectors.toSet()));
+          newToCheck.addAll(four().map(d -> d.move(l)).filter(inBounds).filter(l2 -> !output.contains(l2))
+              .collect(Collectors.toSet()));
         }
       }
       toCheck = newToCheck;
@@ -326,7 +333,8 @@ public class InfiniteGrid implements Grid {
   }
 
   public Map<Long, List<Character>> columnValues() {
-    return columns().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().stream().map(this::getChar).collect(Collectors.toList())));
+    return columns().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
+        e -> e.getValue().stream().map(this::getChar).collect(Collectors.toList())));
   }
 
   public Map<Long, List<Loc>> rows() {
@@ -334,7 +342,8 @@ public class InfiniteGrid implements Grid {
   }
 
   public Map<Long, List<Character>> rowValues() {
-    return rows().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().stream().map(this::getChar).collect(Collectors.toList())));
+    return rows().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
+        e -> e.getValue().stream().map(this::getChar).collect(Collectors.toList())));
   }
 
   public void draw(Loc start, Loc end, char c) {
@@ -358,40 +367,47 @@ public class InfiniteGrid implements Grid {
   public InfiniteGrid zoom(int zoomX, int zoomY) {
     Map<Loc, Character> newGrid = new HashMap<>();
     for (Map.Entry<Loc, Character> entry : grid.entrySet()) {
-        Loc loc = entry.getKey();
-        Character c = entry.getValue();
-        for (int dx = 0; dx < zoomX; dx++) {
-            for (int dy = 0; dy < zoomY; dy++) {
-                Loc newLoc = new Loc(loc.x * zoomX + dx, loc.y * zoomY + dy);
-                newGrid.put(newLoc, c);
-            }
+      Loc loc = entry.getKey();
+      Character c = entry.getValue();
+      for (int dx = 0; dx < zoomX; dx++) {
+        for (int dy = 0; dy < zoomY; dy++) {
+          Loc newLoc = new Loc(loc.x * zoomX + dx, loc.y * zoomY + dy);
+          newGrid.put(newLoc, c);
         }
+      }
     }
     return new InfiniteGrid(newGrid);
   }
 
-  public Map<Loc, Integer> bfs(Loc loc, char...walls) {
+  public Map<Loc, Integer> bfs(Loc loc, char... walls) {
     return bfs(loc, Integer.MAX_VALUE, walls);
   }
 
-  public Map<Loc, Integer> bfs(Loc loc, int maxSteps, char...walls) {
+  public Map<Loc, Integer> bfs(Loc loc, int maxSteps, char... walls) {
     return recurse(new HashMap<Loc, Integer>(Map.of(loc, 0)), loc, (dist, queue, current) -> {
       if (dist.get(current) == maxSteps) {
         return dist;
       }
-      four().map(current::move).filter(l -> !dist.containsKey(l) && (walls.length == 0 || getChar(l) != '#')).forEach(l -> {
-        dist.put(l, dist.get(current) + 1);
-        queue.add(l);
-      });
+      four().map(current::move).filter(l -> !dist.containsKey(l) && (walls.length == 0 || getChar(l) != '#'))
+          .forEach(l -> {
+            dist.put(l, dist.get(current) + 1);
+            queue.add(l);
+          });
       return dist;
     });
   }
 
-  public BiStream<Loc, Integer> bfsStream(Loc loc, char...walls) {
+  public BiStream<Loc, Integer> bfsStream(Loc loc, char... walls) {
     return BiStream.from(bfs(loc, walls));
   }
 
-  public BiStream<Loc, Integer> bfsStream(Loc loc, int maxSteps, char...walls) {
+  public BiStream<Loc, Integer> bfsStream(Loc loc, int maxSteps, char... walls) {
     return BiStream.from(bfs(loc, maxSteps, walls));
+  }
+
+  public InfiniteGrid withReplaced(Loc loc, char c) {
+    InfiniteGrid g = new InfiniteGrid(this);
+    g.set(loc, c);
+    return g;
   }
 }
