@@ -2,14 +2,15 @@ package com.sbaars.adventofcode.year24.days;
 
 import com.sbaars.adventofcode.common.Direction;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
+import com.sbaars.adventofcode.common.grid.Walker;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year24.Day2024;
 
+import static com.sbaars.adventofcode.common.Direction.NORTH;
 import static java.lang.Long.MAX_VALUE;
+import com.sbaars.adventofcode.common.Pair;
 
 import java.util.*;
-
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 public class Day6 extends Day2024 {
@@ -25,9 +26,24 @@ public class Day6 extends Day2024 {
   @Override
   public Object part1() {
     var grid = new InfiniteGrid(dayGrid());
-    var obstructionData = buildObstructionData(grid);
-    var guardStart = findGuardStart(grid);
-    return simulateGuard(grid, obstructionData, guardStart).getLeft();
+    Loc l = grid.findAll('^').findFirst().get();
+    return path(grid, new Walker(l, NORTH)).size();
+  }
+
+  private Set<Loc> path(InfiniteGrid g, Walker walker) {
+    Set<Loc> visited = new HashSet<>();
+    while (true) {
+      var c = g.get(walker.loc());
+      if (!g.contains(walker.loc()))
+        break;
+      else if (c.get() == '#')
+        walker = walker.walkBack().turn();
+      else {
+        visited.add(walker.loc());
+        walker = walker.walk();
+      }
+    }
+    return visited;
   }
 
   @Override
@@ -37,7 +53,8 @@ public class Day6 extends Day2024 {
     var guardStart = findGuardStart(grid);
     var visitedPositions = simulateGuard(grid, obstructionData, guardStart).getMiddle();
     visitedPositions.remove(guardStart.getLeft());
-    return (int) visitedPositions.stream().filter(pos -> simulateGuardWithObstruction(grid, obstructionData, guardStart, pos)).count();
+    return (int) visitedPositions.stream()
+        .filter(pos -> simulateGuardWithObstruction(grid, obstructionData, guardStart, pos)).count();
   }
 
   public Pair<Loc, Direction> findGuardStart(InfiniteGrid grid) {
@@ -48,7 +65,9 @@ public class Day6 extends Day2024 {
         .orElseThrow(() -> new IllegalStateException("Guard starting position not found."));
   }
 
-  public record ObstructionData(Set<Loc> obstruction, Map<Long, NavigableSet<Long>> obstructionXInRow, Map<Long, NavigableSet<Long>> obstructionYInCol) {}
+  public record ObstructionData(Set<Loc> obstruction, Map<Long, NavigableSet<Long>> obstructionXInRow,
+      Map<Long, NavigableSet<Long>> obstructionYInCol) {
+  }
 
   public ObstructionData buildObstructionData(InfiniteGrid grid) {
     Set<Loc> obstruction = new HashSet<>();
@@ -66,13 +85,16 @@ public class Day6 extends Day2024 {
     return new ObstructionData(obstruction, obstructionXInRow, obstructionYInCol);
   }
 
-  public Triple<Integer, Set<Loc>, Boolean> simulateGuard(InfiniteGrid grid, ObstructionData obstructionData, Pair<Loc, Direction> guardStart) {
+  public Triple<Integer, Set<Loc>, Boolean> simulateGuard(InfiniteGrid grid, ObstructionData obstructionData,
+      Pair<Loc, Direction> guardStart) {
     return simulate(grid, obstructionData, guardStart, null);
   }
 
-  public boolean simulateGuardWithObstruction(InfiniteGrid grid, ObstructionData obstructionData, Pair<Loc, Direction> guardStart, Loc obstructionPos) {
+  public boolean simulateGuardWithObstruction(InfiniteGrid grid, ObstructionData obstructionData,
+      Pair<Loc, Direction> guardStart, Loc obstructionPos) {
     Set<Loc> obstruction = new HashSet<>(obstructionData.obstruction());
-    if (obstruction.contains(obstructionPos)) return false;
+    if (obstruction.contains(obstructionPos))
+      return false;
     obstruction.add(obstructionPos);
 
     Map<Long, NavigableSet<Long>> obstructionXInRow = new HashMap<>();
@@ -83,55 +105,61 @@ public class Day6 extends Day2024 {
     obstructionData.obstructionYInCol().forEach((k, v) -> obstructionYInCol.put(k, new TreeSet<>(v)));
     obstructionYInCol.computeIfAbsent(obstructionPos.x, k -> new TreeSet<>()).add(obstructionPos.y);
 
-    return simulate(grid, new ObstructionData(obstruction, obstructionXInRow, obstructionYInCol), guardStart, obstructionPos).getRight();
+    return simulate(grid, new ObstructionData(obstruction, obstructionXInRow, obstructionYInCol), guardStart,
+        obstructionPos).getRight();
   }
 
-  private Triple<Integer, Set<Loc>, Boolean> simulate(InfiniteGrid grid, ObstructionData obstructionData, Pair<Loc, Direction> guardStart, Loc obstructionPos) {
+  private Triple<Integer, Set<Loc>, Boolean> simulate(InfiniteGrid grid, ObstructionData obstructionData,
+      Pair<Loc, Direction> guardStart, Loc obstructionPos) {
     long minX = grid.minX(), maxX = grid.maxX(), minY = grid.minY(), maxY = grid.maxY();
-    Loc pos = guardStart.getLeft();
-    Direction facing = guardStart.getRight();
+    Walker walker = new Walker(guardStart.getLeft(), guardStart.getRight());
     Set<Loc> visitedPositions = new HashSet<>();
     Set<Pair<Loc, Direction>> visitedStates = new HashSet<>();
-    visitedPositions.add(pos);
-    visitedStates.add(Pair.of(pos, facing));
+    visitedPositions.add(walker.loc());
+    visitedStates.add(Pair.of(walker.loc(), walker.direction()));
     boolean looped = false;
 
-    while (true) {
+    for (;;) {
       long stepsToObst = MAX_VALUE, stepsToEdge = MAX_VALUE;
-      var obstaclesAhead = getObstaclesAhead(obstructionData, facing, pos);
-      if (!obstaclesAhead.isEmpty()) stepsToObst = getStepsToObst(obstaclesAhead, facing, pos);
-      stepsToEdge = getStepsToEdge(facing, pos, minX, maxX, minY, maxY);
+      var obstaclesAhead = getObstaclesAhead(obstructionData, walker.direction(), walker.loc());
+      if (!obstaclesAhead.isEmpty())
+        stepsToObst = getStepsToObst(obstaclesAhead, walker.direction(), walker.loc());
+      stepsToEdge = getStepsToEdge(walker.direction(), walker.loc(), minX, maxX, minY, maxY);
 
       long nSteps = Math.min(stepsToObst, stepsToEdge);
       if (nSteps <= 0) {
-        facing = facing.turn(true);
-        Pair<Loc, Direction> state = Pair.of(pos, facing);
+        walker = walker.turn(true);
+        Pair<Loc, Direction> state = Pair.of(walker.loc(), walker.direction());
         if (visitedStates.contains(state)) {
           looped = true;
           break;
         }
         visitedStates.add(state);
-        Loc nextPos = facing.move(pos);
-        if (!grid.contains(nextPos)) break;
-        continue;
+        Loc nextPos = walker.direction().move(walker.loc());
+        if (!grid.contains(nextPos))
+          break;
       } else {
         for (long i = 0; i < nSteps; i++) {
-          pos = pos.move(facing);
-          Pair<Loc, Direction> state = Pair.of(pos, facing);
+          walker = walker.walk();
+          Pair<Loc, Direction> state = Pair.of(walker.loc(), walker.direction());
           if (visitedStates.contains(state)) {
             looped = true;
             break;
           }
           visitedStates.add(state);
-          if (grid.contains(pos)) visitedPositions.add(pos);
-          else break;
+          if (grid.contains(walker.loc()))
+            visitedPositions.add(walker.loc());
+          else
+            break;
         }
-        if (looped) break;
-        Loc nextPos = pos.move(facing);
-        if (!grid.contains(nextPos)) break;
+        if (looped)
+          break;
+        Loc nextPos = walker.direction().move(walker.loc());
+        if (!grid.contains(nextPos))
+          break;
         if (obstructionData.obstruction().contains(nextPos)) {
-          facing = facing.turn(true);
-          Pair<Loc, Direction> state = Pair.of(pos, facing);
+          walker = walker.turn(true);
+          Pair<Loc, Direction> state = Pair.of(walker.loc(), walker.direction());
           if (visitedStates.contains(state)) {
             looped = true;
             break;
