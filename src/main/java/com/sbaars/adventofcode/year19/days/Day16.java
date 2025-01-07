@@ -35,7 +35,18 @@ public class Day16 extends Day2019 {
 
   @Override
   public Object part2() {
-    return calcRes(repeat(input, 10000), TARGET_POS);
+    int[] nums = repeat(input, 10000);
+    int[] workingArray = Arrays.copyOfRange(nums, TARGET_POS, nums.length);
+    
+    for (int phase = 0; phase < 100; phase++) {
+      int sum = 0;
+      for (int i = workingArray.length - 1; i >= 0; i--) {
+        sum = (sum + workingArray[i]) % 10;
+        workingArray[i] = sum;
+      }
+    }
+    
+    return Arrays.stream(workingArray, 0, 8).mapToObj(Integer::toString).collect(Collectors.joining());
   }
 
   private Object calcRes(int[] nums, final int offset) {
@@ -50,7 +61,6 @@ public class Day16 extends Day2019 {
       for (int i = 0; i < nums.length; i++) {
         int sum = 0, loc = 0;
         for (int j = 0; true; j++) {
-
           int k = ((j + 1) * (i + 1)) - 1;
           sum += (newNums[Math.min(k, res.length)] - newNums[loc]) * pattern[j % 4];
           if (k >= res.length) break;
@@ -63,5 +73,4 @@ public class Day16 extends Day2019 {
     }
     return Arrays.stream(res, offset, offset + 8).mapToObj(Integer::toString).collect(Collectors.joining());
   }
-
 }
