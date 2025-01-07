@@ -1,4 +1,4 @@
-package com.sbaars.adventofcode.year24.days;
+package com.sbaars.adventofcode.year23.days;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
@@ -8,11 +8,11 @@ class Day25Test {
 
     @Test
     void testPart1() {
-        assertEquals("2835", day.part1().toString());
+        assertEquals("600369", day.part1().toString());
     }
 
     @Test
     void testPart2() {
-        assertEquals("The End.", day.part2().toString());
+        assertEquals("true", day.part2().toString());
     }
 }
