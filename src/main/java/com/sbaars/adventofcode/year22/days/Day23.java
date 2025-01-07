@@ -1,15 +1,11 @@
 package com.sbaars.adventofcode.year22.days;
 
-import com.sbaars.adventofcode.common.Builder;
 import com.sbaars.adventofcode.common.Direction;
-import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.grid.InfiniteGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year22.Day2022;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.sbaars.adventofcode.common.Direction.*;
@@ -34,26 +30,72 @@ public class Day23 extends Day2022 {
   }
 
   public long solution(boolean isPart2) {
-    Builder<InfiniteGrid> b = new Builder<>(new InfiniteGrid(dayGrid(), '.'), InfiniteGrid::new);
+    InfiniteGrid grid = new InfiniteGrid(dayGrid(), '.');
     List<Direction> dirs = new ArrayList<>(List.of(NORTH, SOUTH, WEST, EAST));
+    Set<Loc> elves = new HashSet<>(grid.grid.keySet());
+    
     for (int i = 0; isPart2 || i < 10; i++) {
-      InfiniteGrid g = b.get();
-      Map<Loc, Loc> dest = g.stream()
-          .filter(e -> Direction.eight().anyMatch(d -> g.contains(d.move(e))))
-          .flatMap(e -> dirs.stream().filter(d -> !g.contains(d.move(e)) && !g.contains(d.turn().move(d.move(e))) && !g.contains(d.turn(false).move(d.move(e)))).map(d -> new Pair<>(e, d.move(e))).limit(1))
-          .collect(Collectors.toMap(Pair::a, Pair::b));
-      dest.entrySet().stream()
-          .map(e -> dest.values().stream().filter(l -> l.equals(e.getValue())).limit(2).count() == 1 ? e.getValue() : e.getKey())
-          .forEach(e -> b.getNew().set(e, '#'));
-      g.grid.keySet().stream()
-          .filter(e -> !dest.containsKey(e))
-          .forEach(e -> b.getNew().set(e, '#'));
-      dirs.add(dirs.remove(0));
-      if (b.getNew().grid.keySet().equals(g.grid.keySet())) {
+      Map<Loc, Loc> proposals = new HashMap<>();
+      Map<Loc, Integer> proposalCounts = new HashMap<>();
+      
+      // First half: propose moves
+      for (Loc elf : elves) {
+        boolean hasNeighbor = false;
+        List<Direction> eightDirs = Direction.eight().collect(Collectors.toList());
+        for (Direction d : eightDirs) {
+          if (elves.contains(d.move(elf))) {
+            hasNeighbor = true;
+            break;
+          }
+        }
+        
+        if (hasNeighbor) {
+          for (Direction d : dirs) {
+            Loc moved = d.move(elf);
+            if (!elves.contains(moved) && 
+                !elves.contains(d.turn().move(moved)) && 
+                !elves.contains(d.turn(false).move(moved))) {
+              proposals.put(elf, moved);
+              proposalCounts.merge(moved, 1, Integer::sum);
+              break;
+            }
+          }
+        }
+      }
+      
+      // Second half: move elves
+      boolean anyMoved = false;
+      Set<Loc> newElves = new HashSet<>();
+      
+      for (Loc elf : elves) {
+        Loc proposed = proposals.get(elf);
+        if (proposed != null && proposalCounts.get(proposed) == 1) {
+          newElves.add(proposed);
+          anyMoved = true;
+        } else {
+          newElves.add(elf);
+        }
+      }
+      
+      if (!anyMoved) {
         return i + 1;
       }
-      b.refresh();
+      
+      elves = newElves;
+      dirs.add(dirs.remove(0));
     }
-    return b.get().toString().chars().filter(c -> c == ' ').count();
+    
+    // Calculate empty ground tiles
+    long minX = Long.MAX_VALUE, maxX = Long.MIN_VALUE;
+    long minY = Long.MAX_VALUE, maxY = Long.MIN_VALUE;
+    
+    for (Loc elf : elves) {
+      minX = Math.min(minX, elf.x);
+      maxX = Math.max(maxX, elf.x);
+      minY = Math.min(minY, elf.y);
+      maxY = Math.max(maxY, elf.y);
+    }
+    
+    return (maxX - minX + 1) * (maxY - minY + 1) - elves.size();
   }
 }
