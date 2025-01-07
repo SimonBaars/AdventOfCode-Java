@@ -88,8 +88,7 @@ Part 2: 4412188
 - [Day 20](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day20.java)
 - [Day 21](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day21.java)
 - [Day 22](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day22.java)
-- [Day 23](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day23.java) (
-  warning: slow)
+- [Day 23](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day23.java)
 - [Day 24](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day24.java)
 - [Day 25](https://github.com/SimonBaars/AdventOfCode-Java/blob/master/src/main/java/com/sbaars/adventofcode/year23/days/Day25.java)
 
