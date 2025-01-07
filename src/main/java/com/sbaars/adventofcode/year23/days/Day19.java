@@ -1,17 +1,9 @@
 package com.sbaars.adventofcode.year23.days;
 
 import com.sbaars.adventofcode.year23.Day2023;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.sbaars.adventofcode.util.DataMapper.readString;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toMap;
+import java.util.*;
 
 public class Day19 extends Day2023 {
-
   public Day19() {
     super(19);
   }
@@ -20,115 +12,118 @@ public class Day19 extends Day2023 {
     new Day19().printParts();
   }
 
-  public record Workflow(List<WorkflowItem> steps, String name) {
-    public Workflow(String n, List<String> strings) {
-      this(strings.stream().map(s -> {
-        try {
-          return readString(s, "%c%c%n:%s", WorkflowItem.class);
-        } catch (Exception e) {
-          return new WorkflowItem(s);
-        }
-      }).toList(), n);
+  record Rule(char category, char operator, long value, String target) {
+    static Rule parse(String s) {
+      if (!s.contains(":")) return new Rule(' ', ' ', 0, s);
+      var condition = s.split(":");
+      return new Rule(
+          condition[0].charAt(0),
+          condition[0].charAt(1),
+          Long.parseLong(condition[0].substring(2)),
+          condition[1]
+      );
     }
   }
 
-  public record WorkflowItem(char c, char op, long n, String s) {
-    public WorkflowItem(String s) {
-      this(' ', ' ', 0, s);
+  record Workflow(List<Rule> rules) {
+    static Workflow parse(String s) {
+      var parts = s.substring(s.indexOf('{')+1, s.length()-1).split(",");
+      return new Workflow(Arrays.stream(parts).map(Rule::parse).toList());
     }
   }
 
-  public record Part(Map<Character, Long> numbers) {
-    public Part(List<Number> numbers) {
-      this(numbers.stream().collect(toMap(n -> n.c, n -> n.n)));
+  record Part(Map<Character, Long> ratings) {
+    static Part parse(String s) {
+      var ratings = new HashMap<Character, Long>();
+      var parts = s.substring(1, s.length()-1).split(",");
+      for (var part : parts) {
+        ratings.put(part.charAt(0), Long.parseLong(part.substring(2)));
+      }
+      return new Part(ratings);
     }
   }
 
-  public record Number(char c, long n) {
-  }
-
-  public record Constraint(long moreThan, long lessThan) {
-    public static Constraint create() {
-      return new Constraint(0, 4001);
-    }
-
-    public Constraint moreThan(long moreThan) {
-      return new Constraint(Math.max(this.moreThan, moreThan), lessThan);
-    }
-
-    public Constraint lessThan(long lessThan) {
-      return new Constraint(moreThan, Math.min(this.lessThan, lessThan));
-    }
-
-    public long numsAccepted() {
-      if (moreThan > lessThan) return 0;
-      return lessThan - moreThan - 1;
+  record Range(long min, long max) {
+    long size() { return max - min + 1; }
+    Range intersect(long newMin, long newMax) {
+      return new Range(Math.max(min, newMin), Math.min(max, newMax));
     }
   }
 
   @Override
   public Object part1() {
-    var workflows = getWorkflows();
-    List<Part> parts = stream(day().split("\n\n")[1].split("\n")).map(s -> readString(s, "{%l(%c=%n)}", ",", Part.class, Number.class)).toList();
-    return parts.stream().filter(p -> isAccepted(workflows, p, "in")).mapToLong(p -> p.numbers.values().stream().mapToLong(l -> l).sum()).sum();
+    var parts = day().split("\n\n");
+    var workflows = parseWorkflows(parts[0]);
+    return Arrays.stream(parts[1].split("\n"))
+        .map(Part::parse)
+        .filter(p -> process(p, workflows, "in"))
+        .mapToLong(p -> p.ratings.values().stream().mapToLong(Long::longValue).sum())
+        .sum();
   }
 
-  private Map<String, List<WorkflowItem>> getWorkflows() {
-    return stream(day().split("\n\n")[0].split("\n")).map(s -> readString(s, "%s{%ls}", ",", Workflow.class)).collect(toMap(e -> e.name, e -> e.steps));
+  private Map<String, Workflow> parseWorkflows(String input) {
+    var workflows = new HashMap<String, Workflow>();
+    for (var line : input.split("\n")) {
+      var parts = line.split("\\{", 2);
+      workflows.put(parts[0], Workflow.parse("{" + parts[1]));
+    }
+    return workflows;
   }
 
-  private boolean isAccepted(Map<String, List<WorkflowItem>> workflows, Part p, String workflow) {
-    var items = workflows.get(workflow);
-    for (var item : items) {
-      if (item.c == ' ') {
-        return isAccepted(workflows, p, item);
-      } else {
-        if (item.op == '<') {
-          if (p.numbers.get(item.c) < item.n) return isAccepted(workflows, p, item);
-        } else if (item.op == '>') {
-          if (p.numbers.get(item.c) > item.n) return isAccepted(workflows, p, item);
-        } else throw new IllegalStateException("Unknown operator: " + item.op);
+  private boolean process(Part part, Map<String, Workflow> workflows, String current) {
+    if (current.equals("A")) return true;
+    if (current.equals("R")) return false;
+    
+    var workflow = workflows.get(current);
+    for (var rule : workflow.rules) {
+      if (rule.category == ' ' || evaluate(part, rule)) {
+        return process(part, workflows, rule.target);
       }
     }
-    throw new IllegalStateException("Reached end = impossible");
+    throw new IllegalStateException("No matching rule found");
   }
 
-  private boolean isAccepted(Map<String, List<WorkflowItem>> workflows, Part p, WorkflowItem item) {
-    if (item.s.equals("A")) return true;
-    else if (item.s.equals("R")) return false;
-    else return isAccepted(workflows, p, item.s);
+  private boolean evaluate(Part part, Rule rule) {
+    if (rule.category == ' ') return true;
+    var value = part.ratings.get(rule.category);
+    return rule.operator == '<' ? value < rule.value : value > rule.value;
   }
 
   @Override
   public Object part2() {
-    var workflows = getWorkflows();
-    return countAccepted(workflows, new HashMap<>("xmas".chars().boxed().collect(toMap(e -> (char) e.intValue(), e -> Constraint.create()))), "in");
+    var workflows = parseWorkflows(day().split("\n\n")[0]);
+    var initial = new HashMap<Character, Range>();
+    "xmas".chars().forEach(c -> initial.put((char)c, new Range(1, 4000)));
+    return countCombinations(workflows, initial, "in");
   }
 
-  private long countAccepted(Map<String, List<WorkflowItem>> workflows, Map<Character, Constraint> constraints, String workflow) {
-    return workflows.get(workflow).stream().mapToLong(item -> applyOperation(workflows, constraints, item)).sum();
-  }
-
-  private long applyOperation(Map<String, List<WorkflowItem>> workflows, Map<Character, Constraint> constraints, WorkflowItem item) {
-    if (item.c != ' ') {
-      var newConstraints = new HashMap<>(constraints);
-      var constraint = constraints.get(item.c);
-      if (item.op == '<') {
-        newConstraints.put(item.c, constraint.lessThan(item.n));
-        constraints.put(item.c, constraint.moreThan(item.n - 1));
-      } else if (item.op == '>') {
-        newConstraints.put(item.c, constraint.moreThan(item.n));
-        constraints.put(item.c, constraint.lessThan(item.n + 1));
-      } else throw new IllegalStateException("Unknown operator: " + item.op);
-      return countAccepted(workflows, newConstraints, item);
+  private long countCombinations(Map<String, Workflow> workflows, Map<Character, Range> ranges, String current) {
+    if (current.equals("R")) return 0;
+    if (current.equals("A")) return ranges.values().stream().mapToLong(Range::size).reduce(1L, (a, b) -> a * b);
+    
+    var workflow = workflows.get(current);
+    var result = 0L;
+    var currentRanges = new HashMap<>(ranges);
+    
+    for (var rule : workflow.rules) {
+      if (rule.category == ' ') {
+        result += countCombinations(workflows, currentRanges, rule.target);
+        continue;
+      }
+      
+      var range = currentRanges.get(rule.category);
+      Map<Character, Range> newRanges = new HashMap<>(currentRanges);
+      
+      if (rule.operator == '<') {
+        newRanges.put(rule.category, range.intersect(1, rule.value - 1));
+        currentRanges.put(rule.category, range.intersect(rule.value, 4000));
+      } else {
+        newRanges.put(rule.category, range.intersect(rule.value + 1, 4000));
+        currentRanges.put(rule.category, range.intersect(1, rule.value));
+      }
+      
+      result += countCombinations(workflows, newRanges, rule.target);
     }
-    return countAccepted(workflows, constraints, item);
-  }
-
-  private long countAccepted(Map<String, List<WorkflowItem>> workflows, Map<Character, Constraint> constraints, WorkflowItem item) {
-    if (item.s.equals("A"))
-      return constraints.values().stream().mapToLong(Constraint::numsAccepted).reduce(1, (a, b) -> a * b);
-    else if (item.s.equals("R")) return 0;
-    else return countAccepted(workflows, constraints, item.s);
+    return result;
   }
 }
