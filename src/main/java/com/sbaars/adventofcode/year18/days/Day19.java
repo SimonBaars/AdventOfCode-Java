@@ -38,12 +38,38 @@ public class Day19 extends Day2018 {
     }
   }
 
-  @Override
-  public Object part1() {
-    List<String> input = dayStream().toList();
-    ipBinding = Integer.parseInt(input.get(0).split(" ")[1]);
+  private long runProgram(List<String> input, int initialR0) {
+    ip = 0;
     Arrays.fill(registers, 0);
+    registers[0] = initialR0;
+    ipBinding = Integer.parseInt(input.get(0).split(" ")[1]);
 
+    // For part 2, we need to optimize by calculating directly
+    if (initialR0 == 1) {
+      // Run a few instructions to get the target number
+      for (int i = 0; i < 20; i++) {
+        registers[ipBinding] = ip;
+        String[] instruction = input.get(ip + 1).split(" ");
+        executeInstruction(instruction[0], 
+            Integer.parseInt(instruction[1]), 
+            Integer.parseInt(instruction[2]), 
+            Integer.parseInt(instruction[3]));
+        ip = registers[ipBinding];
+        ip++;
+      }
+      
+      // The program calculates sum of factors of registers[3]
+      int target = registers[3];
+      long sum = 0;
+      for (int i = 1; i <= target; i++) {
+        if (target % i == 0) {
+          sum += i;
+        }
+      }
+      return sum;
+    }
+
+    // Normal execution for part 1
     while (ip >= 0 && ip < input.size() - 1) {
       registers[ipBinding] = ip;
       String[] instruction = input.get(ip + 1).split(" ");
@@ -59,7 +85,12 @@ public class Day19 extends Day2018 {
   }
 
   @Override
+  public Object part1() {
+    return runProgram(dayStream().toList(), 0);
+  }
+
+  @Override
   public Object part2() {
-    return "";
+    return runProgram(dayStream().toList(), 1);
   }
 }
