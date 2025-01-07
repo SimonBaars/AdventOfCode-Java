@@ -13,6 +13,6 @@ class Day25Test {
 
     @Test
     void testPart2() {
-        assertEquals("true", day.part2().toString());
+        assertEquals("That's all!", day.part2().toString());
     }
 }
