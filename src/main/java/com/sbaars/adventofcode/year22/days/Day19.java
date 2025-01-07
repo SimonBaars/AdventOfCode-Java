@@ -52,9 +52,19 @@ public class Day19 extends Day2022 {
       Collection<State> states = getStates(new LongCountMap<>(), new LongCountMap<>(), "ore", "clay")
           .peek(s -> s.perTurn.increment("ore"))
           .toList();
+      long bestSoFar = 0;
       for (int i = 0; i < minutes; i++) {
+        int timeLeft = minutes - i;
         TopUniqueElements<State> newStates = new TopUniqueElements<>(capacity, comparing(state -> state.inventory.sum()));
         for (State s : states) {
+          // Skip states that can't possibly beat the best
+          long currentGeodes = s.inventory.get("geode");
+          long currentGeodeRobots = s.perTurn.get("geode");
+          long maxPossibleNew = (timeLeft * (timeLeft - 1)) / 2; // triangular number
+          if (currentGeodes + (currentGeodeRobots * timeLeft) + maxPossibleNew <= bestSoFar) {
+            continue;
+          }
+
           LongCountMap<String> perTurn = new LongCountMap<>(s.perTurn);
           boolean buildGeode = s.inventory.get("ore") >= b.geodeOre && s.inventory.get("obsidian") >= b.geodeObsidian;
           boolean buildObsidian = s.inventory.get("ore") >= b.obsidianOre && s.inventory.get("clay") >= b.obsidianClay;
@@ -82,11 +92,11 @@ public class Day19 extends Day2022 {
           } else {
             newStates.add(s);
           }
-
         }
         states = newStates;
+        bestSoFar = Math.max(bestSoFar, states.stream().mapToLong(e -> e.inventory.get("geode")).max().orElse(0L));
       }
-      return states.stream().mapToLong(e -> e.inventory.get("geode")).max().orElse(0L);
+      return bestSoFar;
     });
   }
 
