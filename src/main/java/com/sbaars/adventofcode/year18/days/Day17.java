@@ -7,13 +7,15 @@ import java.util.regex.Pattern;
 
 public class Day17 extends Day2018 {
   private static final int SPRING_X = 500;
-  private static final char CLAY = '#';
-  private static final char WATER = '~';
-  private static final char FLOWING = '|';
-  private static final char SAND = '.';
+  private static final byte CLAY = '#';
+  private static final byte WATER = '~';
+  private static final byte FLOWING = '|';
+  private static final byte SAND = '.';
   
-  private char[][] grid;
+  private byte[][] grid;
   private int minX, maxX, minY, maxY;
+  private int width, height;
+  private BitSet flowCache;
 
   public Day17() {
     super(17);
@@ -54,76 +56,90 @@ public class Day17 extends Day2018 {
 
     minX -= 2;
     maxX += 2;
+    width = maxX - minX + 1;
+    height = maxY + 1;
     
-    grid = new char[maxY + 1][maxX - minX + 1];
-    for (char[] row : grid) {
+    grid = new byte[height][width];
+    for (byte[] row : grid) {
       Arrays.fill(row, SAND);
     }
 
     for (int[] coord : clayCoords) {
       grid[coord[1]][coord[0] - minX] = CLAY;
     }
+    
+    flowCache = new BitSet(width * height);
   }
 
-  private boolean isBlocked(int x, int y) {
-    if (y >= grid.length || x < 0 || x >= grid[0].length) return false;
-    return grid[y][x] == CLAY || grid[y][x] == WATER;
+  private int getCacheIndex(int x, int y) {
+    return y * width + x;
   }
 
-  private boolean canFlowDown(int x, int y) {
-    if (y + 1 >= grid.length) return true;
-    char below = grid[y + 1][x];
-    return below != CLAY && below != WATER;
+  private boolean hasFlowed(int x, int y) {
+    return flowCache.get(getCacheIndex(x, y));
+  }
+
+  private void markFlowed(int x, int y) {
+    flowCache.set(getCacheIndex(x, y));
   }
 
   private void flow(int x, int y) {
-    if (y >= grid.length || x < 0 || x >= grid[0].length || grid[y][x] == CLAY) {
+    if (y >= height || x < 0 || x >= width || grid[y][x] == CLAY) {
       return;
     }
+
+    if (hasFlowed(x, y)) {
+      return;
+    }
+    markFlowed(x, y);
 
     if (grid[y][x] == SAND) {
       grid[y][x] = FLOWING;
     }
 
-    if (canFlowDown(x, y)) {
-      if (y + 1 < grid.length) {
+    if (y + 1 < height) {
+      byte below = grid[y + 1][x];
+      if (below != CLAY && below != WATER) {
         flow(x, y + 1);
+        if (grid[y + 1][x] == FLOWING) {
+          grid[y][x] = FLOWING;
+          return;
+        }
       }
+    } else {
+      grid[y][x] = FLOWING;
       return;
     }
 
-    boolean leftWall = false;
-    boolean rightWall = false;
     int left = x;
     int right = x;
+    byte[] row = grid[y];
+    byte[] rowBelow = grid[y + 1];
 
-    while (left >= 0 && grid[y][left] != CLAY && isBlocked(left, y + 1)) {
+    while (left > 0 && row[left - 1] != CLAY) {
       left--;
+      if (rowBelow[left] != CLAY && rowBelow[left] != WATER) {
+        break;
+      }
     }
-    leftWall = left >= 0 && grid[y][left] == CLAY;
+    boolean leftWall = left > 0 && row[left - 1] == CLAY;
 
-    while (right < grid[0].length && grid[y][right] != CLAY && isBlocked(right, y + 1)) {
+    while (right < width - 1 && row[right + 1] != CLAY) {
       right++;
+      if (rowBelow[right] != CLAY && rowBelow[right] != WATER) {
+        break;
+      }
     }
-    rightWall = right < grid[0].length && grid[y][right] == CLAY;
+    boolean rightWall = right < width - 1 && row[right + 1] == CLAY;
 
-    if (leftWall && rightWall) {
-      for (int i = left + 1; i < right; i++) {
-        grid[y][i] = WATER;
-      }
-      if (y > 0) {
-        flow(x, y - 1);
-      }
+    byte waterType = (leftWall && rightWall) ? WATER : FLOWING;
+    Arrays.fill(row, left, right + 1, waterType);
+
+    if (waterType == WATER && y > 0) {
+      flow(x, y - 1);
     } else {
-      for (int i = left + 1; i < right; i++) {
-        grid[y][i] = FLOWING;
-      }
-      if (!leftWall && left >= 0) {
-        flow(left, y);
-      }
-      if (!rightWall && right < grid[0].length) {
-        flow(right, y);
-      }
+      if (!leftWall) flow(left, y);
+      if (!rightWall) flow(right, y);
     }
   }
 
@@ -132,18 +148,17 @@ public class Day17 extends Day2018 {
   }
 
   private int countWater() {
-    int flowingCount = 0;
-    int settledCount = 0;
+    int total = 0;
     for (int y = minY; y <= maxY; y++) {
-      for (int x = 0; x < grid[0].length; x++) {
-        if (grid[y][x] == WATER) {
-          settledCount++;
-        } else if (grid[y][x] == FLOWING) {
-          flowingCount++;
+      byte[] row = grid[y];
+      for (int x = 0; x < width; x++) {
+        byte cell = row[x];
+        if (cell == WATER || cell == FLOWING) {
+          total++;
         }
       }
     }
-    return flowingCount + settledCount;
+    return total;
   }
 
   @Override
@@ -157,8 +172,9 @@ public class Day17 extends Day2018 {
   public Object part2() {
     int count = 0;
     for (int y = minY; y <= maxY; y++) {
-      for (int x = 0; x < grid[0].length; x++) {
-        if (grid[y][x] == WATER) {
+      byte[] row = grid[y];
+      for (int x = 0; x < width; x++) {
+        if (row[x] == WATER) {
           count++;
         }
       }
