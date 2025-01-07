@@ -1,19 +1,10 @@
 package com.sbaars.adventofcode.year23.days;
 
-import com.sbaars.adventofcode.common.Builder;
-import com.sbaars.adventofcode.common.Pair;
 import com.sbaars.adventofcode.common.location.Loc3D;
-import com.sbaars.adventofcode.common.map.ListMap;
 import com.sbaars.adventofcode.year23.Day2023;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
+import java.util.*;
 
-import static com.sbaars.adventofcode.common.map.ListMap.toListMap;
 import static com.sbaars.adventofcode.util.DataMapper.readString;
 
 public class Day22 extends Day2023 {
@@ -44,39 +35,88 @@ public class Day22 extends Day2023 {
   }
 
   private long solve(boolean part1) {
-    var in = dayStream().map(s -> readString(s, "%n,%n,%n~%n,%n,%n", Brick.class)).toList();
-    var bricks = dropBricks(in);
-    ListMap<Brick, Brick> supportedBy = findSupported(bricks, (b1, b2) -> new Pair<>(b2, b1));
-    ListMap<Brick, Brick> supports = findSupported(bricks, Pair::new);
-    var stream = bricks.parallelStream().filter(b -> part1 == (!supports.containsKey(b) || supports.get(b).stream().allMatch(b2 -> supportedBy.get(b2).size() > 1)));
-    return part1 ? stream.count() : stream.mapToLong(b -> collectAll(b, bricks)).sum();
-  }
+    var bricks = dayStream()
+        .map(s -> readString(s, "%n,%n,%n~%n,%n,%n", Brick.class))
+        .sorted(Comparator.comparingLong(b -> b.cubes.get(0).z))
+        .toList();
+    
+    var settledBricks = dropBricks(bricks);
+    var supportedBy = new HashMap<Brick, Set<Brick>>();
+    var supports = new HashMap<Brick, Set<Brick>>();
+    
+    settledBricks.forEach(b -> {
+        supportedBy.put(b, new HashSet<>());
+        supports.put(b, new HashSet<>());
+    });
+    
+    settledBricks.forEach(upper -> 
+        settledBricks.stream()
+            .filter(lower -> !lower.equals(upper) && isSupporting(lower, upper))
+            .forEach(lower -> {
+                supportedBy.get(upper).add(lower);
+                supports.get(lower).add(upper);
+            }));
 
-  private static ListMap<Brick, Brick> findSupported(Set<Brick> bricks, BiFunction<Brick, Brick, Pair<Brick, Brick>> toPair) {
-    return bricks
-        .parallelStream()
-        .flatMap(b ->
-            bricks.stream()
-                .filter(b2 -> !b.equals(b2))
-                .filter(b2 -> b.cubes().stream().anyMatch(c -> b2.cubes.contains(c.move(0, 0, 1))))
-                .map(b2 -> toPair.apply(b, b2))
-        ).collect(toListMap(Pair::a, Pair::b));
-  }
-
-  private long collectAll(Brick brick, Set<Brick> parentBricks) {
-    var bricksToFall = new HashSet<>(parentBricks);
-    bricksToFall.remove(brick);
-    return dropBricks(bricksToFall).stream().filter(b -> !parentBricks.contains(b)).count();
-  }
-
-  public Set<Brick> dropBricks(Collection<Brick> bricksToDrop) {
-    var bricks = new Builder<Set<Brick>>(HashSet::new);
-    bricks.getNew().addAll(new HashSet<>(bricksToDrop));
-    while (!bricks.get().equals(bricks.getNew())) { // while loop till a fixed point is reached
-      bricks.refresh();
-      bricks.setNew(
-          bricks.get().parallelStream().map(b -> b.cubes.stream().anyMatch(c -> c.z == 1 || bricks.get().stream().filter(b2 -> !b.equals(b2)).anyMatch(b2 -> b2.cubes.contains(c.move(0, 0, -1)))) ? b : new Brick(b.id, b.cubes.stream().map(c -> c.move(0, 0, -1)).toList())).collect(Collectors.toSet()));
+    if (part1) {
+        return settledBricks.stream()
+            .filter(b -> supports.get(b).stream()
+                .allMatch(supported -> supportedBy.get(supported).size() > 1))
+            .count();
     }
-    return bricks.get();
+
+    return settledBricks.stream()
+        .mapToLong(brick -> {
+            Set<Brick> falling = new HashSet<>();
+            falling.add(brick);
+            Queue<Brick> queue = new ArrayDeque<>(supports.get(brick));
+            
+            while (!queue.isEmpty()) {
+                Brick current = queue.poll();
+                if (!falling.contains(current) && 
+                    supportedBy.get(current).stream().allMatch(falling::contains)) {
+                    falling.add(current);
+                    queue.addAll(supports.get(current));
+                }
+            }
+            return falling.size() - 1;
+        }).sum();
+  }
+
+  private boolean isSupporting(Brick lower, Brick upper) {
+    return lower.cubes().stream().anyMatch(c -> 
+        upper.cubes.stream().anyMatch(uc -> 
+            uc.x == c.x && uc.y == c.y && uc.z == c.z + 1));
+  }
+
+  private Set<Brick> dropBricks(List<Brick> bricks) {
+    Set<Brick> result = new HashSet<>();
+    Map<Loc3D, Brick> occupiedSpaces = new HashMap<>();
+    
+    for (Brick brick : bricks) {
+        List<Loc3D> newPos = new ArrayList<>(brick.cubes);
+        long maxZ = brick.cubes.stream()
+            .mapToLong(cube -> {
+                for (long z = cube.z - 1; z >= 1; z--) {
+                    if (occupiedSpaces.containsKey(new Loc3D(cube.x, cube.y, z))) {
+                        return z + 1;
+                    }
+                }
+                return 1L;
+            })
+            .max()
+            .orElse(1L);
+        
+        long drop = brick.cubes.get(0).z - maxZ;
+        for (int i = 0; i < newPos.size(); i++) {
+            Loc3D cube = newPos.get(i);
+            newPos.set(i, new Loc3D(cube.x, cube.y, cube.z - drop));
+        }
+        
+        Brick droppedBrick = new Brick(brick.id, newPos);
+        result.add(droppedBrick);
+        droppedBrick.cubes.forEach(cube -> occupiedSpaces.put(cube, droppedBrick));
+    }
+    
+    return result;
   }
 }
