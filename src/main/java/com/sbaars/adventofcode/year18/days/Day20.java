@@ -81,6 +81,6 @@ public class Day20 extends Day2018 {
 
   @Override
   public Object part2() {
-    return "";
+    return distances.values().stream().filter(d -> d >= 1000).count();
   }
 }
