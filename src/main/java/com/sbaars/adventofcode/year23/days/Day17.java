@@ -5,10 +5,7 @@ import com.sbaars.adventofcode.common.grid.NumGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year23.Day2023;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.PriorityQueue;
 
 import static com.sbaars.adventofcode.common.Direction.EAST;
@@ -23,80 +20,84 @@ public class Day17 extends Day2023 {
     new Day17().printParts();
   }
 
-  @Override
-  public Object part1() {
-    var in = new NumGrid(day(), "\n", "");
-    return shortestPath(in, in.sizeX() - 1, in.sizeY() - 1, true) - in.get(new Point(0, 0));
-  }
+  public record State(Direction dir, int straightMoves) {}
 
-  public record Cell(Loc loc, long distance, List<Direction> prev, List<Loc> path) {
+  public record Cell(Loc loc, long distance, State state) implements Comparable<Cell> {
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (!(o instanceof Cell cell)) return false;
-      return loc.equals(cell.loc) && distance == cell.distance;
+      return loc.equals(cell.loc) && state.equals(cell.state);
+    }
+
+    @Override
+    public int compareTo(Cell other) {
+      return Long.compare(distance, other.distance);
     }
   }
 
   static long shortestPath(NumGrid g, int row, int col, boolean part1) {
     long[][] grid = g.grid;
-    long[][] dist = new long[g.sizeX()][g.sizeY()];
-
+    int minStraight = part1 ? 0 : 4;
+    int maxStraight = part1 ? 3 : 10;
+    
+    var dist = new long[g.sizeX()][g.sizeY()][Direction.values().length][maxStraight + 1];
+    
     for (int i = 0; i < dist.length; i++) {
       for (int j = 0; j < dist[0].length; j++) {
-        dist[i][j] = Integer.MAX_VALUE;
-      }
-    }
-
-    dist[0][0] = 0;
-
-    PriorityQueue<Cell> pq = new PriorityQueue<>(row * col, Comparator.comparing(Cell::distance));
-    pq.add(new Cell(new Loc(0, 0), dist[0][0], new ArrayList<>(), new ArrayList<>(List.of(new Loc(0, 0)))));
-    while (!pq.isEmpty()) {
-      Cell curr = pq.poll();
-      List<Direction> possible = new ArrayList<>();
-      if (curr.prev.isEmpty()) {
-        possible.add(EAST);
-        possible.add(SOUTH);
-      } else {
-        if (part1 || curr.prev.size() >= 4) {
-          possible.add(curr.prev().get(0).turn(true));
-          possible.add(curr.prev().get(0).turn(false));
-        }
-        if ((part1 && curr.prev.size() <= 3) || (!part1 && curr.prev.size() <= 10)) {
-          possible.add(curr.prev().get(0));
-        }
-      }
-      for (Direction dir : possible) {
-        Loc newLoc = dir.move(curr.loc);
-        int rows = newLoc.intX();
-        int cols = newLoc.intY();
-
-        if (isInsideGrid(newLoc, dist.length, dist[0].length)) {
-          long gridNum = grid[rows % grid.length][cols % grid.length] + (rows / grid.length) + (cols / grid[0].length);
-          if (gridNum >= 10) gridNum -= 9;
-
-          if (dist[rows][cols] > dist[curr.loc.intX()][curr.loc.intY()] + gridNum) {
-            if (dist[rows][cols] != Integer.MAX_VALUE) {
-              Cell adj = new Cell(new Loc(rows, cols), dist[rows][cols], new ArrayList<>(), new ArrayList<>());
-              pq.remove(adj);
-            }
-
-            dist[rows][cols] = dist[curr.loc.intX()][curr.loc.intY()] + gridNum;
-
-            var prev = new ArrayList<>(curr.prev);
-            if (!prev.contains(dir)) {
-              prev.clear();
-            }
-            prev.add(dir);
-            List<Loc> path = new ArrayList<>(curr.path());
-            path.add(new Loc(rows, cols));
-            pq.add(new Cell(new Loc(rows, cols), dist[rows][cols], prev, path));
+        for (int d = 0; d < Direction.values().length; d++) {
+          for (int s = 0; s <= maxStraight; s++) {
+            dist[i][j][d][s] = Long.MAX_VALUE;
           }
         }
       }
     }
-    return dist[dist.length - 1][dist[0].length - 1];
+    
+    var pq = new PriorityQueue<Cell>(Comparator.comparing(Cell::distance));
+    
+    for (Direction dir : new Direction[]{EAST, SOUTH}) {
+      dist[0][0][dir.ordinal()][0] = 0;
+      pq.add(new Cell(new Loc(0, 0), 0, new State(dir, 0)));
+    }
+    
+    long result = Long.MAX_VALUE;
+    while (!pq.isEmpty()) {
+      Cell curr = pq.poll();
+      
+      if (curr.loc.intX() == grid.length - 1 && curr.loc.intY() == grid[0].length - 1) {
+        if (curr.state.straightMoves >= minStraight) {
+          result = Math.min(result, curr.distance);
+        }
+        continue;
+      }
+      
+      if (curr.distance > dist[curr.loc.intX()][curr.loc.intY()][curr.state.dir.ordinal()][curr.state.straightMoves]) {
+        continue;
+      }
+      
+      for (int turn = -1; turn <= 1; turn++) {
+        Direction nextDir = turn == 0 ? curr.state.dir : (turn == 1 ? curr.state.dir.turn(true) : curr.state.dir.turn(false));
+        
+        if (turn != 0) {
+          if (curr.state.straightMoves < minStraight) continue;
+        } else {
+          if (curr.state.straightMoves >= maxStraight) continue;
+        }
+        
+        Loc nextLoc = nextDir.move(curr.loc);
+        if (!isInsideGrid(nextLoc, grid.length, grid[0].length)) continue;
+        
+        int nextStraight = turn == 0 ? curr.state.straightMoves + 1 : 1;
+        long nextDist = curr.distance + grid[nextLoc.intX()][nextLoc.intY()];
+        
+        if (nextDist < dist[nextLoc.intX()][nextLoc.intY()][nextDir.ordinal()][nextStraight]) {
+          dist[nextLoc.intX()][nextLoc.intY()][nextDir.ordinal()][nextStraight] = nextDist;
+          pq.add(new Cell(nextLoc, nextDist, new State(nextDir, nextStraight)));
+        }
+      }
+    }
+    
+    return result;
   }
 
   static boolean isInsideGrid(Loc l, int sizex, int sizey) {
@@ -104,9 +105,14 @@ public class Day17 extends Day2023 {
   }
 
   @Override
-  public Object part2() {
-    this.example = 4;
+  public Object part1() {
     var in = new NumGrid(day(), "\n", "");
-    return shortestPath(in, in.sizeX() - 1, in.sizeY() - 1, false) - in.get(new Point(0, 0));
+    return shortestPath(in, in.sizeX() - 1, in.sizeY() - 1, true);
+  }
+
+  @Override
+  public Object part2() {
+    var in = new NumGrid(day(), "\n", "");
+    return shortestPath(in, in.sizeX() - 1, in.sizeY() - 1, false);
   }
 }
