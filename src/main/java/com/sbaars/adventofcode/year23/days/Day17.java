@@ -5,11 +5,10 @@ import com.sbaars.adventofcode.common.grid.NumGrid;
 import com.sbaars.adventofcode.common.location.Loc;
 import com.sbaars.adventofcode.year23.Day2023;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.Arrays;
+import java.util.PriorityQueue; 
 
-import static com.sbaars.adventofcode.common.Direction.EAST;
-import static com.sbaars.adventofcode.common.Direction.SOUTH;
+import static com.sbaars.adventofcode.common.Direction.*;
 
 public class Day17 extends Day2023 {
   public Day17() {
@@ -20,41 +19,22 @@ public class Day17 extends Day2023 {
     new Day17().printParts();
   }
 
-  public record State(Direction dir, int straightMoves) {}
-
-  public record Cell(Loc loc, long distance, State state) implements Comparable<Cell> {
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof Cell cell)) return false;
-      return loc.equals(cell.loc) && state.equals(cell.state);
-    }
-
+  record State(Direction dir, int straightMoves) {}
+  record Cell(Loc loc, long distance, State state) implements Comparable<Cell> {
     @Override
     public int compareTo(Cell other) {
       return Long.compare(distance, other.distance);
     }
   }
 
-  static long shortestPath(NumGrid g, int row, int col, boolean part1) {
-    long[][] grid = g.grid;
+  static long shortestPath(NumGrid g, boolean part1) {
     int minStraight = part1 ? 0 : 4;
     int maxStraight = part1 ? 3 : 10;
-    
     var dist = new long[g.sizeX()][g.sizeY()][Direction.values().length][maxStraight + 1];
     
-    for (int i = 0; i < dist.length; i++) {
-      for (int j = 0; j < dist[0].length; j++) {
-        for (int d = 0; d < Direction.values().length; d++) {
-          for (int s = 0; s <= maxStraight; s++) {
-            dist[i][j][d][s] = Long.MAX_VALUE;
-          }
-        }
-      }
-    }
+    for (var d : dist) for (var row : d) for (var dirs : row) Arrays.fill(dirs, Long.MAX_VALUE);
     
-    var pq = new PriorityQueue<Cell>(Comparator.comparing(Cell::distance));
-    
+    var pq = new PriorityQueue<Cell>();
     for (Direction dir : new Direction[]{EAST, SOUTH}) {
       dist[0][0][dir.ordinal()][0] = 0;
       pq.add(new Cell(new Loc(0, 0), 0, new State(dir, 0)));
@@ -64,7 +44,7 @@ public class Day17 extends Day2023 {
     while (!pq.isEmpty()) {
       Cell curr = pq.poll();
       
-      if (curr.loc.intX() == grid.length - 1 && curr.loc.intY() == grid[0].length - 1) {
+      if (curr.loc.intX() == g.sizeX() - 1 && curr.loc.intY() == g.sizeY() - 1) {
         if (curr.state.straightMoves >= minStraight) {
           result = Math.min(result, curr.distance);
         }
@@ -76,19 +56,16 @@ public class Day17 extends Day2023 {
       }
       
       for (int turn = -1; turn <= 1; turn++) {
-        Direction nextDir = turn == 0 ? curr.state.dir : (turn == 1 ? curr.state.dir.turn(true) : curr.state.dir.turn(false));
+        Direction nextDir = turn == 0 ? curr.state.dir : curr.state.dir.turn(turn > 0);
         
-        if (turn != 0) {
-          if (curr.state.straightMoves < minStraight) continue;
-        } else {
-          if (curr.state.straightMoves >= maxStraight) continue;
-        }
+        if (turn != 0 && curr.state.straightMoves < minStraight) continue;
+        if (turn == 0 && curr.state.straightMoves >= maxStraight) continue;
         
         Loc nextLoc = nextDir.move(curr.loc);
-        if (!isInsideGrid(nextLoc, grid.length, grid[0].length)) continue;
+        if (nextLoc.x < 0 || nextLoc.x >= g.sizeX() || nextLoc.y < 0 || nextLoc.y >= g.sizeY()) continue;
         
         int nextStraight = turn == 0 ? curr.state.straightMoves + 1 : 1;
-        long nextDist = curr.distance + grid[nextLoc.intX()][nextLoc.intY()];
+        long nextDist = curr.distance + g.grid[nextLoc.intX()][nextLoc.intY()];
         
         if (nextDist < dist[nextLoc.intX()][nextLoc.intY()][nextDir.ordinal()][nextStraight]) {
           dist[nextLoc.intX()][nextLoc.intY()][nextDir.ordinal()][nextStraight] = nextDist;
@@ -96,23 +73,16 @@ public class Day17 extends Day2023 {
         }
       }
     }
-    
     return result;
-  }
-
-  static boolean isInsideGrid(Loc l, int sizex, int sizey) {
-    return l.x >= 0 && l.x < sizex && l.y >= 0 && l.y < sizey;
   }
 
   @Override
   public Object part1() {
-    var in = new NumGrid(day(), "\n", "");
-    return shortestPath(in, in.sizeX() - 1, in.sizeY() - 1, true);
+    return shortestPath(new NumGrid(day(), "\n", ""), true);
   }
 
   @Override
   public Object part2() {
-    var in = new NumGrid(day(), "\n", "");
-    return shortestPath(in, in.sizeX() - 1, in.sizeY() - 1, false);
+    return shortestPath(new NumGrid(day(), "\n", ""), false);
   }
 }
