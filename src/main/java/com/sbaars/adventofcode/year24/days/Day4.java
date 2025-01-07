@@ -37,6 +37,7 @@ public class Day4 extends Day2024 {
   public Object part2() {
     InfiniteGrid grid = new InfiniteGrid(dayGrid());
     return grid.stream()
+        .parallel()
         .filter(p -> grid.getOptimistic(p) == 'A')
         .filter(l -> l.x > 0 && l.y > 0 && l.x < grid.width()-1 && l.y < grid.height()-1)
         .filter(l -> {

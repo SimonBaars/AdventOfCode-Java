@@ -115,6 +115,6 @@ public class Day9 extends Day2024 {
   }
 
   private long checksum(List<Integer> disk) {
-    return zipWithIndex(disk.stream()).filter(b -> b.e() != -1).mapToLong(b -> (long) b.i() * b.e()).sum();
+    return zipWithIndex(disk.stream()).parallel().filter(b -> b.e() != -1).mapToLong(b -> (long) b.i() * b.e()).sum();
   }
 }

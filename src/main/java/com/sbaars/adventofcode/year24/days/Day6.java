@@ -47,7 +47,7 @@ public class Day6 extends Day2024 {
     var grid = new InfiniteGrid(dayGrid());
     Loc startLoc = grid.findAll('^').findFirst().get();
     Set<Loc> path = path(grid, new Walker(startLoc, NORTH));
-    return path.stream().filter(l -> grid.getChar(l) == '.')
+    return path.stream().parallel().filter(l -> grid.getChar(l) == '.')
         .filter(l -> hasLoop(grid.withReplaced(l, '#'), new Walker(startLoc, NORTH))).count();
   }
 
