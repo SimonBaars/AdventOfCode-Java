@@ -2,6 +2,8 @@ package com.sbaars.adventofcode.year16.days;
 
 import com.sbaars.adventofcode.year16.Day2016;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Day3 extends Day2016 {
   public Day3() {
@@ -28,6 +30,28 @@ public class Day3 extends Day2016 {
 
   @Override
   public Object part2() {
-    return "";
+    List<String> lines = dayStream().collect(Collectors.toList());
+    int validTriangles = 0;
+    
+    for (int i = 0; i < lines.size(); i += 3) {
+        int[][] triangles = new int[3][3];
+        
+        // Read three rows
+        for (int row = 0; row < 3; row++) {
+            String[] nums = lines.get(i + row).trim().split("\\s+");
+            for (int col = 0; col < 3; col++) {
+                triangles[row][col] = Integer.parseInt(nums[col]);
+            }
+        }
+        
+        // Check each column as a triangle
+        for (int col = 0; col < 3; col++) {
+            if (isValidTriangle(triangles[0][col], triangles[1][col], triangles[2][col])) {
+                validTriangles++;
+            }
+        }
+    }
+    
+    return validTriangles;
   }
 }
