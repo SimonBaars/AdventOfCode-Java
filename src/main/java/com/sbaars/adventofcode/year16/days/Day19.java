@@ -13,7 +13,7 @@ public class Day19 extends Day2016 {
     new Day19().printParts();
   }
 
-  private int findWinningElf(int numElves) {
+  private int findWinningElfPart1(int numElves) {
     LinkedList<Integer> elves = new LinkedList<>();
     for (int i = 1; i <= numElves; i++) {
       elves.add(i);
@@ -29,13 +29,30 @@ public class Day19 extends Day2016 {
     return elves.getFirst();
   }
 
+  private int findWinningElfPart2(int numElves) {
+    // Pattern: For n = 3^k + l where l < 3^k
+    // Winner = l if l ≤ 3^k/2
+    // Winner = 2l - 3^k if 3^k/2 < l ≤ 3^k
+    int pow = 1;
+    while (pow * 3 <= numElves) {
+      pow *= 3;
+    }
+    
+    int l = numElves - pow;
+    if (l <= pow) {
+      return l;
+    } else {
+      return 2 * l - pow;
+    }
+  }
+
   @Override
   public Object part1() {
-    return findWinningElf(Integer.parseInt(day().trim()));
+    return findWinningElfPart1(Integer.parseInt(day().trim()));
   }
 
   @Override
   public Object part2() {
-    return "";
+    return findWinningElfPart2(Integer.parseInt(day().trim()));
   }
 }
