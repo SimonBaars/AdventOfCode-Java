@@ -1,130 +1,143 @@
 package com.sbaars.adventofcode.year16.days;
 
 import com.sbaars.adventofcode.year16.Day2016;
+
 import java.util.*;
 
 public class Day24 extends Day2016 {
-  private static final int[][] DIRECTIONS = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    private record Point(int x, int y) {
+        public List<Point> neighbors() {
+            return List.of(
+                new Point(x + 1, y),
+                new Point(x - 1, y),
+                new Point(x, y + 1),
+                new Point(x, y - 1)
+            );
+        }
+    }
 
-  public Day24() {
-    super(24);
-  }
+    private record State(Point pos, Set<Integer> visited) {}
 
-  public static void main(String[] args) {
-    new Day24().printParts();
-  }
+    public Day24() {
+        super(24);
+    }
 
-  private static class Point {
-    final int x, y;
+    public static void main(String[] args) {
+        new Day24().printParts();
+    }
 
-    Point(int x, int y) {
-      this.x = x;
-      this.y = y;
+    private char[][] parseGrid() {
+        List<String> lines = dayStream().toList();
+        char[][] grid = new char[lines.size()][lines.get(0).length()];
+        for (int i = 0; i < lines.size(); i++) {
+            grid[i] = lines.get(i).toCharArray();
+        }
+        return grid;
+    }
+
+    private Map<Integer, Point> findPoints(char[][] grid) {
+        Map<Integer, Point> points = new HashMap<>();
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid[y].length; x++) {
+                if (Character.isDigit(grid[y][x])) {
+                    points.put(grid[y][x] - '0', new Point(x, y));
+                }
+            }
+        }
+        return points;
+    }
+
+    private int shortestPath(char[][] grid, Point start, Point end) {
+        Queue<Point> queue = new LinkedList<>();
+        Map<Point, Integer> distances = new HashMap<>();
+        queue.add(start);
+        distances.put(start, 0);
+
+        while (!queue.isEmpty()) {
+            Point current = queue.poll();
+            if (current.equals(end)) {
+                return distances.get(current);
+            }
+
+            for (Point next : current.neighbors()) {
+                if (next.y() >= 0 && next.y() < grid.length &&
+                    next.x() >= 0 && next.x() < grid[0].length &&
+                    grid[next.y()][next.x()] != '#' &&
+                    !distances.containsKey(next)) {
+                    queue.add(next);
+                    distances.put(next, distances.get(current) + 1);
+                }
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    private int[][] buildDistanceMatrix(char[][] grid, Map<Integer, Point> points) {
+        int size = points.size();
+        int[][] distances = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = i + 1; j < size; j++) {
+                int dist = shortestPath(grid, points.get(i), points.get(j));
+                distances[i][j] = distances[j][i] = dist;
+            }
+        }
+        return distances;
+    }
+
+    private int findShortestRoute(int[][] distances, boolean returnToStart) {
+        int n = distances.length;
+        List<Integer> points = new ArrayList<>();
+        for (int i = 1; i < n; i++) {
+            points.add(i);
+        }
+
+        int minDistance = Integer.MAX_VALUE;
+        do {
+            int distance = distances[0][points.get(0)];
+            for (int i = 0; i < points.size() - 1; i++) {
+                distance += distances[points.get(i)][points.get(i + 1)];
+            }
+            if (returnToStart) {
+                distance += distances[points.get(points.size() - 1)][0];
+            }
+            minDistance = Math.min(minDistance, distance);
+        } while (nextPermutation(points));
+
+        return minDistance;
+    }
+
+    private boolean nextPermutation(List<Integer> arr) {
+        int i = arr.size() - 2;
+        while (i >= 0 && arr.get(i) >= arr.get(i + 1)) {
+            i--;
+        }
+        if (i < 0) {
+            return false;
+        }
+
+        int j = arr.size() - 1;
+        while (arr.get(j) <= arr.get(i)) {
+            j--;
+        }
+
+        Collections.swap(arr, i, j);
+        Collections.reverse(arr.subList(i + 1, arr.size()));
+        return true;
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof Point)) return false;
-      Point point = (Point) o;
-      return x == point.x && y == point.y;
+    public Object part1() {
+        char[][] grid = parseGrid();
+        Map<Integer, Point> points = findPoints(grid);
+        int[][] distances = buildDistanceMatrix(grid, points);
+        return findShortestRoute(distances, false);
     }
 
     @Override
-    public int hashCode() {
-      return Objects.hash(x, y);
+    public Object part2() {
+        char[][] grid = parseGrid();
+        Map<Integer, Point> points = findPoints(grid);
+        int[][] distances = buildDistanceMatrix(grid, points);
+        return findShortestRoute(distances, true);
     }
-  }
-
-  private int findShortestPath(char[][] grid, Point start, Point end) {
-    Queue<Point> queue = new LinkedList<>();
-    Map<Point, Integer> distances = new HashMap<>();
-    queue.add(start);
-    distances.put(start, 0);
-
-    while (!queue.isEmpty()) {
-      Point current = queue.poll();
-      if (current.equals(end)) {
-        return distances.get(current);
-      }
-
-      for (int[] dir : DIRECTIONS) {
-        int newX = current.x + dir[0];
-        int newY = current.y + dir[1];
-        Point next = new Point(newX, newY);
-
-        if (newX >= 0 && newX < grid.length && newY >= 0 && newY < grid[0].length &&
-            grid[newX][newY] != '#' && !distances.containsKey(next)) {
-          distances.put(next, distances.get(current) + 1);
-          queue.add(next);
-        }
-      }
-    }
-
-    return Integer.MAX_VALUE;
-  }
-
-  private int findShortestTotalPath(char[][] grid, Map<Integer, Point> locations) {
-    int numLocations = locations.size();
-    int[][] distances = new int[numLocations][numLocations];
-
-    // Calculate distances between all pairs of locations
-    for (int i = 0; i < numLocations; i++) {
-      for (int j = i + 1; j < numLocations; j++) {
-        int dist = findShortestPath(grid, locations.get(i), locations.get(j));
-        distances[i][j] = distances[j][i] = dist;
-      }
-    }
-
-    // Try all permutations starting with 0
-    return findMinPermutation(distances, numLocations);
-  }
-
-  private int findMinPermutation(int[][] distances, int n) {
-    List<Integer> remaining = new ArrayList<>();
-    for (int i = 1; i < n; i++) {
-      remaining.add(i);
-    }
-    return permute(distances, 0, remaining, 0);
-  }
-
-  private int permute(int[][] distances, int current, List<Integer> remaining, int totalDist) {
-    if (remaining.isEmpty()) {
-      return totalDist;
-    }
-
-    int minDist = Integer.MAX_VALUE;
-    for (int i = 0; i < remaining.size(); i++) {
-      int next = remaining.get(i);
-      remaining.remove(i);
-      int dist = permute(distances, next, remaining, totalDist + distances[current][next]);
-      remaining.add(i, next);
-      minDist = Math.min(minDist, dist);
-    }
-    return minDist;
-  }
-
-  @Override
-  public Object part1() {
-    List<String> lines = dayStream().toList();
-    char[][] grid = new char[lines.size()][lines.get(0).length()];
-    Map<Integer, Point> locations = new HashMap<>();
-
-    // Parse grid and find numbered locations
-    for (int i = 0; i < lines.size(); i++) {
-      grid[i] = lines.get(i).toCharArray();
-      for (int j = 0; j < grid[i].length; j++) {
-        if (Character.isDigit(grid[i][j])) {
-          locations.put(grid[i][j] - '0', new Point(i, j));
-        }
-      }
-    }
-
-    return findShortestTotalPath(grid, locations);
-  }
-
-  @Override
-  public Object part2() {
-    return "";
-  }
 }
