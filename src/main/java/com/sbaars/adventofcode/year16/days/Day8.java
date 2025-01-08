@@ -1,7 +1,6 @@
 package com.sbaars.adventofcode.year16.days;
 
 import com.sbaars.adventofcode.year16.Day2016;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +32,7 @@ public class Day8 extends Day2016 {
     for (int x = 0; x < WIDTH; x++) {
       newRow[(x + amount) % WIDTH] = screen[row][x];
     }
-    screen[row] = newRow;
+    System.arraycopy(newRow, 0, screen[row], 0, WIDTH);
   }
 
   private void rotateColumn(boolean[][] screen, int col, int amount) {
@@ -46,36 +45,54 @@ public class Day8 extends Day2016 {
     }
   }
 
+  private boolean[][] processInstructions() {
+    boolean[][] screen = new boolean[HEIGHT][WIDTH];
+    
+    for (String instruction : dayStream().toList()) {
+      Matcher rectMatcher = RECT_PATTERN.matcher(instruction);
+      Matcher rowMatcher = ROTATE_ROW_PATTERN.matcher(instruction);
+      Matcher colMatcher = ROTATE_COL_PATTERN.matcher(instruction);
+
+      if (rectMatcher.matches()) {
+        rect(screen, Integer.parseInt(rectMatcher.group(1)), Integer.parseInt(rectMatcher.group(2)));
+      } else if (rowMatcher.matches()) {
+        rotateRow(screen, Integer.parseInt(rowMatcher.group(1)), Integer.parseInt(rowMatcher.group(2)));
+      } else if (colMatcher.matches()) {
+        rotateColumn(screen, Integer.parseInt(colMatcher.group(1)), Integer.parseInt(colMatcher.group(2)));
+      }
+    }
+
+    return screen;
+  }
+
   private int countLitPixels(boolean[][] screen) {
     int count = 0;
-    for (int y = 0; y < HEIGHT; y++) {
-      for (int x = 0; x < WIDTH; x++) {
-        if (screen[y][x]) count++;
+    for (boolean[] row : screen) {
+      for (boolean pixel : row) {
+        if (pixel) count++;
       }
     }
     return count;
   }
 
+  private String displayScreen(boolean[][] screen) {
+    StringBuilder sb = new StringBuilder("\n");
+    for (boolean[] row : screen) {
+      for (boolean pixel : row) {
+        sb.append(pixel ? '#' : '.');
+      }
+      sb.append('\n');
+    }
+    return sb.toString();
+  }
+
   @Override
   public Object part1() {
-    boolean[][] screen = new boolean[HEIGHT][WIDTH];
-    
-    for (String instruction : dayStream().toList()) {
-      Matcher m;
-      if ((m = RECT_PATTERN.matcher(instruction)).matches()) {
-        rect(screen, Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
-      } else if ((m = ROTATE_ROW_PATTERN.matcher(instruction)).matches()) {
-        rotateRow(screen, Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
-      } else if ((m = ROTATE_COL_PATTERN.matcher(instruction)).matches()) {
-        rotateColumn(screen, Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
-      }
-    }
-
-    return countLitPixels(screen);
+    return countLitPixels(processInstructions());
   }
 
   @Override
   public Object part2() {
-    return "";
+    return displayScreen(processInstructions());
   }
 }
