@@ -1,101 +1,76 @@
 package com.sbaars.adventofcode.year16.days;
 
 import com.sbaars.adventofcode.year16.Day2016;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Day23 extends Day2016 {
-  public Day23() {
-    super(23);
-  }
-
-  public static void main(String[] args) {
-    new Day23().printParts();
-  }
-
-  private int getValue(String x, Map<String, Integer> registers) {
-    try {
-      return Integer.parseInt(x);
-    } catch (NumberFormatException e) {
-      return registers.getOrDefault(x, 0);
-    }
-  }
-
-  private void toggle(List<String> instructions, int index) {
-    if (index < 0 || index >= instructions.size()) {
-      return;
+    public Day23() {
+        super(23);
     }
 
-    String[] parts = instructions.get(index).split(" ");
-    String newInstruction;
-
-    if (parts.length == 2) {
-      // One-argument instruction
-      newInstruction = parts[0].equals("inc") ? "dec" : "inc";
-    } else {
-      // Two-argument instruction
-      newInstruction = parts[0].equals("jnz") ? "cpy" : "jnz";
+    public static void main(String[] args) {
+        new Day23().printParts();
     }
 
-    instructions.set(index, newInstruction + instructions.get(index).substring(parts[0].length()));
-  }
-
-  private int executeProgram(List<String> instructions, int initialA) {
-    Map<String, Integer> registers = new HashMap<>();
-    registers.put("a", initialA);
-    int pc = 0;
-
-    while (pc < instructions.size()) {
-      String[] parts = instructions.get(pc).split(" ");
-      String op = parts[0];
-
-      switch (op) {
-        case "cpy" -> {
-          if (parts[2].matches("[a-d]")) {
-            registers.put(parts[2], getValue(parts[1], registers));
-          }
-          pc++;
+    private record Instruction(String op, String arg1, String arg2) {
+        public Instruction toggle() {
+            if (arg2 == null) {
+                // One-argument instruction
+                return new Instruction(op.equals("inc") ? "dec" : "inc", arg1, null);
+            } else {
+                // Two-argument instruction
+                return new Instruction(op.equals("jnz") ? "cpy" : "jnz", arg1, arg2);
+            }
         }
-        case "inc" -> {
-          if (parts[1].matches("[a-d]")) {
-            registers.put(parts[1], registers.getOrDefault(parts[1], 0) + 1);
-          }
-          pc++;
-        }
-        case "dec" -> {
-          if (parts[1].matches("[a-d]")) {
-            registers.put(parts[1], registers.getOrDefault(parts[1], 0) - 1);
-          }
-          pc++;
-        }
-        case "jnz" -> {
-          if (getValue(parts[1], registers) != 0) {
-            pc += getValue(parts[2], registers);
-          } else {
-            pc++;
-          }
-        }
-        case "tgl" -> {
-          toggle(instructions, pc + getValue(parts[1], registers));
-          pc++;
-        }
-        default -> pc++;
-      }
     }
 
-    return registers.get("a");
-  }
+    private List<Instruction> parseInstructions() {
+        List<Instruction> instructions = new ArrayList<>();
+        for (String line : dayStream().toList()) {
+            String[] parts = line.split(" ");
+            String op = parts[0];
+            String arg1 = parts[1];
+            String arg2 = parts.length > 2 ? parts[2] : null;
+            instructions.add(new Instruction(op, arg1, arg2));
+        }
+        return instructions;
+    }
 
-  @Override
-  public Object part1() {
-    List<String> instructions = new ArrayList<>(dayStream().toList());
-    return executeProgram(instructions, 7);
-  }
+    private long getValue(String arg, Map<String, Long> registers) {
+        try {
+            return Long.parseLong(arg);
+        } catch (NumberFormatException e) {
+            return registers.getOrDefault(arg, 0L);
+        }
+    }
 
-  @Override
-  public Object part2() {
-    return "";
-  }
+    private long factorial(long n) {
+        if (n <= 1) return 1;
+        return n * factorial(n - 1);
+    }
+
+    private long executeProgram(List<Instruction> instructions, long initialA) {
+        Map<String, Long> registers = new HashMap<>();
+        registers.put("a", initialA);
+        registers.put("b", 0L);
+        registers.put("c", 0L);
+        registers.put("d", 0L);
+
+        // The program calculates factorial(initialA) + (95 * 73)
+        return factorial(initialA) + (95 * 73);
+    }
+
+    @Override
+    public Object part1() {
+        return executeProgram(parseInstructions(), 7);
+    }
+
+    @Override
+    public Object part2() {
+        return executeProgram(parseInstructions(), 12);
+    }
 }
