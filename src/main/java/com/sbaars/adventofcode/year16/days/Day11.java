@@ -4,10 +4,10 @@ import com.sbaars.adventofcode.year16.Day2016;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Day11 extends Day2016 {
   private static final Pattern ITEM_PATTERN = Pattern.compile("(\\w+)(?:-compatible)? (microchip|generator)");
-  private static final int NUM_FLOORS = 4;
 
   public Day11() {
     super(11);
@@ -17,113 +17,94 @@ public class Day11 extends Day2016 {
     new Day11().printParts();
   }
 
-  private static class State {
-    int elevator;
-    Set<String>[] floors;
-
-    @SuppressWarnings("unchecked")
-    State() {
-      elevator = 0;
-      floors = new Set[NUM_FLOORS];
-      for (int i = 0; i < NUM_FLOORS; i++) {
-        floors[i] = new HashSet<>();
-      }
-    }
-
-    State(State other) {
-      elevator = other.elevator;
-      floors = new Set[NUM_FLOORS];
-      for (int i = 0; i < NUM_FLOORS; i++) {
-        floors[i] = new HashSet<>(other.floors[i]);
-      }
-    }
-
-    boolean isValid() {
+  private record State(int elevator, List<Set<String>> floors) {
+    public boolean isValid() {
       for (Set<String> floor : floors) {
-        Set<String> generators = new HashSet<>();
-        Set<String> chips = new HashSet<>();
-        for (String item : floor) {
-          if (item.endsWith("G")) generators.add(item.substring(0, item.length() - 1));
-          else chips.add(item.substring(0, item.length() - 1));
-        }
+        Set<String> generators = floor.stream()
+            .filter(s -> s.endsWith("G"))
+            .collect(Collectors.toSet());
+        Set<String> microchips = floor.stream()
+            .filter(s -> s.endsWith("M"))
+            .collect(Collectors.toSet());
+
         if (!generators.isEmpty()) {
-          for (String chip : chips) {
-            if (!generators.contains(chip)) return false;
+          for (String chip : microchips) {
+            String gen = chip.substring(0, chip.length() - 1) + "G";
+            if (!generators.contains(gen)) {
+              return false;
+            }
           }
         }
       }
       return true;
     }
 
-    boolean isComplete() {
-      return elevator == NUM_FLOORS - 1 && 
-             floors[NUM_FLOORS - 1].containsAll(floors[0]) && 
-             floors[NUM_FLOORS - 1].containsAll(floors[1]) && 
-             floors[NUM_FLOORS - 1].containsAll(floors[2]);
+    public boolean isComplete() {
+      return floors.get(0).isEmpty() && 
+             floors.get(1).isEmpty() && 
+             floors.get(2).isEmpty();
     }
 
-    @Override
-    public int hashCode() {
-      return Objects.hash(elevator, Arrays.deepHashCode(floors));
-    }
+    public List<State> nextStates() {
+      List<State> states = new ArrayList<>();
+      Set<String> currentFloor = floors.get(elevator);
 
-    @Override
-    public boolean equals(Object obj) {
-      if (!(obj instanceof State other)) return false;
-      return elevator == other.elevator && Arrays.deepEquals(floors, other.floors);
+      // Try moving one or two items
+      List<List<String>> itemCombos = new ArrayList<>();
+      currentFloor.forEach(item -> itemCombos.add(List.of(item)));
+      for (String item1 : currentFloor) {
+        for (String item2 : currentFloor) {
+          if (item1.compareTo(item2) < 0) {
+            itemCombos.add(List.of(item1, item2));
+          }
+        }
+      }
+
+      // Try moving up or down
+      for (int newElevator : List.of(elevator - 1, elevator + 1)) {
+        if (newElevator >= 0 && newElevator < floors.size()) {
+          for (List<String> items : itemCombos) {
+            List<Set<String>> newFloors = new ArrayList<>();
+            for (int i = 0; i < floors.size(); i++) {
+              newFloors.add(new HashSet<>(floors.get(i)));
+            }
+
+            // Move items
+            items.forEach(item -> {
+              newFloors.get(elevator).remove(item);
+              newFloors.get(newElevator).add(item);
+            });
+
+            State newState = new State(newElevator, newFloors);
+            if (newState.isValid()) {
+              states.add(newState);
+            }
+          }
+        }
+      }
+
+      return states;
     }
   }
 
-  private int findMinSteps() {
-    State initial = new State();
-    List<String> input = dayStream().toList();
-
-    // Parse input and populate initial state
-    for (int floor = 0; floor < input.size(); floor++) {
-      Matcher m = ITEM_PATTERN.matcher(input.get(floor));
-      while (m.find()) {
-        String element = m.group(1);
-        String type = m.group(2);
-        initial.floors[floor].add(element + (type.equals("generator") ? "G" : "M"));
-      }
-    }
-
-    Queue<State> queue = new LinkedList<>();
-    Set<State> seen = new HashSet<>();
-    Map<State, Integer> steps = new HashMap<>();
+  private int findMinSteps(State initial) {
+    Queue<State> queue = new ArrayDeque<>();
+    Map<State, Integer> visited = new HashMap<>();
     queue.add(initial);
-    steps.put(initial, 0);
+    visited.put(initial, 0);
 
     while (!queue.isEmpty()) {
       State current = queue.poll();
-      int currentSteps = steps.get(current);
+      int steps = visited.get(current);
 
       if (current.isComplete()) {
-        return currentSteps;
+        return steps;
       }
 
-      // Generate possible moves
-      List<String> items = new ArrayList<>(current.floors[current.elevator]);
-      for (int i = 0; i < items.size(); i++) {
-        for (int j = i; j < items.size(); j++) {
-          for (int dir = -1; dir <= 1; dir += 2) {
-            int newFloor = current.elevator + dir;
-            if (newFloor >= 0 && newFloor < NUM_FLOORS) {
-              State next = new State(current);
-              next.elevator = newFloor;
-              next.floors[current.elevator].remove(items.get(i));
-              next.floors[newFloor].add(items.get(i));
-              if (i != j) {
-                next.floors[current.elevator].remove(items.get(j));
-                next.floors[newFloor].add(items.get(j));
-              }
-              if (next.isValid() && !seen.contains(next)) {
-                seen.add(next);
-                steps.put(next, currentSteps + 1);
-                queue.add(next);
-              }
-            }
-          }
+      for (State next : current.nextStates()) {
+        if (!visited.containsKey(next)) {
+          queue.add(next);
+          visited.put(next, steps + 1);
         }
       }
     }
@@ -131,13 +112,38 @@ public class Day11 extends Day2016 {
     return -1;
   }
 
+  private State parseInput(boolean includePart2Items) {
+    List<Set<String>> floors = new ArrayList<>();
+    for (int i = 0; i < 4; i++) {
+      floors.add(new HashSet<>());
+    }
+
+    int floor = 0;
+    for (String line : dayStream().toList()) {
+      Matcher matcher = ITEM_PATTERN.matcher(line);
+      while (matcher.find()) {
+        String element = matcher.group(1);
+        String type = matcher.group(2);
+        floors.get(floor).add(element.substring(0, 2).toUpperCase() + 
+            (type.equals("generator") ? "G" : "M"));
+      }
+      floor++;
+    }
+
+    if (includePart2Items) {
+      floors.get(0).addAll(Set.of("ELG", "ELM", "DIG", "DIM"));
+    }
+
+    return new State(0, floors);
+  }
+
   @Override
   public Object part1() {
-    return findMinSteps();
+    return findMinSteps(parseInput(false));
   }
 
   @Override
   public Object part2() {
-    return "";
+    return findMinSteps(parseInput(true));
   }
 }
