@@ -39,16 +39,7 @@ public class Day17 extends Day2016 {
     return c >= 'b' && c <= 'f';
   }
 
-  private static class State {
-    final int x, y;
-    final String path;
-
-    State(int x, int y, String path) {
-      this.x = x;
-      this.y = y;
-      this.path = path;
-    }
-  }
+  private record State(int x, int y, String path) {}
 
   private String findShortestPath() {
     String passcode = day().trim();
@@ -78,6 +69,36 @@ public class Day17 extends Day2016 {
     return "NO PATH FOUND";
   }
 
+  private int findLongestPath() {
+    String passcode = day().trim();
+    Queue<State> queue = new LinkedList<>();
+    queue.add(new State(0, 0, ""));
+    int longestPath = -1;
+
+    while (!queue.isEmpty()) {
+      State current = queue.poll();
+
+      if (current.x == GRID_SIZE - 1 && current.y == GRID_SIZE - 1) {
+        longestPath = Math.max(longestPath, current.path.length());
+        continue;
+      }
+
+      String hash = getMD5Hash(passcode + current.path);
+      for (int i = 0; i < 4; i++) {
+        if (isDoorOpen(hash.charAt(i))) {
+          int newX = current.x + MOVES[i][0];
+          int newY = current.y + MOVES[i][1];
+
+          if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE) {
+            queue.add(new State(newX, newY, current.path + DIRECTIONS[i]));
+          }
+        }
+      }
+    }
+
+    return longestPath;
+  }
+
   @Override
   public Object part1() {
     return findShortestPath();
@@ -85,6 +106,6 @@ public class Day17 extends Day2016 {
 
   @Override
   public Object part2() {
-    return "";
+    return findLongestPath();
   }
 }
