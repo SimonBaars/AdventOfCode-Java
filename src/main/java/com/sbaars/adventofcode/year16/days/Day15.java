@@ -18,15 +18,7 @@ public class Day15 extends Day2016 {
     new Day15().printParts();
   }
 
-  private static class Disc {
-    final int positions;
-    final int startPosition;
-
-    Disc(int positions, int startPosition) {
-      this.positions = positions;
-      this.startPosition = startPosition;
-    }
-
+  private record Disc(int positions, int startPosition) {
     int positionAt(int time) {
       return (startPosition + time) % positions;
     }
@@ -49,8 +41,7 @@ public class Day15 extends Day2016 {
     }
   }
 
-  @Override
-  public Object part1() {
+  private List<Disc> parseDiscs() {
     List<Disc> discs = new ArrayList<>();
     for (String line : dayStream().toList()) {
       Matcher m = DISC_PATTERN.matcher(line);
@@ -61,11 +52,18 @@ public class Day15 extends Day2016 {
         ));
       }
     }
-    return findPressTime(discs);
+    return discs;
+  }
+
+  @Override
+  public Object part1() {
+    return findPressTime(parseDiscs());
   }
 
   @Override
   public Object part2() {
-    return "";
+    List<Disc> discs = parseDiscs();
+    discs.add(new Disc(11, 0));
+    return findPressTime(discs);
   }
 }
