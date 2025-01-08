@@ -1,6 +1,7 @@
 package com.sbaars.adventofcode.year16.days;
 
 import com.sbaars.adventofcode.year16.Day2016;
+import java.util.Arrays;
 
 public class Day3 extends Day2016 {
   public Day3() {
@@ -11,9 +12,18 @@ public class Day3 extends Day2016 {
     new Day3().printParts();
   }
 
+  private boolean isValidTriangle(int a, int b, int c) {
+    return a + b > c && b + c > a && a + c > b;
+  }
+
   @Override
   public Object part1() {
-    return "";
+    return dayStream()
+        .map(line -> Arrays.stream(line.trim().split("\\s+"))
+            .mapToInt(Integer::parseInt)
+            .toArray())
+        .filter(sides -> isValidTriangle(sides[0], sides[1], sides[2]))
+        .count();
   }
 
   @Override
