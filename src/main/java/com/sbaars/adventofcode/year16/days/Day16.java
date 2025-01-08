@@ -3,7 +3,8 @@ package com.sbaars.adventofcode.year16.days;
 import com.sbaars.adventofcode.year16.Day2016;
 
 public class Day16 extends Day2016 {
-  private static final int DISK_LENGTH = 272;
+  private static final int DISK_LENGTH_1 = 272;
+  private static final int DISK_LENGTH_2 = 35651584;
 
   public Day16() {
     super(16);
@@ -39,11 +40,11 @@ public class Day16 extends Day2016 {
 
   @Override
   public Object part1() {
-    return fillDisk(day().trim(), DISK_LENGTH);
+    return fillDisk(day().trim(), DISK_LENGTH_1);
   }
 
   @Override
   public Object part2() {
-    return "";
+    return fillDisk(day().trim(), DISK_LENGTH_2);
   }
 }
