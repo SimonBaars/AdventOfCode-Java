@@ -3,7 +3,8 @@ package com.sbaars.adventofcode.year16.days;
 import com.sbaars.adventofcode.year16.Day2016;
 
 public class Day18 extends Day2016 {
-  private static final int TOTAL_ROWS = 40;
+  private static final int ROWS_PART1 = 40;
+  private static final int ROWS_PART2 = 400000;
   private static final char TRAP = '^';
   private static final char SAFE = '.';
 
@@ -55,11 +56,11 @@ public class Day18 extends Day2016 {
 
   @Override
   public Object part1() {
-    return countSafeTiles(day().trim(), TOTAL_ROWS);
+    return countSafeTiles(day().trim(), ROWS_PART1);
   }
 
   @Override
   public Object part2() {
-    return "";
+    return countSafeTiles(day().trim(), ROWS_PART2);
   }
 }
