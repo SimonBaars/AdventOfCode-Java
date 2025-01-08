@@ -170,6 +170,8 @@ public class Day17 extends Day2018 {
 
   @Override
   public Object part2() {
+    parseInput();
+    simulateWater();
     int count = 0;
     for (int y = minY; y <= maxY; y++) {
       byte[] row = grid[y];
