@@ -1,14 +1,10 @@
 package com.sbaars.adventofcode.year16.days;
 
 import com.sbaars.adventofcode.year16.Day2016;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Day6 extends Day2016 {
-
   public Day6() {
     super(6);
   }
@@ -17,29 +13,40 @@ public class Day6 extends Day2016 {
     new Day6().printParts();
   }
 
-  private char getMostFrequentChar(List<String> messages, int position) {
-    return messages.stream()
-        .map(s -> s.charAt(position))
-        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-        .entrySet().stream()
-        .max(Map.Entry.comparingByValue())
-        .map(Map.Entry::getKey)
-        .orElseThrow();
+  private String decodeMessage(boolean mostCommon) {
+    List<String> messages = dayStream().collect(Collectors.toList());
+    int messageLength = messages.get(0).length();
+    StringBuilder result = new StringBuilder();
+
+    for (int pos = 0; pos < messageLength; pos++) {
+      Map<Character, Integer> freq = new HashMap<>();
+      for (String message : messages) {
+        char c = message.charAt(pos);
+        freq.merge(c, 1, Integer::sum);
+      }
+
+      char selectedChar = freq.entrySet().stream()
+          .sorted((a, b) -> {
+            int comp = mostCommon ? b.getValue().compareTo(a.getValue()) : a.getValue().compareTo(b.getValue());
+            return comp != 0 ? comp : a.getKey().compareTo(b.getKey());
+          })
+          .map(Map.Entry::getKey)
+          .findFirst()
+          .orElseThrow();
+
+      result.append(selectedChar);
+    }
+
+    return result.toString();
   }
 
   @Override
   public Object part1() {
-    List<String> messages = dayStream().toList();
-    int messageLength = messages.get(0).length();
-
-    return IntStream.range(0, messageLength)
-        .mapToObj(pos -> getMostFrequentChar(messages, pos))
-        .map(String::valueOf)
-        .collect(Collectors.joining());
+    return decodeMessage(true);
   }
 
   @Override
   public Object part2() {
-    return "";
+    return decodeMessage(false);
   }
 }
