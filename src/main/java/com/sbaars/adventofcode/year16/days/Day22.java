@@ -3,11 +3,9 @@ package com.sbaars.adventofcode.year16.days;
 import com.sbaars.adventofcode.year16.Day2016;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Day22 extends Day2016 {
-    private static final Pattern NODE_PATTERN = Pattern.compile("/dev/grid/node-x(\\d+)-y(\\d+)\\s+(\\d+)T\\s+(\\d+)T\\s+(\\d+)T\\s+\\d+%");
 
     public Day22() {
         super(22);
@@ -17,89 +15,124 @@ public class Day22 extends Day2016 {
         new Day22().printParts();
     }
 
-    private record Node(int x, int y, int size, int used, int avail) {
-        public boolean isViablePair(Node other) {
-            return used > 0 && this != other && used <= other.avail;
-        }
-
-        public boolean isEmpty() {
-            return used == 0;
-        }
-
-        public boolean isWall() {
-            return size > 100; // Nodes with size > 100T are too large to move
-        }
-    }
-
     @Override
     public Object part1() {
         List<Node> nodes = parseNodes();
-        int viablePairs = 0;
-        for (Node a : nodes) {
-            for (Node b : nodes) {
-                if (a.isViablePair(b)) {
-                    viablePairs++;
+        int count = 0;
+        for (int i = 0; i < nodes.size(); i++) {
+            Node a = nodes.get(i);
+            if (a.used == 0) continue;
+            for (int j = 0; j < nodes.size(); j++) {
+                if (i == j) continue;
+                Node b = nodes.get(j);
+                if (a.used <= b.avail) {
+                    count++;
                 }
             }
         }
-        return viablePairs;
+        return count;
+    }
+
+    private List<Node> parseNodes() {
+        String input = day();
+        return Arrays.stream(input.split("\n"))
+                .filter(line -> line.startsWith("/dev/grid/node"))
+                .map(line -> {
+                    String[] parts = line.trim().split("\\s+");
+                    String[] nameParts = parts[0].split("-");
+                    int x = Integer.parseInt(nameParts[1].substring(1));
+                    int y = Integer.parseInt(nameParts[2].substring(1));
+                    int size = Integer.parseInt(parts[1].replace("T", ""));
+                    int used = Integer.parseInt(parts[2].replace("T", ""));
+                    int avail = Integer.parseInt(parts[3].replace("T", ""));
+                    return new Node(x, y, size, used, avail);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     public Object part2() {
         List<Node> nodes = parseNodes();
-        Node[][] grid = createGrid(nodes);
-        int maxX = grid.length - 1;
-        
-        // Find empty node
-        Node empty = null;
+        Node empty = findEmptyNode(nodes);
+        if (empty == null) return "No empty node found";
+
+        int maxX = findMaxXAtY0(nodes);
+        int stepsInitial = bfs(empty, maxX - 1, nodes);
+
+        return stepsInitial + 1 + (maxX - 1) * 5;
+    }
+
+    private Node findEmptyNode(List<Node> nodes) {
+        return nodes.stream()
+                .filter(n -> n.used == 0)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private int findMaxXAtY0(List<Node> nodes) {
+        return nodes.stream()
+                .filter(n -> n.y == 0)
+                .mapToInt(n -> n.x)
+                .max()
+                .orElseThrow();
+    }
+
+    private int bfs(Node empty, int targetX, List<Node> nodes) {
+        int maxX = nodes.stream().mapToInt(n -> n.x).max().orElse(0);
+        int maxY = nodes.stream().mapToInt(n -> n.y).max().orElse(0);
+        int width = maxX + 1;
+        int height = maxY + 1;
+
+        boolean[][] passable = new boolean[width][height];
         for (Node node : nodes) {
-            if (node.isEmpty()) {
-                empty = node;
-                break;
+            passable[node.x][node.y] = node.used <= empty.size;
+        }
+
+        boolean[][] visited = new boolean[width][height];
+        Queue<Position> queue = new LinkedList<>();
+        queue.add(new Position(empty.x, empty.y, 0));
+        visited[empty.x][empty.y] = true;
+
+        int[] dx = {-1, 1, 0, 0};
+        int[] dy = {0, 0, -1, 1};
+
+        while (!queue.isEmpty()) {
+            Position curr = queue.poll();
+            if (curr.x == targetX && curr.y == 0) {
+                return curr.steps;
+            }
+            for (int i = 0; i < 4; i++) {
+                int nx = curr.x + dx[i];
+                int ny = curr.y + dy[i];
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height && !visited[nx][ny] && passable[nx][ny]) {
+                    visited[nx][ny] = true;
+                    queue.add(new Position(nx, ny, curr.steps + 1));
+                }
             }
         }
 
-        // The solution follows a pattern:
-        // 1. Move empty node to position adjacent to goal data
-        // 2. Move goal data one step left
-        // 3. Move empty node around goal data to its right
-        // 4. Repeat steps 2-3 until goal data reaches (0,0)
-
-        // First, count steps to move empty node to position adjacent to goal data
-        int stepsToGoal = Math.abs(empty.x() - (maxX - 1)) + Math.abs(empty.y() - 0);
-
-        // Then, for each step left the goal data needs to move:
-        // - 5 steps to move empty node around goal data (right, down, left, left, up)
-        // - 1 step to move goal data left
-        int stepsToMoveGoal = 5 * maxX;
-
-        return stepsToGoal + stepsToMoveGoal;
+        return -1;
     }
 
-    private List<Node> parseNodes() {
-        List<Node> nodes = new ArrayList<>();
-        dayStream().skip(2).forEach(line -> {
-            Matcher matcher = NODE_PATTERN.matcher(line);
-            if (matcher.find()) {
-                int x = Integer.parseInt(matcher.group(1));
-                int y = Integer.parseInt(matcher.group(2));
-                int size = Integer.parseInt(matcher.group(3));
-                int used = Integer.parseInt(matcher.group(4));
-                int avail = Integer.parseInt(matcher.group(5));
-                nodes.add(new Node(x, y, size, used, avail));
-            }
-        });
-        return nodes;
-    }
+    static class Node {
+        final int x, y, size, used, avail;
 
-    private Node[][] createGrid(List<Node> nodes) {
-        int maxX = nodes.stream().mapToInt(Node::x).max().orElse(0) + 1;
-        int maxY = nodes.stream().mapToInt(Node::y).max().orElse(0) + 1;
-        Node[][] grid = new Node[maxX][maxY];
-        for (Node node : nodes) {
-            grid[node.x()][node.y()] = node;
+        public Node(int x, int y, int size, int used, int avail) {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.used = used;
+            this.avail = avail;
         }
-        return grid;
+    }
+
+    static class Position {
+        final int x, y, steps;
+
+        public Position(int x, int y, int steps) {
+            this.x = x;
+            this.y = y;
+            this.steps = steps;
+        }
     }
 }
