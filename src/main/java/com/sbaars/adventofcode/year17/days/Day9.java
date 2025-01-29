@@ -52,6 +52,36 @@ public class Day9 extends Day2017 {
 
   @Override
   public Object part2() {
-    return "";
+    String input = day().trim();
+    int garbageCount = 0;
+    boolean inGarbage = false;
+    boolean skipNext = false;
+    
+    for (char c : input.toCharArray()) {
+      if (skipNext) {
+        skipNext = false;
+        continue;
+      }
+      
+      if (c == '!') {
+        skipNext = true;
+        continue;
+      }
+      
+      if (inGarbage) {
+        if (c == '>') {
+          inGarbage = false;
+        } else {
+          garbageCount++;
+        }
+        continue;
+      }
+      
+      if (c == '<') {
+        inGarbage = true;
+      }
+    }
+    
+    return garbageCount;
   }
 }
