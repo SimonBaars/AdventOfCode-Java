@@ -20,6 +20,7 @@ public class Day18 extends Day2015 {
         Day18 day = new Day18();
         day.printParts();
         new com.sbaars.adventofcode.network.Submit().submit(day.part1(), 2015, 18, 1);
+        new com.sbaars.adventofcode.network.Submit().submit(day.part2(), 2015, 18, 2);
     }
 
     private void parseInput() {
@@ -44,7 +45,12 @@ public class Day18 extends Day2015 {
 
     @Override
     public Object part2() {
-        return 0; // Implement in next part
+        boolean[][] currentGrid = copyGrid(grid);
+        turnOnCorners(currentGrid);
+        for (int step = 0; step < STEPS; step++) {
+            currentGrid = nextStepWithStuckCorners(currentGrid);
+        }
+        return countLights(currentGrid);
     }
 
     private boolean[][] nextStep(boolean[][] currentGrid) {
@@ -87,5 +93,18 @@ public class Day18 extends Day2015 {
             .flatMap(row -> IntStream.range(0, row.length).mapToObj(i -> row[i]))
             .filter(light -> light)
             .count();
+    }
+
+    private void turnOnCorners(boolean[][] grid) {
+        grid[0][0] = true;
+        grid[0][GRID_SIZE - 1] = true;
+        grid[GRID_SIZE - 1][0] = true;
+        grid[GRID_SIZE - 1][GRID_SIZE - 1] = true;
+    }
+
+    private boolean[][] nextStepWithStuckCorners(boolean[][] currentGrid) {
+        boolean[][] newGrid = nextStep(currentGrid);
+        turnOnCorners(newGrid);
+        return newGrid;
     }
 }
