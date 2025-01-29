@@ -13,7 +13,23 @@ public class Day11 extends Day2017 {
 
   @Override
   public Object part1() {
-    return "";
+    String[] steps = day().trim().split(",");
+    // Using cube coordinates (x, y, z) where x + y + z = 0
+    int x = 0, y = 0, z = 0;
+    
+    for (String step : steps) {
+      switch (step) {
+        case "n" -> { y++; z--; }
+        case "s" -> { y--; z++; }
+        case "ne" -> { x++; z--; }
+        case "sw" -> { x--; z++; }
+        case "nw" -> { x--; y++; }
+        case "se" -> { x++; y--; }
+      }
+    }
+    
+    // Distance in hex grid is max absolute value of coordinates
+    return Math.max(Math.abs(x), Math.max(Math.abs(y), Math.abs(z)));
   }
 
   @Override
