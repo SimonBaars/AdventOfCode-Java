@@ -56,38 +56,38 @@ public class Day7 extends Day2017 {
   }
   
   private int findCorrectWeight(Program root) {
-    // For each node, check if its children are balanced
-    for (Program program : root.children) {
-      int result = findCorrectWeight(program);
-      if (result != -1) return result;
+    // Check if any children are unbalanced
+    for (Program child : root.children) {
+      int result = findCorrectWeight(child);
+      if (result != -1) {
+        return result;
+      }
     }
     
-    // Get weights of all siblings
-    if (root.parent != null) {
+    // Check if this node's children are balanced
+    if (!root.children.isEmpty()) {
       Map<Integer, List<Program>> weightGroups = new HashMap<>();
-      for (Program sibling : root.parent.children) {
-        int weight = sibling.getTotalWeight();
-        weightGroups.computeIfAbsent(weight, k -> new ArrayList<>()).add(sibling);
+      for (Program child : root.children) {
+        weightGroups.computeIfAbsent(child.getTotalWeight(), k -> new ArrayList<>()).add(child);
       }
       
-      // If we have exactly two different weights and one is unique
       if (weightGroups.size() == 2) {
-        int correctWeight = -1;
-        int wrongWeight = -1;
-        Program wrongProgram = null;
+        // Find the odd one out
+        Map.Entry<Integer, List<Program>> wrongEntry = null;
+        Map.Entry<Integer, List<Program>> correctEntry = null;
         
         for (Map.Entry<Integer, List<Program>> entry : weightGroups.entrySet()) {
           if (entry.getValue().size() == 1) {
-            wrongWeight = entry.getKey();
-            wrongProgram = entry.getValue().get(0);
+            wrongEntry = entry;
           } else {
-            correctWeight = entry.getKey();
+            correctEntry = entry;
           }
         }
         
-        if (wrongProgram != null) {
-          int weightDiff = wrongWeight - correctWeight;
-          return wrongProgram.weight - weightDiff;
+        if (wrongEntry != null && correctEntry != null) {
+          Program wrongProgram = wrongEntry.getValue().get(0);
+          int difference = wrongEntry.getKey() - correctEntry.getKey();
+          return wrongProgram.weight - difference;
         }
       }
     }
