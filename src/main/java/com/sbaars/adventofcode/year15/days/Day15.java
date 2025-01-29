@@ -20,6 +20,7 @@ public class Day15 extends Day2015 {
         Day15 day = new Day15();
         day.printParts();
         new com.sbaars.adventofcode.network.Submit().submit(day.part1(), 2015, 15, 1);
+        new com.sbaars.adventofcode.network.Submit().submit(day.part2(), 2015, 15, 2);
     }
 
     private void parseInput() {
@@ -45,12 +46,21 @@ public class Day15 extends Day2015 {
 
     @Override
     public Object part2() {
-        return 0; // Implement in next part
+        return findBestScoreWithCalories(500);
     }
 
     private long findBestScore() {
         return generateCombinations(TOTAL_TEASPOONS, ingredients.size())
             .stream()
+            .mapToLong(this::calculateScore)
+            .max()
+            .orElse(0);
+    }
+
+    private long findBestScoreWithCalories(int targetCalories) {
+        return generateCombinations(TOTAL_TEASPOONS, ingredients.size())
+            .stream()
+            .filter(amounts -> calculateCalories(amounts) == targetCalories)
             .mapToLong(this::calculateScore)
             .max()
             .orElse(0);
@@ -98,6 +108,14 @@ public class Day15 extends Day2015 {
         }
 
         return (long) capacity * durability * flavor * texture;
+    }
+
+    private int calculateCalories(List<Integer> amounts) {
+        int calories = 0;
+        for (int i = 0; i < ingredients.size(); i++) {
+            calories += ingredients.get(i).calories * amounts.get(i);
+        }
+        return calories;
     }
 
     private static class Ingredient {
