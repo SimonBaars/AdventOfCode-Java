@@ -20,6 +20,7 @@ public class Day19 extends Day2015 {
         Day19 day = new Day19();
         day.printParts();
         new com.sbaars.adventofcode.network.Submit().submit(day.part1(), 2015, 19, 1);
+        new com.sbaars.adventofcode.network.Submit().submit(day.part2(), 2015, 19, 2);
     }
 
     private void parseInput() {
@@ -65,6 +66,28 @@ public class Day19 extends Day2015 {
 
     @Override
     public Object part2() {
-        return 0; // Implement in next part
+        // Count total elements (uppercase followed by optional lowercase)
+        int elements = molecule.replaceAll("[^A-Z]", "").length();
+        
+        // Count special elements
+        int rn = countOccurrences(molecule, "Rn");
+        int ar = countOccurrences(molecule, "Ar");
+        int y = countOccurrences(molecule, "Y");
+        
+        // Formula: elements - rn - ar - 2*y - 1
+        // Each Rn...Ar pair reduces steps by 2
+        // Each Y reduces steps by 2 (as it's always between Rn and Ar)
+        // Subtract 1 for the initial 'e'
+        return elements - rn - ar - 2 * y - 1;
+    }
+
+    private int countOccurrences(String str, String substr) {
+        int count = 0;
+        int index = 0;
+        while ((index = str.indexOf(substr, index)) >= 0) {
+            count++;
+            index += substr.length();
+        }
+        return count;
     }
 }

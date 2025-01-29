@@ -17,14 +17,6 @@ public class DownloadPuzzles {
   public static void main(String[] args) {
     DownloadPuzzles dlPuzzles = new DownloadPuzzles();
     dlPuzzles.runForYear("2015");
-    dlPuzzles.runForYear("2016");
-    dlPuzzles.runForYear("2017");
-    dlPuzzles.runForYear("2018");
-    dlPuzzles.runForYear("2019");
-    dlPuzzles.runForYear("2020");
-    dlPuzzles.runForYear("2021");
-    dlPuzzles.runForYear("2022");
-    dlPuzzles.runForYear("2023");
   }
 
   public void retrieveTests(String day, String year) {
