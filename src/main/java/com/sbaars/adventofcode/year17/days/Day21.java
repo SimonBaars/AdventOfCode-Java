@@ -131,8 +131,7 @@ public class Day21 extends Day2017 {
         return result;
     }
 
-    @Override
-    public Object part1() {
+    private int countPixels(int iterations) {
         // Parse rules
         for (String line : dayStrings()) {
             String[] parts = line.split(" => ");
@@ -142,8 +141,8 @@ public class Day21 extends Day2017 {
         // Start with initial pattern
         char[][] grid = stringToGrid(INITIAL_PATTERN);
 
-        // Enhance 5 times
-        for (int i = 0; i < 5; i++) {
+        // Enhance specified number of times
+        for (int i = 0; i < iterations; i++) {
             grid = enhance(grid);
         }
 
@@ -159,7 +158,12 @@ public class Day21 extends Day2017 {
     }
 
     @Override
+    public Object part1() {
+        return countPixels(5);
+    }
+
+    @Override
     public Object part2() {
-        return 0;
+        return countPixels(18);
     }
 }
