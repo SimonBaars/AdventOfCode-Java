@@ -63,6 +63,28 @@ public class Day23 extends Day2017 {
 
   @Override
   public Object part2() {
-    return 0;
+    // When a = 1, the program essentially counts non-prime numbers in a range
+    // b starts at 67 * 100 + 100000 = 106700
+    // c is b + 17000 = 123700
+    // The program increments h for each non-prime number between b and c, stepping by 17
+    int b = 106700;
+    int c = 123700;
+    int h = 0;
+
+    for (int n = b; n <= c; n += 17) {
+      // Check if n is not prime
+      boolean isPrime = true;
+      for (int d = 2; d <= Math.sqrt(n); d++) {
+        if (n % d == 0) {
+          isPrime = false;
+          break;
+        }
+      }
+      if (!isPrime) {
+        h++;
+      }
+    }
+
+    return h;
   }
 }
