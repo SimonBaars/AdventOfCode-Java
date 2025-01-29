@@ -32,6 +32,22 @@ public class Day17 extends Day2017 {
 
   @Override
   public Object part2() {
-    return 0;
+    int steps = Integer.parseInt(day().trim());
+    int currentPos = 0;
+    int valueAfterZero = 0;
+    int bufferSize = 1;
+
+    for (int i = 1; i <= 50_000_000; i++) {
+      currentPos = ((currentPos + steps) % bufferSize) + 1;
+      
+      // If we're inserting at position 1 (after 0), update valueAfterZero
+      if (currentPos == 1) {
+        valueAfterZero = i;
+      }
+      
+      bufferSize++;
+    }
+
+    return valueAfterZero;
   }
 }
