@@ -5,59 +5,91 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Day24 extends Day2017 {
-  private static class Component {
-    final int port1, port2;
-    
-    Component(int port1, int port2) {
-      this.port1 = port1;
-      this.port2 = port2;
-    }
-    
-    int getOtherPort(int port) {
-      return port == port1 ? port2 : port1;
-    }
-    
-    int getStrength() {
-      return port1 + port2;
-    }
-  }
-  
-  private final List<Component> components = new ArrayList<>();
-  
-  public Day24() {
-    super(24);
-    for (String line : dayStream().toList()) {
-      String[] ports = line.split("/");
-      components.add(new Component(Integer.parseInt(ports[0]), Integer.parseInt(ports[1])));
-    }
-  }
+    private record Component(int port1, int port2) {
+        boolean hasPort(int port) {
+            return port1 == port || port2 == port;
+        }
 
-  public static void main(String[] args) {
-    new Day24().printParts();
-  }
+        int getOtherPort(int port) {
+            return port == port1 ? port2 : port1;
+        }
 
-  private int findStrongestBridge(int currentPort, Set<Component> used) {
-    int maxStrength = 0;
-    
-    for (Component c : components) {
-      if (!used.contains(c) && (c.port1 == currentPort || c.port2 == currentPort)) {
-        used.add(c);
-        int strength = c.getStrength() + findStrongestBridge(c.getOtherPort(currentPort), used);
-        maxStrength = Math.max(maxStrength, strength);
-        used.remove(c);
-      }
+        int strength() {
+            return port1 + port2;
+        }
     }
-    
-    return maxStrength;
-  }
 
-  @Override
-  public Object part1() {
-    return findStrongestBridge(0, new HashSet<>());
-  }
+    private record Bridge(List<Component> components, int lastPort) {
+        int strength() {
+            return components.stream().mapToInt(Component::strength).sum();
+        }
 
-  @Override
-  public Object part2() {
-    return 0;
-  }
+        int length() {
+            return components.size();
+        }
+    }
+
+    public Day24() {
+        super(24);
+    }
+
+    public static void main(String[] args) {
+        new Day24().printParts();
+    }
+
+    private List<Component> parseComponents() {
+        return Arrays.stream(dayStrings())
+            .map(line -> {
+                String[] parts = line.split("/");
+                return new Component(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+            })
+            .collect(Collectors.toList());
+    }
+
+    private List<Bridge> buildBridges(Bridge currentBridge, List<Component> availableComponents) {
+        List<Bridge> bridges = new ArrayList<>();
+        bridges.add(currentBridge);
+
+        for (Component component : availableComponents) {
+            if (component.hasPort(currentBridge.lastPort())) {
+                List<Component> remainingComponents = new ArrayList<>(availableComponents);
+                remainingComponents.remove(component);
+
+                List<Component> newBridgeComponents = new ArrayList<>(currentBridge.components());
+                newBridgeComponents.add(component);
+
+                Bridge newBridge = new Bridge(newBridgeComponents, component.getOtherPort(currentBridge.lastPort()));
+                bridges.addAll(buildBridges(newBridge, remainingComponents));
+            }
+        }
+
+        return bridges;
+    }
+
+    @Override
+    public Object part1() {
+        List<Component> components = parseComponents();
+        List<Bridge> bridges = buildBridges(new Bridge(new ArrayList<>(), 0), components);
+        return bridges.stream()
+            .mapToInt(Bridge::strength)
+            .max()
+            .orElse(0);
+    }
+
+    @Override
+    public Object part2() {
+        List<Component> components = parseComponents();
+        List<Bridge> bridges = buildBridges(new Bridge(new ArrayList<>(), 0), components);
+        
+        int maxLength = bridges.stream()
+            .mapToInt(Bridge::length)
+            .max()
+            .orElse(0);
+
+        return bridges.stream()
+            .filter(b -> b.length() == maxLength)
+            .mapToInt(Bridge::strength)
+            .max()
+            .orElse(0);
+    }
 }
