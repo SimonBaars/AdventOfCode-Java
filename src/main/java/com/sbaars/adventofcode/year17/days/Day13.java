@@ -12,17 +12,31 @@ public class Day13 extends Day2017 {
   public static void main(String[] args) {
     new Day13().printParts();
   }
-
-  @Override
-  public Object part1() {
+  
+  private Map<Integer, Integer> parseScanners() {
     Map<Integer, Integer> scanners = new HashMap<>();
-    
-    // Parse input
     for (String line : dayStrings()) {
       String[] parts = line.split(": ");
       scanners.put(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
     }
-    
+    return scanners;
+  }
+  
+  private boolean isCaught(Map<Integer, Integer> scanners, int delay) {
+    for (Map.Entry<Integer, Integer> entry : scanners.entrySet()) {
+      int depth = entry.getKey();
+      int range = entry.getValue();
+      // Scanner position at time = depth + delay
+      if ((depth + delay) % (2 * (range - 1)) == 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public Object part1() {
+    Map<Integer, Integer> scanners = parseScanners();
     int severity = 0;
     int maxDepth = scanners.keySet().stream().mapToInt(Integer::intValue).max().orElse(0);
     
@@ -43,6 +57,13 @@ public class Day13 extends Day2017 {
 
   @Override
   public Object part2() {
-    return "";
+    Map<Integer, Integer> scanners = parseScanners();
+    int delay = 0;
+    
+    while (isCaught(scanners, delay)) {
+      delay++;
+    }
+    
+    return delay;
   }
 }
