@@ -2,6 +2,7 @@ package com.sbaars.adventofcode.year17.days;
 
 import com.sbaars.adventofcode.common.Day;
 import com.sbaars.adventofcode.year17.Day2017;
+import java.util.stream.IntStream;
 
 public class Day1 extends Day2017 {
   public Day1() {
@@ -16,21 +17,19 @@ public class Day1 extends Day2017 {
 
   @Override
   public Object part1() {
-    long[] x = dayDigits();
-    long sum = 0;
-    for (int i = 0; i < x.length; i++) {
-      if (x[i] == x[(i + 1) % x.length]) sum += x[i];
-    }
-    return sum;
+    long[] digits = dayDigits();
+    return IntStream.range(0, digits.length)
+        .filter(i -> digits[i] == digits[(i + 1) % digits.length])
+        .mapToLong(i -> digits[i])
+        .sum();
   }
 
   @Override
   public Object part2() {
-    long[] x = dayDigits();
-    long sum = 0;
-    for (int i = 0; i < x.length; i++) {
-      if (x[i] == x[(i + x.length / 2) % x.length]) sum += x[i];
-    }
-    return sum;
+    long[] digits = dayDigits();
+    return IntStream.range(0, digits.length)
+        .filter(i -> digits[i] == digits[(i + digits.length / 2) % digits.length])
+        .mapToLong(i -> digits[i])
+        .sum();
   }
 }
