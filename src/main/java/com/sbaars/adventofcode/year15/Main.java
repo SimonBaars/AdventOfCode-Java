@@ -9,7 +9,7 @@ public class Main {
   public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException, InvocationTargetException, NoSuchMethodException {
     for (int day = 1; day <= 25; day++) {
       System.out.println("Day " + day + ":");
-      Day instance = (Day) Class.forName("com.sbaars.adventofcode.year21.days.Day" + day).getDeclaredConstructor().newInstance();
+      Day instance = (Day) Class.forName("com.sbaars.adventofcode.year15.days.Day" + day).getDeclaredConstructor().newInstance();
       instance.printParts();
       System.out.println();
     }
