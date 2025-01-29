@@ -16,16 +16,22 @@ public class Day15 extends Day2017 {
         new Day15().printParts();
     }
 
+    private long nextValue(long prev, long factor) {
+        return (prev * factor) % DIVISOR;
+    }
+
     @Override
     public Object part1() {
-        long genA = 722;  // puzzle input
-        long genB = 354;  // puzzle input
+        long genA = 591;  // puzzle input
+        long genB = 393;  // puzzle input
         int matches = 0;
 
         for (int i = 0; i < 40_000_000; i++) {
-            genA = (genA * FACTOR_A) % DIVISOR;
-            genB = (genB * FACTOR_B) % DIVISOR;
+            // Generate next values
+            genA = nextValue(genA, FACTOR_A);
+            genB = nextValue(genB, FACTOR_B);
             
+            // Compare lowest 16 bits
             if ((genA & MASK) == (genB & MASK)) {
                 matches++;
             }
