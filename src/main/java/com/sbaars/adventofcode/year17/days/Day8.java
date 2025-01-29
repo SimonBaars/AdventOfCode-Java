@@ -15,11 +15,13 @@ public class Day8 extends Day2017 {
   public static void main(String[] args) {
     new Day8().printParts();
   }
-
-  @Override
-  public Object part1() {
+  
+  private record ProcessResult(int maxFinal, int maxEver) {}
+  
+  private ProcessResult processInstructions() {
     Map<String, Integer> registers = new HashMap<>();
     Pattern pattern = Pattern.compile("(\\w+) (inc|dec) (-?\\d+) if (\\w+) ([<>=!]+) (-?\\d+)");
+    int maxEver = 0;
     
     for (String line : dayStrings()) {
       Matcher m = pattern.matcher(line);
@@ -45,20 +47,24 @@ public class Day8 extends Day2017 {
         };
         
         if (condition) {
-          if (operation.equals("inc")) {
-            registers.put(register, regValue + value);
-          } else {
-            registers.put(register, regValue - value);
-          }
+          int newValue = operation.equals("inc") ? regValue + value : regValue - value;
+          registers.put(register, newValue);
+          maxEver = Math.max(maxEver, newValue);
         }
       }
     }
     
-    return registers.values().stream().mapToInt(Integer::intValue).max().orElse(0);
+    int maxFinal = registers.values().stream().mapToInt(Integer::intValue).max().orElse(0);
+    return new ProcessResult(maxFinal, maxEver);
+  }
+
+  @Override
+  public Object part1() {
+    return processInstructions().maxFinal();
   }
 
   @Override
   public Object part2() {
-    return "";
+    return processInstructions().maxEver();
   }
 }
