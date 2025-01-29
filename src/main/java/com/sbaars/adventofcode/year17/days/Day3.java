@@ -13,7 +13,7 @@ public class Day3 extends Day2017 {
 
   @Override
   public Object part1() {
-    int input = 361527;  // puzzle input
+    int input = Integer.parseInt(day().trim());
     
     // Find the layer (ring) containing the input number
     int layer = 0;
