@@ -16,7 +16,7 @@ public class Day20 extends Day2015 {
     public static void main(String[] args) {
         Day20 day = new Day20();
         day.printParts();
-        new com.sbaars.adventofcode.network.Submit().submit(day.part1(), 2015, 20, 1);
+        new com.sbaars.adventofcode.network.Submit().submit(day.part2(), 2015, 20, 2);
     }
 
     @Override
@@ -30,7 +30,18 @@ public class Day20 extends Day2015 {
 
     @Override
     public Object part2() {
-        return 0; // Implement in next part
+        int houseNumber = 1;
+        while (getPresentsForHousePart2(houseNumber) < TARGET_PRESENTS) {
+            houseNumber++;
+        }
+        return houseNumber;
+    }
+
+    private int getPresentsForHousePart2(int houseNumber) {
+        return getDivisors(houseNumber).stream()
+            .filter(elf -> houseNumber / elf <= 50)  // Each Elf only visits 50 houses
+            .mapToInt(elf -> elf * 11)  // Each Elf delivers 11 presents
+            .sum();
     }
 
     private int getPresentsForHouse(int houseNumber) {
@@ -41,15 +52,12 @@ public class Day20 extends Day2015 {
 
     private Set<Integer> getDivisors(int number) {
         Set<Integer> divisors = new HashSet<>();
-        int sqrt = (int) Math.sqrt(number);
-        
-        for (int i = 1; i <= sqrt; i++) {
+        for (int i = 1; i <= Math.sqrt(number); i++) {
             if (number % i == 0) {
                 divisors.add(i);
                 divisors.add(number / i);
             }
         }
-        
         return divisors;
     }
 }
