@@ -11,6 +11,10 @@ public class Day11 extends Day2017 {
     new Day11().printParts();
   }
 
+  private int calculateDistance(int x, int y, int z) {
+    return Math.max(Math.abs(x), Math.max(Math.abs(y), Math.abs(z)));
+  }
+
   @Override
   public Object part1() {
     String[] steps = day().trim().split(",");
@@ -28,12 +32,27 @@ public class Day11 extends Day2017 {
       }
     }
     
-    // Distance in hex grid is max absolute value of coordinates
-    return Math.max(Math.abs(x), Math.max(Math.abs(y), Math.abs(z)));
+    return calculateDistance(x, y, z);
   }
 
   @Override
   public Object part2() {
-    return "";
+    String[] steps = day().trim().split(",");
+    int x = 0, y = 0, z = 0;
+    int maxDistance = 0;
+    
+    for (String step : steps) {
+      switch (step) {
+        case "n" -> { y++; z--; }
+        case "s" -> { y--; z++; }
+        case "ne" -> { x++; z--; }
+        case "sw" -> { x--; z++; }
+        case "nw" -> { x--; y++; }
+        case "se" -> { x++; y--; }
+      }
+      maxDistance = Math.max(maxDistance, calculateDistance(x, y, z));
+    }
+    
+    return maxDistance;
   }
 }
