@@ -13,9 +13,8 @@ public class Day12 extends Day2017 {
   public static void main(String[] args) {
     new Day12().printParts();
   }
-
-  @Override
-  public Object part1() {
+  
+  private Map<Integer, Set<Integer>> buildGraph() {
     Map<Integer, Set<Integer>> graph = new HashMap<>();
     Pattern pattern = Pattern.compile("(\\d+) <-> (.+)");
     
@@ -32,27 +31,48 @@ public class Day12 extends Day2017 {
       }
     }
     
-    // Find all programs connected to 0 using BFS
-    Set<Integer> visited = new HashSet<>();
+    return graph;
+  }
+  
+  private Set<Integer> findGroup(Map<Integer, Set<Integer>> graph, int start, Set<Integer> visited) {
     Queue<Integer> queue = new LinkedList<>();
-    queue.add(0);
-    visited.add(0);
+    Set<Integer> group = new HashSet<>();
+    queue.add(start);
+    group.add(start);
     
     while (!queue.isEmpty()) {
       int current = queue.poll();
       for (int neighbor : graph.get(current)) {
-        if (!visited.contains(neighbor)) {
-          visited.add(neighbor);
+        if (!group.contains(neighbor)) {
+          group.add(neighbor);
           queue.add(neighbor);
         }
       }
     }
     
-    return visited.size();
+    visited.addAll(group);
+    return group;
+  }
+
+  @Override
+  public Object part1() {
+    Map<Integer, Set<Integer>> graph = buildGraph();
+    return findGroup(graph, 0, new HashSet<>()).size();
   }
 
   @Override
   public Object part2() {
-    return "";
+    Map<Integer, Set<Integer>> graph = buildGraph();
+    Set<Integer> visited = new HashSet<>();
+    int groups = 0;
+    
+    for (int program : graph.keySet()) {
+      if (!visited.contains(program)) {
+        findGroup(graph, program, visited);
+        groups++;
+      }
+    }
+    
+    return groups;
   }
 }
