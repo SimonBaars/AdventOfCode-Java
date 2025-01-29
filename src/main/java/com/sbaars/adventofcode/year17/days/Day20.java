@@ -19,6 +19,19 @@ public class Day20 extends Day2017 {
         long manhattan() {
             return Math.abs(x) + Math.abs(y) + Math.abs(z);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Vector v = (Vector) o;
+            return x == v.x && y == v.y && z == v.z;
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(x, y, z);
+        }
     }
 
     private static class Particle {
@@ -50,8 +63,7 @@ public class Day20 extends Day2017 {
         new Day20().printParts();
     }
 
-    @Override
-    public Object part1() {
+    private List<Particle> parseParticles() {
         List<Particle> particles = new ArrayList<>();
         Pattern pattern = Pattern.compile("p=<(-?\\d+),(-?\\d+),(-?\\d+)>, v=<(-?\\d+),(-?\\d+),(-?\\d+)>, a=<(-?\\d+),(-?\\d+),(-?\\d+)>");
 
@@ -65,6 +77,12 @@ public class Day20 extends Day2017 {
                 particles.add(new Particle(i, p, v, a));
             }
         }
+        return particles;
+    }
+
+    @Override
+    public Object part1() {
+        List<Particle> particles = parseParticles();
 
         // The particle with the smallest acceleration magnitude will stay closest in the long term
         // If accelerations are equal, compare velocities, then positions
@@ -93,6 +111,38 @@ public class Day20 extends Day2017 {
 
     @Override
     public Object part2() {
-        return 0;
+        List<Particle> particles = parseParticles();
+        int noCollisionCount = 0;
+        int maxNoCollisionCount = 100;  // If no collisions for this many steps, assume we're done
+
+        while (noCollisionCount < maxNoCollisionCount) {
+            // Update all particles
+            for (Particle p : particles) {
+                p.update();
+            }
+
+            // Check for collisions
+            java.util.Map<Vector, List<Particle>> positions = new java.util.HashMap<>();
+            for (Particle p : particles) {
+                positions.computeIfAbsent(p.p, k -> new ArrayList<>()).add(p);
+            }
+
+            // Remove collided particles
+            boolean hadCollision = false;
+            for (List<Particle> collided : positions.values()) {
+                if (collided.size() > 1) {
+                    particles.removeAll(collided);
+                    hadCollision = true;
+                }
+            }
+
+            if (hadCollision) {
+                noCollisionCount = 0;
+            } else {
+                noCollisionCount++;
+            }
+        }
+
+        return particles.size();
     }
 }
