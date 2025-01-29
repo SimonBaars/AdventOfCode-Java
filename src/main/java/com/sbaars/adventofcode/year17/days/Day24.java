@@ -5,88 +5,59 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Day24 extends Day2017 {
-  private record Component(int port1, int port2) {
-    boolean hasPort(int port) {
-      return port1 == port || port2 == port;
+  private static class Component {
+    final int port1, port2;
+    
+    Component(int port1, int port2) {
+      this.port1 = port1;
+      this.port2 = port2;
     }
     
     int getOtherPort(int port) {
       return port == port1 ? port2 : port1;
     }
     
-    int strength() {
+    int getStrength() {
       return port1 + port2;
     }
   }
   
-  private record Bridge(int length, int strength) {
-    Bridge addComponent(Component c) {
-      return new Bridge(length + 1, strength + c.strength());
-    }
-  }
-
+  private final List<Component> components = new ArrayList<>();
+  
   public Day24() {
     super(24);
+    for (String line : dayStream().toList()) {
+      String[] ports = line.split("/");
+      components.add(new Component(Integer.parseInt(ports[0]), Integer.parseInt(ports[1])));
+    }
   }
 
   public static void main(String[] args) {
     new Day24().printParts();
   }
 
-  private List<Component> parseComponents() {
-    return dayStream().map(line -> {
-      String[] parts = line.split("/");
-      return new Component(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
-    }).collect(Collectors.toList());
-  }
-
-  private int findStrongestBridge(List<Component> availableComponents, int currentPort, int currentStrength) {
-    int maxStrength = currentStrength;
+  private int findStrongestBridge(int currentPort, Set<Component> used) {
+    int maxStrength = 0;
     
-    for (int i = 0; i < availableComponents.size(); i++) {
-      Component comp = availableComponents.get(i);
-      if (comp.hasPort(currentPort)) {
-        List<Component> remaining = new ArrayList<>(availableComponents);
-        remaining.remove(i);
-        int nextPort = comp.getOtherPort(currentPort);
-        int strength = findStrongestBridge(remaining, nextPort, currentStrength + comp.strength());
+    for (Component c : components) {
+      if (!used.contains(c) && (c.port1 == currentPort || c.port2 == currentPort)) {
+        used.add(c);
+        int strength = c.getStrength() + findStrongestBridge(c.getOtherPort(currentPort), used);
         maxStrength = Math.max(maxStrength, strength);
+        used.remove(c);
       }
     }
     
     return maxStrength;
   }
-  
-  private Bridge findLongestStrongestBridge(List<Component> availableComponents, int currentPort, Bridge currentBridge) {
-    Bridge bestBridge = currentBridge;
-    
-    for (int i = 0; i < availableComponents.size(); i++) {
-      Component comp = availableComponents.get(i);
-      if (comp.hasPort(currentPort)) {
-        List<Component> remaining = new ArrayList<>(availableComponents);
-        remaining.remove(i);
-        int nextPort = comp.getOtherPort(currentPort);
-        Bridge newBridge = findLongestStrongestBridge(remaining, nextPort, currentBridge.addComponent(comp));
-        
-        if (newBridge.length > bestBridge.length || 
-            (newBridge.length == bestBridge.length && newBridge.strength > bestBridge.strength)) {
-          bestBridge = newBridge;
-        }
-      }
-    }
-    
-    return bestBridge;
-  }
 
   @Override
   public Object part1() {
-    List<Component> components = parseComponents();
-    return findStrongestBridge(components, 0, 0);
+    return findStrongestBridge(0, new HashSet<>());
   }
 
   @Override
   public Object part2() {
-    List<Component> components = parseComponents();
-    return findLongestStrongestBridge(components, 0, new Bridge(0, 0)).strength;
+    return 0;
   }
 }
