@@ -1,15 +1,15 @@
 package com.sbaars.adventofcode.year17.days;
 
-import com.sbaars.adventofcode.common.Day;
+import com.sbaars.adventofcode.year17.Day2017;
 
-public class Day15 extends Day {
+public class Day15 extends Day2017 {
     private static final long FACTOR_A = 16807;
     private static final long FACTOR_B = 48271;
     private static final long DIVISOR = 2147483647;
     private static final int MASK = 0xFFFF;  // For getting lowest 16 bits
 
     public Day15() {
-        super(15, 2017);
+        super(15);
     }
 
     public static void main(String[] args) {
