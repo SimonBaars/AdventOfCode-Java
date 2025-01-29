@@ -20,6 +20,7 @@ public class Day14 extends Day2015 {
         Day14 day = new Day14();
         day.printParts();
         new com.sbaars.adventofcode.network.Submit().submit(day.part1(), 2015, 14, 1);
+        new com.sbaars.adventofcode.network.Submit().submit(day.part2(), 2015, 14, 2);
     }
 
     private void parseInput() {
@@ -46,7 +47,27 @@ public class Day14 extends Day2015 {
 
     @Override
     public Object part2() {
-        return 0; // Implement in next part
+        Map<Reindeer, Integer> points = reindeers.stream()
+            .collect(Collectors.toMap(r -> r, r -> 0));
+        
+        // For each second
+        for (int second = 1; second <= RACE_DURATION; second++) {
+            final int currentSecond = second;
+            int maxDistance = reindeers.stream()
+                .mapToInt(r -> r.getDistanceAfter(currentSecond))
+                .max()
+                .orElse(0);
+            
+            // Award points to all reindeers in the lead
+            reindeers.stream()
+                .filter(r -> r.getDistanceAfter(currentSecond) == maxDistance)
+                .forEach(r -> points.merge(r, 1, Integer::sum));
+        }
+        
+        return points.values().stream()
+            .mapToInt(Integer::intValue)
+            .max()
+            .orElse(0);
     }
 
     private static class Reindeer {
