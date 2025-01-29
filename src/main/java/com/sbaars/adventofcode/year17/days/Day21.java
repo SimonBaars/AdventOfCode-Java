@@ -1,141 +1,165 @@
 package com.sbaars.adventofcode.year17.days;
 
 import com.sbaars.adventofcode.year17.Day2017;
-import com.sbaars.adventofcode.common.grid.CharGrid;
 import java.util.*;
 
 public class Day21 extends Day2017 {
-  private static final String INITIAL_PATTERN = ".#./..#/###";
-  
-  public Day21() {
-    super(21);
-  }
+    private static final String INITIAL_PATTERN = ".#./..#/###";
+    private final Map<String, String> rules = new HashMap<>();
 
-  public static void main(String[] args) {
-    new Day21().printParts();
-  }
+    public Day21() {
+        super(21);
+    }
 
-  private CharGrid stringToGrid(String pattern) {
-    return new CharGrid(pattern.replace("/", "\n"));
-  }
+    public static void main(String[] args) {
+        new Day21().printParts();
+    }
 
-  private String gridToString(CharGrid grid) {
-    return grid.toString().replace("\n", "/").trim();
-  }
+    private List<String> getAllVariations(String pattern) {
+        List<String> variations = new ArrayList<>();
+        String[] rows = pattern.split("/");
+        int size = rows.length;
+        char[][] grid = new char[size][size];
 
-  private List<String> getAllPatternVariations(String pattern) {
-    CharGrid grid = stringToGrid(pattern);
-    Set<String> variations = new HashSet<>();
-    
-    // Original pattern
-    variations.add(gridToString(grid));
-    
-    // Rotations
-    for (int i = 0; i < 3; i++) {
-      char[][] rotated = new char[grid.grid[0].length][grid.grid.length];
-      for (int y = 0; y < grid.grid.length; y++) {
-        for (int x = 0; x < grid.grid[0].length; x++) {
-          rotated[x][grid.grid.length - 1 - y] = grid.grid[y][x];
+        // Convert to 2D array
+        for (int i = 0; i < size; i++) {
+            grid[i] = rows[i].toCharArray();
         }
-      }
-      grid = new CharGrid(rotated);
-      variations.add(gridToString(grid));
-    }
-    
-    // Flips
-    char[][] flipped = new char[grid.grid.length][grid.grid[0].length];
-    for (int y = 0; y < grid.grid.length; y++) {
-      for (int x = 0; x < grid.grid[0].length; x++) {
-        flipped[y][grid.grid[0].length - 1 - x] = grid.grid[y][x];
-      }
-    }
-    grid = new CharGrid(flipped);
-    variations.add(gridToString(grid));
-    
-    // Rotations of flipped
-    for (int i = 0; i < 3; i++) {
-      char[][] rotated = new char[grid.grid[0].length][grid.grid.length];
-      for (int y = 0; y < grid.grid.length; y++) {
-        for (int x = 0; x < grid.grid[0].length; x++) {
-          rotated[x][grid.grid.length - 1 - y] = grid.grid[y][x];
+
+        // Add all rotations and flips
+        for (int flip = 0; flip < 2; flip++) {
+            for (int rot = 0; rot < 4; rot++) {
+                variations.add(gridToString(grid));
+                grid = rotate(grid);
+            }
+            grid = flip(grid);
         }
-      }
-      grid = new CharGrid(rotated);
-      variations.add(gridToString(grid));
-    }
-    
-    return new ArrayList<>(variations);
-  }
 
-  private Map<String, String> parseRules(String input) {
-    Map<String, String> rules = new HashMap<>();
-    for (String line : input.split("\n")) {
-      String[] parts = line.split(" => ");
-      String pattern = parts[0];
-      String result = parts[1];
-      
-      for (String variation : getAllPatternVariations(pattern)) {
-        rules.put(variation, result);
-      }
+        return variations;
     }
-    return rules;
-  }
 
-  private CharGrid enhance(CharGrid input, Map<String, String> rules) {
-    int size = input.grid.length;
-    int step = (size % 2 == 0) ? 2 : 3;
-    int newStep = step + 1;
-    int newSize = size / step * newStep;
-    
-    CharGrid result = new CharGrid(new char[newSize][newSize]);
-    
-    for (int y = 0; y < size; y += step) {
-      for (int x = 0; x < size; x += step) {
-        // Extract subgrid
-        char[][] subgrid = new char[step][step];
-        for (int i = 0; i < step; i++) {
-          for (int j = 0; j < step; j++) {
-            subgrid[i][j] = input.grid[y + i][x + j];
-          }
+    private char[][] rotate(char[][] grid) {
+        int n = grid.length;
+        char[][] result = new char[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result[j][n - 1 - i] = grid[i][j];
+            }
         }
-        
-        // Find matching rule and apply transformation
-        String pattern = gridToString(new CharGrid(subgrid));
-        String transformed = rules.get(pattern);
-        CharGrid newSubgrid = stringToGrid(transformed);
-        
-        // Place transformed subgrid in result
-        int newY = y / step * newStep;
-        int newX = x / step * newStep;
-        for (int i = 0; i < newStep; i++) {
-          for (int j = 0; j < newStep; j++) {
-            result.grid[newY + i][newX + j] = newSubgrid.grid[i][j];
-          }
+        return result;
+    }
+
+    private char[][] flip(char[][] grid) {
+        int n = grid.length;
+        char[][] result = new char[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result[i][n - 1 - j] = grid[i][j];
+            }
         }
-      }
+        return result;
     }
-    
-    return result;
-  }
 
-  private long solve(int iterations) {
-    Map<String, String> rules = parseRules(day());
-    CharGrid grid = stringToGrid(INITIAL_PATTERN);
-    
-    for (int i = 0; i < iterations; i++) {
-      grid = enhance(grid, rules);
+    private String gridToString(char[][] grid) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < grid.length; i++) {
+            if (i > 0) sb.append('/');
+            sb.append(new String(grid[i]));
+        }
+        return sb.toString();
     }
-    
-    return grid.countChar('#');
-  }
 
-  @Override
-  public Object part1() {
-    return solve(5);
-  }
+    private char[][] stringToGrid(String pattern) {
+        String[] rows = pattern.split("/");
+        int size = rows.length;
+        char[][] grid = new char[size][size];
+        for (int i = 0; i < size; i++) {
+            grid[i] = rows[i].toCharArray();
+        }
+        return grid;
+    }
 
-  @Override
-  public Object part2() {
-    return solve(18);
-  }
+    private char[][] enhance(char[][] grid) {
+        int size = grid.length;
+        int newSize;
+        int blockSize;
+        int numBlocks;
+
+        if (size % 2 == 0) {
+            blockSize = 2;
+            numBlocks = size / 2;
+            newSize = numBlocks * 3;
+        } else {
+            blockSize = 3;
+            numBlocks = size / 3;
+            newSize = numBlocks * 4;
+        }
+
+        char[][] result = new char[newSize][newSize];
+
+        for (int blockRow = 0; blockRow < numBlocks; blockRow++) {
+            for (int blockCol = 0; blockCol < numBlocks; blockCol++) {
+                // Extract block
+                StringBuilder blockPattern = new StringBuilder();
+                for (int i = 0; i < blockSize; i++) {
+                    if (i > 0) blockPattern.append('/');
+                    for (int j = 0; j < blockSize; j++) {
+                        blockPattern.append(grid[blockRow * blockSize + i][blockCol * blockSize + j]);
+                    }
+                }
+
+                // Find matching rule and apply enhancement
+                String enhanced = rules.get(blockPattern.toString());
+                if (enhanced == null) {
+                    for (String variation : getAllVariations(blockPattern.toString())) {
+                        enhanced = rules.get(variation);
+                        if (enhanced != null) break;
+                    }
+                }
+
+                // Place enhanced block in result
+                String[] enhancedRows = enhanced.split("/");
+                int enhancedSize = enhancedRows.length;
+                for (int i = 0; i < enhancedSize; i++) {
+                    for (int j = 0; j < enhancedSize; j++) {
+                        result[blockRow * enhancedSize + i][blockCol * enhancedSize + j] = enhancedRows[i].charAt(j);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Object part1() {
+        // Parse rules
+        for (String line : dayStrings()) {
+            String[] parts = line.split(" => ");
+            rules.put(parts[0], parts[1]);
+        }
+
+        // Start with initial pattern
+        char[][] grid = stringToGrid(INITIAL_PATTERN);
+
+        // Enhance 5 times
+        for (int i = 0; i < 5; i++) {
+            grid = enhance(grid);
+        }
+
+        // Count pixels that are on
+        int count = 0;
+        for (char[] row : grid) {
+            for (char c : row) {
+                if (c == '#') count++;
+            }
+        }
+
+        return count;
+    }
+
+    @Override
+    public Object part2() {
+        return 0;
+    }
 }
