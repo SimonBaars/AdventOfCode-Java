@@ -16,13 +16,22 @@ public class Day19 extends Day2017 {
         new Day19().printParts();
     }
 
-    @Override
-    public Object part1() {
-        String[] grid = dayStrings();
+    private static class PathResult {
+        final String letters;
+        final int steps;
+
+        PathResult(String letters, int steps) {
+            this.letters = letters;
+            this.steps = steps;
+        }
+    }
+
+    private PathResult followPath(String[] grid) {
         int x = grid[0].indexOf('|');  // Starting position
         int y = 0;
         int direction = DOWN;
         StringBuilder letters = new StringBuilder();
+        int steps = 0;
 
         while (true) {
             // Move in current direction
@@ -32,6 +41,7 @@ public class Day19 extends Day2017 {
                 case RIGHT -> x++;
                 case LEFT -> x--;
             }
+            steps++;
 
             // Check if we're out of bounds or hit a space
             if (y < 0 || y >= grid.length || x < 0 || x >= grid[y].length() || grid[y].charAt(x) == ' ') {
@@ -61,11 +71,16 @@ public class Day19 extends Day2017 {
             }
         }
 
-        return letters.toString();
+        return new PathResult(letters.toString(), steps);
+    }
+
+    @Override
+    public Object part1() {
+        return followPath(dayStrings()).letters;
     }
 
     @Override
     public Object part2() {
-        return 0;
+        return followPath(dayStrings()).steps;
     }
 }
