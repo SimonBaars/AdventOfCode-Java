@@ -20,6 +20,7 @@ public class Day13 extends Day2015 {
         Day13 day = new Day13();
         day.printParts();
         new com.sbaars.adventofcode.network.Submit().submit(day.part1(), 2015, 13, 1);
+        new com.sbaars.adventofcode.network.Submit().submit(day.part2(), 2015, 13, 2);
     }
 
     private void parseInput() {
@@ -49,7 +50,18 @@ public class Day13 extends Day2015 {
 
     @Override
     public Object part2() {
-        return 0; // Implement in next part
+        // Add myself to the list with happiness 0 for all relationships
+        String me = "Me";
+        Map<String, Integer> myHappiness = new HashMap<>();
+        for (String person : people) {
+            myHappiness.put(person, 0);
+            happinessMap.get(person).put(me, 0);
+        }
+        happinessMap.put(me, myHappiness);
+        people.add(me);
+        
+        List<String> peopleList = new ArrayList<>(people);
+        return findMaxHappiness(peopleList);
     }
 
     private int findMaxHappiness(List<String> peopleList) {
