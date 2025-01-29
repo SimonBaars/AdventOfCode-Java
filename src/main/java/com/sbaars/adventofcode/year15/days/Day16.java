@@ -32,6 +32,7 @@ public class Day16 extends Day2015 {
         Day16 day = new Day16();
         day.printParts();
         new com.sbaars.adventofcode.network.Submit().submit(day.part1(), 2015, 16, 1);
+        new com.sbaars.adventofcode.network.Submit().submit(day.part2(), 2015, 16, 2);
     }
 
     private void parseInput() {
@@ -67,12 +68,31 @@ public class Day16 extends Day2015 {
 
     @Override
     public Object part2() {
-        return 0; // Implement in next part
+        return aunts.stream()
+            .filter(this::matchesAllPropertiesWithRanges)
+            .mapToInt(aunt -> aunt.number)
+            .findFirst()
+            .orElse(0);
     }
 
     private boolean matchesAllProperties(AuntSue aunt) {
         return aunt.properties.entrySet().stream()
             .allMatch(entry -> TARGET_VALUES.get(entry.getKey()).equals(entry.getValue()));
+    }
+
+    private boolean matchesAllPropertiesWithRanges(AuntSue aunt) {
+        return aunt.properties.entrySet().stream()
+            .allMatch(entry -> {
+                String property = entry.getKey();
+                int value = entry.getValue();
+                int target = TARGET_VALUES.get(property);
+                
+                return switch (property) {
+                    case "cats", "trees" -> value > target;
+                    case "pomeranians", "goldfish" -> value < target;
+                    default -> value == target;
+                };
+            });
     }
 
     private static class AuntSue {
