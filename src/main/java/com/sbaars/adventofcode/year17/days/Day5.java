@@ -14,7 +14,18 @@ public class Day5 extends Day2017 {
 
   @Override
   public Object part1() {
-    return "";
+    int[] jumps = dayIntStream().toArray();
+    int pos = 0;
+    int steps = 0;
+    
+    while (pos >= 0 && pos < jumps.length) {
+      int jump = jumps[pos];
+      jumps[pos]++;
+      pos += jump;
+      steps++;
+    }
+    
+    return steps;
   }
 
   @Override
