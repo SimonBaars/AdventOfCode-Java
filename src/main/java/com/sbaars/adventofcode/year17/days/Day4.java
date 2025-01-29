@@ -1,6 +1,8 @@
 package com.sbaars.adventofcode.year17.days;
 
 import com.sbaars.adventofcode.year17.Day2017;
+import java.util.Arrays;
+import java.util.HashSet;
 
 public class Day4 extends Day2017 {
 
@@ -14,7 +16,13 @@ public class Day4 extends Day2017 {
 
   @Override
   public Object part1() {
-    return "";
+    return dayStream()
+        .filter(line -> {
+          String[] words = line.split(" ");
+          HashSet<String> uniqueWords = new HashSet<>(Arrays.asList(words));
+          return uniqueWords.size() == words.length;
+        })
+        .count();
   }
 
   @Override
