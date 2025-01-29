@@ -21,6 +21,7 @@ public class Day24 extends Day2015 {
     Day24 day = new Day24();
     day.printParts();
     new com.sbaars.adventofcode.network.Submit().submit(day.part1(), 2015, 24, 1);
+    new com.sbaars.adventofcode.network.Submit().submit(day.part2(), 2015, 24, 2);
   }
 
   @Override
