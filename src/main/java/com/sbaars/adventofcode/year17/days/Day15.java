@@ -20,6 +20,14 @@ public class Day15 extends Day2017 {
         return (prev * factor) % DIVISOR;
     }
 
+    private long nextValueWithCriteria(long prev, long factor, long multiple) {
+        long next = nextValue(prev, factor);
+        while (next % multiple != 0) {
+            next = nextValue(next, factor);
+        }
+        return next;
+    }
+
     @Override
     public Object part1() {
         long genA = 591;  // puzzle input
@@ -42,6 +50,21 @@ public class Day15 extends Day2017 {
 
     @Override
     public Object part2() {
-        return 0;
+        long genA = 591;  // puzzle input
+        long genB = 393;  // puzzle input
+        int matches = 0;
+
+        for (int i = 0; i < 5_000_000; i++) {
+            // Generate next values that meet criteria
+            genA = nextValueWithCriteria(genA, FACTOR_A, 4);
+            genB = nextValueWithCriteria(genB, FACTOR_B, 8);
+            
+            // Compare lowest 16 bits
+            if ((genA & MASK) == (genB & MASK)) {
+                matches++;
+            }
+        }
+
+        return matches;
     }
 }
