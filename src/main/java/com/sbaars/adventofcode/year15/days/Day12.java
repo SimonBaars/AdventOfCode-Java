@@ -76,45 +76,60 @@ public class Day12 extends Day2015 {
   }
 
   private int sumObject(String json) {
-    // Check if object contains "red" as a value
-    Pattern redPattern = Pattern.compile(":\\s*\"red\"");
-    Matcher redMatcher = redPattern.matcher(json);
-    if (redMatcher.find()) {
-      return 0;
-    }
-
     int sum = 0;
     int depth = 0;
     int start = 1;
     boolean inString = false;
+    boolean hasRed = false;
+    StringBuilder currentValue = new StringBuilder();
     
     for (int i = 1; i < json.length() - 1; i++) {
       char c = json.charAt(i);
+      
       if (c == '"') {
+        if (!inString && depth == 0) {
+          currentValue.setLength(0);
+        }
         inString = !inString;
+        continue;
       }
-      if (inString) continue;
+      
+      if (inString) {
+        currentValue.append(c);
+        continue;
+      }
       
       if (c == '[' || c == '{') {
         depth++;
       } else if (c == ']' || c == '}') {
         depth--;
+      } else if (c == ':' && depth == 0) {
+        String value = currentValue.toString();
+        currentValue.setLength(0);
+        start = i + 1;
       } else if (c == ',' && depth == 0) {
-        String part = json.substring(start, i).trim();
-        int colonIndex = part.indexOf(':');
-        if (colonIndex != -1) {
-          sum += sumJson(part.substring(colonIndex + 1).trim());
+        String value = json.substring(start, i).trim();
+        if (value.equals("\"red\"")) {
+          return 0;
+        }
+        if (!value.isEmpty()) {
+          sum += sumJson(value);
         }
         start = i + 1;
       }
     }
+    
+    // Process the last value
     if (start < json.length() - 1) {
-      String part = json.substring(start, json.length() - 1).trim();
-      int colonIndex = part.indexOf(':');
-      if (colonIndex != -1) {
-        sum += sumJson(part.substring(colonIndex + 1).trim());
+      String value = json.substring(start, json.length() - 1).trim();
+      if (value.equals("\"red\"")) {
+        return 0;
+      }
+      if (!value.isEmpty()) {
+        sum += sumJson(value);
       }
     }
+    
     return sum;
   }
 }
