@@ -22,14 +22,18 @@ public class Day5 extends Day2016 {
     String doorId = day().trim();
     StringBuilder password = new StringBuilder();
     int index = 0;
+
     try {
       MessageDigest md = MessageDigest.getInstance("MD5");
       while (password.length() < 8) {
-        String input = doorId + index;
-        byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
-        String hash = bytesToHex(digest);
-        if (hash.startsWith("00000")) {
-          password.append(hash.charAt(5));
+        byte[] digest = md.digest((doorId + index).getBytes(StandardCharsets.UTF_8));
+
+        // Check if first 20 bits (5 hex zeroes) are zero
+        // digest[0] == 0 && digest[1] == 0 && (digest[2] & 0xF0) == 0
+        if (digest[0] == 0 && digest[1] == 0 && (digest[2] & 0xF0) == 0) {
+          // The 6th hex character is the low nibble of digest[2]
+          int nib5 = digest[2] & 0x0F;
+          password.append(toHexChar(nib5));
         }
         index++;
       }
@@ -46,21 +50,20 @@ public class Day5 extends Day2016 {
     Arrays.fill(password, '_');
     int filled = 0;
     int index = 0;
+
     try {
       MessageDigest md = MessageDigest.getInstance("MD5");
       while (filled < 8) {
-        String input = doorId + index;
-        byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
-        String hash = bytesToHex(digest);
-        if (hash.startsWith("00000") && hash.length() >= 7) {
-          char posChar = hash.charAt(5);
-          if (posChar >= '0' && posChar <= '7') {
-            int pos = posChar - '0';
-            if (password[pos] == '_') {
-              char c = hash.charAt(6);
-              password[pos] = c;
-              filled++;
-            }
+        byte[] digest = md.digest((doorId + index).getBytes(StandardCharsets.UTF_8));
+        // Same check as above
+        if (digest[0] == 0 && digest[1] == 0 && (digest[2] & 0xF0) == 0) {
+          // 6th hex character is nib5 (low nibble of digest[2]), 7th is nib6 (high nibble of digest[3])
+          int nib5 = digest[2] & 0x0F;            // position
+          int nib6 = (digest[3] & 0xF0) >>> 4;    // actual character
+
+          if (nib5 < 8 && password[nib5] == '_') {
+            password[nib5] = toHexChar(nib6);
+            filled++;
           }
         }
         index++;
@@ -71,11 +74,7 @@ public class Day5 extends Day2016 {
     return new String(password);
   }
 
-  private static String bytesToHex(byte[] bytes) {
-    StringBuilder sb = new StringBuilder();
-    for (byte b : bytes) {
-      sb.append(String.format("%02x", b));
-    }
-    return sb.toString();
+  private static char toHexChar(int nibble) {
+    return (char) (nibble < 10 ? ('0' + nibble) : ('a' + (nibble - 10)));
   }
 }

@@ -5,6 +5,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Day11 extends Day2016 {
   private static final Pattern ITEM_PATTERN = Pattern.compile("(\\w+)(?:-compatible)? (microchip|generator)");
@@ -17,22 +19,29 @@ public class Day11 extends Day2016 {
     new Day11().printParts();
   }
 
-  private record State(int elevator, List<Set<String>> floors) {
-    public boolean isValid() {
-      for (Set<String> floor : floors) {
-        Set<String> generators = floor.stream()
-            .filter(s -> s.endsWith("G"))
-            .collect(Collectors.toSet());
-        Set<String> microchips = floor.stream()
-            .filter(s -> s.endsWith("M"))
-            .collect(Collectors.toSet());
+  private record ElementPosition(int generatorFloor, int microchipFloor) implements Comparable<ElementPosition> {
+    @Override
+    public int compareTo(ElementPosition o) {
+      int cmp = Integer.compare(generatorFloor, o.generatorFloor);
+      if (cmp != 0) return cmp;
+      return Integer.compare(microchipFloor, o.microchipFloor);
+    }
+  }
 
-        if (!generators.isEmpty()) {
-          for (String chip : microchips) {
-            String gen = chip.substring(0, chip.length() - 1) + "G";
-            if (!generators.contains(gen)) {
-              return false;
-            }
+  private record State(int elevatorFloor, List<ElementPosition> elements) {
+    public State {
+      elements = new ArrayList<>(elements);
+      Collections.sort(elements);
+    }
+
+    public boolean isValid() {
+      for (ElementPosition elem : elements) {
+        if (elem.microchipFloor != elem.generatorFloor) {
+          final int floor = elem.microchipFloor;
+          boolean hasGenerator = elements.stream()
+              .anyMatch(e -> e.generatorFloor == floor);
+          if (hasGenerator) {
+            return false;
           }
         }
       }
@@ -40,52 +49,51 @@ public class Day11 extends Day2016 {
     }
 
     public boolean isComplete() {
-      return floors.get(0).isEmpty() && 
-             floors.get(1).isEmpty() && 
-             floors.get(2).isEmpty();
+      return elements.stream()
+          .allMatch(e -> e.generatorFloor == 3 && e.microchipFloor == 3);
     }
 
     public List<State> nextStates() {
       List<State> states = new ArrayList<>();
-      Set<String> currentFloor = floors.get(elevator);
+      List<MoveItem> movable = new ArrayList<>();
 
-      // Try moving one or two items
-      List<List<String>> itemCombos = new ArrayList<>();
-      currentFloor.forEach(item -> itemCombos.add(List.of(item)));
-      for (String item1 : currentFloor) {
-        for (String item2 : currentFloor) {
-          if (item1.compareTo(item2) < 0) {
-            itemCombos.add(List.of(item1, item2));
-          }
+      for (int i = 0; i < elements.size(); i++) {
+        ElementPosition elem = elements.get(i);
+        if (elem.generatorFloor == elevatorFloor) {
+          movable.add(new MoveItem(i, true));
+        }
+        if (elem.microchipFloor == elevatorFloor) {
+          movable.add(new MoveItem(i, false));
         }
       }
 
-      // Try moving up or down
-      for (int newElevator : List.of(elevator - 1, elevator + 1)) {
-        if (newElevator >= 0 && newElevator < floors.size()) {
-          for (List<String> items : itemCombos) {
-            List<Set<String>> newFloors = new ArrayList<>();
-            for (int i = 0; i < floors.size(); i++) {
-              newFloors.add(new HashSet<>(floors.get(i)));
+      for (int dir : new int[]{-1, 1}) {
+        int newFloor = elevatorFloor + dir;
+        if (newFloor < 0 || newFloor >= 4) continue;
+
+        for (int count = 1; count <= Math.min(2, movable.size()); count++) {
+          Combinations.combinations(movable, count).forEach(combo -> {
+            List<ElementPosition> newElements = new ArrayList<>(elements);
+            for (MoveItem item : combo) {
+              ElementPosition e = newElements.get(item.elementIndex);
+              if (item.isGenerator) {
+                newElements.set(item.elementIndex, new ElementPosition(newFloor, e.microchipFloor));
+              } else {
+                newElements.set(item.elementIndex, new ElementPosition(e.generatorFloor, newFloor));
+              }
             }
-
-            // Move items
-            items.forEach(item -> {
-              newFloors.get(elevator).remove(item);
-              newFloors.get(newElevator).add(item);
-            });
-
-            State newState = new State(newElevator, newFloors);
+            State newState = new State(newFloor, newElements);
             if (newState.isValid()) {
               states.add(newState);
             }
-          }
+          });
         }
       }
-
       return states;
     }
   }
+
+  private record MoveItem(int elementIndex, boolean isGenerator) {}
 
   private int findMinSteps(State initial) {
     Queue<State> queue = new ArrayDeque<>();
@@ -103,38 +111,52 @@ public class Day11 extends Day2016 {
 
       for (State next : current.nextStates()) {
         if (!visited.containsKey(next)) {
-          queue.add(next);
           visited.put(next, steps + 1);
+          queue.add(next);
         }
       }
     }
-
     return -1;
   }
 
-  private State parseInput(boolean includePart2Items) {
-    List<Set<String>> floors = new ArrayList<>();
-    for (int i = 0; i < 4; i++) {
-      floors.add(new HashSet<>());
-    }
-
+  private State parseInput(boolean includePart2) {
+    Map<String, Integer> generatorFloors = new HashMap<>();
+    Map<String, Integer> microchipFloors = new HashMap<>();
+    
     int floor = 0;
     for (String line : dayStream().toList()) {
-      Matcher matcher = ITEM_PATTERN.matcher(line);
-      while (matcher.find()) {
-        String element = matcher.group(1);
-        String type = matcher.group(2);
-        floors.get(floor).add(element.substring(0, 2).toUpperCase() + 
-            (type.equals("generator") ? "G" : "M"));
+      Matcher m = ITEM_PATTERN.matcher(line);
+      while (m.find()) {
+        String element = m.group(1).substring(0, 2).toUpperCase();
+        String type = m.group(2);
+        if (type.equals("generator")) {
+          generatorFloors.put(element, floor);
+        } else {
+          microchipFloors.put(element, floor);
+        }
       }
       floor++;
     }
 
-    if (includePart2Items) {
-      floors.get(0).addAll(Set.of("ELG", "ELM", "DIG", "DIM"));
+    if (includePart2) {
+      generatorFloors.put("EL", 0);
+      microchipFloors.put("EL", 0);
+      generatorFloors.put("DI", 0);
+      microchipFloors.put("DI", 0);
     }
 
-    return new State(0, floors);
+    Set<String> allElements = new HashSet<>();
+    allElements.addAll(generatorFloors.keySet());
+    allElements.addAll(microchipFloors.keySet());
+    
+    List<ElementPosition> elements = allElements.stream()
+        .map(e -> new ElementPosition(
+            generatorFloors.getOrDefault(e, -1),
+            microchipFloors.getOrDefault(e, -1)
+        ))
+        .toList();
+
+    return new State(0, elements);
   }
 
   @Override
@@ -145,5 +167,24 @@ public class Day11 extends Day2016 {
   @Override
   public Object part2() {
     return findMinSteps(parseInput(true));
+  }
+}
+
+class Combinations {
+  static <T> Stream<List<T>> combinations(List<T> items, int k) {
+    if (k == 0) {
+      return Stream.of(Collections.emptyList());
+    } else {
+      return IntStream.range(0, items.size()).boxed()
+          .flatMap(i -> combinations(items.subList(i+1, items.size()), k-1)
+              .map(t -> prepend(items.get(i), t)));
+    }
+  }
+
+  private static <T> List<T> prepend(T head, List<T> tail) {
+    List<T> result = new ArrayList<>();
+    result.add(head);
+    result.addAll(tail);
+    return result;
   }
 }
