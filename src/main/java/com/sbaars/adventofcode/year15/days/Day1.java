@@ -16,15 +16,16 @@ public class Day1 extends Day2015 {
 
   @Override
   public Object part1() {
-    String in = day().trim();
-    return in.replace(")", "").length() - in.replace("(", "").length();
+    return dayStream()
+        .flatMapToInt(String::chars)
+        .map(c -> c == '(' ? 1 : -1)
+        .sum();
   }
 
   @Override
   public Object part2() {
-    String in = day().trim();
     return findReduce(
-        zipWithIndex(in.chars().boxed()),
+        zipWithIndex(dayStream().flatMapToInt(String::chars).boxed()),
         0,
         (c, acc) -> acc + (c.e() == '(' ? 1 : -1),
         acc -> acc < 0

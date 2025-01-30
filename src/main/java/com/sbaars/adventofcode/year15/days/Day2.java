@@ -20,12 +20,12 @@ public class Day2 extends Day2015 {
     }
 
     private long smallestArea() {
-      long[] s = smallestSides();
+      var s = smallestSides();
       return s[0] * s[1];
     }
 
     private long area() {
-      return 2 * l * w + 2 * w * h + 2 * h * l;
+      return 2 * (l * w + w * h + h * l);
     }
 
     private long wrappingPaper() {
@@ -33,8 +33,8 @@ public class Day2 extends Day2015 {
     }
 
     private long sideDistance() {
-      long[] s = smallestSides();
-      return s[0] * 2 + s[1] * 2;
+      var s = smallestSides();
+      return 2 * (s[0] + s[1]);
     }
 
     private long volume() {
@@ -64,7 +64,6 @@ public class Day2 extends Day2015 {
 
   private long getResult(ToLongFunction<Dimension> func) {
     return dayStream()
-        .map(String::trim)
         .map(s -> readString(s, "%nx%nx%n", Dimension.class))
         .mapToLong(func)
         .sum();
