@@ -3,16 +3,16 @@ package com.sbaars.adventofcode.year16.days;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-class Day1Test {
-    Day1 day = new Day1();
+class Day21Test {
+    Day21 day = new Day21();
 
     @Test
     void testPart1() {
-        assertEquals("288", day.part1().toString());
+        assertEquals("gbhcefad", day.part1().toString());
     }
 
     @Test
     void testPart2() {
-        assertEquals("111", day.part2().toString());
+        assertEquals("gahedfcb", day.part2().toString());
     }
 }
