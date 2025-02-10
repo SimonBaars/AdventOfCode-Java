@@ -4,6 +4,7 @@ import com.sbaars.adventofcode.year16.Day2016;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 public class Day7 extends Day2016 {
   public Day7() {
@@ -33,31 +34,14 @@ public class Day7 extends Day2016 {
     }
 
     public boolean supportsSSL() {
-      Set<String> abas = new HashSet<>();
-      for (String supernet : supernets) {
-        for (int i = 0; i < supernet.length() - 2; i++) {
-          if (isABA(supernet, i)) {
-            abas.add(supernet.substring(i, i + 3));
-          }
-        }
-      }
-
-      for (String aba : abas) {
-        String bab = "" + aba.charAt(1) + aba.charAt(0) + aba.charAt(1);
-        if (hypernets.stream().anyMatch(h -> h.contains(bab))) {
-          return true;
-        }
-      }
-      return false;
+      return supernets.stream()
+          .flatMap(s -> findPatterns(s, 3, IPv7::isABA))
+          .map(aba -> new String(new char[]{aba.charAt(1), aba.charAt(0), aba.charAt(1)}))
+          .anyMatch(bab -> hypernets.stream().anyMatch(h -> h.contains(bab)));
     }
 
     private static boolean hasABBA(String s) {
-      for (int i = 0; i < s.length() - 3; i++) {
-        if (isABBA(s, i)) {
-          return true;
-        }
-      }
-      return false;
+      return findPatterns(s, 4, IPv7::isABBA).findAny().isPresent();
     }
 
     private static boolean isABBA(String s, int i) {
@@ -69,6 +53,12 @@ public class Day7 extends Day2016 {
     private static boolean isABA(String s, int i) {
       return s.charAt(i) == s.charAt(i + 2) && 
              s.charAt(i) != s.charAt(i + 1);
+    }
+
+    private static java.util.stream.Stream<String> findPatterns(String s, int length, java.util.function.BiPredicate<String, Integer> matcher) {
+      return IntStream.range(0, s.length() - length + 1)
+          .filter(i -> matcher.test(s, i))
+          .mapToObj(i -> s.substring(i, i + length));
     }
   }
 
