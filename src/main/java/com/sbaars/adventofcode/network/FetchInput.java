@@ -29,7 +29,7 @@ public class FetchInput {
   }
 
   public static void main(String[] args) {
-    new FetchInput().retrieveDay("25", "2024");
+    new FetchInput().runForYear("2025");
   }
 
   private void retrieveDay(String day, String year) {
@@ -57,7 +57,8 @@ public class FetchInput {
   }
 
   private void runForYear(String year) {
-    for (int day = 1; day <= 25; day++) {
+    int numDays = year.equals("2025") ? 15 : 25;
+    for (int day = 1; day <= numDays; day++) {
       retrieveDay(Integer.toString(day), year);
     }
   }
