@@ -74,7 +74,7 @@ public class InfiniteGrid implements Grid {
   }
 
   public Optional<Character> get(long x, long y) {
-    return get(x, y);
+    return get(new Loc(x, y));
   }
 
   public Character getOptimistic(long x, long y) {

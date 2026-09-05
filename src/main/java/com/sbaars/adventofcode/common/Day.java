@@ -75,7 +75,7 @@ public abstract class Day {
   }
 
   public void submitPart2() {
-    if (solutionPart2 == null) solutionPart2 = part1();
+    if (solutionPart2 == null) solutionPart2 = part2();
     if (example == 0 && solutionPart2 != null) {
       new Submit().submit(solutionPart2, year, day, 2);
     }
